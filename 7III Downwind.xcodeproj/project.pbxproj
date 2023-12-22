@@ -8,18 +8,34 @@
 
 /* Begin PBXBuildFile section */
 		785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
-		785C4A9B2B358F7B00EB07F8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A9A2B358F7B00EB07F8 /* ContentView.swift */; };
+		785C4A9B2B358F7B00EB07F8 /* SongList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A9A2B358F7B00EB07F8 /* SongList.swift */; };
 		785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
 		785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
+		785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AA92B3591EA00EB07F8 /* Song.swift */; };
+		785C4AAC2B35926600EB07F8 /* SongData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAB2B35926600EB07F8 /* SongData.swift */; };
+		785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */; };
+		785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
+		785C4AB22B35CA6200EB07F8 /* AddUpdateSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */; };
+		785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB32B35CAC200EB07F8 /* ModalType.swift */; };
+		785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */; };
+		785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		785C4A952B358F7B00EB07F8 /* 7III Downwind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Downwind.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
-		785C4A9A2B358F7B00EB07F8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		785C4A9A2B358F7B00EB07F8 /* SongList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongList.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		785C4A9E2B358F7D00EB07F8 /* _III_Downwind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = _III_Downwind.entitlements; sourceTree = "<group>"; };
 		785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		785C4AA92B3591EA00EB07F8 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		785C4AAB2B35926600EB07F8 /* SongData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongData.swift; sourceTree = "<group>"; };
+		785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		785C4AAF2B359F8E00EB07F8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUpdateSongView.swift; sourceTree = "<group>"; };
+		785C4AB32B35CAC200EB07F8 /* ModalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalType.swift; sourceTree = "<group>"; };
+		785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUpdateSong.swift; sourceTree = "<group>"; };
+		785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +69,10 @@
 			isa = PBXGroup;
 			children = (
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
-				785C4A9A2B358F7B00EB07F8 /* ContentView.swift */,
+				785C4A9A2B358F7B00EB07F8 /* SongList.swift */,
+				785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */,
+				785C4AA72B35914100EB07F8 /* Model */,
+				785C4AA82B35916900EB07F8 /* Utilities */,
 				785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */,
 				785C4A9E2B358F7D00EB07F8 /* _III_Downwind.entitlements */,
 				785C4A9F2B358F7D00EB07F8 /* Preview Content */,
@@ -67,6 +86,27 @@
 				785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		785C4AA72B35914100EB07F8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				785C4AA92B3591EA00EB07F8 /* Song.swift */,
+				785C4AAB2B35926600EB07F8 /* SongData.swift */,
+				785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		785C4AA82B35916900EB07F8 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */,
+				785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */,
+				785C4AAF2B359F8E00EB07F8 /* Constants.swift */,
+				785C4AB32B35CAC200EB07F8 /* ModalType.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,8 +179,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				785C4A9B2B358F7B00EB07F8 /* ContentView.swift in Sources */,
+				785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */,
+				785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */,
+				785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */,
+				785C4A9B2B358F7B00EB07F8 /* SongList.swift in Sources */,
+				785C4AAC2B35926600EB07F8 /* SongData.swift in Sources */,
+				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
+				785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */,
+				785C4AB22B35CA6200EB07F8 /* AddUpdateSongView.swift in Sources */,
+				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
