@@ -19,6 +19,15 @@
 		785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB32B35CAC200EB07F8 /* ModalType.swift */; };
 		785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */; };
 		785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */; };
+		785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB92B40AF7400EB07F8 /* Member.swift */; };
+		785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABB2B40B04000EB07F8 /* Run.swift */; };
+		785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */; };
+		785C4AC12B40B62E00EB07F8 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 785C4AC02B40B62E00EB07F8 /* KeychainSwift */; };
+		785C4AC32B40B84300EB07F8 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC22B40B84300EB07F8 /* StartView.swift */; };
+		785C4AC52B40B8D100EB07F8 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC42B40B8D100EB07F8 /* SplashView.swift */; };
+		785C4AC72B40B9B000EB07F8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC62B40B9B000EB07F8 /* HomeView.swift */; };
+		785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */; };
+		785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACA2B41705C00EB07F8 /* RunView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +45,14 @@
 		785C4AB32B35CAC200EB07F8 /* ModalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalType.swift; sourceTree = "<group>"; };
 		785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUpdateSong.swift; sourceTree = "<group>"; };
 		785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
+		785C4AB92B40AF7400EB07F8 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		785C4ABB2B40B04000EB07F8 /* Run.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Run.swift; sourceTree = "<group>"; };
+		785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownwindManager.swift; sourceTree = "<group>"; };
+		785C4AC22B40B84300EB07F8 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
+		785C4AC42B40B8D100EB07F8 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		785C4AC62B40B9B000EB07F8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstTimeUserNameSet.swift; sourceTree = "<group>"; };
+		785C4ACA2B41705C00EB07F8 /* RunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				785C4AC12B40B62E00EB07F8 /* KeychainSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +87,11 @@
 			isa = PBXGroup;
 			children = (
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
+				785C4AC22B40B84300EB07F8 /* StartView.swift */,
+				785C4AC42B40B8D100EB07F8 /* SplashView.swift */,
+				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
+				785C4AC62B40B9B000EB07F8 /* HomeView.swift */,
+				785C4ACA2B41705C00EB07F8 /* RunView.swift */,
 				785C4A9A2B358F7B00EB07F8 /* SongList.swift */,
 				785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */,
 				785C4AA72B35914100EB07F8 /* Model */,
@@ -92,6 +115,9 @@
 			isa = PBXGroup;
 			children = (
 				785C4AA92B3591EA00EB07F8 /* Song.swift */,
+				785C4AB92B40AF7400EB07F8 /* Member.swift */,
+				785C4ABB2B40B04000EB07F8 /* Run.swift */,
+				785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */,
 				785C4AAB2B35926600EB07F8 /* SongData.swift */,
 				785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */,
 			);
@@ -125,6 +151,9 @@
 			dependencies = (
 			);
 			name = "7III Downwind";
+			packageProductDependencies = (
+				785C4AC02B40B62E00EB07F8 /* KeychainSwift */,
+			);
 			productName = "7III Downwind";
 			productReference = 785C4A952B358F7B00EB07F8 /* 7III Downwind.app */;
 			productType = "com.apple.product-type.application";
@@ -153,6 +182,9 @@
 				Base,
 			);
 			mainGroup = 785C4A8C2B358F7B00EB07F8;
+			packageReferences = (
+				785C4ABF2B40B62E00EB07F8 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+			);
 			productRefGroup = 785C4A962B358F7B00EB07F8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -180,15 +212,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */,
+				785C4AC32B40B84300EB07F8 /* StartView.swift in Sources */,
+				785C4AC52B40B8D100EB07F8 /* SplashView.swift in Sources */,
+				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */,
 				785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */,
 				785C4A9B2B358F7B00EB07F8 /* SongList.swift in Sources */,
+				785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */,
 				785C4AAC2B35926600EB07F8 /* SongData.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */,
+				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
 				785C4AB22B35CA6200EB07F8 /* AddUpdateSongView.swift in Sources */,
+				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
+				785C4AC72B40B9B000EB07F8 /* HomeView.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
+				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +447,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		785C4ABF2B40B62E00EB07F8 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		785C4AC02B40B62E00EB07F8 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 785C4ABF2B40B62E00EB07F8 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 785C4A8D2B358F7B00EB07F8 /* Project object */;
 }

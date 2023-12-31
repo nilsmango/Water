@@ -8,6 +8,7 @@
 import Foundation
 
 enum Constants {
+    static let keychainKey = "DWUserData"
     static let baseURL = "https://3a5e-194-191-224-88.ngrok-free.app/"
 }
 
