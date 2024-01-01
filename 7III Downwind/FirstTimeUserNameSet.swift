@@ -20,6 +20,15 @@ struct FirstTimeUserNameSet: View {
             Button(action: {
                 downwindManager.user = Member(id: UUID(), name: userName)
                 downwindManager.saveUser()
+                Task {
+                    do {
+                        try await downwindManager.addUserToDB()
+                        
+                    } catch {
+                        print("Error: \(error)")
+                    }
+                }
+                
             }, label: {
                 Text("Save")
             })

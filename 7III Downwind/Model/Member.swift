@@ -16,4 +16,5 @@ struct Member: Identifiable, Codable {
     
     var onlyWatching: Bool?
     
+    var createdOn: String?
 }

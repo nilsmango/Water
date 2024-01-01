@@ -7,7 +7,6 @@
 
 import Foundation
 
-// TODO: make this a observable object (members being observed)? nope?
 struct Run: Identifiable, Codable {
     var id: UUID?
     

@@ -26,7 +26,15 @@ struct HomeView: View {
                         .padding(.bottom, 30)
                     
                     Button(action: {
-                        // Check for Run with yourself
+                        Task {
+                            do {
+                                try await downwindManager.loadActiveRun()
+                                
+                            } catch {
+                                print("Error: \(error)")
+                            }
+                        }
+                        
                     }, label: {
                         Text("Recheck")
                     })
@@ -34,7 +42,7 @@ struct HomeView: View {
                     Text("or")
                     
                     Button(action: {
-                        // New Run
+                        // New Run - get members with fetchMembers()
                     }, label: {
                         Text("Start New Run")
                     })

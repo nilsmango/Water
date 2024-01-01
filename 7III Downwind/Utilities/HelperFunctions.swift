@@ -16,3 +16,13 @@ func createSongURL() throws -> URL {
     
     return url
 }
+
+func createDWURL(endpoint: String) throws -> URL {
+    let urlString = Constants.baseURL + endpoint
+    
+    guard let url = URL(string: urlString) else {
+        throw HTTPError.badURL
+    }
+    
+    return url
+}

@@ -12,9 +12,28 @@ struct RunView: View {
     
     var body: some View {
         List {
+            Text("Run View")
             ForEach(downwindManager.activeRun.members) { member in
                 Text(member.name)
                 Text("Location:")
+                if let unwrappedLatitude = member.latitude {
+                    Text("Latitude: \(unwrappedLatitude)")
+                } else {
+                    Text("No Data")
+                }
+                if let unwrappedLongitude = member.longitude {
+                    Text("Longitude: \(unwrappedLongitude)")
+                }
+            }
+        }
+        .onAppear {
+            Task {
+                do {
+                    try await downwindManager.loadRunMembers()
+                    
+                } catch {
+                    print("Error: \(error)")
+                }
             }
         }
     }
