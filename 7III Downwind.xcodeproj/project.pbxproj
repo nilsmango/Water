@@ -33,6 +33,7 @@
 		785C4AD12B4313EF00EB07F8 /* LocationHelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD02B4313EF00EB07F8 /* LocationHelperFunctions.swift */; };
 		785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD22B433D4000EB07F8 /* MemberRunData.swift */; };
 		785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD52B44096400EB07F8 /* RunListView.swift */; };
+		785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD72B45B04800EB07F8 /* RunListSorting.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		785C4AD02B4313EF00EB07F8 /* LocationHelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelperFunctions.swift; sourceTree = "<group>"; };
 		785C4AD22B433D4000EB07F8 /* MemberRunData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberRunData.swift; sourceTree = "<group>"; };
 		785C4AD52B44096400EB07F8 /* RunListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListView.swift; sourceTree = "<group>"; };
+		785C4AD72B45B04800EB07F8 /* RunListSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListSorting.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 				785C4AD02B4313EF00EB07F8 /* LocationHelperFunctions.swift */,
 				785C4AAF2B359F8E00EB07F8 /* Constants.swift */,
 				785C4AB32B35CAC200EB07F8 /* ModalType.swift */,
+				785C4AD72B45B04800EB07F8 /* RunListSorting.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
+				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */,
 				785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */,
 				785C4A9B2B358F7B00EB07F8 /* SongList.swift in Sources */,
