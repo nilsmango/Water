@@ -89,3 +89,24 @@ func isPosInside(position: MemberRunData, canvasWidth: Double, canvasHeight: Dou
         return false
     }
 }
+
+/// calculating bearing of two locations
+func calculateBearing(sourceLatitude: Double, sourceLongitude: Double, targetLatitude: Double, targetLongitude: Double) -> Double {
+    let lat1 = sourceLatitude.degreesToRadians
+    let lon1 = sourceLongitude.degreesToRadians
+    let lat2 = targetLatitude.degreesToRadians
+    let lon2 = targetLongitude.degreesToRadians
+
+    let dLon = lon2 - lon1
+
+    let x = sin(dLon) * cos(lat2)
+    let y = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
+
+    let bearing = atan2(x, y).radiansToDegrees
+    return (bearing + 360.0).truncatingRemainder(dividingBy: 360.0)
+}
+
+/// calculating the relative bearing
+func calculateRelativeBearing(myTrueHeading: Double, bearing: Double) -> Double {
+    return (bearing - myTrueHeading + 360.0).truncatingRemainder(dividingBy: 360.0)
+}

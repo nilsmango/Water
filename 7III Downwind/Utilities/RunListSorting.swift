@@ -10,8 +10,8 @@ import Foundation
 enum RunListSorting: String, CaseIterable, Identifiable, Codable {
     case custom = "Custom"
     case name = "Name"
-    case distanceAscending = "Ascending"
     case distanceDescending = "Descending"
+    case distanceAscending = "Ascending"
     
     var id: Self { self }
 }

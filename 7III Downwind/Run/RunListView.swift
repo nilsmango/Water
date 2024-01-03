@@ -14,6 +14,8 @@ struct RunListView: View {
     
     private var myself = Member(id: UUID(), name: "Nils Mango", latitude: 48.1206, longitude: 55.202)
     
+    private var myTrueHeading: Double = 89.3
+    
     private var distances: [Member: Double] {
         var distances = [Member: Double]()
         for member in runMembers {
@@ -24,14 +26,28 @@ struct RunListView: View {
         return distances
     }
     
+    
     var body: some View {
         VStack {
             List {
                 ForEach(sortedMembers()) { member in
                     HStack {
                         Text(member.name)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
                         if let distance = distances[member] {
+                            BearingArrowView(degrees: Double.random(in: 0...360))
+                                .frame(width: 25, height: 25)
+                                .padding(.trailing, 5)
+//                                .frame(maxWidth: .infinity, alignment: .center)
+                            
                             Text(makePrettyDistance(meters: distance))
+                                .fontWeight(.bold)
+//                                    .frame(maxWidth: .infinity, alignment: .center)
+                            
+                            Text("\(Int.random(in: 0...30)) km/h")
+                                  .frame(maxWidth: .infinity, alignment: .trailing)
+                            
                         } else {
                             Text("No Data")
                         }

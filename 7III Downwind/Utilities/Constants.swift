@@ -16,7 +16,8 @@ enum Constants {
 }
 
 enum Endpoints {
-    static let songs = "/songs"
     static let members = "/members"
     static let runs = "/runs"
+    // TODO: remove this
+    static let songs = "/songs"
 }

@@ -7,8 +7,9 @@
 
 import Foundation
 
-func createSongURL() throws -> URL {
-    let urlString = Constants.baseURL + Endpoints.songs
+
+func createDWURL(endpoint: String) throws -> URL {
+    let urlString = Constants.baseURL + endpoint
     
     guard let url = URL(string: urlString) else {
         throw HTTPError.badURL
@@ -17,8 +18,9 @@ func createSongURL() throws -> URL {
     return url
 }
 
-func createDWURL(endpoint: String) throws -> URL {
-    let urlString = Constants.baseURL + endpoint
+// TODO: Remove this
+func createSongURL() throws -> URL {
+    let urlString = Constants.baseURL + Endpoints.songs
     
     guard let url = URL(string: urlString) else {
         throw HTTPError.badURL

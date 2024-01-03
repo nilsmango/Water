@@ -34,6 +34,8 @@
 		785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD22B433D4000EB07F8 /* MemberRunData.swift */; };
 		785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD52B44096400EB07F8 /* RunListView.swift */; };
 		785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD72B45B04800EB07F8 /* RunListSorting.swift */; };
+		785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD92B45EAD000EB07F8 /* Extensions.swift */; };
+		785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +67,8 @@
 		785C4AD22B433D4000EB07F8 /* MemberRunData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberRunData.swift; sourceTree = "<group>"; };
 		785C4AD52B44096400EB07F8 /* RunListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListView.swift; sourceTree = "<group>"; };
 		785C4AD72B45B04800EB07F8 /* RunListSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListSorting.swift; sourceTree = "<group>"; };
+		785C4AD92B45EAD000EB07F8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BearingArrowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,11 +107,9 @@
 				785C4AC42B40B8D100EB07F8 /* SplashView.swift */,
 				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
 				785C4AC62B40B9B000EB07F8 /* HomeView.swift */,
-				785C4ACA2B41705C00EB07F8 /* RunView.swift */,
-				785C4AD52B44096400EB07F8 /* RunListView.swift */,
+				785C4ADD2B45EBDC00EB07F8 /* Run */,
 				785C4AD42B44095300EB07F8 /* Experiments */,
-				785C4A9A2B358F7B00EB07F8 /* SongList.swift */,
-				785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */,
+				785C4ADE2B45EC5300EB07F8 /* Song */,
 				785C4AA72B35914100EB07F8 /* Model */,
 				785C4AA82B35916900EB07F8 /* Utilities */,
 				785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */,
@@ -146,8 +148,8 @@
 				785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */,
 				785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */,
 				785C4AD02B4313EF00EB07F8 /* LocationHelperFunctions.swift */,
+				785C4AD92B45EAD000EB07F8 /* Extensions.swift */,
 				785C4AAF2B359F8E00EB07F8 /* Constants.swift */,
-				785C4AB32B35CAC200EB07F8 /* ModalType.swift */,
 				785C4AD72B45B04800EB07F8 /* RunListSorting.swift */,
 			);
 			path = Utilities;
@@ -159,6 +161,26 @@
 				785C4ACE2B4308A800EB07F8 /* RunUITest.swift */,
 			);
 			path = Experiments;
+			sourceTree = "<group>";
+		};
+		785C4ADD2B45EBDC00EB07F8 /* Run */ = {
+			isa = PBXGroup;
+			children = (
+				785C4ACA2B41705C00EB07F8 /* RunView.swift */,
+				785C4AD52B44096400EB07F8 /* RunListView.swift */,
+				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
+			);
+			path = Run;
+			sourceTree = "<group>";
+		};
+		785C4ADE2B45EC5300EB07F8 /* Song */ = {
+			isa = PBXGroup;
+			children = (
+				785C4A9A2B358F7B00EB07F8 /* SongList.swift */,
+				785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */,
+				785C4AB32B35CAC200EB07F8 /* ModalType.swift */,
+			);
+			path = Song;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,6 +266,7 @@
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
+				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */,
 				785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */,
 				785C4A9B2B358F7B00EB07F8 /* SongList.swift in Sources */,
@@ -259,6 +282,7 @@
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
 				785C4AC72B40B9B000EB07F8 /* HomeView.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
+				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,
 				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,
 			);
