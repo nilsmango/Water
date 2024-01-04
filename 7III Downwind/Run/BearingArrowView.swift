@@ -13,8 +13,9 @@ struct BearingArrowView: View {
     var body: some View {
 //        GeometryReader { geometry in
             Image(systemName: "arrow.up")
-                .resizable()
-                .scaledToFit()
+//                .resizable()
+//                .scaledToFit()
+                .fontWeight(.bold)
                 .rotationEffect(Angle(degrees: degrees))
 //                .frame(width: min(geometry.size.width, geometry.size.height), height: min(geometry.size.width, geometry.size.height))
 //                    .onTapGesture {

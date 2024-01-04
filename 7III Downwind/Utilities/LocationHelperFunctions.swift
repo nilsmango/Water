@@ -52,6 +52,15 @@ func makePrettyDistance(meters: Double) -> String {
     }
 }
 
+// Takes a speed in km/h, returns a pretty speed
+func makePrettySpeed(speed: Double) -> String {
+    if speed >= 10.0 {
+        return String(Int(speed.rounded()))
+    } else {
+        return String(format: "%.1f", speed)
+    }
+}
+
 
 func makeShortName(name: String) -> String {
     let words = name.components(separatedBy: " ")
@@ -91,7 +100,7 @@ func isPosInside(position: MemberRunData, canvasWidth: Double, canvasHeight: Dou
 }
 
 /// calculating bearing of two locations
-func calculateBearing(sourceLatitude: Double, sourceLongitude: Double, targetLatitude: Double, targetLongitude: Double) -> Double {
+private func calculateBearing(sourceLatitude: Double, sourceLongitude: Double, targetLatitude: Double, targetLongitude: Double) -> Double {
     let lat1 = sourceLatitude.degreesToRadians
     let lon1 = sourceLongitude.degreesToRadians
     let lat2 = targetLatitude.degreesToRadians
@@ -107,6 +116,14 @@ func calculateBearing(sourceLatitude: Double, sourceLongitude: Double, targetLat
 }
 
 /// calculating the relative bearing
-func calculateRelativeBearing(myTrueHeading: Double, bearing: Double) -> Double {
+private func calculateRelativeBearing(myTrueHeading: Double, bearing: Double) -> Double {
     return (bearing - myTrueHeading + 360.0).truncatingRemainder(dividingBy: 360.0)
+}
+
+/// calculating the relative bearing from heading and locations, returns heading in degrees (0 == north)
+func calculateBearingToTarget(myTrueHeading: Double, myLatitude: Double, myLongitude: Double, targetLatitude: Double, targetLongitude: Double) -> Double {
+    let bearing = calculateBearing(sourceLatitude: myLatitude, sourceLongitude: myLongitude, targetLatitude: targetLatitude, targetLongitude: targetLongitude)
+    let relativeBearing = calculateRelativeBearing(myTrueHeading: myTrueHeading, bearing: bearing)
+    
+    return relativeBearing
 }

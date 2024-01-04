@@ -10,7 +10,7 @@ import SwiftUI
 struct RunListView: View {
     @AppStorage("runListSorting") private var runListSorting: RunListSorting = .distanceAscending
     
-    @State private var runMembers = [Member(id: UUID(), name: "Fritz", latitude: 48.13, longitude: 55.2), Member(id: UUID(), name: "Franz", latitude: 48.1, longitude: 55.2), Member(id: UUID(), name: "Florian", latitude: 48.1206, longitude: 55.2018)]
+    @State private var runMembers = [Member(id: UUID(), name: "Fritz", latitude: 48.13, longitude: 55.2, speed: 23.3), Member(id: UUID(), name: "Franz", latitude: 48.1, longitude: 55.2, speed: 0.05), Member(id: UUID(), name: "Florian", latitude: 48.1206, longitude: 55.2018, speed: 0.45), Member(id: UUID(), name: "Zuschauer", onlyWatching: true), Member(id: UUID(), name: "Max", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Moritz", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Michael", latitude: 48.1, longitude: 55.1, speed: nil)]
     
     private var myself = Member(id: UUID(), name: "Nils Mango", latitude: 48.1206, longitude: 55.202)
     
@@ -31,27 +31,37 @@ struct RunListView: View {
         VStack {
             List {
                 ForEach(sortedMembers()) { member in
-                    HStack {
-                        Text(member.name)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        if let distance = distances[member] {
-                            BearingArrowView(degrees: Double.random(in: 0...360))
-                                .frame(width: 25, height: 25)
-                                .padding(.trailing, 5)
-//                                .frame(maxWidth: .infinity, alignment: .center)
+                    if !(member.onlyWatching ?? false) {
+                        HStack {
+                            Text(member.name)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            Text(makePrettyDistance(meters: distance))
-                                .fontWeight(.bold)
-//                                    .frame(maxWidth: .infinity, alignment: .center)
-                            
-                            Text("\(Int.random(in: 0...30)) km/h")
-                                  .frame(maxWidth: .infinity, alignment: .trailing)
-                            
-                        } else {
-                            Text("No Data")
+                            if let distance = distances[member] {
+                                BearingArrowView(degrees: calculateBearingToTarget(myTrueHeading: myTrueHeading, myLatitude: myself.latitude!, myLongitude: myself.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!))
+    //                                .frame(width: 25, height: 25)
+                                    .padding(.trailing, 5)
+    //                                .frame(maxWidth: .infinity, alignment: .center)
+                                
+                                Text(makePrettyDistance(meters: distance))
+                                    .fontWeight(.bold)
+    //                                    .frame(maxWidth: .infinity, alignment: .center)
+                                Group {
+                                    if let speed = member.speed {
+                                        Text("\(makePrettySpeed(speed: speed)) km/h")
+                                    } else {
+                                        Text("- km/h")
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                
+                            } else {
+                                Text("No Data")
+                                Text("- km/h")
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                            }
                         }
                     }
+                    
                 }
                 .onMove(perform: { indices, newOffset in
                     // TODO: move this function into the model (doesn't really make a difference though)
@@ -88,13 +98,14 @@ struct RunListView: View {
         
     func sortedMembers() -> [Member] {
         let stupidlyHighNumber = 10000000000.9
+        let stupidlyLowNumber = -1.0
         switch runListSorting {
         case .name:
             return runMembers.sorted { $0.name < $1.name }
         case .distanceAscending:
             return runMembers.sorted { distances[$0] ?? stupidlyHighNumber < distances[$1] ?? stupidlyHighNumber}
         case .distanceDescending:
-            return runMembers.sorted { distances[$0] ?? stupidlyHighNumber > distances[$1] ?? stupidlyHighNumber}
+            return runMembers.sorted { distances[$0] ?? stupidlyLowNumber > distances[$1] ?? stupidlyLowNumber}
         case .custom:
             return runMembers
         }

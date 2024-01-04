@@ -14,6 +14,9 @@ struct Member: Identifiable, Codable, Hashable {
     var latitude: Double?
     var longitude: Double?
     
+    // speed in km/h
+    var speed: Double?
+    
     var onlyWatching: Bool?
     
     var createdOn: String?
