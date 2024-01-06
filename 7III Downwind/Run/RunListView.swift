@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct RunListView: View {
+    @ObservedObject var downwindManager: DownwindManager
+    
     @AppStorage("runListSorting") private var runListSorting: RunListSorting = .distanceAscending
     
     @State private var runMembers = [Member(id: UUID(), name: "Fritz", latitude: 48.13, longitude: 55.2, speed: 23.3), Member(id: UUID(), name: "Franz", latitude: 48.1, longitude: 55.2, speed: 0.05), Member(id: UUID(), name: "Florian", latitude: 48.1206, longitude: 55.2018, speed: 0.45), Member(id: UUID(), name: "Zuschauer", onlyWatching: true), Member(id: UUID(), name: "Max", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Moritz", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Michael", latitude: 48.1, longitude: 55.1, speed: nil)]
-    
-    private var myself = Member(id: UUID(), name: "Nils Mango", latitude: 48.1206, longitude: 55.202)
-    
-    private var myTrueHeading: Double = 89.3
+
     
     private var distances: [Member: Double] {
         var distances = [Member: Double]()
         for member in runMembers {
-            if let distance = calculateDirectDistance(from: myself, to: member) {
+            if let distance = calculateDirectDistance(from: downwindManager.user, to: member) {
                 distances[member] = distance
             }
         }
@@ -37,7 +36,7 @@ struct RunListView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if let distance = distances[member] {
-                                BearingArrowView(degrees: calculateBearingToTarget(myTrueHeading: myTrueHeading, myLatitude: myself.latitude!, myLongitude: myself.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!))
+                                BearingArrowView(degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude!, myLongitude: downwindManager.user.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!))
     //                                .frame(width: 25, height: 25)
                                     .padding(.trailing, 5)
     //                                .frame(maxWidth: .infinity, alignment: .center)
@@ -113,5 +112,5 @@ struct RunListView: View {
 }
 
 #Preview {
-    RunListView()
+    RunListView(downwindManager: DownwindManager())
 }

@@ -69,6 +69,7 @@
 		785C4AD72B45B04800EB07F8 /* RunListSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListSorting.swift; sourceTree = "<group>"; };
 		785C4AD92B45EAD000EB07F8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BearingArrowView.swift; sourceTree = "<group>"; };
+		785C4ADF2B49517700EB07F8 /* -III-Downwind-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "-III-Downwind-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +103,7 @@
 		785C4A972B358F7B00EB07F8 /* 7III Downwind */ = {
 			isa = PBXGroup;
 			children = (
+				785C4ADF2B49517700EB07F8 /* -III-Downwind-Info.plist */,
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
 				785C4AC42B40B8D100EB07F8 /* SplashView.swift */,
@@ -418,6 +420,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "-III-Downwind-Info.plist";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to work as intended (showing you how far everybody else is and showing your crew where you are).";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -456,6 +460,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "-III-Downwind-Info.plist";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to work as intended (showing you how far everybody else is and showing your crew where you are).";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
