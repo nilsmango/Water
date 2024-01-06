@@ -13,6 +13,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // RUN
     @Published var activeRun: Run = Run(name: "", members: [], active: false)
+    @Published var locationError: LocationError = .none
     
     func loadActiveRun() async throws {
 
@@ -37,13 +38,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             self.locationManager?.startUpdatingLocation()
                             self.locationManager?.startUpdatingHeading()
                         } else {
-                            // TODO: show message can't activate location services -> either your device is in Airplane mode or the device doesn’t have the required hardware
+                            // show message can't activate location services -> either your device is in Airplane mode or the device doesn’t have the required hardware
+                            self.locationError = .notPossible
                         }
                         
                         
                     } else {
-                        // TODO: show message an't activate location services -> you have to give this app permission for location updates to work as expected.
-                        
+                        // show location authorization request again
+                        self.locationManager?.requestWhenInUseAuthorization()
                     }
                 }
             }
@@ -52,6 +54,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // TODO: func quit active run - stop location and heading updating, change user location, speed to nil
     
+    func locationTesting() {
+        self.locationManager?.startUpdatingLocation()
+        self.locationManager?.startUpdatingHeading()
+    }
     
     func loadRunMembers() async throws {
         guard let runID = activeRun.id else {

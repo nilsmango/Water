@@ -30,12 +30,13 @@
 		785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACA2B41705C00EB07F8 /* RunView.swift */; };
 		785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACC2B41D28400EB07F8 /* DBRun.swift */; };
 		785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACE2B4308A800EB07F8 /* RunUITest.swift */; };
-		785C4AD12B4313EF00EB07F8 /* LocationHelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD02B4313EF00EB07F8 /* LocationHelperFunctions.swift */; };
+		785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD02B4313EF00EB07F8 /* LocationThings.swift */; };
 		785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD22B433D4000EB07F8 /* MemberRunData.swift */; };
 		785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD52B44096400EB07F8 /* RunListView.swift */; };
 		785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD72B45B04800EB07F8 /* RunListSorting.swift */; };
 		785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD92B45EAD000EB07F8 /* Extensions.swift */; };
 		785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */; };
+		785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,13 +64,14 @@
 		785C4ACA2B41705C00EB07F8 /* RunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunView.swift; sourceTree = "<group>"; };
 		785C4ACC2B41D28400EB07F8 /* DBRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBRun.swift; sourceTree = "<group>"; };
 		785C4ACE2B4308A800EB07F8 /* RunUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunUITest.swift; sourceTree = "<group>"; };
-		785C4AD02B4313EF00EB07F8 /* LocationHelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelperFunctions.swift; sourceTree = "<group>"; };
+		785C4AD02B4313EF00EB07F8 /* LocationThings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationThings.swift; sourceTree = "<group>"; };
 		785C4AD22B433D4000EB07F8 /* MemberRunData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberRunData.swift; sourceTree = "<group>"; };
 		785C4AD52B44096400EB07F8 /* RunListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListView.swift; sourceTree = "<group>"; };
 		785C4AD72B45B04800EB07F8 /* RunListSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListSorting.swift; sourceTree = "<group>"; };
 		785C4AD92B45EAD000EB07F8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BearingArrowView.swift; sourceTree = "<group>"; };
 		785C4ADF2B49517700EB07F8 /* -III-Downwind-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "-III-Downwind-Info.plist"; sourceTree = SOURCE_ROOT; };
+		785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayAlertView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				785C4AC42B40B8D100EB07F8 /* SplashView.swift */,
 				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
 				785C4AC62B40B9B000EB07F8 /* HomeView.swift */,
+				785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */,
 				785C4ADD2B45EBDC00EB07F8 /* Run */,
 				785C4AD42B44095300EB07F8 /* Experiments */,
 				785C4ADE2B45EC5300EB07F8 /* Song */,
@@ -149,7 +152,7 @@
 			children = (
 				785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */,
 				785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */,
-				785C4AD02B4313EF00EB07F8 /* LocationHelperFunctions.swift */,
+				785C4AD02B4313EF00EB07F8 /* LocationThings.swift */,
 				785C4AD92B45EAD000EB07F8 /* Extensions.swift */,
 				785C4AAF2B359F8E00EB07F8 /* Constants.swift */,
 				785C4AD72B45B04800EB07F8 /* RunListSorting.swift */,
@@ -269,12 +272,13 @@
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
+				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,
 				785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */,
 				785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */,
 				785C4A9B2B358F7B00EB07F8 /* SongList.swift in Sources */,
 				785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */,
 				785C4AAC2B35926600EB07F8 /* SongData.swift in Sources */,
-				785C4AD12B4313EF00EB07F8 /* LocationHelperFunctions.swift in Sources */,
+				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */,

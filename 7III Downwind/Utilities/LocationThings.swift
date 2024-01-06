@@ -1,5 +1,5 @@
 //
-//  LocationHelperFunctions.swift
+//  LocationThings.swift
 //  7III Downwind
 //
 //  Created by Simon Lang on 01.01.24.
@@ -126,4 +126,8 @@ func calculateBearingToTarget(myTrueHeading: Double, myLatitude: Double, myLongi
     let relativeBearing = calculateRelativeBearing(myTrueHeading: myTrueHeading, bearing: bearing)
     
     return relativeBearing
+}
+
+enum LocationError {
+    case none, noPermission, notPossible
 }

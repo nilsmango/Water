@@ -48,6 +48,10 @@ struct HomeView: View {
                     })
                 }
                 .buttonStyle(.bordered)
+                
+                .overlay {
+                    OverlayAlertView(locationError: $downwindManager.locationError)
+                }
             }
         }
     }
