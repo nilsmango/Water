@@ -16,23 +16,23 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var locationError: LocationError = .none
     
     func loadActiveRun() async throws {
-
+        
         if let userIDString = user.id?.uuidString {
             let url = try createDWURL(endpoint: Endpoints.members + "/" + userIDString + Endpoints.runs)
             
             let dbRunResponse: [DBRun] = try await HTTPClient.shared.fetch(url: url)
-                        
+            
             if !dbRunResponse.isEmpty {
                 // request for location authorization
                 locationManager?.requestWhenInUseAuthorization()
                 
                 DispatchQueue.main.async {
-                let firstDBRun = dbRunResponse.first!
-                self.activeRun.id = firstDBRun.id
-                self.activeRun.name = firstDBRun.name
-                self.activeRun.active = true
-                
-                // starting the location and heading updating
+                    let firstDBRun = dbRunResponse.first!
+                    self.activeRun.id = firstDBRun.id
+                    self.activeRun.name = firstDBRun.name
+                    self.activeRun.active = true
+                    
+                    // starting the location and heading updating
                     if self.locationAuthorization {
                         if CLLocationManager.locationServicesEnabled() {
                             self.locationManager?.startUpdatingLocation()
@@ -49,11 +49,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                 }
             }
-            }
         }
+    }
     
     // TODO: func quit active run - stop location and heading updating, change user location, speed to nil
     
+    // TODO: remove this when not needed any more
     func locationTesting() {
         self.locationManager?.startUpdatingLocation()
         self.locationManager?.startUpdatingHeading()
@@ -64,19 +65,19 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             print("Error: No active run ID!")
             return }
         
-            
+        
         let url = try createDWURL(endpoint: Endpoints.runs + "/" + runID.uuidString + Endpoints.members)
-            
-            let membersResponse: [Member] = try await HTTPClient.shared.fetch(url: url)
-            
-            DispatchQueue.main.async {
-                self.activeRun.members = membersResponse
-            }
+        
+        let membersResponse: [Member] = try await HTTPClient.shared.fetch(url: url)
+        
+        DispatchQueue.main.async {
+            self.activeRun.members = membersResponse.filter { $0.id != self.user.id }
         }
+    }
     
     
-
-    // Members
+    
+    // MEMBERS
     @Published var availableMembers = [Member]()
     
     func fetchMembers() async throws {
@@ -85,7 +86,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let membersResponse: [Member] = try await HTTPClient.shared.fetch(url: url)
         
         DispatchQueue.main.async {
-            self.availableMembers = membersResponse
+            // remove user
+            self.availableMembers = membersResponse.filter { $0.id != self.user.id }
         }
     }
     
@@ -120,28 +122,29 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // TODO: fetch members, check how I create my own username, and see if it is already on the db? check if a run with myself is running?
     
+    
     // LOCATION
     private var locationManager: CLLocationManager?
-
-    override init() {
-            super.init()
-            setupLocationManager()
-        }
-
-        private func setupLocationManager() {
-            locationManager = CLLocationManager()
-            locationManager?.delegate = self
-            
-        }
     
-    // TODO: if not authorized when in use do show a message when starting a run. activate a overlay via a status @published var in loadingRuns
+    override init() {
+        super.init()
+        setupLocationManager()
+    }
+    
+    private func setupLocationManager() {
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        
+    }
+    
+    // Location Authorization
     private var locationAuthorization = false
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
             // Permission granted, start location updates
             locationAuthorization = true
         } else if status == .notDetermined {
-                // Location access not determined, request permission
+            // Location access not determined, request permission
             locationManager?.requestWhenInUseAuthorization()
         } else {
             // Handle denied or restricted permission
@@ -149,20 +152,26 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    // Heading
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-            DispatchQueue.main.async {
-                self.trueHeading = Double(newHeading.trueHeading)
-            }
+        DispatchQueue.main.async {
+            self.trueHeading = Double(newHeading.trueHeading)
         }
-
-        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            guard let newLocation = locations.last else { return }
-
-            DispatchQueue.main.async {
-                self.user.latitude = newLocation.coordinate.latitude
-                self.user.longitude = newLocation.coordinate.longitude
-                self.user.speed = newLocation.speed * 60 * 60 / 1000
+    }
+    
+    // Location and Speed
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let newLocation = locations.last else { return }
+        
+        DispatchQueue.main.async {
+            self.user.latitude = newLocation.coordinate.latitude
+            self.user.longitude = newLocation.coordinate.longitude
+            var speed = newLocation.speed * 60 * 60 / 1000
+            if speed < 0.0 {
+                speed = 0.0
             }
+            self.user.speed = speed
         }
-
+    }
+    
 }

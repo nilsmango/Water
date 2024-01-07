@@ -14,7 +14,7 @@ struct RunListView: View {
     
     @AppStorage("runListSorting") private var runListSorting: RunListSorting = .distanceAscending
     
-    @State private var runMembers = [Member(id: UUID(), name: "Fritz", latitude: 48.13, longitude: 55.2, speed: 23.3), Member(id: UUID(), name: "Franz", latitude: 48.1, longitude: 55.2, speed: 0.05), Member(id: UUID(), name: "Florian", latitude: 48.1206, longitude: 55.2018, speed: 0.45), Member(id: UUID(), name: "Zuschauer", onlyWatching: true), Member(id: UUID(), name: "Max", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Moritz", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Michael", latitude: 37.33, longitude: -122.02, speed: nil)]
+    @State private var runMembers = [Member(id: UUID(), name: "Fritz", latitude: 47.13, longitude: 7.23, speed: 23.3), Member(id: UUID(), name: "Franz", latitude: 48.1, longitude: 55.2, speed: 0.05), Member(id: UUID(), name: "Florian", latitude: 48.1206, longitude: 55.2018, speed: 0.45), Member(id: UUID(), name: "Zuschauer", onlyWatching: true), Member(id: UUID(), name: "Max", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Moritz", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Michael", latitude: 37.33, longitude: -122.02, speed: nil)]
 
     
     private var distances: [Member: Double] {
@@ -95,6 +95,7 @@ struct RunListView: View {
             .padding()
             }
         }
+        // TODO: remove this when not needed any more
         .onAppear {
             downwindManager.locationTesting()
         }

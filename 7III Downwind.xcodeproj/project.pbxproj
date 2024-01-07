@@ -135,12 +135,12 @@
 		785C4AA72B35914100EB07F8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */,
 				785C4AA92B3591EA00EB07F8 /* Song.swift */,
 				785C4AB92B40AF7400EB07F8 /* Member.swift */,
 				785C4ABB2B40B04000EB07F8 /* Run.swift */,
 				785C4ACC2B41D28400EB07F8 /* DBRun.swift */,
 				785C4AD22B433D4000EB07F8 /* MemberRunData.swift */,
-				785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */,
 				785C4AAB2B35926600EB07F8 /* SongData.swift */,
 				785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */,
 			);
