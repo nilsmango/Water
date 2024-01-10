@@ -23,6 +23,8 @@ struct RunListView: View {
         return distances
     }
     
+    @State private var isShowingAlert = false
+
     
     var body: some View {
         VStack {
@@ -70,14 +72,8 @@ struct RunListView: View {
             
             HStack {
                 Button(action: {
-                    // TODO: show overlay asking: are you sure? there is no turning back. then exit run
-                    Task {
-                        do {
-                            try await downwindManager.quitActiveRun()
-                        } catch {
-                            print("Error: \(error)")
-                        }
-                    }
+                    isShowingAlert = true
+                    
                     
                 }, label: {
                     Label("Exit Run", systemImage: "door.left.hand.open")
@@ -99,11 +95,23 @@ struct RunListView: View {
             .padding()
             }
         }
-        // TODO: remove this when not needed any more
-//        .onAppear {
-//            downwindManager.locationTesting()
-//        }
-        
+        .alert(isPresented: $isShowingAlert) {
+            Alert(
+                title: Text("Are you sure?"),
+                message: Text("There is no turning back."),
+                primaryButton: .destructive(Text("Yes, I am done!")) {
+                    Task {
+                        do {
+                            try await downwindManager.quitActiveRun()
+                        } catch {
+                            print("Error: \(error)")
+                        }
+                    }
+                },
+                secondaryButton: .default(Text("Cancel"))
+            )
+
+        }
     }
         
         
