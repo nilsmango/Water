@@ -57,15 +57,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     
                     // check if we have authorization to see location
                     if self.locationAuthorization {
+                        // TODO: check if location is enabled?
                         // check if location is enabled
 //                        if CLLocationManager.locationServicesEnabled() {
                             // starting the location and heading updating + timer for upload and download
-                            print("Starting location")
+                            print("Starting location tracking")
                             self.locationManager?.startUpdatingLocation()
                             self.locationManager?.startUpdatingHeading()
 
                             // starting the upload/download timer
-//                            self.runTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.upDownloadManager), userInfo: nil, repeats: true)
+                            self.startUploadDownloadTimer()
+
                         // Ensure the timer is added to the current run loop
 //                            RunLoop.current.add(self.runTimer!, forMode: .default)
 //                        } else {
@@ -79,13 +81,23 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         self.locationManager?.requestWhenInUseAuthorization()
                     }
                 }
+                // downloading all the members uploading yourself
                 await upDownloadManager()
             }
         }
     }
     
+    /// starts our upload and download timer
+    private func startUploadDownloadTimer() {
+        self.runTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { _ in
+            Task {
+                await self.upDownloadManager()
+            }
+        }
+    }
+    
     /// uploads user location, and if the app is in foreground loads the run members after 20 seconds
-    @objc func upDownloadManager() async {
+        func upDownloadManager() async {
         print("UpDownload is running")
         // Upload user location
         do {
@@ -166,6 +178,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.activeRun = Run(name: "", members: [], active: false)
             
             // stop location and header updating
+            print("Stopping location tracking")
             self.locationManager?.stopUpdatingLocation()
             self.locationManager?.stopUpdatingHeading()
             

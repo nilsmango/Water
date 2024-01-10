@@ -9,7 +9,7 @@ import Foundation
 
 enum Constants {
     static let keychainKey = "DWUserData"
-    static let baseURL = "https://2086-194-191-224-88.ngrok-free.app"
+    static let baseURL = "https://1152-194-191-224-88.ngrok-free.app"
     
     /// height of the run map in meter
     static let heightOfMap = 300.0
