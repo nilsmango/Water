@@ -134,8 +134,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             return
         }
         
-        // check if run has only user in it at this point
-        if activeRun.members == [] {
+        // check if run has only one user in it
+        if activeRun.members.count <= 1 {
             // simply delete the run
             let url = try createDWURL(endpoint: Endpoints.runs + "/" + runID.uuidString)
             
@@ -149,7 +149,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
         } else {
             // remove user
-            
             guard let userID = user.id else {
                 print("Error: No user ID!")
                 return
