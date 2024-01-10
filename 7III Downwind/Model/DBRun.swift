@@ -12,6 +12,4 @@ struct DBRun: Identifiable, Codable {
     
     var name: String
     
-    var startedOn: String
-    
 }

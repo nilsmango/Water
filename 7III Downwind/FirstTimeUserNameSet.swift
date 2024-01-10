@@ -13,28 +13,43 @@ struct FirstTimeUserNameSet: View {
     @State private var userName = ""
     
     var body: some View {
+
         List {
-            Section("Set a name so your friends to see") {
-            TextField("Kai Lenny Junior", text: $userName)
-        
-            Button(action: {
-                downwindManager.user = Member(id: UUID(), name: userName)
-                downwindManager.saveUser()
-                Task {
-                    do {
-                        try await downwindManager.addUserToDB()
-                        
-                    } catch {
-                        print("Error: \(error)")
-                    }
-                }
+            Section {
                 
-            }, label: {
-                Text("Save")
-            })
-            .disabled(userName == "")
+                TextField("Kai Lenny Junior", text: $userName)
+
+            } header: {
+                Text("Set a name so your friends to see")
+            } footer: {
+                HStack {
+                    Spacer()
+                    
+                    Button(action: {
+                        downwindManager.user = Member(id: UUID(), name: userName)
+                        downwindManager.saveUser()
+                        Task {
+                            do {
+                                try await downwindManager.addUserToDB()
+                                
+                            } catch {
+                                print("Error: \(error)")
+                            }
+                        }
+                        
+                    }, label: {
+                        Label("Save", systemImage: "checkmark.circle")
+                    })
+                    .buttonStyle(.bordered)
+                    .disabled(userName == "")
+                    
+                    Spacer()
+                }
+                .padding()
             }
+            
         }
+        
     }
 }
 

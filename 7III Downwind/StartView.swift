@@ -16,16 +16,16 @@ struct StartView: View {
         if showSplash {
             SplashView()
                 .onAppear {
+                    downwindManager.loadUser()
                         Task {
                             do {
+                                try await downwindManager.checkAndUpdateUserInDB()
                                 try await downwindManager.loadActiveRun()
-                                
                             } catch {
                                 print("Error: \(error)")
                             }
                         }
-                    
-                    downwindManager.loadUser()
+
                     showSplash = false
                 }
         } else {

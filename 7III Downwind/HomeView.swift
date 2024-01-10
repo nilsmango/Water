@@ -10,12 +10,14 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var downwindManager: DownwindManager
     
+    @State private var showStartRunSheet = false
+    
     var body: some View {
         if downwindManager.user.id == nil {
             FirstTimeUserNameSet(downwindManager: downwindManager)
         } else {
             if downwindManager.activeRun.active {
-                RunView(downwindManager: downwindManager)
+                RunListView(downwindManager: downwindManager)
             } else {
                 VStack {
                     Text("Aloha \(downwindManager.user.name)!")
@@ -36,15 +38,26 @@ struct HomeView: View {
                         }
                         
                     }, label: {
-                        Text("Recheck")
+                        Label("Check Again", systemImage: "arrow.clockwise.circle")
                     })
                     
                     Text("or")
                     
                     Button(action: {
-                        // New Run - get members with fetchMembers()
+                        // get all members
+                        Task {
+                            do {
+                                try await downwindManager.fetchAllMembers()
+                                
+                            } catch {
+                                print("Error: \(error)")
+                            }
+                        }
+                        
+                        showStartRunSheet = true
+                        
                     }, label: {
-                        Text("Start New Run")
+                        Label("Start New Run", systemImage: "wind.snow")
                     })
                 }
                 .buttonStyle(.bordered)
@@ -52,6 +65,9 @@ struct HomeView: View {
                 .overlay {
                     OverlayAlertView(locationError: $downwindManager.locationError)
                 }
+                .sheet(isPresented: $showStartRunSheet, content: {
+                    NewRunView(downwindManager: downwindManager, showSheet: $showStartRunSheet)
+                })
             }
         }
     }

@@ -8,18 +8,14 @@
 import SwiftUI
 
 struct RunListView: View {
-    // TODO: change this back
-    @StateObject private var downwindManager = DownwindManager()
-//    @ObservedObject var downwindManager: DownwindManager
+
+    @ObservedObject var downwindManager: DownwindManager
     
     @AppStorage("runListSorting") private var runListSorting: RunListSorting = .distanceAscending
     
-    @State private var runMembers = [Member(id: UUID(), name: "Fritz", latitude: 47.13, longitude: 7.23, speed: 23.3), Member(id: UUID(), name: "Franz", latitude: 48.1, longitude: 55.2, speed: 0.05), Member(id: UUID(), name: "Florian", latitude: 48.1206, longitude: 55.2018, speed: 0.45), Member(id: UUID(), name: "Zuschauer", onlyWatching: true), Member(id: UUID(), name: "Max", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Moritz", latitude: nil, longitude: nil, speed: nil), Member(id: UUID(), name: "Michael", latitude: 37.33, longitude: -122.02, speed: nil)]
-
-    
     private var distances: [Member: Double] {
         var distances = [Member: Double]()
-        for member in runMembers {
+        for member in downwindManager.activeRun.members {
             if let distance = calculateDirectDistance(from: downwindManager.user, to: member) {
                 distances[member] = distance
             }
@@ -66,15 +62,23 @@ struct RunListView: View {
                     
                 }
                 .onMove(perform: { indices, newOffset in
-                    // TODO: move this function into the model (doesn't really make a difference though)
-                    runMembers.move(fromOffsets: indices, toOffset: newOffset)
+                    // TODO: move this function into the model (doesn't really make a difference though) and make it work
+                    downwindManager.activeRun.members.move(fromOffsets: indices, toOffset: newOffset)
                     runListSorting = .custom
                 })
             }
             
             HStack {
                 Button(action: {
-                    // show overlay asking: are you sure? there is no turning back. then exit run
+                    // TODO: show overlay asking: are you sure? there is no turning back. then exit run
+                    Task {
+                        do {
+                            try await downwindManager.quitActiveRun()
+                        } catch {
+                            print("Error: \(error)")
+                        }
+                    }
+                    
                 }, label: {
                     Label("Exit Run", systemImage: "door.left.hand.open")
                 })
@@ -96,9 +100,9 @@ struct RunListView: View {
             }
         }
         // TODO: remove this when not needed any more
-        .onAppear {
-            downwindManager.locationTesting()
-        }
+//        .onAppear {
+//            downwindManager.locationTesting()
+//        }
         
     }
         
@@ -108,17 +112,17 @@ struct RunListView: View {
         let stupidlyLowNumber = -1.0
         switch runListSorting {
         case .name:
-            return runMembers.sorted { $0.name < $1.name }
+            return downwindManager.activeRun.members.sorted { $0.name < $1.name }
         case .distanceAscending:
-            return runMembers.sorted { distances[$0] ?? stupidlyHighNumber < distances[$1] ?? stupidlyHighNumber}
+            return downwindManager.activeRun.members.sorted { distances[$0] ?? stupidlyHighNumber < distances[$1] ?? stupidlyHighNumber}
         case .distanceDescending:
-            return runMembers.sorted { distances[$0] ?? stupidlyLowNumber > distances[$1] ?? stupidlyLowNumber}
+            return downwindManager.activeRun.members.sorted { distances[$0] ?? stupidlyLowNumber > distances[$1] ?? stupidlyLowNumber}
         case .custom:
-            return runMembers
+            return downwindManager.activeRun.members
         }
     }
 }
 
 #Preview {
-    RunListView()
+    RunListView(downwindManager: DownwindManager())
 }

@@ -37,6 +37,7 @@
 		785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD92B45EAD000EB07F8 /* Extensions.swift */; };
 		785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */; };
 		785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */; };
+		787A7EE82B4B03C20083ECEF /* NewRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* NewRunView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BearingArrowView.swift; sourceTree = "<group>"; };
 		785C4ADF2B49517700EB07F8 /* -III-Downwind-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "-III-Downwind-Info.plist"; sourceTree = SOURCE_ROOT; };
 		785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayAlertView.swift; sourceTree = "<group>"; };
+		787A7EE72B4B03C20083ECEF /* NewRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRunView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				785C4AC42B40B8D100EB07F8 /* SplashView.swift */,
 				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
 				785C4AC62B40B9B000EB07F8 /* HomeView.swift */,
+				787A7EE72B4B03C20083ECEF /* NewRunView.swift */,
 				785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */,
 				785C4ADD2B45EBDC00EB07F8 /* Run */,
 				785C4AD42B44095300EB07F8 /* Experiments */,
@@ -163,6 +166,7 @@
 		785C4AD42B44095300EB07F8 /* Experiments */ = {
 			isa = PBXGroup;
 			children = (
+				785C4ACA2B41705C00EB07F8 /* RunView.swift */,
 				785C4ACE2B4308A800EB07F8 /* RunUITest.swift */,
 			);
 			path = Experiments;
@@ -171,7 +175,6 @@
 		785C4ADD2B45EBDC00EB07F8 /* Run */ = {
 			isa = PBXGroup;
 			children = (
-				785C4ACA2B41705C00EB07F8 /* RunView.swift */,
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
 			);
@@ -281,6 +284,7 @@
 				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
+				787A7EE82B4B03C20083ECEF /* NewRunView.swift in Sources */,
 				785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
@@ -422,6 +426,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				DEVELOPMENT_TEAM = XDR8Y54N77;
 				ENABLE_HARDENED_RUNTIME = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
@@ -462,6 +467,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				DEVELOPMENT_TEAM = XDR8Y54N77;
 				ENABLE_HARDENED_RUNTIME = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";

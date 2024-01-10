@@ -32,7 +32,7 @@ class SongData: ObservableObject {
             
             Task {
                 do {
-                    try await HTTPClient.shared.delete(at: songID, url: url)
+                    try await HTTPClient.shared.delete(url: url)
                 } catch {
                     print("Error \(error)")
                 }
