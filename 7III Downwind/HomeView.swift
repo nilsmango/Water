@@ -12,6 +12,8 @@ struct HomeView: View {
     
     @State private var showStartRunSheet = false
     
+    @State private var lastCheckDate = Date.now
+    
     var body: some View {
         if downwindManager.user.id == nil {
             FirstTimeUserNameSet(downwindManager: downwindManager)
@@ -25,18 +27,25 @@ struct HomeView: View {
                         .padding(.bottom, 60)
                     
                     Text("You have not been added to an active run yet.")
+                    
+                    Text("Last check: \(Text(lastCheckDate, style: .timer))")
+                        .monospacedDigit()
                         .padding(.bottom, 30)
+                        .onAppear {
+                            lastCheckDate = Date.now
+                        }
+
                     
                     Button(action: {
                         Task {
                             do {
                                 try await downwindManager.loadActiveRun()
-                                
                             } catch {
-                                print("Error: \(error)")
+                                print("Error loading active run: \(error)")
                             }
                         }
-                        
+                        lastCheckDate = Date.now
+
                     }, label: {
                         Label("Check Again", systemImage: "arrow.clockwise.circle")
                     })
@@ -50,7 +59,7 @@ struct HomeView: View {
                                 try await downwindManager.fetchAllMembers()
                                 
                             } catch {
-                                print("Error: \(error)")
+                                print("Error fetching all members: \(error)")
                             }
                         }
                         

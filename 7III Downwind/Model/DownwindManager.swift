@@ -89,15 +89,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// starts our upload and download timer
     private func startUploadDownloadTimer() {
-        self.runTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { _ in
+        self.runTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
             Task {
                 await self.upDownloadManager()
             }
         }
     }
     
-    /// uploads user location, and if the app is in foreground loads the run members after 20 seconds
-        func upDownloadManager() async {
+    /// uploads user location, and downloads the other members
+    func upDownloadManager() async {
         print("UpDownload is running")
         // Upload user location
         do {
@@ -106,15 +106,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             print("Error uploading user location: \(error)")
         }
         
-        // After uploading, wait for 20 seconds and then load run members
+        // After uploading, load run members
         do {
-//            try await Task.sleep(nanoseconds: 20_000_000_000)
             try await loadRunMembers()
         } catch {
             print("Error loading run members: \(error)")
         }
-        
-        
     }
     
     /// updates the user in db
@@ -245,7 +242,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     // MARK: User
-    // TODO: check how I create my own username, and see if it is already on the db? check if a run with myself is running?
 
     @Published var user: Member = Member(id: nil, name: "Your Name")
     @Published var trueHeading: Double = 0.0
@@ -300,6 +296,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // Location Authorization
     private var locationAuthorization = false
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
             // Permission granted, start location updates

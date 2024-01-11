@@ -20,9 +20,13 @@ struct StartView: View {
                         Task {
                             do {
                                 try await downwindManager.checkAndUpdateUserInDB()
+                            } catch {
+                                print("Error checking and updating user in db: \(error)")
+                            }
+                            do {
                                 try await downwindManager.loadActiveRun()
                             } catch {
-                                print("Error: \(error)")
+                                print("Error loading active run: \(error)")
                             }
                         }
 

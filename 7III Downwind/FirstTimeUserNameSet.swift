@@ -12,12 +12,24 @@ struct FirstTimeUserNameSet: View {
     
     @State private var userName = ""
     
+    @FocusState private var editorIsFocused: FocusField?
+    
+    enum FocusField: Hashable {
+        case field
+      }
+    
     var body: some View {
 
         List {
             Section {
                 
                 TextField("Kai Lenny Junior", text: $userName)
+                    .focused($editorIsFocused, equals: .field)
+                    .onAppear() {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {  // making the text field focussed when it appears
+                            editorIsFocused = .field
+                        }
+                    }
 
             } header: {
                 Text("Set a name so your friends to see")
@@ -31,9 +43,13 @@ struct FirstTimeUserNameSet: View {
                         Task {
                             do {
                                 try await downwindManager.addUserToDB()
-                                
                             } catch {
-                                print("Error: \(error)")
+                                print("Error adding user to db: \(error)")
+                            }
+                            do {
+                                try await downwindManager.loadActiveRun()
+                            } catch {
+                                print("Error loading active run: \(error)")
                             }
                         }
                         
