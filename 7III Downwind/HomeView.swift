@@ -12,6 +12,8 @@ struct HomeView: View {
     
     @State private var showStartRunSheet = false
     
+    @State private var showOptionsSheet = false
+    
     @State private var lastCheckDate = Date.now
     
     var body: some View {
@@ -22,6 +24,21 @@ struct HomeView: View {
                 RunListView(downwindManager: downwindManager)
             } else {
                 VStack {
+                    HStack {
+                        Spacer()
+                        
+                        Button(action: {
+                            showOptionsSheet = true
+                        }, label: {
+                            Label("Options", systemImage: "ellipsis.circle")
+                                .labelStyle(.iconOnly)
+                                .font(.title3)
+                        })
+                        .padding()
+                    }
+                    
+                    Spacer()
+                    
                     Text("Aloha \(downwindManager.user.name)!")
                         .font(.largeTitle)
                         .padding(.bottom, 60)
@@ -34,48 +51,71 @@ struct HomeView: View {
                         .onAppear {
                             lastCheckDate = Date.now
                         }
-
                     
-                    Button(action: {
-                        Task {
-                            do {
-                                try await downwindManager.loadActiveRun()
-                            } catch {
-                                print("Error loading active run: \(error)")
+                    Group {
+                        Button(action: {
+                            Task {
+                                do {
+                                    try await downwindManager.loadActiveRun()
+                                } catch {
+                                    print("Error loading active run: \(error)")
+                                }
                             }
-                        }
-                        lastCheckDate = Date.now
+                            lastCheckDate = Date.now
 
-                    }, label: {
-                        Label("Check Again", systemImage: "arrow.clockwise.circle")
-                    })
-                    
-                    Text("or")
-                    
-                    Button(action: {
-                        // get all members
-                        Task {
-                            do {
-                                try await downwindManager.fetchAllMembers()
-                                
-                            } catch {
-                                print("Error fetching all members: \(error)")
+                        }, label: {
+                            Label("Check Again", systemImage: "arrow.clockwise.circle")
+                        })
+                        
+                        Text("or")
+                        
+                        Button(action: {
+                            // get all members
+                            Task {
+                                do {
+                                    try await downwindManager.fetchAllMembers()
+                                    
+                                } catch {
+                                    print("Error fetching all members: \(error)")
+                                }
                             }
-                        }
-                        
-                        showStartRunSheet = true
-                        
-                    }, label: {
-                        Label("Start New Run", systemImage: "wind.snow")
-                    })
+                            
+                            showStartRunSheet = true
+                            
+                        }, label: {
+                            Label("Start New Run", systemImage: "wind.snow")
+                        })
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    
+                    
+                    Spacer()
                 }
-                .buttonStyle(.bordered)
+                
+                
+                
                 
                 .overlay {
                     OverlayAlertView(locationError: $downwindManager.locationError)
                 }
                 .sheet(isPresented: $showStartRunSheet, content: {
                     NewRunView(downwindManager: downwindManager, showSheet: $showStartRunSheet)
+                })
+                
+                .sheet(isPresented: $showOptionsSheet, content: {
+                    NavigationStack {
+                        OptionsView(downwindManager: downwindManager)
+                            .navigationTitle("Options")
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button("Done") {
+                                        showOptionsSheet = false
+                                    }
+                                }
+                            }
+                    }
+                    
                 })
             }
         }

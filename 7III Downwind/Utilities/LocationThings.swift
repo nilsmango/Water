@@ -37,28 +37,63 @@ func calculateDirectDistance(from myself: Member, to member: Member) -> CLLocati
     return directDistance
 }
 
-/// Takes a distance in m and gives us back a string of the distance that looks great with km or m.
-func makePrettyDistance(meters: Double) -> String {
-    if meters >= 1000.0 {
-        let km = meters / 1000
-        let rounded = Int(km.rounded())
-        let string = "\(rounded) km"
-        return string
+private let metersPerYard = 0.9144
+private let yardsPerMile = 1760.0
+private let metersPerMile = 1609.344
+
+/// Takes a distance in m and gives us back a string of the distance that looks great with km or m or mi or yd.
+func makePrettyDistance(meters: Double, system: MeasurementSystem) -> String {
+    switch system {
+    case .metric:
+        if meters >= 1000.0 {
+            let km = meters / 1000
+            let rounded = Int(km.rounded())
+            let string = "\(rounded) km"
+            return string
+            
+        } else {
+            let rounded = Int(meters.rounded())
+            let string = "\(rounded) m"
+            return string
+        }
+    case .imperial:
+        // get yards
+        let yards = meters / metersPerYard
         
-    } else {
-        let rounded = Int(meters.rounded())
-        let string = "\(rounded) m"
-        return string
+        if yards >= yardsPerMile {
+            let miles = yards / yardsPerMile
+            let roundedMiles = Int(miles.rounded())
+            let string = "\(roundedMiles) mi"
+            return string
+            
+        } else {
+            let roundedYards = Int(yards.rounded())
+            let string = "\(roundedYards) yd"
+            return string
+        }
     }
+    
 }
 
-// Takes a speed in km/h, returns a pretty speed
-func makePrettySpeed(speed: Double) -> String {
-    if speed >= 10.0 {
-        return String(Int(speed.rounded()))
-    } else {
-        return String(format: "%.1f", speed)
+/// Takes a speed in km/h, returns a pretty speed in km/h or mph
+func makePrettySpeed(speed: Double, system: MeasurementSystem) -> String {
+    switch system {
+    case .metric:
+        if speed >= 10.0 {
+            return String(Int(speed.rounded())) + " km/h"
+        } else {
+            return String(format: "%.1f", speed) + " km/h"
+        }
+    case .imperial:
+        let mph = speed * 1000 / metersPerMile
+        
+        if mph >= 10.0 {
+            return String(Int(mph.rounded())) + " mph"
+        } else {
+            return String(format: "%.1f", mph) + " mph"
+        }
     }
+    
 }
 
 

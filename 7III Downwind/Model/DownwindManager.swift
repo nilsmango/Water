@@ -10,6 +10,10 @@ import KeychainSwift
 import CoreLocation
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    // MARK: App Storage
+    @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
+    
+    @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
     
     // MARK: Run
     @Published var activeRun: Run = Run(name: "", members: [], active: false)

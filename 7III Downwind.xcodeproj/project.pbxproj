@@ -37,6 +37,9 @@
 		785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD92B45EAD000EB07F8 /* Extensions.swift */; };
 		785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */; };
 		785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */; };
+		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
+		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
+		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
 		787A7EE82B4B03C20083ECEF /* NewRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* NewRunView.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +76,9 @@
 		785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BearingArrowView.swift; sourceTree = "<group>"; };
 		785C4ADF2B49517700EB07F8 /* -III-Downwind-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "-III-Downwind-Info.plist"; sourceTree = SOURCE_ROOT; };
 		785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayAlertView.swift; sourceTree = "<group>"; };
+		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
+		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
+		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* NewRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRunView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,8 +117,8 @@
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
 				785C4AC42B40B8D100EB07F8 /* SplashView.swift */,
-				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
 				785C4AC62B40B9B000EB07F8 /* HomeView.swift */,
+				785CF9562B4FE85100528B6D /* Options */,
 				787A7EE72B4B03C20083ECEF /* NewRunView.swift */,
 				785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */,
 				785C4ADD2B45EBDC00EB07F8 /* Run */,
@@ -159,6 +165,7 @@
 				785C4AD92B45EAD000EB07F8 /* Extensions.swift */,
 				785C4AAF2B359F8E00EB07F8 /* Constants.swift */,
 				785C4AD72B45B04800EB07F8 /* RunListSorting.swift */,
+				785CF9572B4FED3100528B6D /* MeasurementSystem.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -176,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
+				785CF9592B4FF2E300528B6D /* OptionsMenu.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
 			);
 			path = Run;
@@ -189,6 +197,15 @@
 				785C4AB32B35CAC200EB07F8 /* ModalType.swift */,
 			);
 			path = Song;
+			sourceTree = "<group>";
+		};
+		785CF9562B4FE85100528B6D /* Options */ = {
+			isa = PBXGroup;
+			children = (
+				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
+				785CF9542B4FE74E00528B6D /* OptionsView.swift */,
+			);
+			path = Options;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -272,9 +289,11 @@
 				785C4AC52B40B8D100EB07F8 /* SplashView.swift in Sources */,
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
+				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
+				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
 				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,
 				785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */,
 				785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */,
@@ -291,6 +310,7 @@
 				785C4AB22B35CA6200EB07F8 /* AddUpdateSongView.swift in Sources */,
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
 				785C4AC72B40B9B000EB07F8 /* HomeView.swift in Sources */,
+				785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,

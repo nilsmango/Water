@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct RunListView: View {
-
     @ObservedObject var downwindManager: DownwindManager
-    
-    @AppStorage("runListSorting") private var runListSorting: RunListSorting = .distanceAscending
     
     private var distances: [Member: Double] {
         var distances = [Member: Double]()
@@ -42,12 +39,12 @@ struct RunListView: View {
                                     .padding(.trailing, 5)
     //                                .frame(maxWidth: .infinity, alignment: .center)
                                 
-                                Text(makePrettyDistance(meters: distance))
+                                Text(makePrettyDistance(meters: distance, system: downwindManager.measurementSystem))
                                     .fontWeight(.bold)
     //                                    .frame(maxWidth: .infinity, alignment: .center)
                                 Group {
                                     if let speed = member.speed {
-                                        Text("\(makePrettySpeed(speed: speed)) km/h")
+                                        Text(makePrettySpeed(speed: speed, system: downwindManager.measurementSystem))
                                     } else {
                                         Text("- km/h")
                                     }
@@ -66,14 +63,13 @@ struct RunListView: View {
                 .onMove(perform: { indices, newOffset in
                     // TODO: move this function into the model (doesn't really make a difference though) and make it work
                     downwindManager.activeRun.members.move(fromOffsets: indices, toOffset: newOffset)
-                    runListSorting = .custom
+                    downwindManager.runListSorting = .custom
                 })
             }
             
             HStack {
-                Button(action: {
+                Button(role: .destructive, action: {
                     isShowingAlert = true
-                    
                     
                 }, label: {
                     Label("Exit Run", systemImage: "door.left.hand.open")
@@ -81,18 +77,10 @@ struct RunListView: View {
                 .buttonStyle(.bordered)
                 .padding()
                 
-                Menu {
-                    Picker("Sorting", selection: $runListSorting) {
-                        ForEach(RunListSorting.allCases) { sortCase in
-                            Text(sortCase.rawValue)
-                        }
-                    }
-                }
-            label: {
-                Label("Sort by", systemImage: "arrow.up.arrow.down")
-            }
-            .buttonStyle(.bordered)
-            .padding()
+                OptionsMenu(sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem)
+                    .buttonStyle(.bordered)
+                    .padding()
+                
             }
         }
         .alert(isPresented: $isShowingAlert) {
@@ -118,7 +106,7 @@ struct RunListView: View {
     func sortedMembers() -> [Member] {
         let stupidlyHighNumber = 10000000000.9
         let stupidlyLowNumber = -1.0
-        switch runListSorting {
+        switch downwindManager.runListSorting {
         case .name:
             return downwindManager.activeRun.members.sorted { $0.name < $1.name }
         case .distanceAscending:
