@@ -54,9 +54,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 locationManager?.requestWhenInUseAuthorization()
                 
                 DispatchQueue.main.async {
+                    // TODO make this the newest DBRun - date format: "2024-01-10T13:36:12Z"
                     let firstDBRun = dbRunResponse.first!
                     self.activeRun.id = firstDBRun.id
                     self.activeRun.name = firstDBRun.name
+                    self.activeRun.startedOn = firstDBRun.startedOn
                     self.activeRun.active = true
                     
                     // check if we have authorization to see location

@@ -15,4 +15,6 @@ struct Run: Identifiable, Codable {
     var members: [Member]
     
     var active: Bool
+    
+    var startedOn: String?
 }
