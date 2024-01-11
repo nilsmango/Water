@@ -14,6 +14,16 @@ struct OptionsMenu: View {
     var body: some View {
         Menu {
             Menu {
+                Picker("Measurement System", selection: $measurement) {
+                    ForEach(MeasurementSystem.allCases) { system in
+                        Text(system.rawValue)
+                    }
+                }
+            } label: {
+                Label("Measurement System", systemImage: "ruler")
+            }
+            
+            Menu {
                 Picker("Sorting", selection: $sorting) {
                     ForEach(RunListSorting.allCases) { sortCase in
                         Text(sortCase.rawValue)
@@ -24,15 +34,7 @@ struct OptionsMenu: View {
         label: {
             Label("List Sorting", systemImage: "arrow.up.arrow.down")
         }
-            Menu {
-                Picker("Measurement System", selection: $measurement) {
-                    ForEach(MeasurementSystem.allCases) { system in
-                        Text(system.rawValue)
-                    }
-                }
-            } label: {
-                Label("Measurement System", systemImage: "ruler")
-            }
+            
             
         } label: {
             Label("Options", systemImage: "ellipsis.circle")

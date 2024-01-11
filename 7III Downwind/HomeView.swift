@@ -100,7 +100,17 @@ struct HomeView: View {
                     OverlayAlertView(locationError: $downwindManager.locationError)
                 }
                 .sheet(isPresented: $showStartRunSheet, content: {
-                    NewRunView(downwindManager: downwindManager, showSheet: $showStartRunSheet)
+                    NavigationStack {
+                        NewRunView(downwindManager: downwindManager, showSheet: $showStartRunSheet)
+                            .navigationTitle("New Run")
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button("Cancel") {
+                                        showStartRunSheet = false
+                                    }
+                                }
+                            }
+                    }
                 })
                 
                 .sheet(isPresented: $showOptionsSheet, content: {
