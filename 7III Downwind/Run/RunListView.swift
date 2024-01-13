@@ -24,83 +24,91 @@ struct RunListView: View {
 
     
     var body: some View {
-        VStack {
-            List {
-                Text("Your data: \(String(downwindManager.user.latitude ?? 0.0)), \(downwindManager.user.longitude ?? 0.0). Speed: \(downwindManager.user.speed ?? 0.0) km/h")
-                Text("Time elapsed: \(Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer))")
-                ForEach(sortedMembers()) { member in
-                    if !(member.onlyWatching ?? false) {
-                        HStack {
-                            Text(member.name)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            if let distance = distances[member] {
-                                BearingArrowView(degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude!, myLongitude: downwindManager.user.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!))
-    //                                .frame(width: 25, height: 25)
-                                    .padding(.trailing, 5)
-    //                                .frame(maxWidth: .infinity, alignment: .center)
+        NavigationStack {
+            VStack {
+                List {
+                    Section {
+                        Text("Your data: \(String(downwindManager.user.latitude ?? 0.0)), \(downwindManager.user.longitude ?? 0.0). Speed: \(downwindManager.user.speed ?? 0.0) km/h")
+                        Text("Time elapsed: \(Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer))")
+                    }
+                    
+                    ForEach(sortedMembers()) { member in
+                        if !(member.onlyWatching ?? false) {
+                            HStack {
+                                Text(member.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                 
-                                Text(makePrettyDistance(meters: distance, system: downwindManager.measurementSystem))
-                                    .fontWeight(.bold)
-    //                                    .frame(maxWidth: .infinity, alignment: .center)
-                                Group {
-                                    if let speed = member.speed {
-                                        Text(makePrettySpeed(speed: speed, system: downwindManager.measurementSystem))
-                                    } else {
-                                        Text("- km/h")
+                                if let distance = distances[member] {
+                                    BearingArrowView(degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude!, myLongitude: downwindManager.user.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!))
+        //                                .frame(width: 25, height: 25)
+                                        .padding(.trailing, 5)
+        //                                .frame(maxWidth: .infinity, alignment: .center)
+                                    
+                                    Text(makePrettyDistance(meters: distance, system: downwindManager.measurementSystem))
+                                        .fontWeight(.bold)
+        //                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    Group {
+                                        if let speed = member.speed {
+                                            Text(makePrettySpeed(speed: speed, system: downwindManager.measurementSystem))
+                                        } else {
+                                            Text("- km/h")
+                                        }
                                     }
-                                }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                
-                            } else {
-                                Text("No Data")
-                                Text("- km/h")
                                     .frame(maxWidth: .infinity, alignment: .trailing)
+                                    
+                                } else {
+                                    Text("No Data")
+                                    Text("- km/h")
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                }
                             }
                         }
+                        
                     }
-                    
+                    .onMove(perform: { indices, newOffset in
+                        // TODO: move this function into the model (doesn't really make a difference though) and make it work
+                        downwindManager.activeRun.members.move(fromOffsets: indices, toOffset: newOffset)
+                        downwindManager.runListSorting = .custom
+                    })
                 }
-                .onMove(perform: { indices, newOffset in
-                    // TODO: move this function into the model (doesn't really make a difference though) and make it work
-                    downwindManager.activeRun.members.move(fromOffsets: indices, toOffset: newOffset)
-                    downwindManager.runListSorting = .custom
-                })
-            }
-            
-            HStack {
-                Button(role: .destructive, action: {
-                    isShowingAlert = true
-                    
-                }, label: {
-                    Label("Exit Run", systemImage: "door.left.hand.open")
-                })
-                .buttonStyle(.bordered)
-                .padding()
                 
-                OptionsMenu(sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem)
+                HStack {
+                    Button(role: .destructive, action: {
+                        isShowingAlert = true
+                        
+                    }, label: {
+                        Label("Exit Run", systemImage: "door.left.hand.open")
+                    })
                     .buttonStyle(.bordered)
                     .padding()
-                
+                    
+                    OptionsMenu(sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem)
+                        .buttonStyle(.bordered)
+                        .padding()
+                    
+                }
             }
-        }
-        .alert(isPresented: $isShowingAlert) {
-            Alert(
-                title: Text("Are you sure?"),
-                message: Text("There is no turning back."),
-                primaryButton: .destructive(Text("Yes, I am done!")) {
-                    Task {
-                        do {
-                            try await downwindManager.quitActiveRun()
-                        } catch {
-                            print("Error: \(error)")
+            .alert(isPresented: $isShowingAlert) {
+                Alert(
+                    title: Text("Are you sure?"),
+                    message: Text("There is no turning back."),
+                    primaryButton: .destructive(Text("Yes, I am done!")) {
+                        Task {
+                            do {
+                                try await downwindManager.quitActiveRun()
+                            } catch {
+                                print("Error: \(error)")
+                            }
                         }
-                    }
-                },
-                secondaryButton: .default(Text("Cancel"))
-            )
+                    },
+                    secondaryButton: .default(Text("Cancel"))
+                )
 
+            }
+            .navigationTitle(downwindManager.activeRun.name)
+            .navigationBarTitleDisplayMode(.inline)
         }
+        
     }
         
         

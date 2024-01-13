@@ -33,20 +33,32 @@ struct RunOverView: View {
             
         }
         .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 15.0)
-                .foregroundStyle(Color("ListForeground"))
-        }
+//        .background {
+//            RoundedRectangle(cornerRadius: 15.0)
+//                .foregroundStyle(Color("ListForeground"))
+//        }
     }
 }
 
 #Preview {
-    ZStack {
-        Rectangle()
-            .foregroundStyle(Color("ListBackground"))
-            .ignoresSafeArea()
-        RunOverView(downwindManager: DownwindManager(), run: Run(name: "Test Run 01", members: [Member(id: UUID(), name: "Kay Lenny"), Member(id: UUID(), name: "James Casey"), Member(id: UUID(), name: "Nils Mango"), Member(id: UUID(), name: "Mark Zuckerberg")], active: true, startedOn: Date.now - 23))
+    // a preview of all runs view
+    NavigationStack {
+        VStack {
+            List {
+                
+                RunOverView(downwindManager: DownwindManager(), run: Run(name: "Test Run 01", members: [Member(id: UUID(), name: "Kay Lenny"), Member(id: UUID(), name: "James Casey"), Member(id: UUID(), name: "Nils Mango"), Member(id: UUID(), name: "Mark Zuckerberg")], active: true, startedOn: Date.now - 23))
+            }
+            Button(role: .destructive, action: {
+                // TODO: Remove from all runs
+            }, label: {
+                Label("Remove From Run", systemImage: "xmark.circle")
+            })
+            .buttonStyle(.bordered)
+            .padding()
+        }
+        .navigationTitle("You have been added to the following run")
+        .navigationBarTitleDisplayMode(.inline)
     }
-        
+    
         
 }

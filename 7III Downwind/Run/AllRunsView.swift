@@ -11,28 +11,29 @@ struct AllRunsView: View {
     @ObservedObject var downwindManager: DownwindManager
     
     var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundStyle(Color("ListBackground"))
-                .ignoresSafeArea()
-            
-            ScrollView {
-                Text("You have been added to the following runs:")
-                ForEach(downwindManager.allRuns) { run in
-                    RunOverView(downwindManager: downwindManager, run: run)
-                        .padding(.vertical)
+        let moreThanOneRun = downwindManager.allRuns.count > 1
+        NavigationStack {
+            VStack {
+                List {
+                    ForEach(downwindManager.allRuns) { run in
+                        Section {
+                            RunOverView(downwindManager: downwindManager, run: run)
+                        }
+                    }
                 }
                 
                 Button(role: .destructive, action: {
                     // TODO: Remove from all runs
                 }, label: {
-                    Label("Remove From All Runs", systemImage: "xmark.circle")
+                    Label(moreThanOneRun ? "Remove From All Runs" : "Remove From Run", systemImage: "xmark.circle")
                 })
                 .buttonStyle(.bordered)
+                .padding()
+                
             }
-            
+            .navigationTitle(moreThanOneRun ? "You have been added to the following runs" : "You have been added to the following run")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        
     }
 }
 

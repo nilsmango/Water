@@ -58,31 +58,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 
                 // remove user from all runs that are older than 24 hours, return array of active runs
                 let runArray = try await findOldRunsAndRemoveUser(runList: dbRunResponse)
-                
-                    // if only one run available show, make that the active run
-                    if runArray.count == 1 {
-                        DispatchQueue.main.async {
-                            let firstDBRun = runArray.first!
-                            self.activeRun.id = firstDBRun.id
-                            self.activeRun.name = firstDBRun.name
-                            self.activeRun.startedOn = firstDBRun.startedOn
-                            self.activeRun.active = true
-                            
-                            // check if we have authorization to see location and start location
-                            self.checkAndStartLocationService()
-                            
-                            Task {
-                                do {
-                                    // downloading all the members uploading yourself
-                                    await self.upDownloadManager()
-                                }
-                            }
-                        }
-                        
-                        
-                        
-                    // if more than one run, fill the all runs array and return
-                    } else if runArray.count > 1 {
+                 
+                    // if more than 0 run, fill the all runs array and return
+                    if runArray.count > 0 {
                         DispatchQueue.main.async {
                             self.allRuns = runArray
                             Task {
