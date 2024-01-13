@@ -28,3 +28,10 @@ func createSongURL() throws -> URL {
     
     return url
 }
+
+func dateFromString(_ dateString: String) -> Date? {
+    let dateFormatter = ISO8601DateFormatter()
+//    dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds, .withTimeZone]
+
+    return dateFormatter.date(from: dateString)
+}

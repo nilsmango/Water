@@ -16,5 +16,5 @@ struct Run: Identifiable, Codable {
     
     var active: Bool
     
-    var startedOn: String?
+    var startedOn: Date?
 }

@@ -9,9 +9,17 @@ import SwiftUI
 
 struct SplashView: View {
     var body: some View {
-        Text("7III Downwind")
-            .font(.largeTitle)
-            .fontWeight(.bold)
+        ZStack {
+            Rectangle()
+                .ignoresSafeArea()
+                .foregroundStyle(Color("ListBackground"))
+            
+            Text("7III Downwind")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+        }
+        
+            
     }
 }
 

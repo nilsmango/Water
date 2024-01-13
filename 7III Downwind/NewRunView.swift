@@ -74,7 +74,7 @@ struct NewRunView: View {
                         Task {
                             do {
                                 try await downwindManager.startNewRun(name: runName, members: runMembers)
-                                try await downwindManager.loadActiveRun()
+                                try await downwindManager.loadAllRuns()
                             } catch {
                                 print("Error: \(error)")
                             }

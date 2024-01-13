@@ -22,6 +22,10 @@ struct HomeView: View {
         } else {
             if downwindManager.activeRun.active {
                 RunListView(downwindManager: downwindManager)
+                
+            } else if downwindManager.allRuns.count > 1 {
+                AllRunsView(downwindManager: downwindManager)
+                
             } else {
                 VStack {
                     HStack {
@@ -41,6 +45,7 @@ struct HomeView: View {
                     
                     Text("Aloha \(downwindManager.user.name)!")
                         .font(.largeTitle)
+                        .fontWeight(.bold)
                         .padding(.bottom, 60)
                     
                     Text("You have not been added to an active run yet.")
@@ -56,7 +61,7 @@ struct HomeView: View {
                         Button(action: {
                             Task {
                                 do {
-                                    try await downwindManager.loadActiveRun()
+                                    try await downwindManager.loadAllRuns()
                                 } catch {
                                     print("Error loading active run: \(error)")
                                 }
@@ -127,6 +132,11 @@ struct HomeView: View {
                     }
                     
                 })
+                .background {
+                    Rectangle()
+                        .ignoresSafeArea()
+                        .foregroundStyle(Color("ListBackground"))
+                }
             }
         }
     }

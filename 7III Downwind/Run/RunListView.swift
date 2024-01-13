@@ -27,6 +27,7 @@ struct RunListView: View {
         VStack {
             List {
                 Text("Your data: \(String(downwindManager.user.latitude ?? 0.0)), \(downwindManager.user.longitude ?? 0.0). Speed: \(downwindManager.user.speed ?? 0.0) km/h")
+                Text("Time elapsed: \(Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer))")
                 ForEach(sortedMembers()) { member in
                     if !(member.onlyWatching ?? false) {
                         HStack {

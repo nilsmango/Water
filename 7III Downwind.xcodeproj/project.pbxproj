@@ -40,6 +40,8 @@
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
+		785CF95C2B518B0400528B6D /* AllRunsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF95B2B518B0400528B6D /* AllRunsView.swift */; };
+		785CF95E2B518B7900528B6D /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF95D2B518B7900528B6D /* RunOverView.swift */; };
 		787A7EE82B4B03C20083ECEF /* NewRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* NewRunView.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +81,8 @@
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
+		785CF95B2B518B0400528B6D /* AllRunsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRunsView.swift; sourceTree = "<group>"; };
+		785CF95D2B518B7900528B6D /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* NewRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRunView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -182,6 +186,8 @@
 		785C4ADD2B45EBDC00EB07F8 /* Run */ = {
 			isa = PBXGroup;
 			children = (
+				785CF95B2B518B0400528B6D /* AllRunsView.swift */,
+				785CF95D2B518B7900528B6D /* RunOverView.swift */,
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
 				785CF9592B4FF2E300528B6D /* OptionsMenu.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
@@ -292,6 +298,7 @@
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
+				785CF95C2B518B0400528B6D /* AllRunsView.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
 				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,
@@ -304,6 +311,7 @@
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				787A7EE82B4B03C20083ECEF /* NewRunView.swift in Sources */,
+				785CF95E2B518B7900528B6D /* RunOverView.swift in Sources */,
 				785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,

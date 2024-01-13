@@ -24,7 +24,7 @@ struct StartView: View {
                                 print("Error checking and updating user in db: \(error)")
                             }
                             do {
-                                try await downwindManager.loadActiveRun()
+                                try await downwindManager.loadAllRuns()
                             } catch {
                                 print("Error loading active run: \(error)")
                             }
