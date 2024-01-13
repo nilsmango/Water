@@ -71,8 +71,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 }
                             }
                         }
-                        
-                        
 
                         // no runs? return
                     } else {
@@ -85,6 +83,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// load run as active run, starting run up
     func startActiveRun(run: Run) async throws {
         DispatchQueue.main.async {
+            // remove user from all other runs
+            // 1. remove active run from all Runs
+            self.allRuns.removeAll(where: { $0.id == run.id })
+            
+            // start active run
             self.activeRun.id = run.id
             self.activeRun.name = run.name
             self.activeRun.startedOn = run.startedOn
@@ -92,22 +95,27 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // check if we have authorization to see location and start location
             self.checkAndStartLocationService()
-            
-            // remove user from all other runs
-            // 1. remove active run from all Runs
-            self.allRuns.removeAll(where: { $0.id == run.id })
-
         }
         // downloading all the members uploading yourself
         await upDownloadManager()
         
         // 2. for all remaining runs we remove user from
-        for oldRun in allRuns {
-            try await removeUserFromRun(run: oldRun)
-        }
+        try await removeUserFromAllRuns()
+        
         // 3. remove the runs from all runs
         DispatchQueue.main.async {
             self.allRuns = []
+        }
+    }
+    
+    /// removes user from array all runs
+    func removeUserFromAllRuns() async throws {
+        for run in allRuns {
+            do {
+                try await removeUserFromRun(run: run)
+            } catch {
+                print("Error removing user from run \(run.name): \(error)")
+            }
         }
     }
     

@@ -23,7 +23,14 @@ struct AllRunsView: View {
                 }
                 
                 Button(role: .destructive, action: {
-                    // TODO: Remove from all runs
+                    Task {
+                        do {
+                            try await downwindManager.removeUserFromAllRuns()
+                        } catch {
+                            print("Error removing user from all runs: \(error)")
+                        }
+                    }
+                    
                 }, label: {
                     Label(moreThanOneRun ? "Remove From All Runs" : "Remove From Run", systemImage: "xmark.circle")
                 })
