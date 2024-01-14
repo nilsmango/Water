@@ -63,6 +63,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     if runArray.count > 0 {
                         DispatchQueue.main.async {
                             self.allRuns = runArray
+                            // Note: not sure why the task runs after the previous line, but it sure seems to.
                             Task {
                                 do {
                                     try await self.loadMembersOfAllRuns()

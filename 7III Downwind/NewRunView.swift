@@ -86,7 +86,7 @@ struct NewRunView: View {
                         Label("Start Run", systemImage: "wind")
                     })
                     .buttonStyle(.bordered)
-                    .disabled(runMembers.count < 2)
+                    .disabled(runMembers.count < 1)
                     
                     Spacer()
                 }
