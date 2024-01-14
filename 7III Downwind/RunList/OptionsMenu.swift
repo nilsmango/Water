@@ -8,11 +8,19 @@
 import SwiftUI
 
 struct OptionsMenu: View {
+    
     @Binding var sorting: RunListSorting
     @Binding var measurement: MeasurementSystem
+    @Binding var showAdMembersView: Bool
     
     var body: some View {
         Menu {
+            Button(action: {
+                showAdMembersView = true
+            }, label: {
+                Label("Add Members", systemImage: "plus.circle")
+            })
+            
             Menu {
                 Picker("Measurement System", selection: $measurement) {
                     ForEach(MeasurementSystem.allCases) { system in
@@ -29,12 +37,10 @@ struct OptionsMenu: View {
                         Text(sortCase.rawValue)
                     }
                 }
-                
             }
         label: {
             Label("List Sorting", systemImage: "arrow.up.arrow.down")
         }
-            
             
         } label: {
             Label("Options", systemImage: "ellipsis.circle")
@@ -43,5 +49,5 @@ struct OptionsMenu: View {
 }
 
 #Preview {
-    OptionsMenu(sorting: .constant(.distanceAscending), measurement: .constant(.metric))
+    OptionsMenu(sorting: .constant(.distanceAscending), measurement: .constant(.metric), showAdMembersView: .constant(false))
 }

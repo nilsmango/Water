@@ -38,7 +38,7 @@ struct AllRunsView: View {
                 .padding()
                 
             }
-            .navigationTitle(moreThanOneRun ? "You have been added to the following runs" : "You have been added to the following run")
+            .navigationTitle(moreThanOneRun ? "You have been added to the following runs:" : "You have been added to the following run:")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

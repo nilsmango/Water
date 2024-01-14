@@ -108,6 +108,7 @@ struct HomeView: View {
                     NavigationStack {
                         NewRunView(downwindManager: downwindManager, showSheet: $showStartRunSheet)
                             .navigationTitle("New Run")
+                            .navigationBarTitleDisplayMode(.inline)
                             .toolbar {
                                 ToolbarItem(placement: .topBarTrailing) {
                                     Button("Cancel") {

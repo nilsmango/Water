@@ -26,7 +26,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// creating a new run
     func startNewRun(name: String, members: [Member]) async throws {
-        // TODO: testing!
+
         let url = try createDWURL(endpoint: Endpoints.runs)
         
         // create a new DB run and upload
@@ -35,13 +35,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         try await HTTPClient.shared.sendData(to: url, object: newRun, httpMethod: HTTPMethods.POST.rawValue)
         
         // add all the members to that run we are creating before
-        for member in members {
-            let newBaseURL = try createDWURL(endpoint: Endpoints.runs + "/" + newRun.id!.uuidString + Endpoints.members + "/" + member.id!.uuidString)
-            print(newBaseURL)
-            
-            try await HTTPClient.shared.postURL(url: newBaseURL)
-        }
-
+        try await addMembersToRun(members: members, runID: newRun.id!)
     }
     
     /// looking for an active run with the user in it, and starting the UI of the run up
@@ -306,7 +300,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let url = try createDWURL(endpoint: Endpoints.runs + "/" + runID.uuidString + Endpoints.members)
             
             let membersResponse: [Member] = try await HTTPClient.shared.fetch(url: url)
-            print(membersResponse)
             
             DispatchQueue.main.async {
                 let membersOfRun = membersResponse.filter { $0.id != self.user.id }
@@ -331,6 +324,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    /// adding members to an active run
+    func addMembersToRun(members: [Member], runID: UUID) async throws {
+        // add the members to the active run on the db
+        for member in members {
+            let newBaseURL = try createDWURL(endpoint: Endpoints.runs + "/" + runID.uuidString + Endpoints.members + "/" + member.id!.uuidString)
+            
+            try await HTTPClient.shared.postURL(url: newBaseURL)
+        }
+    }
     
     
     // MARK: Members

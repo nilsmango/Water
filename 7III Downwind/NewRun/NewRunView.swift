@@ -40,11 +40,8 @@ struct NewRunView: View {
                 } else {
                     ForEach(downwindManager.availableMembers) { member in
                         let isInRun = runMembers.contains(member)
-                        HStack {
-                            Image(systemName: isInRun ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(isInRun ? .blue : .primary)
-                            Text(member.name)
-                        }
+                        
+                        MemberView(isInRun: isInRun, memberName: member.name)
                         .onTapGesture {
                             if isInRun {
                                 runMembers.removeAll(where: { $0.id == member.id })
