@@ -23,7 +23,7 @@ struct HomeView: View {
             if downwindManager.activeRun.active {
                 RunListView(downwindManager: downwindManager)
                 
-            } else if downwindManager.allRuns.count > 1 {
+            } else if downwindManager.allRuns.count > 0 {
                 AllRunsView(downwindManager: downwindManager)
                 
             } else {

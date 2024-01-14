@@ -103,19 +103,21 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // 2. for all remaining runs we remove user from
         try await removeUserFromAllRuns()
         
-        // 3. remove the runs from all runs
-        DispatchQueue.main.async {
-            self.allRuns = []
-        }
+        
     }
     
     /// removes user from array all runs
     func removeUserFromAllRuns() async throws {
         for run in allRuns {
+            // remove user from all runs in the db
             do {
                 try await removeUserFromRun(run: run)
             } catch {
                 print("Error removing user from run \(run.name): \(error)")
+            }
+            // remove all runs in the model
+            DispatchQueue.main.async {
+                self.allRuns = []
             }
         }
     }
