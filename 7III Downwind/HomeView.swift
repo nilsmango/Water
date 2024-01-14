@@ -75,15 +75,6 @@ struct HomeView: View {
                         Text("or")
                         
                         Button(action: {
-                            // get all members
-                            Task {
-                                do {
-                                    try await downwindManager.fetchAllMembers()
-                                    
-                                } catch {
-                                    print("Error fetching all members: \(error)")
-                                }
-                            }
                             
                             showStartRunSheet = true
                             

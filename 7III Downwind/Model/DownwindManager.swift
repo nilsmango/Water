@@ -36,6 +36,30 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // add all the members to that run we are creating before
         try await addMembersToRun(members: members, runID: newRun.id!)
+        
+        let newRunRun = try await loadFirstRun()
+            
+        try await startActiveRun(run: newRunRun)
+    }
+    
+    
+    private func loadFirstRun() async throws -> Run {
+        
+        let userIDString = user.id!.uuidString
+            let url = try createDWURL(endpoint: Endpoints.members + "/" + userIDString + Endpoints.runs)
+            
+            let dbRunResponse: [DBRun] = try await HTTPClient.shared.fetch(url: url)
+            
+                // request for location authorization
+                locationManager?.requestWhenInUseAuthorization()
+                
+                // remove user from all runs that are older than 24 hours, return array of active runs
+                let runArray = try await findOldRunsAndRemoveUser(runList: dbRunResponse)
+                 
+                let run = runArray.first!
+                return run
+                    
+
     }
     
     /// looking for an active run with the user in it, and starting the UI of the run up

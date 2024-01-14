@@ -51,14 +51,14 @@ struct RunListView: View {
                                         if let speed = member.speed {
                                             Text(makePrettySpeed(speed: speed, system: downwindManager.measurementSystem))
                                         } else {
-                                            Text("- km/h")
+                                            Text(downwindManager.measurementSystem == .imperial ? "- mph" : "- km/h")
                                         }
                                     }
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                     
                                 } else {
                                     Text("No Data")
-                                    Text("- km/h")
+                                    Text(downwindManager.measurementSystem == .imperial ? "- mph" : "- km/h")
                                         .frame(maxWidth: .infinity, alignment: .trailing)
                                 }
                             }

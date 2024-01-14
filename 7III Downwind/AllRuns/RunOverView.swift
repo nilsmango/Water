@@ -49,7 +49,7 @@ struct RunOverView: View {
                 RunOverView(downwindManager: DownwindManager(), run: Run(name: "Test Run 01", members: [Member(id: UUID(), name: "Kay Lenny"), Member(id: UUID(), name: "James Casey"), Member(id: UUID(), name: "Nils Mango"), Member(id: UUID(), name: "Mark Zuckerberg")], active: true, startedOn: Date.now - 23))
             }
             Button(role: .destructive, action: {
-                // TODO: Remove from all runs
+                // remove
             }, label: {
                 Label("Remove From Run", systemImage: "xmark.circle")
             })

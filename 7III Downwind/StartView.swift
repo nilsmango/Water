@@ -28,6 +28,11 @@ struct StartView: View {
                             } catch {
                                 print("Error loading active run: \(error)")
                             }
+                            do {
+                                try await downwindManager.fetchAllMembers()
+                            } catch {
+                                print("Error fetching all members: \(error)")
+                            }
                         }
 
                     showSplash = false
