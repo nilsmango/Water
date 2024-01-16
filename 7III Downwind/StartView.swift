@@ -10,36 +10,133 @@ import SwiftUI
 struct StartView: View {
     @StateObject private var downwindManager = DownwindManager()
     
-    @State private var showSplash = true
+    @State private var showStartRunSheet = false
+    @State private var showJoinRunSheet = false
     
+    @State private var showOptionsSheet = false
+    
+    @State private var showFirstTimeUserName = false
+        
     var body: some View {
-        if showSplash {
-            SplashView()
-                .onAppear {
-                    downwindManager.loadUser()
-                        Task {
-                            do {
-                                try await downwindManager.checkAndUpdateUserInDB()
-                            } catch {
-                                print("Error checking and updating user in db: \(error)")
-                            }
-                            do {
-                                try await downwindManager.loadAllRuns()
-                            } catch {
-                                print("Error loading active run: \(error)")
-                            }
-                            do {
-                                try await downwindManager.fetchAllMembers()
-                            } catch {
-                                print("Error fetching all members: \(error)")
+        if downwindManager.activeRun.active {
+            RunListView(downwindManager: downwindManager)
+        } else {
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    Button(action: {
+                        showOptionsSheet = true
+                    }, label: {
+                        Label("Options", systemImage: "ellipsis.circle")
+                            .labelStyle(.iconOnly)
+                            .font(.title3)
+                    })
+                    .padding()
+                }
+                
+                Spacer()
+                
+                Text("Aloha \(downwindManager.user.name)!")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 60)
+                
+                Group {
+                    Button(action: {
+                        // join a run
+                        showJoinRunSheet = true
+                    }, label: {
+                        Label("Join A Run", systemImage: "wind")
+                    })
+                    
+                    Text("or")
+                    
+                    Button(action: {
+                        showStartRunSheet = true
+                        
+                    }, label: {
+                        Label("Start New Run", systemImage: "wind.snow")
+                    })
+                }
+                .buttonStyle(.bordered)
+                
+                
+                
+                Spacer()
+            }
+            
+            .overlay {
+                OverlayAlertView(locationError: $downwindManager.locationError)
+            }
+            .sheet(isPresented: $showStartRunSheet, content: {
+                NavigationStack {
+                    StartRun(downwindManager: downwindManager, showSheet: $showStartRunSheet, isNewRun: true)
+                        .navigationTitle("New Run")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Cancel") {
+                                    showStartRunSheet = false
+                                }
                             }
                         }
-
-                    showSplash = false
                 }
-        } else {
-            HomeView(downwindManager: downwindManager)
+            })
+            .sheet(isPresented: $showJoinRunSheet, content: {
+                NavigationStack {
+                    StartRun(downwindManager: downwindManager, showSheet: $showStartRunSheet, isNewRun: false)
+                        .navigationTitle("Join Run")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Cancel") {
+                                    showJoinRunSheet = false
+                                }
+                            }
+                        }
+                }
+            })
+            .fullScreenCover(isPresented: $showFirstTimeUserName, content: {
+                FirstTimeUserNameSet(downwindManager: downwindManager, showingSheet: $showFirstTimeUserName)
+            })
+            .sheet(isPresented: $showOptionsSheet, content: {
+                NavigationStack {
+                    OptionsView(downwindManager: downwindManager)
+                        .navigationTitle("Options")
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Done") {
+                                    showOptionsSheet = false
+                                }
+                            }
+                        }
+                }
+                
+            })
+        
+            .background {
+                Rectangle()
+                    .ignoresSafeArea()
+                    .foregroundStyle(Color("ListBackground"))
+            }
+            .onAppear {
+                downwindManager.loadUser()
+                if downwindManager.user.id == nil {
+                    showFirstTimeUserName = true
+                } else {
+                    Task {
+                        do {
+                            try await downwindManager.checkAndUpdateUserInDB()
+                        } catch {
+                            print("error checking updating user: \(error)")
+                        }
+                    }
+                }
         }
+            
+        }
+        
     }
 }
 

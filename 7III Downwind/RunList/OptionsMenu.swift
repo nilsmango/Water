@@ -11,15 +11,9 @@ struct OptionsMenu: View {
     
     @Binding var sorting: RunListSorting
     @Binding var measurement: MeasurementSystem
-    @Binding var showAdMembersView: Bool
     
     var body: some View {
         Menu {
-            Button(action: {
-                showAdMembersView = true
-            }, label: {
-                Label("Add Members", systemImage: "plus.circle")
-            })
             
             Menu {
                 Picker("Measurement System", selection: $measurement) {
@@ -49,5 +43,5 @@ struct OptionsMenu: View {
 }
 
 #Preview {
-    OptionsMenu(sorting: .constant(.distanceAscending), measurement: .constant(.metric), showAdMembersView: .constant(false))
+    OptionsMenu(sorting: .constant(.distanceAscending), measurement: .constant(.metric))
 }

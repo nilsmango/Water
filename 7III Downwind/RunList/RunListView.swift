@@ -21,7 +21,6 @@ struct RunListView: View {
     }
     
     @State private var isShowingAlert = false
-    @State private var showAddMembersView = false
     
     var body: some View {
         NavigationStack {
@@ -82,7 +81,7 @@ struct RunListView: View {
                     .buttonStyle(.bordered)
                     .padding()
                     
-                    OptionsMenu(sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showAdMembersView: $showAddMembersView)
+                    OptionsMenu(sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem)
                         .buttonStyle(.bordered)
                         .padding()
                     
@@ -104,23 +103,10 @@ struct RunListView: View {
                     secondaryButton: .default(Text("Cancel"))
                 )
             }
-            .sheet(isPresented: $showAddMembersView, content: {
-                NavigationStack {
-                    AddMembersView(downwindManager: downwindManager, showingSheet: $showAddMembersView)
-                        .navigationTitle("Add Members")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button("Cancel") {
-                                    showAddMembersView = false
-                                }
-                            }
-                        }
-                }
-                
-            })
             .navigationTitle(downwindManager.activeRun.name)
             .navigationBarTitleDisplayMode(.inline)
+            .background(Color("ListBackground"))
+
         }
         
     }

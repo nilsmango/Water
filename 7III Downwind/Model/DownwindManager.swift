@@ -19,13 +19,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // MARK: Run
     @Published var activeRun: Run = Run(name: "", members: [], active: false)
-    @Published var allRuns: [Run] = []
+
     @Published var locationError: LocationError = .none
     
     var runTimer: Timer?
     
     /// creating a new run
-    func startNewRun(name: String, members: [Member]) async throws {
+    func startNewRun(name: String) async throws {
 
         let url = try createDWURL(endpoint: Endpoints.runs)
         
@@ -34,77 +34,98 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         try await HTTPClient.shared.sendData(to: url, object: newRun, httpMethod: HTTPMethods.POST.rawValue)
         
-        // add all the members to that run we are creating before
-        try await addMembersToRun(members: members, runID: newRun.id!)
+        // add user to the run
+        try await addMembersToRun(members: [user], runID: newRun.id!)
         
-        let newRunRun = try await loadFirstRun()
-            
-        try await startActiveRun(run: newRunRun)
+        // updating the run name from the db
+        let updatedRunName = try await getRunNameFromId(runId: newRun.id!)
+        let updatedRun = Run(id: newRun.id, name: updatedRunName, members: [], active: true, startedOn: Date.now)
+        
+        // starting the action
+        try await startActiveRun(run: updatedRun)
     }
     
-    
-    private func loadFirstRun() async throws -> Run {
+    private func getRunNameFromId(runId: UUID) async throws -> String {
         
-        let userIDString = user.id!.uuidString
-            let url = try createDWURL(endpoint: Endpoints.members + "/" + userIDString + Endpoints.runs)
+        let runIDString = runId.uuidString
+        
+        let url = try createDWURL(endpoint: Endpoints.runs + "/" + runIDString)
             
-            let dbRunResponse: [DBRun] = try await HTTPClient.shared.fetch(url: url)
+        let dbRunResponse: DBRun = try await HTTPClient.shared.fetchString(url: url)
             
-                // request for location authorization
-                locationManager?.requestWhenInUseAuthorization()
-                
-                // remove user from all runs that are older than 24 hours, return array of active runs
-                let runArray = try await findOldRunsAndRemoveUser(runList: dbRunResponse)
-                 
-                let run = runArray.first!
-                return run
-                    
+        return dbRunResponse.name
 
     }
-    
-    /// looking for an active run with the user in it, and starting the UI of the run up
-    func loadAllRuns() async throws {
+   
+    /// joining a run
+    func joinRun(name: String) async throws {
         
-        if let userIDString = user.id?.uuidString {
-            let url = try createDWURL(endpoint: Endpoints.members + "/" + userIDString + Endpoints.runs)
-            
-            let dbRunResponse: [DBRun] = try await HTTPClient.shared.fetch(url: url)
-            
-            if !dbRunResponse.isEmpty {
-                // request for location authorization
-                locationManager?.requestWhenInUseAuthorization()
-                
-                // remove user from all runs that are older than 24 hours, return array of active runs
-                let runArray = try await findOldRunsAndRemoveUser(runList: dbRunResponse)
-                 
-                    // if more than 0 run, fill the all runs array and return
-                    if runArray.count > 0 {
-                        DispatchQueue.main.async {
-                            self.allRuns = runArray
-                            // Note: not sure why the task runs after the previous line, but it sure seems to.
-                            Task {
-                                do {
-                                    try await self.loadMembersOfAllRuns()
-                                } catch {
-                                    print("Error loading members of all runs")
-                                }
-                            }
-                        }
-
-                        // no runs? return
-                    } else {
-                        return
-                    }
-            }
-        }
+        // get run
+        let runToJoin = try await getRunFromName(runName: name)
+        
+        // add user to the run
+        try await addMembersToRun(members: [user], runID: runToJoin.id!)
+        
+        
+        // starting the action
+        try await startActiveRun(run: runToJoin)
+        
     }
+    
+    private func getRunFromName(runName: String) async throws -> Run {
+        
+        let url = try createDWURL(endpoint: Endpoints.runs + Endpoints.byname + "/" + runName)
+        
+        let dbRunResponse: DBRun = try await HTTPClient.shared.fetchString(url: url)
+        
+        let run = Run(id: dbRunResponse.id, name: runName, members: [], active: true, startedOn: dateFromString(dbRunResponse.startedOn ?? "2023-01-10T13:36:12Z"))
+        
+        return run
+    }
+    
+//    /// looking for an active run with the user in it, and starting the UI of the run up
+//    func loadAllRuns() async throws {
+//        
+//        if let userIDString = user.id?.uuidString {
+//            let url = try createDWURL(endpoint: Endpoints.members + "/" + userIDString + Endpoints.runs)
+//            
+//            let dbRunResponse: [DBRun] = try await HTTPClient.shared.fetch(url: url)
+//            
+//            if !dbRunResponse.isEmpty {
+//                // request for location authorization
+//                locationManager?.requestWhenInUseAuthorization()
+//                
+//                // remove user from all runs that are older than 24 hours, return array of active runs
+//                let runArray = try await findOldRunsAndRemoveUser(runList: dbRunResponse)
+//                 
+//                    // if more than 0 run, fill the all runs array and return
+//                    if runArray.count > 0 {
+//                        DispatchQueue.main.async {
+//                            self.allRuns = runArray
+//                            // Note: not sure why the task runs after the previous line, but it sure seems to.
+//                            Task {
+//                                do {
+//                                    try await self.loadMembersOfAllRuns()
+//                                } catch {
+//                                    print("Error loading members of all runs")
+//                                }
+//                            }
+//                        }
+//
+//                        // no runs? return
+//                    } else {
+//                        return
+//                    }
+//            }
+//        }
+//    }
     
     /// load run as active run, starting run up
-    func startActiveRun(run: Run) async throws {
+    private func startActiveRun(run: Run) async throws {
+        // request for location authorization
+        locationManager?.requestWhenInUseAuthorization()
+        
         DispatchQueue.main.async {
-            // remove user from all other runs
-            // 1. remove active run from all Runs
-            self.allRuns.removeAll(where: { $0.id == run.id })
             
             // start active run
             self.activeRun.id = run.id
@@ -118,27 +139,23 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // downloading all the members uploading yourself
         await upDownloadManager()
         
-        // 2. for all remaining runs we remove user from
-        try await removeUserFromAllRuns()
-        
-        
     }
     
-    /// removes user from array all runs
-    func removeUserFromAllRuns() async throws {
-        for run in allRuns {
-            // remove user from all runs in the db
-            do {
-                try await removeUserFromRun(run: run)
-            } catch {
-                print("Error removing user from run \(run.name): \(error)")
-            }
-            // remove all runs in the model
-            DispatchQueue.main.async {
-                self.allRuns = []
-            }
-        }
-    }
+//    /// removes user from array all runs
+//    func removeUserFromAllRuns() async throws {
+//        for run in allRuns {
+//            // remove user from all runs in the db
+//            do {
+//                try await removeUserFromRun(run: run)
+//            } catch {
+//                print("Error removing user from run \(run.name): \(error)")
+//            }
+//            // remove all runs in the model
+//            DispatchQueue.main.async {
+//                self.allRuns = []
+//            }
+//        }
+//    }
     
     /// checks and starts location service
     private func checkAndStartLocationService() {
@@ -168,36 +185,36 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    /// removes user from all old runs and returns a list of new runs, sorted by newest
-    private func findOldRunsAndRemoveUser(runList: [DBRun]) async throws -> [Run]{
-        // turn db runs into runs
-        let rawRunArray = runList.compactMap( { DBRun in
-            Run(
-                id: DBRun.id,
-                name: DBRun.name,
-                members: [],
-                active: true,
-                startedOn: dateFromString(DBRun.startedOn ?? "2023-01-10T13:36:12Z")
-            )
-        } )
-        // filter all old runs
-        let twentyFourHoursAgo = Date().addingTimeInterval(-24 * 60 * 60)
-        let runIdsToRemoveUser = rawRunArray.filter { $0.startedOn! < twentyFourHoursAgo}
-        
-        // remove user from all old runs (and delete run if empty)
-        for run in runIdsToRemoveUser {
-            do {
-                try await removeUserFromRun(run: run)
-            } catch {
-                print("Error removing user from run: \(error)")
-            }
-                
-        }
-        
-        // return the newer runs, sorted by newest
-        let newRuns = rawRunArray.filter { $0.startedOn! >= twentyFourHoursAgo }.sorted(by: { $0.startedOn! > $1.startedOn! })
-        return newRuns
-    }
+//    /// removes user from all old runs and returns a list of new runs, sorted by newest
+//    private func findOldRunsAndRemoveUser(runList: [DBRun]) async throws -> [Run] {
+//        // turn db runs into runs
+//        let rawRunArray = runList.compactMap( { DBRun in
+//            Run(
+//                id: DBRun.id,
+//                name: DBRun.name,
+//                members: [],
+//                active: true,
+//                startedOn: dateFromString(DBRun.startedOn ?? "2023-01-10T13:36:12Z")
+//            )
+//        } )
+//        // filter all old runs
+//        let twentyFourHoursAgo = Date().addingTimeInterval(-24 * 60 * 60)
+//        let runIdsToRemoveUser = rawRunArray.filter { $0.startedOn! < twentyFourHoursAgo}
+//        
+//        // remove user from all old runs (and delete run if empty)
+//        for run in runIdsToRemoveUser {
+//            do {
+//                try await removeUserFromRun(run: run)
+//            } catch {
+//                print("Error removing user from run: \(error)")
+//            }
+//                
+//        }
+//        
+//        // return the newer runs, sorted by newest
+//        let newRuns = rawRunArray.filter { $0.startedOn! >= twentyFourHoursAgo }.sorted(by: { $0.startedOn! > $1.startedOn! })
+//        return newRuns
+//    }
     
     
     /// starts our upload and download timer
@@ -283,7 +300,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.runTimer?.invalidate()
             self.runTimer = nil
             
-            self.activeRun = Run(name: "", members: [], active: false)
+            // make run inactive, keeping the id
+            self.activeRun = Run(name: "", members: self.activeRun.members, active: false)
             
             // stop location and header updating
             print("Stopping location tracking")
@@ -299,12 +317,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // remove user from run / delete run if user is last member
         do {
             try await removeUserFromRun(run: activeRun)
+            // remove members from active run (probably not necessary)
+            DispatchQueue.main.async {
+                self.activeRun.members = []
+            }
         } catch {
             print("Error removing user from run: \(error)")
         }
         
-        
-        // update the user on db
+        // update the user location of nil on db for maximum privacy
         do {
             try await uploadUserLocation()
         } catch {
@@ -312,25 +333,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    /// loading  the members off all runs
-    func loadMembersOfAllRuns() async throws {
-        for (index, run) in allRuns.enumerated() {
-
-            guard let runID = run.id else {
-                print("Error: No active run ID!")
-                return
-            }
-            
-            let url = try createDWURL(endpoint: Endpoints.runs + "/" + runID.uuidString + Endpoints.members)
-            
-            let membersResponse: [Member] = try await HTTPClient.shared.fetch(url: url)
-            
-            DispatchQueue.main.async {
-                let membersOfRun = membersResponse.filter { $0.id != self.user.id }
-                self.allRuns[index].members = membersOfRun
-            }
-        }
-    }
 
     /// loading members of active run
     func loadRunMembers() async throws {
@@ -358,24 +360,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    
-    // MARK: Members
-    @Published var availableMembers = [Member]()
-    
-    
-    func fetchAllMembers() async throws {
-        let url = try createDWURL(endpoint: Endpoints.members)
-        
-        let membersResponse: [Member] = try await HTTPClient.shared.fetch(url: url)
-        
-        DispatchQueue.main.async {
-            // remove user
-            self.availableMembers = membersResponse.filter { $0.id != self.user.id }
-        }
-    }
-    
-    
-    
+
     // MARK: User
 
     @Published var user: Member = Member(id: nil, name: "Your Name")

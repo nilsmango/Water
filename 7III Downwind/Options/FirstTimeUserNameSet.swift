@@ -14,13 +14,15 @@ struct FirstTimeUserNameSet: View {
     
     @FocusState private var editorIsFocused: FocusField?
     
+    @Binding var showingSheet: Bool
+    
     enum FocusField: Hashable {
         case field
       }
     
     var body: some View {
-
-        List {
+        VStack {
+            List {
             Section {
                 
                 TextField("Kai Lenny Junior", text: $userName)
@@ -33,42 +35,35 @@ struct FirstTimeUserNameSet: View {
 
             } header: {
                 Text("Set a name so your friends to see")
-            } footer: {
-                HStack {
-                    Spacer()
-                    
-                    Button(action: {
-                        downwindManager.user = Member(id: UUID(), name: userName)
-                        downwindManager.saveUser()
-                        Task {
-                            do {
-                                try await downwindManager.addUserToDB()
-                            } catch {
-                                print("Error adding user to db: \(error)")
-                            }
-                            do {
-                                try await downwindManager.loadAllRuns()
-                            } catch {
-                                print("Error loading active run: \(error)")
-                            }
-                        }
-                        
-                    }, label: {
-                        Label("Save", systemImage: "checkmark.circle")
-                    })
-                    .buttonStyle(.bordered)
-                    .disabled(userName == "")
-                    
-                    Spacer()
-                }
-                .padding()
             }
-            
         }
+            
+            Button(action: {
+                downwindManager.user = Member(id: UUID(), name: userName)
+                downwindManager.saveUser()
+                showingSheet = false
+                
+                Task {
+                    do {
+                        try await downwindManager.checkAndUpdateUserInDB()
+                    } catch {
+                        print("Error checking and updating user in db: \(error)")
+                    }
+                }
+                
+            }, label: {
+                Label("Save", systemImage: "checkmark.circle")
+            })
+            .buttonStyle(.bordered)
+            .disabled(userName == "")
+            .padding()
+        }
+        .background(Color("ListBackground"))
+
         
     }
 }
 
 #Preview {
-    FirstTimeUserNameSet(downwindManager: DownwindManager())
+    FirstTimeUserNameSet(downwindManager: DownwindManager(), showingSheet: .constant(true))
 }

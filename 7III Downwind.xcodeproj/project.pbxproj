@@ -8,24 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
-		785C4A9B2B358F7B00EB07F8 /* SongList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A9A2B358F7B00EB07F8 /* SongList.swift */; };
 		785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
 		785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
-		785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AA92B3591EA00EB07F8 /* Song.swift */; };
-		785C4AAC2B35926600EB07F8 /* SongData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAB2B35926600EB07F8 /* SongData.swift */; };
 		785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */; };
 		785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
-		785C4AB22B35CA6200EB07F8 /* AddUpdateSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */; };
-		785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB32B35CAC200EB07F8 /* ModalType.swift */; };
-		785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */; };
 		785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */; };
 		785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB92B40AF7400EB07F8 /* Member.swift */; };
 		785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABB2B40B04000EB07F8 /* Run.swift */; };
 		785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */; };
 		785C4AC12B40B62E00EB07F8 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 785C4AC02B40B62E00EB07F8 /* KeychainSwift */; };
 		785C4AC32B40B84300EB07F8 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC22B40B84300EB07F8 /* StartView.swift */; };
-		785C4AC52B40B8D100EB07F8 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC42B40B8D100EB07F8 /* SplashView.swift */; };
-		785C4AC72B40B9B000EB07F8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC62B40B9B000EB07F8 /* HomeView.swift */; };
 		785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */; };
 		785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACA2B41705C00EB07F8 /* RunView.swift */; };
 		785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACC2B41D28400EB07F8 /* DBRun.swift */; };
@@ -40,34 +32,22 @@
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
-		785CF95C2B518B0400528B6D /* AllRunsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF95B2B518B0400528B6D /* AllRunsView.swift */; };
-		785CF95E2B518B7900528B6D /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF95D2B518B7900528B6D /* RunOverView.swift */; };
-		785CF9622B53D57000528B6D /* MemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9612B53D57000528B6D /* MemberView.swift */; };
-		785CF9642B53D65200528B6D /* AddMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9632B53D65200528B6D /* AddMembersView.swift */; };
-		787A7EE82B4B03C20083ECEF /* NewRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* NewRunView.swift */; };
+		787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		785C4A952B358F7B00EB07F8 /* 7III Downwind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Downwind.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
-		785C4A9A2B358F7B00EB07F8 /* SongList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongList.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		785C4A9E2B358F7D00EB07F8 /* _III_Downwind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = _III_Downwind.entitlements; sourceTree = "<group>"; };
 		785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		785C4AA92B3591EA00EB07F8 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
-		785C4AAB2B35926600EB07F8 /* SongData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongData.swift; sourceTree = "<group>"; };
 		785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		785C4AAF2B359F8E00EB07F8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUpdateSongView.swift; sourceTree = "<group>"; };
-		785C4AB32B35CAC200EB07F8 /* ModalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalType.swift; sourceTree = "<group>"; };
-		785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUpdateSong.swift; sourceTree = "<group>"; };
 		785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		785C4AB92B40AF7400EB07F8 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		785C4ABB2B40B04000EB07F8 /* Run.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Run.swift; sourceTree = "<group>"; };
 		785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownwindManager.swift; sourceTree = "<group>"; };
 		785C4AC22B40B84300EB07F8 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
-		785C4AC42B40B8D100EB07F8 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
-		785C4AC62B40B9B000EB07F8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstTimeUserNameSet.swift; sourceTree = "<group>"; };
 		785C4ACA2B41705C00EB07F8 /* RunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunView.swift; sourceTree = "<group>"; };
 		785C4ACC2B41D28400EB07F8 /* DBRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBRun.swift; sourceTree = "<group>"; };
@@ -83,11 +63,7 @@
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
-		785CF95B2B518B0400528B6D /* AllRunsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRunsView.swift; sourceTree = "<group>"; };
-		785CF95D2B518B7900528B6D /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
-		785CF9612B53D57000528B6D /* MemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberView.swift; sourceTree = "<group>"; };
-		785CF9632B53D65200528B6D /* AddMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMembersView.swift; sourceTree = "<group>"; };
-		787A7EE72B4B03C20083ECEF /* NewRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRunView.swift; sourceTree = "<group>"; };
+		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,15 +100,11 @@
 				785C4ADF2B49517700EB07F8 /* -III-Downwind-Info.plist */,
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
-				785C4AC42B40B8D100EB07F8 /* SplashView.swift */,
-				785C4AC62B40B9B000EB07F8 /* HomeView.swift */,
 				785CF9562B4FE85100528B6D /* Options */,
 				785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */,
 				785CF9602B53D50D00528B6D /* NewRun */,
-				785CF95F2B53D4DA00528B6D /* AllRuns */,
 				785C4ADD2B45EBDC00EB07F8 /* RunList */,
 				785C4AD42B44095300EB07F8 /* Experiments */,
-				785C4ADE2B45EC5300EB07F8 /* Song */,
 				785C4AA72B35914100EB07F8 /* Model */,
 				785C4AA82B35916900EB07F8 /* Utilities */,
 				785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */,
@@ -154,13 +126,10 @@
 			isa = PBXGroup;
 			children = (
 				785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */,
-				785C4AA92B3591EA00EB07F8 /* Song.swift */,
 				785C4AB92B40AF7400EB07F8 /* Member.swift */,
 				785C4ABB2B40B04000EB07F8 /* Run.swift */,
 				785C4ACC2B41D28400EB07F8 /* DBRun.swift */,
 				785C4AD22B433D4000EB07F8 /* MemberRunData.swift */,
-				785C4AAB2B35926600EB07F8 /* SongData.swift */,
-				785C4AB52B35CD5F00EB07F8 /* AddUpdateSong.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -192,21 +161,10 @@
 			isa = PBXGroup;
 			children = (
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
-				785CF9632B53D65200528B6D /* AddMembersView.swift */,
 				785CF9592B4FF2E300528B6D /* OptionsMenu.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
 			);
 			path = RunList;
-			sourceTree = "<group>";
-		};
-		785C4ADE2B45EC5300EB07F8 /* Song */ = {
-			isa = PBXGroup;
-			children = (
-				785C4A9A2B358F7B00EB07F8 /* SongList.swift */,
-				785C4AB12B35CA6200EB07F8 /* AddUpdateSongView.swift */,
-				785C4AB32B35CAC200EB07F8 /* ModalType.swift */,
-			);
-			path = Song;
 			sourceTree = "<group>";
 		};
 		785CF9562B4FE85100528B6D /* Options */ = {
@@ -214,24 +172,14 @@
 			children = (
 				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
 				785CF9542B4FE74E00528B6D /* OptionsView.swift */,
-				785CF9612B53D57000528B6D /* MemberView.swift */,
 			);
 			path = Options;
-			sourceTree = "<group>";
-		};
-		785CF95F2B53D4DA00528B6D /* AllRuns */ = {
-			isa = PBXGroup;
-			children = (
-				785CF95B2B518B0400528B6D /* AllRunsView.swift */,
-				785CF95D2B518B7900528B6D /* RunOverView.swift */,
-			);
-			path = AllRuns;
 			sourceTree = "<group>";
 		};
 		785CF9602B53D50D00528B6D /* NewRun */ = {
 			isa = PBXGroup;
 			children = (
-				787A7EE72B4B03C20083ECEF /* NewRunView.swift */,
+				787A7EE72B4B03C20083ECEF /* StartRun.swift */,
 			);
 			path = NewRun;
 			sourceTree = "<group>";
@@ -314,38 +262,26 @@
 			files = (
 				785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */,
 				785C4AC32B40B84300EB07F8 /* StartView.swift in Sources */,
-				785C4AC52B40B8D100EB07F8 /* SplashView.swift in Sources */,
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
-				785CF95C2B518B0400528B6D /* AllRunsView.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
 				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,
-				785C4AB42B35CAC200EB07F8 /* ModalType.swift in Sources */,
-				785C4AAA2B3591EA00EB07F8 /* Song.swift in Sources */,
-				785C4A9B2B358F7B00EB07F8 /* SongList.swift in Sources */,
 				785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */,
-				785CF9642B53D65200528B6D /* AddMembersView.swift in Sources */,
-				785C4AAC2B35926600EB07F8 /* SongData.swift in Sources */,
 				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
-				787A7EE82B4B03C20083ECEF /* NewRunView.swift in Sources */,
-				785CF95E2B518B7900528B6D /* RunOverView.swift in Sources */,
-				785C4AB62B35CD5F00EB07F8 /* AddUpdateSong.swift in Sources */,
+				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
-				785C4AB22B35CA6200EB07F8 /* AddUpdateSongView.swift in Sources */,
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
-				785C4AC72B40B9B000EB07F8 /* HomeView.swift in Sources */,
 				785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,
-				785CF9622B53D57000528B6D /* MemberView.swift in Sources */,
 				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
