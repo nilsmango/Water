@@ -67,7 +67,11 @@ struct StartView: View {
             }
             
             .overlay {
-                OverlayAlertView(locationError: $downwindManager.locationError)
+                OverlayAlertView(showAlert: $downwindManager.locationError, text: """
+    Can't activate location services.
+    Either your device is in Airplane mode or the device doesn’t have the required hardware.
+    Please deactivate Airplane mode and try again.
+    """)
             }
             .sheet(isPresented: $showStartRunSheet, content: {
                 NavigationStack {
@@ -114,12 +118,13 @@ struct StartView: View {
                 }
                 
             })
-        
+            
             .background {
                 Rectangle()
                     .ignoresSafeArea()
                     .foregroundStyle(Color("ListBackground"))
             }
+            
             .onAppear {
                 downwindManager.loadUser()
                 if downwindManager.user.id == nil {

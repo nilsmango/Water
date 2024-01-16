@@ -20,7 +20,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: Run
     @Published var activeRun: Run = Run(name: "", members: [], active: false)
 
-    @Published var locationError: LocationError = .none
+    @Published var locationError = false
     
     var runTimer: Timer?
     
@@ -175,7 +175,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 //                            RunLoop.current.add(self.runTimer!, forMode: .default)
 //                        } else {
 //                            // show message can't activate location services -> either your device is in Airplane mode or the device doesn’t have the required hardware
-//                            self.locationError = .notPossible
+//                            self.locationError = true
 //                        }
             
             

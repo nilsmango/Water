@@ -103,6 +103,7 @@ struct RunListView: View {
                     secondaryButton: .default(Text("Cancel"))
                 )
             }
+            
             .navigationTitle(downwindManager.activeRun.name)
             .navigationBarTitleDisplayMode(.inline)
             .background(Color("ListBackground"))

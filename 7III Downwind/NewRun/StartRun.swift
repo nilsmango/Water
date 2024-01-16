@@ -21,6 +21,9 @@ struct StartRun: View {
         case field
       }
     
+    @State private var showAlert = false
+    @State private var alertText = ""
+    
     var body: some View {
         VStack {
             List {
@@ -58,10 +61,12 @@ struct StartRun: View {
                         do {
                             try await downwindManager.joinRun(name: runName)
                         } catch GetRunError.badResponse {
-                            // TODO: make this an alert or overlay alert
-                            print("Name not found")
+  
+                            alertText = "No run with that name found!"
+                            showAlert = true
                         } catch {
-                            print("Error joining run: \(error)")
+                            alertText = "Error joining run: \(error)"
+                            showAlert = true
                         }
                     }
                 }
@@ -74,7 +79,9 @@ struct StartRun: View {
             .padding()
         }
         .background(Color("ListBackground"))
-
+        .overlay {
+            OverlayAlertView(showAlert: $showAlert, text: alertText)
+        }
         
     }
     
