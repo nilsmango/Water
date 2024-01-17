@@ -80,7 +80,7 @@ struct RunListView: View {
                                 isShowingShareSheet = true
                                 
                             } label: {
-                                Label("Share Run", systemImage: "person.fill.badge.plus")
+                                Label("Share Run", systemImage: "square.and.arrow.up")
                             }
                             .buttonStyle(.bordered)
                             
