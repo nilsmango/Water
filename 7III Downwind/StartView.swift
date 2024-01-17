@@ -37,6 +37,9 @@ struct StartView: View {
                 
                 Spacer()
                 
+                Image("DWSplash")
+                    .padding(.bottom, 55)
+                
                 Text("Aloha \(downwindManager.user.name)!")
                     .font(.largeTitle)
                     .fontWeight(.bold)
