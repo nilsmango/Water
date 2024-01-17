@@ -122,7 +122,7 @@ struct StartView: View {
             .background {
                 Rectangle()
                     .ignoresSafeArea()
-                    .foregroundStyle(Color("ListBackground"))
+                    .foregroundStyle(.listBackground)
             }
             
             .onAppear {

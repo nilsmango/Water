@@ -58,7 +58,7 @@ struct FirstTimeUserNameSet: View {
             .disabled(userName == "")
             .padding()
         }
-        .background(Color("ListBackground"))
+        .background(Color("ListSheet"))
 
         
     }

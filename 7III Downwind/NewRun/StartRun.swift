@@ -51,6 +51,11 @@ struct StartRun: View {
                             try await downwindManager.startNewRun(name: runName)
                         } catch {
                             print("Error starting new run: \(error)")
+                            alertText = """
+                            Error starting new run.
+                            Make sure you are connected to the internet.
+                            """
+                            showAlert = true
                         }
                     }
                 } else {
@@ -61,7 +66,6 @@ struct StartRun: View {
                         do {
                             try await downwindManager.joinRun(name: runName)
                         } catch GetRunError.badResponse {
-  
                             alertText = "No run with that name found!"
                             showAlert = true
                         } catch {
@@ -78,7 +82,7 @@ struct StartRun: View {
             .disabled(runName == "")
             .padding()
         }
-        .background(Color("ListBackground"))
+        .background(.listSheet)
         .overlay {
             OverlayAlertView(showAlert: $showAlert, text: alertText)
         }

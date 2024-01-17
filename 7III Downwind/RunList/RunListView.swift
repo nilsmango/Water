@@ -22,53 +22,75 @@ struct RunListView: View {
     
     @State private var isShowingAlert = false
     
+    @State private var isShowingShareSheet = false
+    
     var body: some View {
         NavigationStack {
             VStack {
                 List {
+//                    Section {
+//                        Text("Your data: \(String(downwindManager.user.latitude ?? 0.0)), \(downwindManager.user.longitude ?? 0.0). Speed: \(downwindManager.user.speed ?? 0.0) km/h")
+//                        
+//                    }
                     Section {
-                        Text("Your data: \(String(downwindManager.user.latitude ?? 0.0)), \(downwindManager.user.longitude ?? 0.0). Speed: \(downwindManager.user.speed ?? 0.0) km/h")
-                        Text("Time elapsed: \(Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer))")
-                    }
-                    
-                    ForEach(sortedMembers()) { member in
-                        if !(member.onlyWatching ?? false) {
-                            HStack {
-                                Text(member.name)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                if let distance = distances[member] {
-                                    BearingArrowView(degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude!, myLongitude: downwindManager.user.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!))
-        //                                .frame(width: 25, height: 25)
-                                        .padding(.trailing, 5)
-        //                                .frame(maxWidth: .infinity, alignment: .center)
+                        ForEach(sortedMembers()) { member in
+                            if !(member.onlyWatching ?? false) {
+                                HStack {
+                                    Text(member.name)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                     
-                                    Text(makePrettyDistance(meters: distance, system: downwindManager.measurementSystem))
-                                        .fontWeight(.bold)
-        //                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    Group {
-                                        if let speed = member.speed {
-                                            Text(makePrettySpeed(speed: speed, system: downwindManager.measurementSystem))
-                                        } else {
-                                            Text(downwindManager.measurementSystem == .imperial ? "- mph" : "- km/h")
+                                    if let distance = distances[member] {
+                                        BearingArrowView(degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude!, myLongitude: downwindManager.user.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!))
+                                            .padding(.trailing, 5)
+                                        
+                                        Text(makePrettyDistance(meters: distance, system: downwindManager.measurementSystem))
+                                            .fontWeight(.bold)
+
+                                        Group {
+                                            if let speed = member.speed {
+                                                Text(makePrettySpeed(speed: speed, system: downwindManager.measurementSystem))
+                                            } else {
+                                                Text(downwindManager.measurementSystem == .imperial ? "- mph" : "- km/h")
+                                            }
                                         }
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    
-                                } else {
-                                    Text("No Data")
-                                    Text(downwindManager.measurementSystem == .imperial ? "- mph" : "- km/h")
                                         .frame(maxWidth: .infinity, alignment: .trailing)
+                                        
+                                    } else {
+                                        Text("No Data")
+                                        Text(downwindManager.measurementSystem == .imperial ? "- mph" : "- km/h")
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                    }
                                 }
                             }
+                            
                         }
+                        .onMove(perform: { indices, newOffset in
+                            // TODO: move this function into the model (doesn't really make a difference though) and make it work
+                            downwindManager.activeRun.members.move(fromOffsets: indices, toOffset: newOffset)
+                            downwindManager.runListSorting = .custom
+                        })
+                    } header: {
+                        Text("Time elapsed: \(Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer))")
+                            .monospacedDigit()
+                    } footer: {
+                        HStack {
+                            Spacer()
+                            
+                            Button {
+                                isShowingShareSheet = true
+                                
+                            } label: {
+                                Label("Share Run", systemImage: "person.fill.badge.plus")
+                            }
+                            .buttonStyle(.bordered)
+                            
+                            Spacer()
+                        }
+                        .padding()
                         
+
                     }
-                    .onMove(perform: { indices, newOffset in
-                        // TODO: move this function into the model (doesn't really make a difference though) and make it work
-                        downwindManager.activeRun.members.move(fromOffsets: indices, toOffset: newOffset)
-                        downwindManager.runListSorting = .custom
-                    })
+                    
                 }
                 
                 HStack {
@@ -103,10 +125,24 @@ struct RunListView: View {
                     secondaryButton: .default(Text("Cancel"))
                 )
             }
+            .sheet(isPresented: $isShowingShareSheet, content: {
+                NavigationStack {
+                    RunShareView(runName: downwindManager.activeRun.name)
+//                        .navigationTitle("Share Run")
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Done") {
+                                    isShowingShareSheet = false
+                                }
+                            }
+                        }
+                }
+                
+            })
             
             .navigationTitle(downwindManager.activeRun.name)
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color("ListBackground"))
+            .background(.listBackground)
 
         }
         

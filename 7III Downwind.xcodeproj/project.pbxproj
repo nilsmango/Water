@@ -33,6 +33,7 @@
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
 		787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
+		78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
+		78A9EB072B57132F0054E9F9 /* RunShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunShareView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
+				78A9EB072B57132F0054E9F9 /* RunShareView.swift */,
 				785CF9592B4FF2E300528B6D /* OptionsMenu.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
 			);
@@ -276,6 +279,7 @@
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
+				78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */,
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
 				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,
 				785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */,

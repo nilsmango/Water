@@ -8,13 +8,9 @@
 import SwiftUI
 
 struct OverlayAlertView: View {
-    
-    // for location alert: locationError == .notPossible -> bool
-    // Text: 
-    
-    
-    
+
     @Binding var showAlert: Bool
+    
     var text: String
     
     var body: some View {
@@ -24,21 +20,20 @@ struct OverlayAlertView: View {
                     Image(systemName: "exclamationmark.triangle")
                     Text(text)
                 }
-                .foregroundColor(.primary)
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.leading)
                 
                 .padding()
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(Color("DWGray"))
+                        .foregroundColor(.dwGray)
 //                        .background(.ultraThinMaterial)
                 }
                 .onTapGesture {
                     showAlert = false
                 }
                 .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
                         showAlert = false
                     }
                 }
