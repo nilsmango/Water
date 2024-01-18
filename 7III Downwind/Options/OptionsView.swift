@@ -75,6 +75,10 @@ struct OptionsView: View {
                         Text(system.rawValue)
                     }
                 }
+                
+                Toggle(isOn: $downwindManager.showListDetail, label: {
+                    Text("Show List Details")
+                })
             }
         }
     }

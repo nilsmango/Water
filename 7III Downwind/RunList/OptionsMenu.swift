@@ -11,6 +11,7 @@ struct OptionsMenu: View {
     
     @Binding var sorting: RunListSorting
     @Binding var measurement: MeasurementSystem
+    @Binding var showListDetail: Bool
     
     var body: some View {
         Menu {
@@ -26,6 +27,14 @@ struct OptionsMenu: View {
             }
             
             Menu {
+                Toggle(isOn: $showListDetail, label: {
+                    Text("Show List Details")
+                })
+            } label: {
+                Text("Show List Details")
+            }
+            
+            Menu {
                 Picker("Sorting", selection: $sorting) {
                     ForEach(RunListSorting.allCases) { sortCase in
                         Text(sortCase.rawValue)
@@ -36,6 +45,7 @@ struct OptionsMenu: View {
             Label("List Sorting", systemImage: "arrow.up.arrow.down")
         }
             
+            
         } label: {
             Label("Options", systemImage: "ellipsis.circle")
         }
@@ -43,5 +53,5 @@ struct OptionsMenu: View {
 }
 
 #Preview {
-    OptionsMenu(sorting: .constant(.distanceAscending), measurement: .constant(.metric))
+    OptionsMenu(sorting: .constant(.distanceAscending), measurement: .constant(.metric), showListDetail: .constant(true))
 }

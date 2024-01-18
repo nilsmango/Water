@@ -10,6 +10,7 @@ import Foundation
 struct Member: Identifiable, Codable, Hashable {
     let id: UUID?
     var name: String
+    var status: String?
     
     var latitude: Double?
     var longitude: Double?

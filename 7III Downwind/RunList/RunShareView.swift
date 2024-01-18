@@ -17,9 +17,9 @@ struct RunShareView: View {
                 .padding(.bottom, 1.0)
             
             Text("""
-                    1. Open 7III DW
+                    1. Open 7III Downwind
                     2. Tap \"Join A Run\"
-                    3. Enter the name:
+                    3. Enter name:
                 """)
             .padding(.bottom, 2.0)
             

@@ -13,7 +13,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // MARK: App Storage
     @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
-    
+    @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
     
     

@@ -35,32 +35,8 @@ struct RunListView: View {
                     Section {
                         ForEach(sortedMembers()) { member in
                             if !(member.onlyWatching ?? false) {
-                                HStack {
-                                    Text(member.name)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    
-                                    if let distance = distances[member] {
-                                        BearingArrowView(degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude!, myLongitude: downwindManager.user.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!))
-                                            .padding(.trailing, 5)
-                                        
-                                        Text(makePrettyDistance(meters: distance, system: downwindManager.measurementSystem))
-                                            .fontWeight(.bold)
-
-                                        Group {
-                                            if let speed = member.speed {
-                                                Text(makePrettySpeed(speed: speed, system: downwindManager.measurementSystem))
-                                            } else {
-                                                Text(downwindManager.measurementSystem == .imperial ? "- mph" : "- km/h")
-                                            }
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .trailing)
-                                        
-                                    } else {
-                                        Text("No Data")
-                                        Text(downwindManager.measurementSystem == .imperial ? "- mph" : "- km/h")
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
-                                    }
-                                }
+                                MemberListView(member: member, distance: distances[member], degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude!, myLongitude: downwindManager.user.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!), measurementSystem: downwindManager.measurementSystem, showDetail: downwindManager.showListDetail)
+                                
                             }
                             
                         }
@@ -103,7 +79,7 @@ struct RunListView: View {
                     .buttonStyle(.bordered)
                     .padding()
                     
-                    OptionsMenu(sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem)
+                    OptionsMenu(sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail)
                         .buttonStyle(.bordered)
                         .padding()
                     
