@@ -9,10 +9,13 @@ import Foundation
 
 enum Constants {
     static let keychainKey = "DWUserData"
-    static let baseURL = "https://4c44-194-191-224-88.ngrok-free.app"
+    static let baseURL = "https://e065-194-191-224-88.ngrok-free.app"
     
     /// height of the run map in meter
     static let heightOfMap = 300.0
+    
+    /// location up-, and downloading timer interval in seconds
+    static let locationTimerInterval: Double = 30
 }
 
 enum Endpoints {

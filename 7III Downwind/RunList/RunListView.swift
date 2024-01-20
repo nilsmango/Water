@@ -35,7 +35,7 @@ struct RunListView: View {
                     Section {
                         ForEach(sortedMembers()) { member in
                             if !(member.onlyWatching ?? false) {
-                                MemberListView(member: member, distance: distances[member], degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude!, myLongitude: downwindManager.user.longitude!, targetLatitude: member.latitude!, targetLongitude: member.longitude!), measurementSystem: downwindManager.measurementSystem, showDetail: downwindManager.showListDetail)
+                                MemberListView(member: member, distance: distances[member], degrees: calculateBearingToTarget(myTrueHeading: downwindManager.trueHeading, myLatitude: downwindManager.user.latitude ?? 0.0, myLongitude: downwindManager.user.longitude ?? 0.0, targetLatitude: member.latitude ?? 0.0, targetLongitude: member.longitude ?? 0.0), measurementSystem: downwindManager.measurementSystem, showDetail: downwindManager.showListDetail)
                                 
                             }
                             

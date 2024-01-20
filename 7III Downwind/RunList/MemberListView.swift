@@ -59,7 +59,6 @@ struct MemberListView: View {
                     
                     if let latitude = member.latitude, let longitude = member.longitude {
                         Text("\(latitude), \(longitude)")
-                            .textSelection(.enabled)
                     }
                     
                 }

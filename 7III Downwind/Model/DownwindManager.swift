@@ -136,8 +136,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // check if we have authorization to see location and start location
             self.checkAndStartLocationService()
         }
-        // downloading all the members uploading yourself
-        await upDownloadManager()
         
     }
     
@@ -219,7 +217,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// starts our upload and download timer
     private func startUploadDownloadTimer() {
-        self.runTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { _ in
+        // down and upload for the first time
+        Task {
+            await self.upDownloadManager()
+        }
+        
+        // start the timer
+        self.runTimer = Timer.scheduledTimer(withTimeInterval: Constants.locationTimerInterval, repeats: true) { _ in
             Task {
                 await self.upDownloadManager()
             }
