@@ -11,35 +11,40 @@ struct FirstTimeUserNameSet: View {
     @ObservedObject var downwindManager: DownwindManager
     
     @State private var userName = ""
-    
-    @FocusState private var editorIsFocused: FocusField?
+    @State private var status = ""
     
     @Binding var showingSheet: Bool
     
-    enum FocusField: Hashable {
-        case field
-      }
     
     var body: some View {
         VStack {
             List {
-            Section {
-                
-                TextField("Kai Lenny Junior", text: $userName)
-                    .focused($editorIsFocused, equals: .field)
-                    .onAppear() {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {  // making the text field focussed when it appears
-                            editorIsFocused = .field
-                        }
-                    }
+                Section {
+                    TextField("Kai Lenny", text: $userName)
+                        .onChange(of: userName, { oldValue, newValue in
+                            if newValue.count > Constants.maxLengthUser {
+                                userName = String(newValue.prefix(Constants.maxLengthUser))
+                            }
+                        })
 
-            } header: {
-                Text("Set a name so your friends to see")
+                } header: {
+                    Text("Set a name so your friends to see")
+                }
+                
+                Section {
+                    TextField("Frothing!", text: $status)
+                        .onChange(of: status, { oldValue, newValue in
+                            if newValue.count > Constants.maxLengthUser {
+                                status = String(newValue.prefix(Constants.maxLengthUser))
+                            }
+                        })
+                } header: {
+                    Text("Set a status")
+                }
             }
-        }
             
             Button(action: {
-                downwindManager.user = Member(id: UUID(), name: userName)
+                downwindManager.user = Member(id: UUID(), name: userName, status: status)
                 downwindManager.saveUser()
                 showingSheet = false
                 
@@ -55,7 +60,7 @@ struct FirstTimeUserNameSet: View {
                 Label("Save", systemImage: "checkmark.circle")
             })
             .buttonStyle(.bordered)
-            .disabled(userName == "")
+            .disabled(userName == "" || status == "")
             .padding()
         }
         .background(Color("ListSheet"))

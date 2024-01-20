@@ -40,31 +40,35 @@ struct StartView: View {
                 Image("DWSplash")
                     .padding(.bottom, 55)
                 
-                Text("Aloha \(downwindManager.user.name)!")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 60)
-                
-                Group {
-                    Button(action: {
-                        // join a run
-                        showJoinRunSheet = true
-                    }, label: {
-                        Label("Join A Run", systemImage: "wind")
-                    })
+                if downwindManager.user.name == "" {
+                    Text("You will need to set a name before you can start using this app. Simply tap on the icon in the upper right-hand corner to set a name.")
+                        .padding()
+                } else {
+                    Text("Aloha \(downwindManager.user.name)!")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.bottom, 60)
                     
-                    Text("or")
-                    
-                    Button(action: {
-                        showStartRunSheet = true
+                    Group {
+                        Button(action: {
+                            // join a run
+                            showJoinRunSheet = true
+                        }, label: {
+                            Label("Join A Run", systemImage: "wind")
+                        })
                         
-                    }, label: {
-                        Label("Start New Run", systemImage: "wind.snow")
-                    })
+                        Text("or")
+                        
+                        Button(action: {
+                            showStartRunSheet = true
+                            
+                        }, label: {
+                            Label("Start New Run", systemImage: "wind.snow")
+                        })
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .buttonStyle(.bordered)
-                
-                
+
                 
                 Spacer()
             }
@@ -109,7 +113,7 @@ struct StartView: View {
             })
             .sheet(isPresented: $showOptionsSheet, content: {
                 NavigationStack {
-                    OptionsView(downwindManager: downwindManager)
+                    OptionsView(downwindManager: downwindManager, showOptionsSheet: $showOptionsSheet, showFirstTimeUserName: $showFirstTimeUserName)
                         .navigationTitle("Options")
                         .toolbar {
                             ToolbarItem(placement: .topBarTrailing) {

@@ -17,6 +17,8 @@ struct MemberListView: View {
     
     let showDetail: Bool
     
+    let screenWidth = UIScreen.main.bounds.width
+    
     var body: some View {
         VStack {
             HStack {
@@ -25,11 +27,13 @@ struct MemberListView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 if distance != nil {
-                    BearingArrowView(degrees: degrees)
-                        .padding(.trailing, 5)
-                    
-                    Text(makePrettyDistance(meters: distance!, system: measurementSystem))
-                        .fontWeight(.bold)
+                    Group {
+                        BearingArrowView(degrees: degrees)
+    //                        .padding(.trailing, 3)
+                        
+                        Text(makePrettyDistance(meters: distance!, system: measurementSystem))
+                            .fontWeight(.bold)
+                    }
 
                     Group {
                         if let speed = member.speed {
@@ -38,13 +42,13 @@ struct MemberListView: View {
                             Text(measurementSystem == .imperial ? "- mph" : "- km/h")
                         }
                     }
-                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .frame(maxWidth: screenWidth/5, alignment: .trailing)
                     
                 } else {
                     Text("No Data")
                     
                     Text(measurementSystem == .imperial ? "- mph" : "- km/h")
-                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .frame(maxWidth: screenWidth/5, alignment: .trailing)
                 }
             }
             .padding(.bottom, showDetail ? 3 : 0)
@@ -72,9 +76,9 @@ struct MemberListView: View {
     List {
         MemberListView(member: Member(id: UUID(), name: "Lay Kenny", status: "🥶🥶🥶", latitude: 47.127145, longitude: 7.220062, speed: 15.3), distance: 200.0, degrees: 23, measurementSystem: .metric, showDetail: true)
         
-        MemberListView(member: Member(id: UUID(), name: "Hardly Rippi", status: "Every Man For Himself", latitude: 47.127165, longitude: 7.2200672, speed: 15.3), distance: 400.0, degrees: 23, measurementSystem: .metric, showDetail: true)
+        MemberListView(member: Member(id: UUID(), name: "Mister Bennetts", status: "Foil Flow", latitude: 47.127165, longitude: 7.2200672, speed: 15.3), distance: 20.0, degrees: 23, measurementSystem: .metric, showDetail: true)
         
-        MemberListView(member: Member(id: UUID(), name: "Nils Mango", status: "Broke Paddle, but A-OK", latitude: 47.127165, longitude: 7.2200672, speed: 15.3), distance: 400.0, degrees: 23, measurementSystem: .metric, showDetail: true)
+        MemberListView(member: Member(id: UUID(), name: "Nils Mango", status: "Please Wait", latitude: 47.127165, longitude: 7.2200672, speed: 1.3), distance: 4000.0, degrees: 23, measurementSystem: .metric, showDetail: true)
         
     }
 }

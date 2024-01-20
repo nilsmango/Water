@@ -16,6 +16,9 @@ enum Constants {
     
     /// location up-, and downloading timer interval in seconds
     static let locationTimerInterval: Double = 30
+    
+    /// max character number for username and status
+    static let maxLengthUser = 15
 }
 
 enum Endpoints {

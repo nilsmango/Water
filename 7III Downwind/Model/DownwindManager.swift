@@ -367,7 +367,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     // MARK: User
 
-    @Published var user: Member = Member(id: nil, name: "Your Name")
+    @Published var user: Member = Member(id: nil, name: "Your Name", status: "All good.")
     @Published var trueHeading: Double = 0.0
     
     func saveUser() {
@@ -397,6 +397,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let url = try createDWURL(endpoint: Endpoints.checkUpdateMembers)
         
         try await HTTPClient.shared.sendData(to: url, object: user, httpMethod: HTTPMethods.POST.rawValue)
+    }
+    
+    func deleteUserFromDB() async throws {
+        if let userIDString = user.id?.uuidString {
+            let url = try createDWURL(endpoint: Endpoints.checkUpdateMembers + "/" + userIDString)
+            
+            try await HTTPClient.shared.delete(url: url)
+        }
+        
     }
     
     
