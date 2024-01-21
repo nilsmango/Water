@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		783A53C02B59A61B00701D7F /* MemberListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53BF2B59A61B00701D7F /* MemberListView.swift */; };
+		783A53C32B5D930400701D7F /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C22B5D930400701D7F /* MapView.swift */; };
+		783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C42B5D9DB000701D7F /* CircleAndText.swift */; };
+		783A53C72B5DA57C00701D7F /* RunMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C62B5DA57C00701D7F /* RunMapView.swift */; };
 		785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
 		785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
 		785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
@@ -39,6 +42,9 @@
 
 /* Begin PBXFileReference section */
 		783A53BF2B59A61B00701D7F /* MemberListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberListView.swift; sourceTree = "<group>"; };
+		783A53C22B5D930400701D7F /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		783A53C42B5D9DB000701D7F /* CircleAndText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAndText.swift; sourceTree = "<group>"; };
+		783A53C62B5DA57C00701D7F /* RunMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunMapView.swift; sourceTree = "<group>"; };
 		785C4A952B358F7B00EB07F8 /* 7III Downwind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Downwind.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -82,6 +88,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		783A53C12B5D92EC00701D7F /* RunMap */ = {
+			isa = PBXGroup;
+			children = (
+				783A53C62B5DA57C00701D7F /* RunMapView.swift */,
+				783A53C22B5D930400701D7F /* MapView.swift */,
+				783A53C42B5D9DB000701D7F /* CircleAndText.swift */,
+			);
+			path = RunMap;
+			sourceTree = "<group>";
+		};
 		785C4A8C2B358F7B00EB07F8 = {
 			isa = PBXGroup;
 			children = (
@@ -106,8 +122,7 @@
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
 				785CF9562B4FE85100528B6D /* Options */,
 				78A9EB062B56C01B0054E9F9 /* Alerts */,
-				785CF9602B53D50D00528B6D /* NewRun */,
-				785C4ADD2B45EBDC00EB07F8 /* RunList */,
+				785CF9602B53D50D00528B6D /* Runs */,
 				785C4AD42B44095300EB07F8 /* Experiments */,
 				785C4AA72B35914100EB07F8 /* Model */,
 				785C4AA82B35916900EB07F8 /* Utilities */,
@@ -167,8 +182,6 @@
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
 				783A53BF2B59A61B00701D7F /* MemberListView.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
-				78A9EB072B57132F0054E9F9 /* RunShareView.swift */,
-				785CF9592B4FF2E300528B6D /* OptionsMenu.swift */,
 			);
 			path = RunList;
 			sourceTree = "<group>";
@@ -182,12 +195,16 @@
 			path = Options;
 			sourceTree = "<group>";
 		};
-		785CF9602B53D50D00528B6D /* NewRun */ = {
+		785CF9602B53D50D00528B6D /* Runs */ = {
 			isa = PBXGroup;
 			children = (
 				787A7EE72B4B03C20083ECEF /* StartRun.swift */,
+				78A9EB072B57132F0054E9F9 /* RunShareView.swift */,
+				785CF9592B4FF2E300528B6D /* OptionsMenu.swift */,
+				785C4ADD2B45EBDC00EB07F8 /* RunList */,
+				783A53C12B5D92EC00701D7F /* RunMap */,
 			);
-			path = NewRun;
+			path = Runs;
 			sourceTree = "<group>";
 		};
 		78A9EB062B56C01B0054E9F9 /* Alerts */ = {
@@ -279,6 +296,8 @@
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
+				783A53C72B5DA57C00701D7F /* RunMapView.swift in Sources */,
+				783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
@@ -291,6 +310,7 @@
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
+				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
