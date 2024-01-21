@@ -21,4 +21,6 @@ struct Member: Identifiable, Codable, Hashable {
     var onlyWatching: Bool?
     
     var createdOn: String?
+    
+    var lastUpdated: String?
 }
