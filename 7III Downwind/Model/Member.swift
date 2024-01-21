@@ -8,7 +8,7 @@
 import Foundation
 
 struct Member: Identifiable, Codable, Hashable {
-    let id: UUID?
+    var id: UUID?
     var name: String
     var status: String?
     

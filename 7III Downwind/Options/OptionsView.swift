@@ -38,6 +38,9 @@ struct OptionsView: View {
                         
                         Button(action: {
                             downwindManager.user.name = userName
+                            if downwindManager.user.id == nil {
+                                downwindManager.user.id = UUID()
+                            }
                             downwindManager.saveUser()
                             Task {
                                 do {
@@ -90,6 +93,9 @@ struct OptionsView: View {
                         
                         Button(action: {
                             downwindManager.user.status = status
+                            if downwindManager.user.id == nil {
+                                downwindManager.user.id = UUID()
+                            }
                             downwindManager.saveUser()
                             Task {
                                 do {
