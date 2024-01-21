@@ -40,11 +40,7 @@ struct RunListView: View {
                             }
                             
                         }
-                        .onMove(perform: { indices, newOffset in
-                            // TODO: move this function into the model (doesn't really make a difference though) and make it work
-                            downwindManager.activeRun.members.move(fromOffsets: indices, toOffset: newOffset)
-                            downwindManager.runListSorting = .custom
-                        })
+
                     } header: {
                         Text("Time elapsed: \(Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer))")
                             .monospacedDigit()
@@ -135,8 +131,6 @@ struct RunListView: View {
             return downwindManager.activeRun.members.sorted { distances[$0] ?? stupidlyHighNumber < distances[$1] ?? stupidlyHighNumber}
         case .distanceDescending:
             return downwindManager.activeRun.members.sorted { distances[$0] ?? stupidlyLowNumber > distances[$1] ?? stupidlyLowNumber}
-        case .custom:
-            return downwindManager.activeRun.members
         }
     }
 }

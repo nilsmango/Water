@@ -19,6 +19,8 @@ struct MemberListView: View {
     
     let screenWidth = UIScreen.main.bounds.width
     
+    @State private var showLastUpdate = false
+    
     var body: some View {
         VStack {
             HStack {
@@ -54,27 +56,51 @@ struct MemberListView: View {
             .padding(.bottom, showDetail ? 3 : 0)
             
             if showDetail {
-                HStack {
-                    if let status = member.status {
-                        Text(status)
+                
+                    HStack {
+                        if showLastUpdate {
+                            if let dateString = member.lastUpdated {
+                                let date = dateFromString(dateString)
+                                Text("Last updated: \(Text(date!, style: .timer))")
+                                    .monospacedDigit()
+                            } else {
+                                Text("Last updated: unknown")
+                            }
+                            
+                            Spacer()
+                            
+                        } else {
+
+                        if let status = member.status {
+                            Text(status)
+                        }
+                        
+                        Spacer()
+                        
+                        if let latitude = member.latitude, let longitude = member.longitude {
+                            Text("\(latitude), \(longitude)")
+                        }
+                        
                     }
-                    
-                    Spacer()
-                    
-                    if let latitude = member.latitude, let longitude = member.longitude {
-                        Text("\(latitude), \(longitude)")
-                    }
-                    
                 }
+                
             }
             
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            showLastUpdate.toggle()
+        }
+        .onLongPressGesture {
+            // TODO: either copy location coordinates and last updated or show share thing for that
+            print("copy that stuff here")
         }
     }
 }
 
 #Preview {
     List {
-        MemberListView(member: Member(id: UUID(), name: "Lay Kenny", status: "🥶🥶🥶", latitude: 47.127145, longitude: 7.220062, speed: 15.3), distance: 200.0, degrees: 23, measurementSystem: .metric, showDetail: true)
+        MemberListView(member: Member(id: UUID(), name: "Lay Kenny", status: "🥶🥶🥶", latitude: 47.127145, longitude: 7.220062, speed: 15.3, lastUpdated: "2024-01-21T13:36:12Z"), distance: 200.0, degrees: 23, measurementSystem: .metric, showDetail: true)
         
         MemberListView(member: Member(id: UUID(), name: "Mister Bennetts", status: "Foil Flow", latitude: 47.127165, longitude: 7.2200672, speed: 15.3), distance: 20.0, degrees: 23, measurementSystem: .metric, showDetail: true)
         
