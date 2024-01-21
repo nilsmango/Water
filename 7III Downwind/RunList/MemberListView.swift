@@ -20,6 +20,7 @@ struct MemberListView: View {
     let screenWidth = UIScreen.main.bounds.width
     
     @State private var showLastUpdate = false
+    @State private var showAlert = false
     
     var body: some View {
         VStack {
@@ -92,8 +93,14 @@ struct MemberListView: View {
             showLastUpdate.toggle()
         }
         .onLongPressGesture {
-            // TODO: either copy location coordinates and last updated or show share thing for that
-            print("copy that stuff here")
+            
+            if let latitude = member.latitude, let longitude = member.longitude {
+                UIPasteboard.general.string = "\(latitude), \(longitude)"
+                showAlert = true
+            }
+        }
+        .overlay {
+            OverlayAlertView(showAlert: $showAlert, text: "Location copied!", showSymbol: false, padding: 10.0)
         }
     }
 }

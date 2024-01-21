@@ -12,18 +12,22 @@ struct OverlayAlertView: View {
     @Binding var showAlert: Bool
     
     var text: String
+    var showSymbol: Bool = true
+    var padding: Double = 16.0
     
     var body: some View {
         if showAlert {
             VStack {
                 HStack {
-                    Image(systemName: "exclamationmark.triangle")
+                    if showSymbol {
+                        Image(systemName: "exclamationmark.triangle")
+                    }
                     Text(text)
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.leading)
                 
-                .padding()
+                .padding(padding)
                 .background {
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.dwGray)
