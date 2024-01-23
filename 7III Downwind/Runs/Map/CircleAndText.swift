@@ -10,13 +10,14 @@ import SwiftUI
 struct CircleAndText: View {
     var member: Member
     var measurementSystem: MeasurementSystem
-        
-    @State private var showUpdated = false
+    var showUpdated: Bool
+    
+    @Binding var showAlert: Bool
     
     var body: some View {
         ZStack {
             Circle()
-                .frame(width: 20)
+                .frame(width: 15)
                 .foregroundStyle(.secondary)
             
             VStack {
@@ -32,7 +33,6 @@ struct CircleAndText: View {
                         Text("unknown")
                     }
                     
-                    
                 } else {
                     Text(member.name)
                         
@@ -42,18 +42,20 @@ struct CircleAndText: View {
                         Text(measurementSystem == .imperial ? "- mph" : "- km/h")
                     }
                 }
-                
             }
             .font(.caption)
-            .frame(width: 90, height: 90)
+            .frame(width: 90, height: 85)
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            showUpdated.toggle()
+            if let latitude = member.latitude, let longitude = member.longitude {
+                UIPasteboard.general.string = "\(latitude), \(longitude)"
+                showAlert = true
+            }
         }
     }
 }
 
 #Preview {
-    CircleAndText(member: Member(id: UUID(), name: "Nils Mango", status: "Please Wait", latitude: 47.123295, longitude: 7.220013, speed: 1.3), measurementSystem: .metric)
+    CircleAndText(member: Member(id: UUID(), name: "Nils Mango", status: "Please Wait", latitude: 47.123295, longitude: 7.220013, speed: 1.3), measurementSystem: .metric, showUpdated: false, showAlert: .constant(false))
 }

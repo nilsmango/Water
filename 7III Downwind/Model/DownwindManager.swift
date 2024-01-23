@@ -35,6 +35,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         try await HTTPClient.shared.sendData(to: url, object: newRun, httpMethod: HTTPMethods.POST.rawValue)
         
         // add user to the run
+        user.onlyWatching = false
         try await addMembersToRun(members: [user], runID: newRun.id!)
         
         // updating the run name from the db
@@ -64,11 +65,28 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let runToJoin = try await getRunFromName(runName: name)
         
         // add user to the run
+        user.onlyWatching = false
         try await addMembersToRun(members: [user], runID: runToJoin.id!)
         
         
         // starting the action
         try await startActiveRun(run: runToJoin)
+        
+    }
+    
+    /// watching a run
+    func watchRun(name: String) async throws {
+        
+        // get run
+        let runToJoin = try await getRunFromName(runName: name)
+        
+        // add user to the run
+        user.onlyWatching = true
+        try await addMembersToRun(members: [user], runID: runToJoin.id!)
+        
+        
+        // starting the action
+        try await startWatchingRun(run: runToJoin)
         
     }
     
@@ -135,6 +153,23 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // check if we have authorization to see location and start location
             self.checkAndStartLocationService()
+        }
+        
+    }
+    
+    /// load run as watching only run
+    private func startWatchingRun(run: Run) async throws {
+        
+        DispatchQueue.main.async {
+            
+            // start active run
+            self.activeRun.id = run.id
+            self.activeRun.name = run.name
+            self.activeRun.startedOn = run.startedOn
+            self.activeRun.active = true
+            
+            // start download timer
+            self.startUploadDownloadTimer(onlyDownload: true)
         }
         
     }
@@ -216,7 +251,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     /// starts our upload and download timer
-    private func startUploadDownloadTimer() {
+    private func startUploadDownloadTimer(onlyDownload: Bool = false) {
         // down and upload for the first time
         Task {
             await self.upDownloadManager()
@@ -225,19 +260,22 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // start the timer
         self.runTimer = Timer.scheduledTimer(withTimeInterval: Constants.locationTimerInterval, repeats: true) { _ in
             Task {
-                await self.upDownloadManager()
+                await self.upDownloadManager(onlyDownload: onlyDownload)
             }
         }
     }
     
+    
     /// uploads user location, and downloads the other members
-    func upDownloadManager() async {
+    func upDownloadManager(onlyDownload: Bool = false) async {
         print("UpDownload is running")
         // Upload user location
-        do {
-            try await uploadUserLocation()
-        } catch {
-            print("Error uploading user location: \(error)")
+        if !onlyDownload {
+            do {
+                try await uploadUserLocation()
+            } catch {
+                print("Error uploading user location: \(error)")
+            }
         }
         
         // After uploading, load run members
@@ -351,6 +389,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         DispatchQueue.main.async {
             self.activeRun.members = membersResponse.filter { $0.id != self.user.id }
+            
         }
     }
     

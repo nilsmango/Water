@@ -32,27 +32,20 @@ struct MemberListView: View {
                 if distance != nil {
                     Group {
                         BearingArrowView(degrees: degrees)
-    //                        .padding(.trailing, 3)
                         
                         Text(makePrettyDistance(meters: distance!, system: measurementSystem))
                             .fontWeight(.bold)
                     }
-
-                    Group {
-                        if let speed = member.speed {
-                            Text(makePrettySpeed(speed: speed, system: measurementSystem))
-                        } else {
-                            Text(measurementSystem == .imperial ? "- mph" : "- km/h")
-                        }
-                    }
-                    .frame(maxWidth: screenWidth/5, alignment: .trailing)
-                    
-                } else {
-                    Text("No Data")
-                    
-                    Text(measurementSystem == .imperial ? "- mph" : "- km/h")
-                        .frame(maxWidth: screenWidth/5, alignment: .trailing)
                 }
+                
+                Group {
+                    if let speed = member.speed {
+                        Text(makePrettySpeed(speed: speed, system: measurementSystem))
+                    } else {
+                        Text(measurementSystem == .imperial ? "- mph" : "- km/h")
+                    }
+                }
+                .frame(maxWidth: screenWidth/5, alignment: .trailing)
             }
             .padding(.bottom, showDetail ? 3 : 0)
             
@@ -90,24 +83,25 @@ struct MemberListView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            showLastUpdate.toggle()
-        }
-        .onLongPressGesture {
-            
             if let latitude = member.latitude, let longitude = member.longitude {
                 UIPasteboard.general.string = "\(latitude), \(longitude)"
                 showAlert = true
             }
         }
+        .onAppear {
+            Timer.scheduledTimer(withTimeInterval: Constants.updateTimer, repeats: true) { _ in
+                showLastUpdate.toggle()
+            }
+        }
         .overlay {
-            OverlayAlertView(showAlert: $showAlert, text: "Location copied!", showSymbol: false, padding: 10.0)
+            OverlayAlertView(showAlert: $showAlert, text: "Coordinates copied!", symbolPositive: true, padding: 10.0)
         }
     }
 }
 
 #Preview {
     List {
-        MemberListView(member: Member(id: UUID(), name: "Lay Kenny", status: "🥶🥶🥶", latitude: 47.127145, longitude: 7.220062, speed: 15.3, lastUpdated: "2024-01-21T13:36:12Z"), distance: 200.0, degrees: 23, measurementSystem: .metric, showDetail: true)
+        MemberListView(member: Member(id: UUID(), name: "Lay Kenny", status: "🥶🥶🥶", latitude: 47.127145, longitude: 7.220062, speed: 15.3, lastUpdated: "2024-01-21T13:36:12Z"), distance: nil, degrees: 23, measurementSystem: .metric, showDetail: true)
         
         MemberListView(member: Member(id: UUID(), name: "Mister Bennetts", status: "Foil Flow", latitude: 47.127165, longitude: 7.2200672, speed: 15.3), distance: 20.0, degrees: 23, measurementSystem: .metric, showDetail: true)
         

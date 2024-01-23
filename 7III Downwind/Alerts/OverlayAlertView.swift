@@ -13,6 +13,7 @@ struct OverlayAlertView: View {
     
     var text: String
     var showSymbol: Bool = true
+    var symbolPositive = false
     var padding: Double = 16.0
     
     var body: some View {
@@ -20,7 +21,7 @@ struct OverlayAlertView: View {
             VStack {
                 HStack {
                     if showSymbol {
-                        Image(systemName: "exclamationmark.triangle")
+                        Image(systemName: symbolPositive ? "checkmark" : "exclamationmark.triangle")
                     }
                     Text(text)
                 }

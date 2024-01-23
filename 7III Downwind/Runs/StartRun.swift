@@ -13,7 +13,7 @@ struct StartRun: View {
     @Binding var showSheet: Bool
     @State private var runName: String = ""
     
-    var isNewRun: Bool
+    var runType: RunType
     
     @FocusState private var editorIsFocused: FocusField?
     
@@ -30,7 +30,7 @@ struct StartRun: View {
                 
                 Section {
 
-                    TextField(isNewRun ? "Enter new run name here" : "Enter run to join here", text: $runName)
+                    TextField(runType.textFieldText, text: $runName)
                         .focused($editorIsFocused, equals: .field)
                         .onAppear() {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {  
@@ -44,7 +44,8 @@ struct StartRun: View {
             }
             
             Button(action: {
-                if isNewRun {
+                switch runType {
+                case .start:
                     // start a new run and add yourself, load and update active run
                     Task {
                         do {
@@ -58,7 +59,7 @@ struct StartRun: View {
                             showAlert = true
                         }
                     }
-                } else {
+                case .join:
                     // if not in db show "no run with that name is running at the moment"
                     
                     // if everything works out add yourself to the run and load and update active run
@@ -73,10 +74,23 @@ struct StartRun: View {
                             showAlert = true
                         }
                     }
+                case .watch:
+                    Task {
+                        do {
+                            try await downwindManager.watchRun(name: runName)
+                        } catch GetRunError.badResponse {
+                            alertText = "No run with that name found!"
+                            showAlert = true
+                        } catch {
+                            alertText = "Error joining run: \(error)"
+                            showAlert = true
+                        }
+                    }
                 }
                 
+                
             }, label: {
-                Label(isNewRun ? "Start Run" : "Join Run", systemImage: isNewRun ? "wind.snow" : "wind")
+                Label(runType.buttonLabel, systemImage: runType.symbol)
             })
             .buttonStyle(.bordered)
             .disabled(runName == "")
@@ -93,5 +107,5 @@ struct StartRun: View {
 
 #Preview {
     
-    StartRun(downwindManager: DownwindManager(), showSheet: .constant(true), isNewRun: false)
+    StartRun(downwindManager: DownwindManager(), showSheet: .constant(true), runType: .start)
 }
