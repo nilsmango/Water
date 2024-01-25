@@ -10,15 +10,19 @@ import SwiftUI
 struct ListInfoLabel: View {
     var members: [Member]
     var userWatching: Bool
+    
+    private var watchingMembersCount: Int {
+        let watchingMembers = members.filter { $0.onlyWatching == true }
+        return watchingMembers.count + (userWatching ? 1 : 0)
+    }
 
     var body: some View {
-        let watchingMembers = members.filter { $0.onlyWatching == true }
-        let user = userWatching ? 1 : 0
-        let count = watchingMembers.count + user
         VStack(alignment: .leading) {
+            
             Label("Tap on any row to copy the coordinates", systemImage: "info.circle")
-            if count > 0 {
-                Label("Watching: \(count)", systemImage: "eyes")
+            
+            if watchingMembersCount > 0 {
+                Label("Watching: \(watchingMembersCount)", systemImage: "eyes")
             }
         }
     }

@@ -39,7 +39,7 @@ enum RunType {
         case .join:
             "wind"
         case .watch:
-            "wind"
+            "eyes"
         }
     }
 }

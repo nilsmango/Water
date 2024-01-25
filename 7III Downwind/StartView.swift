@@ -10,16 +10,21 @@ import SwiftUI
 struct StartView: View {
     @StateObject private var downwindManager = DownwindManager()
     
+    @State private var showRunPicker = false
     @State private var showStartRunSheet = false
-    @State private var showJoinRunSheet = false
+    @State private var runType: RunType = .start
     
     @State private var showOptionsSheet = false
     
     @State private var showFirstTimeUserName = false
-        
+    
     var body: some View {
         if downwindManager.activeRun.active {
-            RunListView(downwindManager: downwindManager)
+            if downwindManager.user.onlyWatching == true {
+                RunMapView(downwindManager: downwindManager)
+            } else {
+                RunListView(downwindManager: downwindManager)
+            }
         } else {
             VStack {
                 HStack {
@@ -49,26 +54,13 @@ struct StartView: View {
                         .fontWeight(.bold)
                         .padding(.bottom, 60)
                     
-                    Group {
-                        Button(action: {
-                            // join a run
-                            showJoinRunSheet = true
-                        }, label: {
-                            Label("Join A Run", systemImage: "wind")
-                        })
-                        
-                        Text("or")
-                        
-                        Button(action: {
-                            showStartRunSheet = true
-                            
-                        }, label: {
-                            Label("Start New Run", systemImage: "wind.snow")
-                        })
-                    }
+                    Button(action: {
+                        showRunPicker = true
+                    }, label: {
+                        Label("Start", systemImage: "wind")
+                    })
                     .buttonStyle(.bordered)
                 }
-
                 
                 Spacer()
             }
@@ -80,10 +72,24 @@ struct StartView: View {
     Please deactivate Airplane mode and try again.
     """)
             }
+            .confirmationDialog("Pick Run Option", isPresented: $showRunPicker, actions: {
+                Button("Start New Run") {
+                    runType = .start
+                    showStartRunSheet = true
+                }
+                Button("Join a Run") {
+                    runType = .join
+                    showStartRunSheet = true
+                }
+                Button("Watch a Run") {
+                    runType = .watch
+                    showStartRunSheet = true
+                }
+            })
             .sheet(isPresented: $showStartRunSheet, content: {
                 NavigationStack {
-                    StartRun(downwindManager: downwindManager, showSheet: $showStartRunSheet, isNewRun: true)
-                        .navigationTitle("New Run")
+                    StartRun(downwindManager: downwindManager, showSheet: $showStartRunSheet, runType: runType)
+                        .navigationTitle(runType.buttonLabel)
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
                             ToolbarItem(placement: .topBarTrailing) {
@@ -94,20 +100,7 @@ struct StartView: View {
                         }
                 }
             })
-            .sheet(isPresented: $showJoinRunSheet, content: {
-                NavigationStack {
-                    StartRun(downwindManager: downwindManager, showSheet: $showStartRunSheet, isNewRun: false)
-                        .navigationTitle("Join Run")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button("Cancel") {
-                                    showJoinRunSheet = false
-                                }
-                            }
-                        }
-                }
-            })
+            
             .fullScreenCover(isPresented: $showFirstTimeUserName, content: {
                 FirstTimeUserNameSet(downwindManager: downwindManager, showingSheet: $showFirstTimeUserName)
             })
