@@ -114,7 +114,6 @@
 			children = (
 				783A53C22B5D930400701D7F /* MapView.swift */,
 				783A53C42B5D9DB000701D7F /* CircleAndText.swift */,
-				783A53D42B626BF500701D7F /* HeadingIndicator.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -202,6 +201,7 @@
 		785C4AD42B44095300EB07F8 /* Experiments */ = {
 			isa = PBXGroup;
 			children = (
+				783A53D42B626BF500701D7F /* HeadingIndicator.swift */,
 				785C4ACA2B41705C00EB07F8 /* RunView.swift */,
 				785C4ACE2B4308A800EB07F8 /* RunUITest.swift */,
 			);

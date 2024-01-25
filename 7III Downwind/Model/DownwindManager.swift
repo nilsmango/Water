@@ -348,11 +348,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func quitActiveRun() async throws {
         // reset the active run var
         DispatchQueue.main.async {
-            self.runTimer?.invalidate()
-            self.runTimer = nil
-            
             // make run inactive, keeping the id
             self.activeRun = Run(name: "", members: self.activeRun.members, active: false)
+            
+            self.runTimer?.invalidate()
+            self.runTimer = nil
             
             // stop location and header updating
             print("Stopping location tracking")

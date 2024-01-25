@@ -19,10 +19,10 @@ struct MapView: View {
     @State private var showAlert = false
     @State private var showLastUpdate = false
     
-    var heading: Double = 0.0
+    @Namespace var mapScope
     
     var body: some View {
-        Map() {
+        Map(scope: mapScope) {
             ForEach(members) { member in
                 if let latitude = member.latitude, let longitude = member.longitude {
                     Annotation("", coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)) {
@@ -31,15 +31,12 @@ struct MapView: View {
                 }
             }
             if !onlyWatching {
-                UserAnnotation {
-                    CircleAndText(member: user, measurementSystem: measurementSystem, showUpdated: false, heading: heading, showAlert: .constant(false), isUser: true)
-                }
+                UserAnnotation()
             }
-                
         }
         .mapControls {
             MapScaleView()
-                }
+        }
         .mapControlVisibility(.visible)
         
         
@@ -50,26 +47,35 @@ struct MapView: View {
         }
         
         .overlay {
-            if !onlyWatching {
+            HStack {
+                Spacer()
+                
                 VStack {
-                    HStack {
-                        Spacer()
-                        
+                    if !onlyWatching {
                         Button("Done") {
                             isShowingSheet = false
                         }
                         .buttonStyle(.borderedProminent)
                         .padding()
+                        
+                        MapUserLocationButton(scope: mapScope)
+                            .buttonBorderShape(.roundedRectangle)
+                        
+                        MapCompass(scope: mapScope)
+                        
+                    } else {
+                        MapCompass(scope: mapScope)
+                            .padding()
                     }
                     Spacer()
+                    
                 }
             }
-            
         }
         .overlay {
             OverlayAlertView(showAlert: $showAlert, text: "Coordinates copied!", symbolPositive: true, padding: 10.0)
         }
-        
+        .mapScope(mapScope)
     }
 }
 
@@ -80,6 +86,6 @@ struct MapView: View {
         Member(id: UUID(), name: "Mister Bennetts", status: "Foil Flow", latitude: 47.131195, longitude: 7.231034, speed: 22.3),
         
         Member(id: UUID(), name: "Nils Mango", status: "Please Wait", latitude: 47.123295, longitude: 7.220013, speed: 1.3)
-    
+        
     ], user: Member(id: UUID(), name: "Bibi", status: "What The?", latitude: 47.123895, longitude: 7.229013, speed: 1.3, onlyWatching: false), measurementSystem: .metric, onlyWatching: false, isShowingSheet: .constant(true))
 }

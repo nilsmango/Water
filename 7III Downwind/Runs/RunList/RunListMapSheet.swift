@@ -14,7 +14,7 @@ struct RunListMapSheet: View {
     
     
     var body: some View {
-        MapView(members: downwindManager.activeRun.members, user: downwindManager.user, measurementSystem: downwindManager.measurementSystem, onlyWatching: false, isShowingSheet: $isShowingSheet, heading: downwindManager.trueHeading)
+        MapView(members: downwindManager.activeRun.members, user: downwindManager.user, measurementSystem: downwindManager.measurementSystem, onlyWatching: false, isShowingSheet: $isShowingSheet)
     }
 }
 

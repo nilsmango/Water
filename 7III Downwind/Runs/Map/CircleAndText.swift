@@ -11,21 +11,14 @@ struct CircleAndText: View {
     var member: Member
     var measurementSystem: MeasurementSystem
     var showUpdated: Bool
-    var heading: Double = 0.0
     
     @Binding var showAlert: Bool
-    
-    var isUser: Bool = false
-    
+        
     var body: some View {
         ZStack {
             Circle()
-                .frame(width: 15)
-                .foregroundStyle(isUser ? .blue : .secondary)
-            
-            if isUser {
-                HeadingIndicator(heading: heading)
-            }
+                .frame(width: 20)
+                .foregroundStyle(.secondary)
             
             VStack {
                 Spacer()
@@ -41,7 +34,6 @@ struct CircleAndText: View {
                     }
                     
                 } else {
-                    if !isUser {
                         Text(member.name)
                             
                         if let speed = member.speed {
@@ -49,7 +41,6 @@ struct CircleAndText: View {
                         } else {
                             Text(measurementSystem == .imperial ? "- mph" : "- km/h")
                         }
-                    }
                 }
             }
             .font(.caption)
@@ -66,5 +57,5 @@ struct CircleAndText: View {
 }
 
 #Preview {
-    CircleAndText(member: Member(id: UUID(), name: "Nils Mango", status: "Please Wait", latitude: 47.123295, longitude: 7.220013, speed: 1.3), measurementSystem: .metric, showUpdated: false, heading: 0.0, showAlert: .constant(false), isUser: true)
+    CircleAndText(member: Member(id: UUID(), name: "Nils Mango", status: "Please Wait", latitude: 47.123295, longitude: 7.220013, speed: 1.3), measurementSystem: .metric, showUpdated: false, showAlert: .constant(false))
 }
