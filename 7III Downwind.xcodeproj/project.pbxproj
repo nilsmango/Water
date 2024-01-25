@@ -15,6 +15,8 @@
 		783A53CD2B5E6C9A00701D7F /* ListInfoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53CC2B5E6C9A00701D7F /* ListInfoLabel.swift */; };
 		783A53CF2B5FBF5000701D7F /* RunType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53CE2B5FBF5000701D7F /* RunType.swift */; };
 		783A53D32B5FD18000701D7F /* NoActiveRunnersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */; };
+		783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D42B626BF500701D7F /* HeadingIndicator.swift */; };
+		783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D62B62C53C00701D7F /* RunListMapSheet.swift */; };
 		785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
 		785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
 		785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
@@ -53,6 +55,8 @@
 		783A53CC2B5E6C9A00701D7F /* ListInfoLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInfoLabel.swift; sourceTree = "<group>"; };
 		783A53CE2B5FBF5000701D7F /* RunType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunType.swift; sourceTree = "<group>"; };
 		783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActiveRunnersView.swift; sourceTree = "<group>"; };
+		783A53D42B626BF500701D7F /* HeadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingIndicator.swift; sourceTree = "<group>"; };
+		783A53D62B62C53C00701D7F /* RunListMapSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListMapSheet.swift; sourceTree = "<group>"; };
 		785C4A952B358F7B00EB07F8 /* 7III Downwind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Downwind.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -110,6 +114,7 @@
 			children = (
 				783A53C22B5D930400701D7F /* MapView.swift */,
 				783A53C42B5D9DB000701D7F /* CircleAndText.swift */,
+				783A53D42B626BF500701D7F /* HeadingIndicator.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -207,6 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
+				783A53D62B62C53C00701D7F /* RunListMapSheet.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
 			);
 			path = RunList;
@@ -339,7 +345,9 @@
 				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				783A53CD2B5E6C9A00701D7F /* ListInfoLabel.swift in Sources */,
+				783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
+				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
 				783A53D32B5FD18000701D7F /* NoActiveRunnersView.swift in Sources */,
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,

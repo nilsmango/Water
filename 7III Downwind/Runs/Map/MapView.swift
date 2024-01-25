@@ -19,6 +19,8 @@ struct MapView: View {
     @State private var showAlert = false
     @State private var showLastUpdate = false
     
+    var heading: Double = 0.0
+    
     var body: some View {
         Map() {
             ForEach(members) { member in
@@ -30,15 +32,23 @@ struct MapView: View {
             }
             if !onlyWatching {
                 UserAnnotation {
-                    CircleAndText(member: user, measurementSystem: measurementSystem, showUpdated: false, showAlert: .constant(false))
+                    CircleAndText(member: user, measurementSystem: measurementSystem, showUpdated: false, heading: heading, showAlert: .constant(false), isUser: true)
                 }
             }
+                
         }
+        .mapControls {
+            MapScaleView()
+                }
+        .mapControlVisibility(.visible)
+        
+        
         .onAppear {
             Timer.scheduledTimer(withTimeInterval: Constants.updateTimer, repeats: true) { _ in
                 showLastUpdate.toggle()
             }
         }
+        
         .overlay {
             if !onlyWatching {
                 VStack {

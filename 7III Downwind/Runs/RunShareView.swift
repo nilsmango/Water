@@ -34,12 +34,11 @@ struct RunShareView: View {
                     Capsule()
                         .foregroundStyle(.dwGray)
                 }
-            Text("For copying/sharing simply long press the name.")
+            Label("For copying/sharing simply long press the name.", systemImage: "info")
                 .font(.caption)
             
             
         }
-        
     }
 }
 

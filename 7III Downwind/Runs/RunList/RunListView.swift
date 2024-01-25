@@ -98,7 +98,7 @@ struct RunListView: View {
                 
             })
             .fullScreenCover(isPresented: $isShowingMapSheet, content: {
-                MapView(members: downwindManager.activeRun.members, user: downwindManager.user, measurementSystem: downwindManager.measurementSystem, onlyWatching: false, isShowingSheet: $isShowingMapSheet)
+                RunListMapSheet(downwindManager: downwindManager, isShowingSheet: $isShowingMapSheet)
 
             })
             .navigationTitle(downwindManager.activeRun.name)

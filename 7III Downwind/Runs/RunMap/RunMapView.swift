@@ -65,7 +65,7 @@ struct RunMapView: View {
         })
         .sheet(isPresented: $showCoordinatesSheet, content: {
             NavigationStack {
-                CoordinatesListView(members: downwindManager.activeRun.members, measurementSystem: downwindManager.measurementSystem)
+                CoordinatesListView(downwindManager: downwindManager)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button("Done") {

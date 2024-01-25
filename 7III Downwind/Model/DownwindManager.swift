@@ -35,8 +35,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         try await HTTPClient.shared.sendData(to: url, object: newRun, httpMethod: HTTPMethods.POST.rawValue)
         
         // add user to the run
-        user.onlyWatching = false
-        try await addMembersToRun(members: [user], runID: newRun.id!)
+        DispatchQueue.main.async {
+            self.user.onlyWatching = false
+        }
+        let updatedUser = Member(id: user.id, name: user.name, status: user.status, latitude: user.latitude, longitude: user.longitude, speed: user.speed, onlyWatching: false, createdOn: user.createdOn, lastUpdated: user.lastUpdated)
+        try await addMembersToRun(members: [updatedUser], runID: newRun.id!)
         
         // updating the run name from the db
         let updatedRunName = try await getRunNameFromId(runId: newRun.id!)
@@ -65,8 +68,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let runToJoin = try await getRunFromName(runName: name)
         
         // add user to the run
-        user.onlyWatching = false
-        try await addMembersToRun(members: [user], runID: runToJoin.id!)
+        DispatchQueue.main.async {
+            self.user.onlyWatching = false
+        }
+        let updatedUser = Member(id: user.id, name: user.name, status: user.status, latitude: user.latitude, longitude: user.longitude, speed: user.speed, onlyWatching: false, createdOn: user.createdOn, lastUpdated: user.lastUpdated)
+        try await addMembersToRun(members: [updatedUser], runID: runToJoin.id!)
         
         
         // starting the action
@@ -81,8 +87,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let runToJoin = try await getRunFromName(runName: name)
         
         // add user to the run
-        user.onlyWatching = true
-        try await addMembersToRun(members: [user], runID: runToJoin.id!)
+        DispatchQueue.main.async {
+            self.user.onlyWatching = true
+        }
+        let updatedUser = Member(id: user.id, name: user.name, status: user.status, latitude: user.latitude, longitude: user.longitude, speed: user.speed, onlyWatching: true, createdOn: user.createdOn, lastUpdated: user.lastUpdated)
+        try await addMembersToRun(members: [updatedUser], runID: runToJoin.id!)
         
         
         // starting the action

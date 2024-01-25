@@ -65,9 +65,7 @@ struct MemberListView: View {
                             
                         } else {
 
-                        if let status = member.status {
-                            Text(status)
-                        }
+                        Text(member.status ?? "")
                         
                         Spacer()
                         
