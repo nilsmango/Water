@@ -9,17 +9,19 @@ import SwiftUI
 
 struct RunShareView: View {
     var runName: String
+    
     var body: some View {
         VStack {
             
-            Text("Instructions for Joining A Run")
+            Text("Instructions for Joining/Watching A Run")
                 .fontWeight(.bold)
                 .padding(.bottom, 1.0)
             
             Text("""
                     1. Open 7III Downwind
-                    2. Tap \"Join A Run\"
-                    3. Enter name:
+                    2. Tap \"Start\"
+                    3. Tap \"Join/Watch a Run\"
+                    3. Enter the name:
                 """)
             .padding(.bottom, 2.0)
             
@@ -34,7 +36,7 @@ struct RunShareView: View {
                     Capsule()
                         .foregroundStyle(.dwGray)
                 }
-            Label("For copying/sharing simply long press the name.", systemImage: "info.circle")
+            Label("For copying/sharing simply long-press the name.", systemImage: "info.circle")
                 .font(.caption)
             
             

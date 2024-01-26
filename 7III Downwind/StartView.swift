@@ -15,6 +15,7 @@ struct StartView: View {
     @State private var runType: RunType = .start
     
     @State private var showOptionsSheet = false
+    @State private var showAboutSheet = false
     
     @State private var showFirstTimeUserName = false
     
@@ -31,13 +32,7 @@ struct StartView: View {
                     HStack {
                         Spacer()
                         
-                        Button(action: {
-                            showOptionsSheet = true
-                        }, label: {
-                            Label("Options", systemImage: "ellipsis.circle")
-                                .labelStyle(.iconOnly)
-                                .font(.title3)
-                        })
+                        StartOptionsMenu(showOptionsSheet: $showOptionsSheet, showAboutSheet: $showAboutSheet)
                         .padding()
                     }
                     
@@ -71,11 +66,10 @@ struct StartView: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundStyle(.black)
-                            .offset(CGSize(width: 0, height: -2))
                     }
                     
                 })
-                .offset(CGSize(width: 0, height: -10))
+                .offset(CGSize(width: 0, height: -8))
                 
             }
             
@@ -118,6 +112,7 @@ struct StartView: View {
             .fullScreenCover(isPresented: $showFirstTimeUserName, content: {
                 FirstTimeUserNameSet(downwindManager: downwindManager, showingSheet: $showFirstTimeUserName)
             })
+            
             .sheet(isPresented: $showOptionsSheet, content: {
                 NavigationStack {
                     OptionsView(downwindManager: downwindManager, showOptionsSheet: $showOptionsSheet, showFirstTimeUserName: $showFirstTimeUserName)
@@ -132,6 +127,22 @@ struct StartView: View {
                 }
                 
             })
+            
+            .sheet(isPresented: $showAboutSheet, content: {
+                NavigationStack {
+                    AboutView()
+                        .navigationTitle("About")
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Done") {
+                                    showAboutSheet = false
+                                }
+                            }
+                        }
+                }
+                
+            })
+            
             .background {
                 Rectangle()
                     .ignoresSafeArea()
@@ -153,7 +164,6 @@ struct StartView: View {
                 }
             }
         }
-        
     }
 }
 
