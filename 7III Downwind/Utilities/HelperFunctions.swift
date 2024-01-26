@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 
 func createDWURL(endpoint: String) throws -> URL {

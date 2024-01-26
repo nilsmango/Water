@@ -69,7 +69,7 @@ struct StartView: View {
                     }
                     
                 })
-                .offset(CGSize(width: 0, height: -8))
+                .offset(CGSize(width: 0, height: -9))
                 
             }
             
