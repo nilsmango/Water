@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct OptionsMenu: View {
-    var onlyWatching: Bool
-    
+    @Binding var onlyWatching: Bool?
     @Binding var sorting: RunListSorting
     @Binding var measurement: MeasurementSystem
     @Binding var showListDetail: Bool
     @Binding var isShowingShareSheet: Bool
     @Binding var isShowingOtherSheet: Bool
+    
+    var changingRunStatus: () -> Void
     
     var body: some View {
         Menu {
@@ -28,13 +29,13 @@ struct OptionsMenu: View {
             } label: {
                 Label("Measurement System", systemImage: "ruler")
             }
-            if !onlyWatching {
+            if !(onlyWatching ?? false) {
                 Menu {
                     Toggle(isOn: $showListDetail, label: {
                         Text("Show List Details")
                     })
                 } label: {
-                    Text("Show List Details")
+                    Label("Show List Details", systemImage: "text.magnifyingglass")
                 }
                 
                 Menu {
@@ -49,16 +50,31 @@ struct OptionsMenu: View {
             }
             }
             
+            if !(onlyWatching ?? false) {
+                Button {
+                    // change status of user
+                    onlyWatching = false
+                    // stop timer and upload nil location + onlyWatching
+                    // start new timer with only downloading.
+                    changingRunStatus()
+                    
+                } label: {
+                    Label("Switch to Watching", systemImage: "eyes")
+                }
+            }
+            
             Button {
                 isShowingOtherSheet = true
                 
             } label: {
-                if onlyWatching {
+                if onlyWatching ?? false {
                     Label("Show Coordinates", systemImage: "globe")
                 } else {
                     Label("Show Map", systemImage: "map")
                 }
             }
+            
+            
             
             Button {
                 isShowingShareSheet = true
@@ -75,5 +91,5 @@ struct OptionsMenu: View {
 }
 
 #Preview {
-    OptionsMenu(onlyWatching: true, sorting: .constant(.distanceAscending), measurement: .constant(.metric), showListDetail: .constant(true), isShowingShareSheet: .constant(true), isShowingOtherSheet: .constant(false))
+    OptionsMenu(onlyWatching: .constant(false), sorting: .constant(.distanceAscending), measurement: .constant(.metric), showListDetail: .constant(true), isShowingShareSheet: .constant(true), isShowingOtherSheet: .constant(false), changingRunStatus: {})
 }

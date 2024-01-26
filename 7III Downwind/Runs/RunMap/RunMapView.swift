@@ -28,7 +28,9 @@ struct RunMapView: View {
                 .buttonStyle(.bordered)
                 .padding()
                 
-                OptionsMenu(onlyWatching: true, sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail, isShowingShareSheet: $isShowingShareSheet, isShowingOtherSheet: $showCoordinatesSheet)
+                OptionsMenu(onlyWatching: .constant(true), sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail, isShowingShareSheet: $isShowingShareSheet, isShowingOtherSheet: $showCoordinatesSheet) {
+                    // no need for a function here
+                }
                     .buttonStyle(.bordered)
                     .padding()
                 

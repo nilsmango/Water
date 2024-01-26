@@ -34,7 +34,7 @@ struct RunShareView: View {
                     Capsule()
                         .foregroundStyle(.dwGray)
                 }
-            Label("For copying/sharing simply long press the name.", systemImage: "info")
+            Label("For copying/sharing simply long press the name.", systemImage: "info.circle")
                 .font(.caption)
             
             

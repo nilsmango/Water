@@ -279,7 +279,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func upDownloadManager(onlyDownload: Bool = false) async {
         print("UpDownload is running")
         // Upload user location
-        if !onlyDownload {
+        if onlyDownload == false {
             do {
                 try await uploadUserLocation()
             } catch {
@@ -343,6 +343,26 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
     }
     
+    /// change user from active runner to only watching during a run
+    func changeFromRunningToWatching() {
+        DispatchQueue.main.async {
+            // stop timer
+            self.runTimer?.invalidate()
+            self.runTimer = nil
+            
+            // stop location and header updating
+            print("Stopping location tracking")
+            self.locationManager?.stopUpdatingLocation()
+            self.locationManager?.stopUpdatingHeading()
+            
+            // set location of user to nil
+            self.user.latitude = nil
+            self.user.longitude = nil
+            self.user.speed = nil
+            
+            self.startUploadDownloadTimer(onlyDownload: true)
+        }
+    }
     
     /// quit active run: removes user from run, stops run timer, stops updating location, stops updating header, sets location, speed and heading to nil and updates the user in the DB to that
     func quitActiveRun() async throws {

@@ -61,9 +61,16 @@ struct RunListView: View {
                     .buttonStyle(.bordered)
                     .padding()
                     
-                    OptionsMenu(onlyWatching: false, sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail, isShowingShareSheet: $isShowingShareSheet, isShowingOtherSheet: $isShowingMapSheet)
-                        .buttonStyle(.bordered)
-                        .padding()
+                    OptionsMenu(onlyWatching: $downwindManager.user.onlyWatching, sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail, isShowingShareSheet: $isShowingShareSheet, isShowingOtherSheet: $isShowingMapSheet) {
+                        
+                        downwindManager.user.onlyWatching = true
+                        
+                        downwindManager.changeFromRunningToWatching()
+                            
+                        }
+
+                    .buttonStyle(.bordered)
+                    .padding()
                     
                 }
             }
