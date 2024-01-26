@@ -26,51 +26,65 @@ struct StartView: View {
                 RunListView(downwindManager: downwindManager)
             }
         } else {
-            VStack {
-                HStack {
+            ZStack {
+                VStack {
+                    HStack {
+                        Spacer()
+                        
+                        Button(action: {
+                            showOptionsSheet = true
+                        }, label: {
+                            Label("Options", systemImage: "ellipsis.circle")
+                                .labelStyle(.iconOnly)
+                                .font(.title3)
+                        })
+                        .padding()
+                    }
+                    
                     Spacer()
                     
-                    Button(action: {
-                        showOptionsSheet = true
-                    }, label: {
-                        Label("Options", systemImage: "ellipsis.circle")
-                            .labelStyle(.iconOnly)
-                            .font(.title3)
-                    })
-                    .padding()
-                }
-                
-                Spacer()
-                
-                Image("DWSplash")
-                    .padding(.bottom, 55)
-                
-                if downwindManager.user.name == "" {
-                    Text("You will need to set a name before you can start using this app. Simply tap on the icon in the upper right-hand corner to set a name.")
-                        .padding()
-                } else {
-                    Text("Aloha \(downwindManager.user.name)!")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.bottom, 60)
                     
-                    Button(action: {
-                        showRunPicker = true
-                    }, label: {
-                        Label("Start", systemImage: "wind")
-                    })
-                    .buttonStyle(.bordered)
+                    if downwindManager.user.name == "" {
+                        Text("You will need to set a name before you can start using this app. Simply tap on the icon in the upper right-hand corner to set a name.")
+                    } else {
+                        Text("Aloha \(downwindManager.user.name)!")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        
+                        Spacer()
+                        
+                    }
+                    
+                    Spacer()
+                    Spacer()
                 }
                 
-                Spacer()
+                Button(action: {
+                    showRunPicker = true
+                }, label: {
+                    ZStack {
+                        Image("DWSplash")
+                            .shadow(
+                                color: .black.opacity(0.3),
+                                radius: 7)
+                        Text("Start")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.black)
+                            .offset(CGSize(width: 0, height: -2))
+                    }
+                    
+                })
+                .offset(CGSize(width: 0, height: -10))
+                
             }
             
             .overlay {
                 OverlayAlertView(showAlert: $downwindManager.locationError, text: """
-    Can't activate location services.
-    Either your device is in Airplane mode or the device doesn’t have the required hardware.
-    Please deactivate Airplane mode and try again.
-    """)
+        Can't activate location services.
+        Either your device is in Airplane mode or the device doesn’t have the required hardware.
+        Please deactivate Airplane mode and try again.
+        """)
             }
             .confirmationDialog("Pick Run Option", isPresented: $showRunPicker, actions: {
                 Button("Start New Run") {
@@ -118,7 +132,6 @@ struct StartView: View {
                 }
                 
             })
-            
             .background {
                 Rectangle()
                     .ignoresSafeArea()
@@ -138,8 +151,7 @@ struct StartView: View {
                         }
                     }
                 }
-        }
-            
+            }
         }
         
     }
