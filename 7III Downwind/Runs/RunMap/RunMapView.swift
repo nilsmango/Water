@@ -13,6 +13,7 @@ struct RunMapView: View {
     @State private var isShowingAlert = false
     @State private var isShowingShareSheet = false
     @State private var showCoordinatesSheet = false
+    @State private var showShareDialog = false
     
     var body: some View {
         VStack {
@@ -28,7 +29,7 @@ struct RunMapView: View {
                 .buttonStyle(.bordered)
                 .padding()
                 
-                OptionsMenu(onlyWatching: .constant(true), sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail, isShowingShareSheet: $isShowingShareSheet, isShowingOtherSheet: $showCoordinatesSheet) {
+                OptionsMenu(onlyWatching: .constant(true), sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail, showShareDialog: $showShareDialog, isShowingOtherSheet: $showCoordinatesSheet) {
                     // no need for a function here
                 }
                     .buttonStyle(.bordered)
@@ -76,6 +77,9 @@ struct RunMapView: View {
                         }
                     }
             }
+        })
+        .confirmationDialog("Share Run via", isPresented: $showShareDialog, actions: {
+            ShareDialog(urlString: "\(Constants.deepLinkBase)\(downwindManager.activeRun.name)", isShowingShareSheet: $isShowingShareSheet)
         })
     }
 }

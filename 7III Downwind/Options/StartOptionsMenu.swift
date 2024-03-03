@@ -17,22 +17,21 @@ struct StartOptionsMenu: View {
                 showAboutSheet = true
             }, label: {
                 Label("About", systemImage: "info.circle")
-                    .labelStyle(.iconOnly)
-                    .font(.title3)
+
             })
             
             Button(action: {
                 showOptionsSheet = true
             }, label: {
                 Label("Options", systemImage: "gear")
-                    .labelStyle(.iconOnly)
-                    .font(.title3)
+
             })
         } label: {
             Label("Options", systemImage: "ellipsis.circle")
                 .labelStyle(.iconOnly)
-                .font(.title3)
+                
         }
+        .font(.title3)
         
         
     }

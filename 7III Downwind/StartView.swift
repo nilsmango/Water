@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct StartView: View {
-    @StateObject private var downwindManager = DownwindManager()
-    
+    @ObservedObject var downwindManager: DownwindManager
+
     @State private var showRunPicker = false
     @State private var showStartRunSheet = false
     @State private var runType: RunType = .start
@@ -108,9 +108,10 @@ struct StartView: View {
                         }
                 }
             })
-            
-            .fullScreenCover(isPresented: $showFirstTimeUserName, content: {
+
+            .sheet(isPresented: $showFirstTimeUserName, content: {
                 FirstTimeUserNameSet(downwindManager: downwindManager, showingSheet: $showFirstTimeUserName)
+                    .interactiveDismissDisabled()
             })
             
             .sheet(isPresented: $showOptionsSheet, content: {
@@ -168,5 +169,5 @@ struct StartView: View {
 }
 
 #Preview {
-    StartView()
+    StartView(downwindManager: DownwindManager())
 }

@@ -23,6 +23,7 @@ struct RunListView: View {
     @State private var isShowingAlert = false
     @State private var isShowingShareSheet = false
     @State private var isShowingMapSheet = false
+    @State private var showShareDialog = false
     
     var body: some View {
         NavigationStack {
@@ -61,7 +62,7 @@ struct RunListView: View {
                     .buttonStyle(.bordered)
                     .padding()
                     
-                    OptionsMenu(onlyWatching: $downwindManager.user.onlyWatching, sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail, isShowingShareSheet: $isShowingShareSheet, isShowingOtherSheet: $isShowingMapSheet) {
+                    OptionsMenu(onlyWatching: $downwindManager.user.onlyWatching, sorting: $downwindManager.runListSorting, measurement: $downwindManager.measurementSystem, showListDetail: $downwindManager.showListDetail, showShareDialog: $showShareDialog, isShowingOtherSheet: $isShowingMapSheet) {
                         
                         downwindManager.user.onlyWatching = true
                         
@@ -107,6 +108,9 @@ struct RunListView: View {
             .fullScreenCover(isPresented: $isShowingMapSheet, content: {
                 RunListMapSheet(downwindManager: downwindManager, isShowingSheet: $isShowingMapSheet)
 
+            })
+            .confirmationDialog("Share Run via", isPresented: $showShareDialog, actions: {
+                ShareDialog(urlString: "\(Constants.deepLinkBase)\(downwindManager.activeRun.name)", isShowingShareSheet: $isShowingShareSheet)
             })
             .navigationTitle(downwindManager.activeRun.name)
             .navigationBarTitleDisplayMode(.inline)

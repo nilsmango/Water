@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		781562A32B94D92900E081FC /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
+		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
+		781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
 		783A53C02B59A61B00701D7F /* MemberListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53BF2B59A61B00701D7F /* MemberListView.swift */; };
 		783A53C32B5D930400701D7F /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C22B5D930400701D7F /* MapView.swift */; };
 		783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C42B5D9DB000701D7F /* CircleAndText.swift */; };
@@ -49,6 +52,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		781562A22B94D92900E081FC /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
+		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
+		781562A62B94DD7500E081FC /* ShareDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDialog.swift; sourceTree = "<group>"; };
 		783A53BF2B59A61B00701D7F /* MemberListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberListView.swift; sourceTree = "<group>"; };
 		783A53C22B5D930400701D7F /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		783A53C42B5D9DB000701D7F /* CircleAndText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAndText.swift; sourceTree = "<group>"; };
@@ -238,6 +244,8 @@
 			children = (
 				787A7EE72B4B03C20083ECEF /* StartRun.swift */,
 				78A9EB072B57132F0054E9F9 /* RunShareView.swift */,
+				781562A22B94D92900E081FC /* QRCodeView.swift */,
+				781562A62B94DD7500E081FC /* ShareDialog.swift */,
 				785CF9592B4FF2E300528B6D /* OptionsMenu.swift */,
 				783A53CB2B5E6C8B00701D7F /* List */,
 				783A53CA2B5E6AE900701D7F /* Map */,
@@ -251,6 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */,
+				781562A42B94DA0E00E081FC /* OutsideTap.swift */,
 			);
 			path = Alerts;
 			sourceTree = "<group>";
@@ -344,6 +353,7 @@
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
+				781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */,
 				78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */,
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
 				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,
@@ -355,11 +365,13 @@
 				783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
+				781562A32B94D92900E081FC /* QRCodeView.swift in Sources */,
 				783A53D32B5FD18000701D7F /* NoActiveRunnersView.swift in Sources */,
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
+				781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */,
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
 				785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,

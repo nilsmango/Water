@@ -6,7 +6,8 @@
 //
 
 import Foundation
-
+import SwiftUI
+import CoreImage.CIFilterBuiltins
 
 func createDWURL(endpoint: String) throws -> URL {
     let urlString = Constants.baseURL + endpoint
@@ -34,4 +35,19 @@ func dateFromString(_ dateString: String) -> Date? {
 //    dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds, .withTimeZone]
 
     return dateFormatter.date(from: dateString)
+}
+
+func generateQRCode(from string: String) -> UIImage {
+    let data = Data(string.utf8)
+    let context = CIContext()
+    let filter = CIFilter.qrCodeGenerator()
+    
+    filter.setValue(data, forKey: "inputMessage")
+    
+    if let outputImage = filter.outputImage {
+        if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
+            return UIImage(cgImage: cgImage)
+        }
+    }
+    return UIImage(systemName: "xmark.circle") ?? UIImage()
 }

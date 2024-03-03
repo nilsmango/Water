@@ -24,6 +24,8 @@ struct StartRun: View {
     @State private var showAlert = false
     @State private var alertText = ""
     
+    @State private var showShareDialog = false
+    
     var body: some View {
         VStack {
             List {

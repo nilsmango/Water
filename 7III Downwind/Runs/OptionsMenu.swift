@@ -12,7 +12,7 @@ struct OptionsMenu: View {
     @Binding var sorting: RunListSorting
     @Binding var measurement: MeasurementSystem
     @Binding var showListDetail: Bool
-    @Binding var isShowingShareSheet: Bool
+    @Binding var showShareDialog: Bool
     @Binding var isShowingOtherSheet: Bool
     
     var changingRunStatus: () -> Void
@@ -77,7 +77,7 @@ struct OptionsMenu: View {
             
             
             Button {
-                isShowingShareSheet = true
+                showShareDialog = true
                 
             } label: {
                 Label("Share Run", systemImage: "square.and.arrow.up")
@@ -87,9 +87,10 @@ struct OptionsMenu: View {
         } label: {
             Label("Options", systemImage: "ellipsis.circle")
         }
+        
     }
 }
 
 #Preview {
-    OptionsMenu(onlyWatching: .constant(false), sorting: .constant(.distanceAscending), measurement: .constant(.metric), showListDetail: .constant(true), isShowingShareSheet: .constant(true), isShowingOtherSheet: .constant(false), changingRunStatus: {})
+    OptionsMenu(onlyWatching: .constant(false), sorting: .constant(.distanceAscending), measurement: .constant(.metric), showListDetail: .constant(true), showShareDialog: .constant(true), isShowingOtherSheet: .constant(false), changingRunStatus: {})
 }

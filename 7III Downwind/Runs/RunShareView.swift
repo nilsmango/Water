@@ -13,17 +13,8 @@ struct RunShareView: View {
     var body: some View {
         VStack {
             
-            Text("Instructions for Joining/Watching A Run")
-                .fontWeight(.bold)
-                .padding(.bottom, 1.0)
-            
-            Text("""
-                    1. Open 7III Downwind
-                    2. Tap \"Start\"
-                    3. Tap \"Join/Watch a Run\"
-                    3. Enter the name:
-                """)
-            .padding(.bottom, 2.0)
+            QRCodeView(qrString: Constants.deepLinkBase + runName)
+            .padding()
             
             Text(runName)
                 .textSelection(.enabled)
@@ -33,17 +24,13 @@ struct RunShareView: View {
                 .padding(.vertical, 6)
                 .padding(6)
                 .background {
-                    Capsule()
+                    RoundedRectangle(cornerRadius: 10)
                         .foregroundStyle(.dwGray)
                 }
-            Label("For copying/sharing simply long-press the name.", systemImage: "info.circle")
-                .font(.caption)
-            
-            
         }
     }
 }
 
 #Preview {
-    RunShareView(runName: "Run 01")
+    RunShareView(runName: "testing")
 }

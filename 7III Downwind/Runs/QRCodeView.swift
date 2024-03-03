@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct QRCodeView: View {
+    var qrString: String
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Image(uiImage: generateQRCode(from: qrString))
+            .interpolation(.none)
+            .resizable()
+            .scaledToFit()
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 
 #Preview {
-    QRCodeView()
+    QRCodeView(qrString: "\(Constants.deepLinkBase)testing")
 }

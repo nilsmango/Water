@@ -22,6 +22,8 @@ enum Constants {
     
     /// max character number for username and status
     static let maxLengthUser = 15
+    
+    static let deepLinkBase = "project7iii.location://"
 }
 
 enum Endpoints {
