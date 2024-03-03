@@ -46,6 +46,9 @@ struct OverlayAlertView: View {
             .padding()
             .frame(width: UIScreen.main.bounds.width * 0.8)
 //            .background(StartView())
+            .outsideTap {
+                showAlert = false
+            }
         }
             
     }
