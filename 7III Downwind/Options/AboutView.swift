@@ -31,9 +31,8 @@ struct AboutView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 20)
                         .foregroundStyle(.yellow.opacity(0.8))
-                    
                 }
-
+                
                 Text("What data do we collect?")
                     .font(.headline)
                     .padding(.top)
@@ -42,23 +41,22 @@ struct AboutView: View {
                     .font(.body)
                     .padding(.bottom)
                 
+                Text("Licenses")
+                    .font(.headline)
+
+                Text("This app uses [Keychain Swift](https://github.com/evgenyneu/keychain-swift):")
+                Text("Copyright (c) 2015 - 2024 Evgenii Neumerzhitckii\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS ORIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THEAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHERLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.")
+                    .font(.body)
+                    .padding(.bottom)
+                
                 Text("What else?")
                     .font(.headline)
-                    .padding(.top)
                 
-                
-                Text("project7III makes useful things.\nFind us: [project7iii.com](https://project7iii.com)\nWrite to us: dw@project7iii.com")
+                Text("project7III makes useful things.\nFind us: [project7iii.com](https://project7iii.com)\nWrite to us: 0@project7iii.com")
                     .font(.body)
                     .padding(.bottom)
-                     
-                     Text("Changelog")
-                         .font(.headline)
-                         .padding(.top)
-                     Text("January 2024: Version 0.1 made with ❤️ by [Nils Mango](https://nilsmango.ch) in Switzerland.")
-                    .font(.body)
-                    .padding(.bottom)
-                     
-                Spacer()
+                
+                Spacer(minLength: 0.0)
             }
             .padding()
         }
