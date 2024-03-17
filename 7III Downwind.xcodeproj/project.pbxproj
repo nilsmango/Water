@@ -52,6 +52,8 @@
 		78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */; };
 		78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */; };
 		78C4D23A2BA6DADB00639E65 /* StatisticData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* StatisticData.swift */; };
+		78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */; };
+		78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -102,6 +104,8 @@
 		78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsControlCenter.swift; sourceTree = "<group>"; };
 		78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatistic.swift; sourceTree = "<group>"; };
 		78C4D2392BA6DADB00639E65 /* StatisticData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticData.swift; sourceTree = "<group>"; };
+		78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
+		78C4D23E2BA7512A00639E65 /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +172,7 @@
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
 				785CF9562B4FE85100528B6D /* Options */,
+				78C4D23D2BA750D200639E65 /* Run Statistics */,
 				78A9EB062B56C01B0054E9F9 /* Alerts */,
 				785CF9602B53D50D00528B6D /* Runs */,
 				785C4AD42B44095300EB07F8 /* Experiments */,
@@ -273,6 +278,15 @@
 			path = Alerts;
 			sourceTree = "<group>";
 		};
+		78C4D23D2BA750D200639E65 /* Run Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
+				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
+			);
+			path = "Run Statistics";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -355,6 +369,7 @@
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */,
 				78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */,
+				78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */,
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
 				783A53C72B5DA57C00701D7F /* RunMapView.swift in Sources */,
 				783A53CF2B5FBF5000701D7F /* RunType.swift in Sources */,
@@ -388,6 +403,7 @@
 				78C4D23A2BA6DADB00639E65 /* StatisticData.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
+				78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,
 				788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */,
 				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,

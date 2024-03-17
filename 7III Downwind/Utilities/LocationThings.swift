@@ -96,6 +96,25 @@ func makePrettySpeed(speed: Double, system: MeasurementSystem) -> String {
     
 }
 
+/// Takes a time in minutes, returns a pretty time in h or min
+func makePrettyTime(timeInMinutes: Double) -> String {
+    if timeInMinutes >= 60.0 {
+        let roundedMinutes = timeInMinutes.rounded()
+        let hours = Int(roundedMinutes / 60)
+        let remainingMinutes = Int(roundedMinutes) % 60
+        if remainingMinutes > 0 {
+            return "\(hours)h \(remainingMinutes)min"
+        } else {
+            return "\(hours)h"
+        }
+        
+    } else {
+        let roundedMinutes = Int(timeInMinutes.rounded())
+        let minutesString = String(roundedMinutes)
+        return minutesString
+    }
+}
+
 
 func makeShortName(name: String) -> String {
     let words = name.components(separatedBy: " ")

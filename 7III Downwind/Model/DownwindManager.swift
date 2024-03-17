@@ -99,6 +99,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return Double(components.second ?? 0)
     }
     
+    func createDateString(from date: Date?) -> String {
+        if date != nil {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let dateString = dateFormatter.string(from: date!)
+            return dateString
+        } else {
+            return ""
+        }
+    }
+    
     // Helper method to get documents directory
     private func getDocumentsDirectory() throws -> URL {
         do {

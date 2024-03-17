@@ -20,152 +20,161 @@ struct StartView: View {
     @State private var showFirstTimeUserName = false
     
     var body: some View {
-        if downwindManager.activeRun.active {
-            if downwindManager.user.onlyWatching == true {
-                RunMapView(downwindManager: downwindManager)
-            } else {
-                RunListView(downwindManager: downwindManager)
-            }
-        } else {
-            ZStack {
-                VStack {
-                    HStack {
-                        Spacer()
-                        
-                        StartOptionsMenu(showOptionsSheet: $showOptionsSheet, showAboutSheet: $showAboutSheet)
-                        .padding()
-                    }
-                    
-                    Spacer()
-                    
-                    
-                    if downwindManager.user.name == "" {
-                        Text("You will need to set a name before you can start using this app. Simply tap on the icon in the upper right-hand corner to set a name.")
-                    } else {
-                        Text("Aloha \(downwindManager.user.name)!")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        
-                        Spacer()
-                        
-                    }
-                    
-                    Spacer()
-                    Spacer()
+        NavigationStack {
+            if downwindManager.activeRun.active {
+                if downwindManager.user.onlyWatching == true {
+                    RunMapView(downwindManager: downwindManager)
+                } else {
+                    RunListView(downwindManager: downwindManager)
                 }
+            } else {
+                ZStack {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            
+                            StartOptionsMenu(showOptionsSheet: $showOptionsSheet, showAboutSheet: $showAboutSheet)
+                            .padding()
+                        }
+                        
+                        Spacer()
+                        
+                        
+                        if downwindManager.user.name == "" {
+                            Text("You will need to set a name before you can start using this app. Simply tap on the icon in the upper right-hand corner to set a name.")
+                        } else {
+                            Text("Aloha \(downwindManager.user.name)!")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                            
+                            Spacer()
+                            
+                        }
+                        
+                        Spacer()
+                        Spacer()
+                        HStack {
+                            NavigationLink(destination: StatisticsView(downwindManager: downwindManager)) {
+                                Label("Statistics", systemImage: "chart.xyaxis.line")
+                            }
+                            .buttonStyle(.bordered)
+                            .padding()
+                        }
+                    }
+                    
+                    Button(action: {
+                        showRunPicker = true
+                    }, label: {
+                        ZStack {
+                            Image("DWSplash")
+                                .shadow(
+                                    color: .black.opacity(0.3),
+                                    radius: 7)
+                            Text("Start")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.black)
+                        }
+                        
+                    })
+                    .offset(CGSize(width: 0, height: -9))
+                    
+                }
+                .overlay {
+                    OverlayAlertView(showAlert: $downwindManager.locationError, text: """
+            Can't activate location services.
+            Either your device is in Airplane mode or the device doesn’t have the required hardware.
+            Please deactivate Airplane mode and try again.
+            """)
+                }
+                .confirmationDialog("Pick Run Option", isPresented: $showRunPicker, actions: {
+                    Button("Start New Run") {
+                        runType = .start
+                        showStartRunSheet = true
+                    }
+                    Button("Join a Run") {
+                        runType = .join
+                        showStartRunSheet = true
+                    }
+                    Button("Watch a Run") {
+                        runType = .watch
+                        showStartRunSheet = true
+                    }
+                })
+                .sheet(isPresented: $showStartRunSheet, content: {
+                    NavigationStack {
+                        StartRun(downwindManager: downwindManager, showSheet: $showStartRunSheet, runType: runType)
+                            .navigationTitle(runType.buttonLabel)
+                            .navigationBarTitleDisplayMode(.inline)
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button("Cancel") {
+                                        showStartRunSheet = false
+                                    }
+                                }
+                            }
+                    }
+                })
+
+                .sheet(isPresented: $showFirstTimeUserName, content: {
+                    FirstTimeUserNameSet(downwindManager: downwindManager, showingSheet: $showFirstTimeUserName)
+                        .interactiveDismissDisabled()
+                })
                 
-                Button(action: {
-                    showRunPicker = true
-                }, label: {
-                    ZStack {
-                        Image("DWSplash")
-                            .shadow(
-                                color: .black.opacity(0.3),
-                                radius: 7)
-                        Text("Start")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.black)
+                .sheet(isPresented: $showOptionsSheet, content: {
+                    NavigationStack {
+                        OptionsView(downwindManager: downwindManager, showOptionsSheet: $showOptionsSheet, showFirstTimeUserName: $showFirstTimeUserName)
+                            .navigationTitle("Options")
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button("Done") {
+                                        showOptionsSheet = false
+                                    }
+                                }
+                            }
                     }
                     
                 })
-                .offset(CGSize(width: 0, height: -9))
                 
-            }
-            
-            .overlay {
-                OverlayAlertView(showAlert: $downwindManager.locationError, text: """
-        Can't activate location services.
-        Either your device is in Airplane mode or the device doesn’t have the required hardware.
-        Please deactivate Airplane mode and try again.
-        """)
-            }
-            .confirmationDialog("Pick Run Option", isPresented: $showRunPicker, actions: {
-                Button("Start New Run") {
-                    runType = .start
-                    showStartRunSheet = true
-                }
-                Button("Join a Run") {
-                    runType = .join
-                    showStartRunSheet = true
-                }
-                Button("Watch a Run") {
-                    runType = .watch
-                    showStartRunSheet = true
-                }
-            })
-            .sheet(isPresented: $showStartRunSheet, content: {
-                NavigationStack {
-                    StartRun(downwindManager: downwindManager, showSheet: $showStartRunSheet, runType: runType)
-                        .navigationTitle(runType.buttonLabel)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button("Cancel") {
-                                    showStartRunSheet = false
+                .sheet(isPresented: $showAboutSheet, content: {
+                    NavigationStack {
+                        AboutView()
+                            .navigationTitle("About")
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button("Done") {
+                                        showAboutSheet = false
+                                    }
                                 }
                             }
-                        }
-                }
-            })
-
-            .sheet(isPresented: $showFirstTimeUserName, content: {
-                FirstTimeUserNameSet(downwindManager: downwindManager, showingSheet: $showFirstTimeUserName)
-                    .interactiveDismissDisabled()
-            })
-            
-            .sheet(isPresented: $showOptionsSheet, content: {
-                NavigationStack {
-                    OptionsView(downwindManager: downwindManager, showOptionsSheet: $showOptionsSheet, showFirstTimeUserName: $showFirstTimeUserName)
-                        .navigationTitle("Options")
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button("Done") {
-                                    showOptionsSheet = false
-                                }
-                            }
-                        }
+                    }
+                    
+                })
+                
+                .background {
+                    Rectangle()
+                        .ignoresSafeArea()
+                        .foregroundStyle(.listBackground)
                 }
                 
-            })
-            
-            .sheet(isPresented: $showAboutSheet, content: {
-                NavigationStack {
-                    AboutView()
-                        .navigationTitle("About")
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button("Done") {
-                                    showAboutSheet = false
-                                }
+                .onAppear {
+                    downwindManager.loadUser()
+                    downwindManager.loadRunStatistics()
+                    if downwindManager.user.id == nil {
+                        showFirstTimeUserName = true
+                    } else {
+                        Task {
+                            do {
+                                try await downwindManager.checkAndUpdateUserInDB()
+                            } catch {
+                                print("error checking updating user: \(error)")
                             }
-                        }
-                }
-                
-            })
-            
-            .background {
-                Rectangle()
-                    .ignoresSafeArea()
-                    .foregroundStyle(.listBackground)
-            }
-            
-            .onAppear {
-                downwindManager.loadUser()
-                downwindManager.loadRunStatistics()
-                if downwindManager.user.id == nil {
-                    showFirstTimeUserName = true
-                } else {
-                    Task {
-                        do {
-                            try await downwindManager.checkAndUpdateUserInDB()
-                        } catch {
-                            print("error checking updating user: \(error)")
                         }
                     }
                 }
             }
         }
+        
     }
 }
 
