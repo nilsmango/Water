@@ -16,9 +16,90 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
     
+    // MARK: Statistics
+    @Published var activeStatistics: Bool = false
+    @Published var runStatistics: [RunStatistic] = []
+    var currentRunStatisticIndex = 0
+    
+    /// Activates the run statistic
+    func startStatistic() {
+        // Safety first
+        if !activeStatistics {
+            activeStatistics = true
+            // create a new RunStatistic and record the first point to the runStatistic
+            // map the member names
+            let runMembers = activeRun.members.map { $0.name }
+            
+            // make the first data entry if there is a location
+            let newStatistic: RunStatistic
+            if user.latitude != nil && user.longitude != nil {
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, runMembers: runMembers, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, data: [StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)])
+            } else {
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, runMembers: runMembers, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, data: [])
+            }
+            
+            runStatistics.append(newStatistic)
+            currentRunStatisticIndex = runStatistics.endIndex - 1
+        }
+    }
+    
+    /// Stops the current run statistic
+    func stopStatistic() {
+        // Safety first
+        if activeStatistics {
+            // record one last point to the runStatistic
+            updateStatistic()
+            // deactivate statistic recording
+            activeStatistics = false
+        }
+    }
+    
+    /// Updates the run statistic
+    private func updateStatistic() {
+        if activeStatistics {
+            // only update if we have valid data
+            if user.latitude != nil && user.longitude != nil {
+                // updating the show vars
+                let currentStatistic = runStatistics[currentRunStatisticIndex]
+                
+                // adding up the run time
+                if let firstDataEntry = runStatistics[currentRunStatisticIndex].data.first {
+                    let startDate = firstDataEntry.date
+                    let timeSinceStart = secondsBetweenDates(from: startDate) / 60
+                    runStatistics[currentRunStatisticIndex].runTime = timeSinceStart
+                }
+                
+                // adding up the distance if there is any data
+                if let lastData = currentStatistic.data.last {
+                    let lastLatitude = lastData.latitude
+                    let lastLongitude = lastData.longitude
+                    let addedDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: user) ?? 0.0
+                    runStatistics[currentRunStatisticIndex].runDistance += addedDistance
+                }
+                
+                // updating the top speed
+                if user.speed ?? -1.0 > currentStatistic.topSpeed {
+                    runStatistics[currentRunStatisticIndex].topSpeed = user.speed!
+                }
+                
+                // updating the data
+                let newData = StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
+                runStatistics[currentRunStatisticIndex].data.append(newData)
+            }
+        }
+    }
+    
+    private func secondsBetweenDates(from pastDate: Date) -> Double {
+        let calendar = Calendar.current
+        let currentDate = Date.now
+        
+        let components = calendar.dateComponents([.second], from: pastDate, to: currentDate)
+        return Double(components.second ?? 0)
+    }
     
     // MARK: Run
     @Published var activeRun: Run = Run(name: "", members: [], active: false)
+
 
     @Published var locationError = false
     
@@ -346,6 +427,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// change user from active runner to only watching during a run
     func changeFromRunningToWatching() {
         DispatchQueue.main.async {
+            // Stop statistics if they are on
+            self.stopStatistic()
+            
             // stop timer
             self.runTimer?.invalidate()
             self.runTimer = nil
@@ -361,6 +445,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.user.speed = nil
             
             self.startUploadDownloadTimer(onlyDownload: true)
+            
+            
         }
     }
     
@@ -368,6 +454,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func quitActiveRun() async throws {
         // reset the active run var
         DispatchQueue.main.async {
+            // Stop statistics if they are on
+            self.stopStatistic()
+            
             // make run inactive, keeping the id
             self.activeRun = Run(name: "", members: self.activeRun.members, active: false)
             
@@ -534,6 +623,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 speed = 0.0
             }
             self.user.speed = speed
+            
+            self.updateStatistic()
         }
     }
     

@@ -49,6 +49,9 @@
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
 		78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
+		78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */; };
+		78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */; };
+		78C4D23A2BA6DADB00639E65 /* StatisticData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* StatisticData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +99,9 @@
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		78A9EB072B57132F0054E9F9 /* RunShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunShareView.swift; sourceTree = "<group>"; };
+		78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsControlCenter.swift; sourceTree = "<group>"; };
+		78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatistic.swift; sourceTree = "<group>"; };
+		78C4D2392BA6DADB00639E65 /* StatisticData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +121,7 @@
 			children = (
 				783A53C62B5DA57C00701D7F /* RunMapView.swift */,
 				783A53C82B5E667500701D7F /* CoordinatesListView.swift */,
+				783A53CA2B5E6AE900701D7F /* Map */,
 			);
 			path = RunMap;
 			sourceTree = "<group>";
@@ -189,6 +196,8 @@
 				785C4ABB2B40B04000EB07F8 /* Run.swift */,
 				785C4ACC2B41D28400EB07F8 /* DBRun.swift */,
 				785C4AD22B433D4000EB07F8 /* MemberRunData.swift */,
+				78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */,
+				78C4D2392BA6DADB00639E65 /* StatisticData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -222,8 +231,10 @@
 			isa = PBXGroup;
 			children = (
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
+				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
 				783A53D62B62C53C00701D7F /* RunListMapSheet.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
+				783A53CB2B5E6C8B00701D7F /* List */,
 			);
 			path = RunList;
 			sourceTree = "<group>";
@@ -247,8 +258,6 @@
 				781562A22B94D92900E081FC /* QRCodeView.swift */,
 				781562A62B94DD7500E081FC /* ShareDialog.swift */,
 				785CF9592B4FF2E300528B6D /* OptionsMenu.swift */,
-				783A53CB2B5E6C8B00701D7F /* List */,
-				783A53CA2B5E6AE900701D7F /* Map */,
 				785C4ADD2B45EBDC00EB07F8 /* RunList */,
 				783A53C12B5D92EC00701D7F /* RunMap */,
 			);
@@ -345,6 +354,7 @@
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */,
+				78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */,
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
 				783A53C72B5DA57C00701D7F /* RunMapView.swift in Sources */,
 				783A53CF2B5FBF5000701D7F /* RunType.swift in Sources */,
@@ -368,12 +378,14 @@
 				781562A32B94D92900E081FC /* QRCodeView.swift in Sources */,
 				783A53D32B5FD18000701D7F /* NoActiveRunnersView.swift in Sources */,
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
+				78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
 				781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */,
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
 				785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */,
+				78C4D23A2BA6DADB00639E65 /* StatisticData.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,

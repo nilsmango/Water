@@ -19,7 +19,7 @@ func calculateDistances(fromLatitude: Double, fromLongitude: Double, toLatitude:
     return (latitudeDistance, longitudeDistance, directDistance)
 }
 
-/// Takes coordinates in degrees and returns direct distance in meters
+/// Takes two members and returns direct distance in meters
 func calculateDirectDistance(from myself: Member, to member: Member) -> CLLocationDistance? {
     // Check if any of the coordinates is nil
     guard let myLatitude = myself.latitude,

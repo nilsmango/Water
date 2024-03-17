@@ -48,7 +48,14 @@ struct RunListView: View {
                         Text("Time elapsed: \(Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer))")
                             .monospacedDigit()
                     } footer: {
-                        ListInfoLabel(members: downwindManager.activeRun.members, userWatching: downwindManager.user.onlyWatching ?? false)
+                        VStack {
+                            ListInfoLabel(members: downwindManager.activeRun.members, userWatching: downwindManager.user.onlyWatching ?? false)
+                            
+                            if downwindManager.user.onlyWatching != true {
+                                StatisticsControlCenter(downwindManager: downwindManager)
+                            }
+                        }
+                        
                     }
                 }
                 

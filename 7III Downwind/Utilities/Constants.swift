@@ -24,6 +24,8 @@ enum Constants {
     static let maxLengthUser = 15
     
     static let deepLinkBase = "project7iii.location://"
+    
+    static let defaultValue = 9999.9
 }
 
 enum Endpoints {
