@@ -30,12 +30,17 @@ struct StatisticsControlCenter: View {
             .buttonStyle(.bordered)
             .padding()
             
-            let currentRunStatistic = downwindManager.runStatistics[downwindManager.currentRunStatisticIndex]
-            Text("Distance: \(makePrettyDistance(meters: currentRunStatistic.runDistance, system: downwindManager.measurementSystem))")
             Text("Time: \(Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer))")
                 .monospacedDigit()
-            let averageSpeed = makePrettySpeed(speed: currentRunStatistic.runDistance / (currentRunStatistic.runTime / 60), system: downwindManager.measurementSystem)
+            
+            let currentRunStatistic = downwindManager.runStatistics[downwindManager.currentRunStatisticIndex]
+            
+            Text("Distance: \(makePrettyDistance(meters: currentRunStatistic.runDistance, system: downwindManager.measurementSystem))")
+            
+            let averageSpeed = makePrettySpeed(speed: (currentRunStatistic.runDistance / 1000) / (currentRunStatistic.runTime / 60), system: downwindManager.measurementSystem)
             Text("Average Speed: \(averageSpeed)")
+            
+            Text("Top Speed: \(makePrettySpeed(speed: currentRunStatistic.topSpeed, system: downwindManager.measurementSystem))")
         }
         
 
