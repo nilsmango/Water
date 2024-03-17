@@ -51,7 +51,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             updateStatistic()
             // deactivate statistic recording
             activeStatistics = false
-            // safe the statistics to disk
+            // save the statistics to disk
             saveRunStatistics()
         }
     }
@@ -622,7 +622,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.allowsBackgroundLocationUpdates = true
-        
+        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
     }
     
     // Location Authorization
