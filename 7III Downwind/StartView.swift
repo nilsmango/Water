@@ -152,6 +152,7 @@ struct StartView: View {
             
             .onAppear {
                 downwindManager.loadUser()
+                downwindManager.loadRunStatistics()
                 if downwindManager.user.id == nil {
                     showFirstTimeUserName = true
                 } else {

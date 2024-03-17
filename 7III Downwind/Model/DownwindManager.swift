@@ -51,6 +51,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             updateStatistic()
             // deactivate statistic recording
             activeStatistics = false
+            // safe the statistics to disk
+            saveRunStatistics()
         }
     }
     
@@ -95,6 +97,45 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         let components = calendar.dateComponents([.second], from: pastDate, to: currentDate)
         return Double(components.second ?? 0)
+    }
+    
+    // Helper method to get documents directory
+    private func getDocumentsDirectory() throws -> URL {
+        do {
+            return try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        } catch {
+            fatalError("Can't find documents directory.")
+        }
+    }
+    
+    // File name of the statistics data
+    private let fileName = "locationStatistics.data"
+    
+    
+    // Save runStatistics to disk
+    private func saveRunStatistics() {
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try JSONEncoder().encode(self.runStatistics)
+                let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
+                try data.write(to: url)
+            } catch {
+                print("Error saving runStatistics: \(error)")
+            }
+        }
+    }
+    
+    // Load runStatistics from disk
+    func loadRunStatistics() {
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
+                let data = try Data(contentsOf: url)
+                self.runStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+            } catch {
+                print("Error loading runStatistics: \(error)")
+            }
+        }
     }
     
     // MARK: Run
