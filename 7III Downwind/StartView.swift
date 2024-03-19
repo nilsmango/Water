@@ -100,6 +100,13 @@ struct StartView: View {
                         runType = .watch
                         showStartRunSheet = true
                     }
+                    NavigationLink {
+                        CaptureRunStatisticsView(downwindManager: downwindManager)
+                    } label: {
+                        Text("Run Statistics only")
+                    }
+
+                   
                 })
                 .sheet(isPresented: $showStartRunSheet, content: {
                     NavigationStack {

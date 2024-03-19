@@ -77,14 +77,21 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem) -> String {
 
 /// Takes a speed in km/h, returns a pretty speed in km/h or mph
 func makePrettySpeed(speed: Double, system: MeasurementSystem) -> String {
+    
     switch system {
     case .metric:
+        if speed.isNaN {
+            return "0.0 km/h"
+        }
         if speed >= 10.0 {
             return String(Int(speed.rounded())) + " km/h"
         } else {
             return String(format: "%.1f", speed) + " km/h"
         }
     case .imperial:
+        if speed.isNaN {
+            return "0.0 mph"
+        }
         let mph = speed * 1000 / metersPerMile
         
         if mph >= 10.0 {

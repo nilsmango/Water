@@ -22,10 +22,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var currentRunStatisticIndex = 0
     
     /// Activates the run statistic
-    func startStatistic() {
+    func startStatistic(onlyStatistics: Bool) {
         // Safety first
         if !activeStatistics {
             activeStatistics = true
+            // start location tracking if we have not done that
+            if onlyStatistics {
+                checkAndStartLocationService(cloudService: false)
+            }
             // create a new RunStatistic and record the first point to the runStatistic
             // map the member names
             let runMembers = activeRun.members.map { $0.name }
@@ -44,13 +48,21 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// Stops the current run statistic
-    func stopStatistic() {
+    func stopStatistic(onlyStatistic: Bool = false) {
         // Safety first
         if activeStatistics {
             // record one last point to the runStatistic
             updateStatistic()
             // deactivate statistic recording
             activeStatistics = false
+            
+            if onlyStatistic {
+                // Stop location update
+                print("Stopping location tracking")
+                self.locationManager?.stopUpdatingLocation()
+                self.locationManager?.stopUpdatingHeading()
+            }
+            
             // save the statistics to disk
             saveRunStatistics()
         }
@@ -80,7 +92,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
                 
                 // updating the top speed
-                if user.speed ?? -1.0 > currentStatistic.topSpeed {
+                if user.speed ?? 0.0 > currentStatistic.topSpeed {
                     runStatistics[currentRunStatisticIndex].topSpeed = user.speed!
                 }
                 
@@ -142,7 +154,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             do {
                 let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
                 let data = try Data(contentsOf: url)
-                self.runStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+                let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+                
+                DispatchQueue.main.async {
+                    // Update UI on the main thread
+                    self.runStatistics = decodedStatistics
+                }
             } catch {
                 print("Error loading runStatistics: \(error)")
             }
@@ -333,18 +350,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 //    }
     
     /// checks and starts location service
-    private func checkAndStartLocationService() {
+    private func checkAndStartLocationService(cloudService: Bool = true) {
         if self.locationAuthorization {
             // TODO: check if location is enabled?
             // check if location is enabled
-//                        if CLLocationManager.locationServicesEnabled() {
-                // starting the location and heading updating + timer for upload and download
-                print("Starting location tracking")
-                self.locationManager?.startUpdatingLocation()
-                self.locationManager?.startUpdatingHeading()
-
+            //                        if CLLocationManager.locationServicesEnabled() {
+            // starting the location and heading updating + timer for upload and download
+            print("Starting location tracking")
+            self.locationManager?.startUpdatingLocation()
+            self.locationManager?.startUpdatingHeading()
+            
+            if cloudService {
                 // starting the upload/download timer
                 self.startUploadDownloadTimer()
+            }
 
             // Ensure the timer is added to the current run loop
 //                            RunLoop.current.add(self.runTimer!, forMode: .default)

@@ -9,11 +9,12 @@ import SwiftUI
 
 struct StatisticsControlCenter: View {
     @ObservedObject var downwindManager: DownwindManager
+    var onlyStatistics: Bool = false
     
     var body: some View {
         if downwindManager.activeStatistics == false {
             Button {
-                downwindManager.startStatistic()
+                downwindManager.startStatistic(onlyStatistics: onlyStatistics)
                 downwindManager.activeRun.startedOn = Date.now
             } label: {
                 Label("Start Statistics", systemImage: "play.fill")
@@ -23,7 +24,7 @@ struct StatisticsControlCenter: View {
             
         } else {
             Button(role: .destructive) {
-                downwindManager.stopStatistic()
+                downwindManager.stopStatistic(onlyStatistic: onlyStatistics)
             } label: {
                 Label("Stop Statistics", systemImage: "stop.fill")
             }

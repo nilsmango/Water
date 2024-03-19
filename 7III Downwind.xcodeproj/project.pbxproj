@@ -54,6 +54,7 @@
 		78C4D23A2BA6DADB00639E65 /* StatisticData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* StatisticData.swift */; };
 		78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */; };
 		78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
+		78C4D2412BAA149000639E65 /* CaptureRunStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,6 +107,7 @@
 		78C4D2392BA6DADB00639E65 /* StatisticData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticData.swift; sourceTree = "<group>"; };
 		78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
 		78C4D23E2BA7512A00639E65 /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
+		78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureRunStatisticsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,6 +285,7 @@
 			children = (
 				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
 				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
+				78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */,
 			);
 			path = "Run Statistics";
 			sourceTree = "<group>";
@@ -385,6 +388,7 @@
 				783A53C02B59A61B00701D7F /* MemberListView.swift in Sources */,
 				785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */,
 				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
+				78C4D2412BAA149000639E65 /* CaptureRunStatisticsView.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				783A53CD2B5E6C9A00701D7F /* ListInfoLabel.swift in Sources */,
 				783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */,
