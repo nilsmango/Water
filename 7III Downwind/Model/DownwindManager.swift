@@ -19,6 +19,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: Statistics
     @Published var activeStatistics: Bool = false
     @Published var runStatistics: [RunStatistic] = []
+    // TODO: remove again
+    @Published var accuracy: Double = 1000.0
     var currentRunStatisticIndex = 0
     
     /// Activates the run statistic
@@ -85,9 +87,24 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 
                 // adding up the distance if there is any data
                 if let lastData = currentStatistic.data.last {
+                    
+                    // calculate distance from location
                     let lastLatitude = lastData.latitude
                     let lastLongitude = lastData.longitude
-                    let addedDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: user) ?? 0.0
+                    let addedLocationDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: user) ?? 0.0
+                    
+                    // calculate distance from speed
+                    let currentSpeedInMPerS: Double
+                    if user.speed ?? 0.0 > 0.0 {
+                        currentSpeedInMPerS = user.speed! * 1000 / 3600
+                    } else {
+                        currentSpeedInMPerS = 0.0
+                    }
+                    
+                    let timeSinceLastData = secondsBetweenDates(from: lastData.date)
+                    let addedSpeedDistance = timeSinceLastData * currentSpeedInMPerS
+                    
+                    let addedDistance = (addedSpeedDistance + addedLocationDistance) / 2
                     runStatistics[currentRunStatisticIndex].runDistance += addedDistance
                 }
                 
@@ -652,6 +669,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.allowsBackgroundLocationUpdates = true
+        locationManager?.activityType = .fitness
         locationManager?.desiredAccuracy = kCLLocationAccuracyBest
     }
     
@@ -687,13 +705,19 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         
         DispatchQueue.main.async {
-            self.user.latitude = newLocation.coordinate.latitude
-            self.user.longitude = newLocation.coordinate.longitude
+            // only updating location if the accuracy is there
+//            if newLocation.horizontalAccuracy <= 5 {
+                self.user.latitude = newLocation.coordinate.latitude
+                self.user.longitude = newLocation.coordinate.longitude
+//            }
             var speed = newLocation.speed * 60 * 60 / 1000
             if speed < 0.0 {
                 speed = 0.0
             }
             self.user.speed = speed
+            
+            // TODO: remove again
+            self.accuracy = newLocation.speedAccuracy
             
             self.updateStatistic()
         }

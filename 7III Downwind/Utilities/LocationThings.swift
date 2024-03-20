@@ -80,7 +80,7 @@ func makePrettySpeed(speed: Double, system: MeasurementSystem) -> String {
     
     switch system {
     case .metric:
-        if speed.isNaN {
+        if speed.isNaN || speed.isInfinite {
             return "0.0 km/h"
         }
         if speed >= 10.0 {

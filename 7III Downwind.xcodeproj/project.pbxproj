@@ -55,6 +55,7 @@
 		78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */; };
 		78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
 		78C4D2412BAA149000639E65 /* CaptureRunStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */; };
+		78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,6 +109,7 @@
 		78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
 		78C4D23E2BA7512A00639E65 /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
 		78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureRunStatisticsView.swift; sourceTree = "<group>"; };
+		78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,6 +288,7 @@
 				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
 				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
 				78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */,
+				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
 			);
 			path = "Run Statistics";
 			sourceTree = "<group>";
@@ -381,6 +384,7 @@
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
+				78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */,
 				781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */,
 				78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */,
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
