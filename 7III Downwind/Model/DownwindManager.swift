@@ -706,20 +706,21 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         DispatchQueue.main.async {
             // only updating location if the accuracy is there
-//            if newLocation.horizontalAccuracy <= 5 {
+            if newLocation.horizontalAccuracy <= 7 {
                 self.user.latitude = newLocation.coordinate.latitude
                 self.user.longitude = newLocation.coordinate.longitude
-//            }
-            var speed = newLocation.speed * 60 * 60 / 1000
-            if speed < 0.0 {
-                speed = 0.0
+                var speed = newLocation.speed * 60 * 60 / 1000
+                if speed < 0.0 {
+                    speed = 0.0
+                }
+                self.user.speed = speed
+                
+                // TODO: remove again
+                self.accuracy = newLocation.speedAccuracy
+                
+                self.updateStatistic()
             }
-            self.user.speed = speed
             
-            // TODO: remove again
-            self.accuracy = newLocation.speedAccuracy
-            
-            self.updateStatistic()
         }
     }
     
