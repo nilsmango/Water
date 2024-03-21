@@ -19,8 +19,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: Statistics
     @Published var activeStatistics: Bool = false
     @Published var runStatistics: [RunStatistic] = []
-    // TODO: remove again
-    @Published var accuracy: Double = 1000.0
+    // TODO: make this non published
+    @Published var locationAccuracy: Double = 1000.0
     var currentRunStatisticIndex = 0
     
     /// Activates the run statistic
@@ -84,49 +84,52 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// Updates the run statistic
     private func updateStatistic() {
         if activeStatistics {
+            // only updating if the accuracy is there
+            if locationAccuracy <= 7.9 {
             // only update if we have valid data
-            if user.latitude != nil && user.longitude != nil {
-                // updating the show vars
-                let currentStatistic = runStatistics[currentRunStatisticIndex]
-                
-                // adding up the run time
-                if let firstDataEntry = runStatistics[currentRunStatisticIndex].data.first {
-                    let startDate = firstDataEntry.date
-                    let timeSinceStart = secondsBetweenDates(from: startDate) / 60
-                    runStatistics[currentRunStatisticIndex].runTime = timeSinceStart
-                }
-                
-                // adding up the distance if there is any data
-                if let lastData = currentStatistic.data.last {
+                if user.latitude != nil && user.longitude != nil {
+                    // updating the show vars
+                    let currentStatistic = runStatistics[currentRunStatisticIndex]
                     
-                    // calculate distance from location
-                    let lastLatitude = lastData.latitude
-                    let lastLongitude = lastData.longitude
-                    let addedLocationDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: user) ?? 0.0
-                    
-                    // calculate distance from speed
-                    let currentSpeedInMPerS: Double
-                    if user.speed ?? 0.0 > 0.0 {
-                        currentSpeedInMPerS = user.speed! * 1000 / 3600
-                    } else {
-                        currentSpeedInMPerS = 0.0
+                    // adding up the run time
+                    if let firstDataEntry = runStatistics[currentRunStatisticIndex].data.first {
+                        let startDate = firstDataEntry.date
+                        let timeSinceStart = secondsBetweenDates(from: startDate) / 60
+                        runStatistics[currentRunStatisticIndex].runTime = timeSinceStart
                     }
                     
-                    let timeSinceLastData = secondsBetweenDates(from: lastData.date)
-                    let addedSpeedDistance = timeSinceLastData * currentSpeedInMPerS
+                    // adding up the distance if there is any data
+                    if let lastData = currentStatistic.data.last {
+                        
+                        // calculate distance from location
+                        let lastLatitude = lastData.latitude
+                        let lastLongitude = lastData.longitude
+                        let addedLocationDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: user) ?? 0.0
+                        
+                        // calculate distance from speed
+                        let currentSpeedInMPerS: Double
+                        if user.speed ?? 0.0 > 0.0 {
+                            currentSpeedInMPerS = user.speed! * 1000 / 3600
+                        } else {
+                            currentSpeedInMPerS = 0.0
+                        }
+                        
+                        let timeSinceLastData = secondsBetweenDates(from: lastData.date)
+                        let addedSpeedDistance = timeSinceLastData * currentSpeedInMPerS
+                        
+                        let addedDistance = (addedSpeedDistance + addedLocationDistance) / 2
+                        runStatistics[currentRunStatisticIndex].runDistance += addedDistance
+                    }
                     
-                    let addedDistance = (addedSpeedDistance + addedLocationDistance) / 2
-                    runStatistics[currentRunStatisticIndex].runDistance += addedDistance
+                    // updating the top speed
+                    if user.speed ?? 0.0 > currentStatistic.topSpeed {
+                        runStatistics[currentRunStatisticIndex].topSpeed = user.speed!
+                    }
+                    
+                    // updating the data
+                    let newData = StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
+                    runStatistics[currentRunStatisticIndex].data.append(newData)
                 }
-                
-                // updating the top speed
-                if user.speed ?? 0.0 > currentStatistic.topSpeed {
-                    runStatistics[currentRunStatisticIndex].topSpeed = user.speed!
-                }
-                
-                // updating the data
-                let newData = StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
-                runStatistics[currentRunStatisticIndex].data.append(newData)
             }
         }
     }
@@ -733,11 +736,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         guard let newLocation = locations.last else { 
             print("Something wrong with locationManager")
             return }
-        
-        
+                
         DispatchQueue.main.async {
-            // only updating location if the accuracy is there
-            if newLocation.horizontalAccuracy <= 7 {
                 self.user.latitude = newLocation.coordinate.latitude
                 self.user.longitude = newLocation.coordinate.longitude
                 var speed = newLocation.speed * 60 * 60 / 1000
@@ -746,12 +746,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
                 self.user.speed = speed
                 
-                // TODO: remove again
-                self.accuracy = newLocation.speedAccuracy
+                self.locationAccuracy = newLocation.horizontalAccuracy
                 
                 self.updateStatistic()
-            }
-            
         }
     }
     

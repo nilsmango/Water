@@ -42,7 +42,7 @@ struct StatisticsControlCenter: View {
             Text("Average Speed: \(averageSpeed)")
             
             Text("Top Speed: \(makePrettySpeed(speed: currentRunStatistic.topSpeed, system: downwindManager.measurementSystem))")
-            Text("Accuracy of speed m/s: \(downwindManager.accuracy)")
+            Text("Accuracy of location: \(downwindManager.locationAccuracy) m")
         }
         
 
