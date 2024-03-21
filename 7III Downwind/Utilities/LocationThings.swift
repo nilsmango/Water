@@ -110,15 +110,15 @@ func makePrettyTime(timeInMinutes: Double) -> String {
         let hours = Int(roundedMinutes / 60)
         let remainingMinutes = Int(roundedMinutes) % 60
         if remainingMinutes > 0 {
-            return "\(hours)h \(remainingMinutes)min"
+            return "\(hours) h \(remainingMinutes) min"
         } else {
-            return "\(hours)h"
+            return "\(hours) h"
         }
         
     } else {
         let roundedMinutes = Int(timeInMinutes.rounded())
         let minutesString = String(roundedMinutes)
-        return minutesString
+        return "\(minutesString) min"
     }
 }
 
