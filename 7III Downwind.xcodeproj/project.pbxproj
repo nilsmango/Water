@@ -56,6 +56,7 @@
 		78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
 		78C4D2412BAA149000639E65 /* CaptureRunStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */; };
 		78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
+		78C4D2452BAC8B8A00639E65 /* CrewStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,6 +111,7 @@
 		78C4D23E2BA7512A00639E65 /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
 		78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureRunStatisticsView.swift; sourceTree = "<group>"; };
 		78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMap.swift; sourceTree = "<group>"; };
+		78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStatistic.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +209,7 @@
 				785C4AD22B433D4000EB07F8 /* MemberRunData.swift */,
 				78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */,
 				78C4D2392BA6DADB00639E65 /* StatisticData.swift */,
+				78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -370,6 +373,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */,
+				78C4D2452BAC8B8A00639E65 /* CrewStatistic.swift in Sources */,
 				785C4AC32B40B84300EB07F8 /* StartView.swift in Sources */,
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,

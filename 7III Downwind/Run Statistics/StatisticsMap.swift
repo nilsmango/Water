@@ -56,7 +56,7 @@ struct StatisticsMap: View {
 
 #Preview {
     
-    StatisticsMap(statisticsData: RunStatistic(id: UUID(), runName: "Testrun", runMembers: ["Peter", "Micheal", "Ben"], runTime: 300, runDistance: 20, topSpeed: 23, data: [StatisticData(date: Date().addingTimeInterval(2), latitude: 37.7748, longitude: -122.4197, speed: 11.790322769578067),
+    StatisticsMap(statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, data: [StatisticData(date: Date().addingTimeInterval(2), latitude: 37.7748, longitude: -122.4197, speed: 11.790322769578067),
                                                                                                                                                                             StatisticData(date: Date().addingTimeInterval(4), latitude: 37.7748, longitude: -122.41958, speed: 11.991023390499704),
                                                                                                                                                                             StatisticData(date: Date().addingTimeInterval(6), latitude: 37.77479826565036, longitude: -122.41952333322953, speed: 7.317224042312246),
                                                                                                                                                                             StatisticData(date: Date().addingTimeInterval(7), latitude: 37.77476060704628, longitude: -122.41926475227716, speed: 7.485536747974884),

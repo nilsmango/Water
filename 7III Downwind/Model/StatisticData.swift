@@ -13,5 +13,5 @@ struct StatisticData: Codable {
     var longitude: Double
     
     // speed in km/h from CoreLocation
-    var speed: Double
+    var speed: Double?
 }

@@ -10,7 +10,7 @@ import Foundation
 struct RunStatistic: Identifiable, Codable {
     let id: UUID
     var runName: String
-    var runMembers: [String]
+    var crewStatistics: [CrewStatistic]
     
     /// time in minutes
     var runTime: Double

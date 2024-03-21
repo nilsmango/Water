@@ -34,14 +34,25 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             // create a new RunStatistic and record the first point to the runStatistic
             // map the member names
-            let runMembers = activeRun.members.map { $0.name }
+            let crewStatistics = activeRun.members.compactMap { member -> CrewStatistic? in
+                // ignore members that are only watching
+                if member.onlyWatching == false {
+                    var statisticData: [StatisticData] = []
+                    if let latitude = member.latitude, let longitude = member.longitude {
+                        statisticData = [StatisticData(date: Date.now, latitude: latitude, longitude: longitude)]
+                    }
+                    return CrewStatistic(memberID: member.id, memberName: member.name, data: statisticData)
+                } else {
+                    return nil
+                }
+            }
             
             // make the first data entry if there is a location
             let newStatistic: RunStatistic
             if user.latitude != nil && user.longitude != nil {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, runMembers: runMembers, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, data: [StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)])
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, data: [StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)])
             } else {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, runMembers: runMembers, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, data: [])
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, data: [])
             }
             
             runStatistics.append(newStatistic)
@@ -116,6 +127,24 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 // updating the data
                 let newData = StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
                 runStatistics[currentRunStatisticIndex].data.append(newData)
+            }
+        }
+    }
+    
+    /// updating the member locations in the statistics
+    private func updateMemberStatistics() {
+        if activeStatistics {
+            activeRun.members.forEach { member in
+                if member.onlyWatching == false {
+                    if let latitude = member.latitude, let longitude = user.longitude {
+                        let newData = StatisticData(date: Date.now, latitude: latitude, longitude: longitude)
+                        
+                        if let statMemberIndex = runStatistics[currentRunStatisticIndex].crewStatistics.firstIndex(where: { $0.memberID == member.id }) {
+                            runStatistics[currentRunStatisticIndex].crewStatistics[statMemberIndex].data.append(newData)
+                        }
+                        
+                    }
+                }
             }
         }
     }
@@ -458,7 +487,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // After uploading, load run members
         do {
-            try await loadRunMembers()
+            try await loadRunMembers(notUpdatingMemberStatistic: onlyDownload)
         } catch {
             print("Error loading run members: \(error)")
         }
@@ -583,7 +612,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
 
     /// loading members of active run
-    func loadRunMembers() async throws {
+    func loadRunMembers(notUpdatingMemberStatistic: Bool = true) async throws {
         print("loading members")
         guard let runID = activeRun.id else {
             print("Error: No active run ID!")
@@ -595,7 +624,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         DispatchQueue.main.async {
             self.activeRun.members = membersResponse.filter { $0.id != self.user.id }
-            
+            if notUpdatingMemberStatistic == false {
+                self.updateMemberStatistics()
+            }
         }
     }
     
