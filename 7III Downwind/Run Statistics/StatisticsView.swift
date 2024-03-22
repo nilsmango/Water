@@ -18,7 +18,7 @@ struct StatisticsView: View {
                 NavigationLink {
                     StatisticsMap(statisticsData: statistic)
                 } label: {
-                    RunOverView(runDate: downwindManager.createDateString(from: statistic.data.first?.date), runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed)
+                    RunOverView(runDate: downwindManager.createDateString(from: statistic.locationData.first?.timestamp), runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed)
                 }
             }
             .onDelete { indexSet in

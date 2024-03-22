@@ -38,11 +38,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let crewStatistics = activeRun.members.compactMap { member -> CrewStatistic? in
                 // ignore members that are only watching
                 if member.onlyWatching == false {
-                    var statisticData: [StatisticData] = []
+                    var statisticData: [LocationData] = []
                     if let latitude = member.latitude, let longitude = member.longitude {
-                        statisticData = [StatisticData(date: Date.now, latitude: latitude, longitude: longitude)]
+                        statisticData = [LocationData(timestamp: Date.now, latitude: latitude, longitude: longitude)]
                     }
-                    return CrewStatistic(memberID: member.id, memberName: member.name, data: statisticData)
+                    return CrewStatistic(memberID: member.id, memberName: member.name, locationData: statisticData)
                 } else {
                     return nil
                 }
@@ -51,9 +51,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // make the first data entry if there is a location
             let newStatistic: RunStatistic
             if user.latitude != nil && user.longitude != nil {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, data: [StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)])
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)])
             } else {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, data: [])
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [])
             }
             
             runStatistics.append(newStatistic)
@@ -94,14 +94,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     let currentStatistic = runStatistics[currentRunStatisticIndex]
                     
                     // adding up the run time
-                    if let firstDataEntry = runStatistics[currentRunStatisticIndex].data.first {
-                        let startDate = firstDataEntry.date
+                    if let firstDataEntry = runStatistics[currentRunStatisticIndex].locationData.first {
+                        let startDate = firstDataEntry.timestamp
                         let timeSinceStart = secondsBetweenDates(from: startDate) / 60
                         runStatistics[currentRunStatisticIndex].runTime = timeSinceStart
                     }
                     
                     // adding up the distance if there is any data
-                    if let lastData = currentStatistic.data.last {
+                    if let lastData = currentStatistic.locationData.last {
                         
                         // calculate distance from location
                         let lastLatitude = lastData.latitude
@@ -117,8 +117,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     
                     // updating the data
-                    let newData = StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
-                    runStatistics[currentRunStatisticIndex].data.append(newData)
+                    let newData = LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
+                    runStatistics[currentRunStatisticIndex].locationData.append(newData)
                 }
 //            }
         }
@@ -130,10 +130,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             activeRun.members.forEach { member in
                 if member.onlyWatching == false {
                     if let latitude = member.latitude, let longitude = user.longitude {
-                        let newData = StatisticData(date: Date.now, latitude: latitude, longitude: longitude)
+                        let newData = LocationData(timestamp: Date.now, latitude: latitude, longitude: longitude)
                         
                         if let statMemberIndex = runStatistics[currentRunStatisticIndex].crewStatistics.firstIndex(where: { $0.memberID == member.id }) {
-                            runStatistics[currentRunStatisticIndex].crewStatistics[statMemberIndex].data.append(newData)
+                            runStatistics[currentRunStatisticIndex].crewStatistics[statMemberIndex].locationData.append(newData)
                         }
                         
                     }

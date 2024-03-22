@@ -19,6 +19,6 @@ struct RunStatistic: Identifiable, Codable {
     /// top speed in km/h
     var topSpeed: Double
     
-    var data: [StatisticData]
+    var locationData: [LocationData]
     
 }

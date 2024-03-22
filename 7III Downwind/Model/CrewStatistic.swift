@@ -10,5 +10,5 @@ import Foundation
 struct CrewStatistic: Codable {
     let memberID: UUID?
     let memberName: String
-    var data: [StatisticData]
+    var locationData: [LocationData]
 }
