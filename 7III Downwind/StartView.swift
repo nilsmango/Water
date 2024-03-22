@@ -65,16 +65,20 @@ struct StartView: View {
                     Button(action: {
                         showRunPicker = true
                     }, label: {
-                        ZStack {
-                            Image("DWSplash")
-                                .shadow(
-                                    color: .black.opacity(0.3),
-                                    radius: 7)
-                            Text("Start")
-                                .font(.largeTitle)
-                                .fontWeight(.bold)
-                                .foregroundStyle(.black)
-                        }
+                        Text("Start")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.black)
+                            .padding(.horizontal, 50)
+                            .padding(.vertical, 30)
+                            .background {
+                                Capsule()
+                                    .fill(LinearGradient(gradient: Gradient(colors: [Color.accentColor, Color.mint]), startPoint: .top, endPoint: .bottom))
+                                                    
+                                    .shadow(
+                                        color: .black.opacity(0.1),
+                                        radius: 7)
+                            }
                         
                     })
                     .offset(CGSize(width: 0, height: -9))
