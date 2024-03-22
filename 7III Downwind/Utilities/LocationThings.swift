@@ -47,8 +47,15 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem) -> String {
     case .metric:
         if meters >= 1000.0 {
             let km = meters / 1000
-            let rounded = Int(km.rounded())
-            let string = "\(rounded) km"
+            let kilometer: String
+            if km >= 100 {
+                kilometer = String(Int(km.rounded()))
+            } else {
+                // rounding to two decimals
+                let rounded = (km * 100).rounded() / 100
+                kilometer = String(format: "%.2f", rounded)
+            }
+            let string = "\(kilometer) km"
             return string
             
         } else {
