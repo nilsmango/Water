@@ -14,7 +14,7 @@ struct AboutView: View {
                 Text("What can you do with this app?")
                     .font(.headline)
                 
-                Text("Start downwind runs, share them with friends, and watch them unfold in real-time. Track speed and location of your whole downwind crew.")
+                Text("Start runs (originally, this app was only thought for downwind runs, but you can track the location of any group doing any activity), share them with friends, and watch them unfold in real-time. Track the speed and location of your whole group. You can save all the location data collected and analyze it later when you activate statistics.")
                     .font(.body)
                     .padding(.bottom)
                 
