@@ -74,7 +74,7 @@
 		783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActiveRunnersView.swift; sourceTree = "<group>"; };
 		783A53D42B626BF500701D7F /* HeadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingIndicator.swift; sourceTree = "<group>"; };
 		783A53D62B62C53C00701D7F /* RunListMapSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListMapSheet.swift; sourceTree = "<group>"; };
-		785C4A952B358F7B00EB07F8 /* 7III Downwind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Downwind.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		785C4A952B358F7B00EB07F8 /* 7III Location.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Location.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		785C4A9E2B358F7D00EB07F8 /* _III_Downwind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = _III_Downwind.entitlements; sourceTree = "<group>"; };
@@ -168,7 +168,7 @@
 		785C4A962B358F7B00EB07F8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				785C4A952B358F7B00EB07F8 /* 7III Downwind.app */,
+				785C4A952B358F7B00EB07F8 /* 7III Location.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -301,9 +301,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		785C4A942B358F7B00EB07F8 /* 7III Downwind */ = {
+		785C4A942B358F7B00EB07F8 /* 7III Location */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 785C4AA42B358F7D00EB07F8 /* Build configuration list for PBXNativeTarget "7III Downwind" */;
+			buildConfigurationList = 785C4AA42B358F7D00EB07F8 /* Build configuration list for PBXNativeTarget "7III Location" */;
 			buildPhases = (
 				785C4A912B358F7B00EB07F8 /* Sources */,
 				785C4A922B358F7B00EB07F8 /* Frameworks */,
@@ -313,13 +313,13 @@
 			);
 			dependencies = (
 			);
-			name = "7III Downwind";
+			name = "7III Location";
 			packageProductDependencies = (
 				785C4AC02B40B62E00EB07F8 /* KeychainSwift */,
 				786C95252BAD96B30085109D /* HCKalmanFilter */,
 			);
 			productName = "7III Downwind";
-			productReference = 785C4A952B358F7B00EB07F8 /* 7III Downwind.app */;
+			productReference = 785C4A952B358F7B00EB07F8 /* 7III Location.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -337,7 +337,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 785C4A902B358F7B00EB07F8 /* Build configuration list for PBXProject "7III Downwind" */;
+			buildConfigurationList = 785C4A902B358F7B00EB07F8 /* Build configuration list for PBXProject "7III Location" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -354,7 +354,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				785C4A942B358F7B00EB07F8 /* 7III Downwind */,
+				785C4A942B358F7B00EB07F8 /* 7III Location */,
 			);
 		};
 /* End PBXProject section */
@@ -634,7 +634,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		785C4A902B358F7B00EB07F8 /* Build configuration list for PBXProject "7III Downwind" */ = {
+		785C4A902B358F7B00EB07F8 /* Build configuration list for PBXProject "7III Location" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				785C4AA22B358F7D00EB07F8 /* Debug */,
@@ -643,7 +643,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		785C4AA42B358F7D00EB07F8 /* Build configuration list for PBXNativeTarget "7III Downwind" */ = {
+		785C4AA42B358F7D00EB07F8 /* Build configuration list for PBXNativeTarget "7III Location" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				785C4AA52B358F7D00EB07F8 /* Debug */,
