@@ -14,18 +14,19 @@ struct StartOptionsMenu: View {
         Menu {
             
             Button(action: {
+                showOptionsSheet = true
+            }, label: {
+                Label("Options", systemImage: "gear")
+
+            })
+            
+            Button(action: {
                 showAboutSheet = true
             }, label: {
                 Label("About", systemImage: "info.circle")
 
             })
             
-            Button(action: {
-                showOptionsSheet = true
-            }, label: {
-                Label("Options", systemImage: "gear")
-
-            })
         } label: {
             Label("Options", systemImage: "ellipsis.circle")
                 .labelStyle(.iconOnly)
