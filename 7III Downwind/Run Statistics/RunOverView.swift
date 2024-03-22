@@ -17,10 +17,12 @@ struct RunOverView: View {
     var body: some View {
         VStack {
             HStack {
-                Text(runName)
-                    .fontWeight(.bold)
+                    Text(runDate)
+                        .fontWeight(.bold)
+                
+                    Text(runName)
+                
                 Spacer()
-                Text(runDate)
             }
             HStack {
                 Text(distance)
