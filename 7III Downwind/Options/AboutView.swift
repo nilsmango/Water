@@ -23,7 +23,7 @@ struct AboutView: View {
                         .font(.headline)
                         .padding(.top, 10)
                     
-                    Text("This app is designed for recreational use and should not be considered a substitute for emergency beacons or other rescue devices. Safety is our top priority, and you should always exercise caution and adhere to maritime safety guidelines while using this app.")
+                    Text("This app is designed for recreational use and should not be considered a substitute for emergency beacons or other rescue devices. Safety is our top priority, and you should always exercise caution and adhere to maritime safety guidelines while using this app. Please note that GPS usage consumes a significant amount of battery. Therefore, you should be mindful and periodically check the battery level to ensure safety during tracking.")
                         .font(.body)
                 }
                 .padding([.horizontal, .bottom])
