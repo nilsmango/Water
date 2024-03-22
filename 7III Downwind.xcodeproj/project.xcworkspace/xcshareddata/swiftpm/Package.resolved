@@ -1,6 +1,15 @@
 {
-  "originHash" : "61d0f8bddcbf3b93ae7ce1d42c4f6929e95bfcb66319ddeb36d0dda55337047e",
+  "originHash" : "e2c88787c5f6ad177c8c2ef4b3d6572c9a5d2eba986422e5ea3a71809e1278a9",
   "pins" : [
+    {
+      "identity" : "hckalmanfilter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nilsmango/HCKalmanFilter",
+      "state" : {
+        "branch" : "master",
+        "revision" : "7a9d03cc91899d0ff8fe8b58f02dea8f3e4161e0"
+      }
+    },
     {
       "identity" : "keychain-swift",
       "kind" : "remoteSourceControl",
@@ -8,6 +17,15 @@
       "state" : {
         "revision" : "d108a1fa6189e661f91560548ef48651ed8d93b9",
         "version" : "20.0.0"
+      }
+    },
+    {
+      "identity" : "surge",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Jounce/Surge.git",
+      "state" : {
+        "revision" : "6e4a47e63da8801afe6188cf039e9f04eb577721",
+        "version" : "2.3.2"
       }
     }
   ],

@@ -8,6 +8,7 @@
 import SwiftUI
 import KeychainSwift
 import CoreLocation
+import HCKalmanFilter
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
@@ -83,6 +84,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func updateStatistic() {
         if activeStatistics {
             
+            // only count if we have some accuracy
+            if locationAccuracy <= 9.0 {
+
             // only update if we have valid data
                 if user.latitude != nil && user.longitude != nil {
                     
@@ -128,6 +132,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     let newData = StatisticData(date: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
                     runStatistics[currentRunStatisticIndex].data.append(newData)
                 }
+            }
         }
     }
     
@@ -401,6 +406,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         self.locationManager?.stopUpdatingLocation()
         self.locationManager?.stopUpdatingHeading()
         ignoreFirstFewLocations = true
+        resetKalmanFilter = true
     }
     
     /// checks and starts location service
@@ -696,8 +702,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     private var isUpdatingLocation = false
     private var ignoreFirstFewLocations = true
-    private let secondsWeIgnoreLocations = 2.4
+    private let secondsWeIgnoreLocations = 2.0
     private var locationManagerStartTime = Date.now
+    
+    // Kalman Filter
+    var resetKalmanFilter: Bool = false
+    var kalmanFilter: HCKalmanAlgorithm?
     
     override init() {
         super.init()
@@ -750,20 +760,37 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 guard let newLocation = locations.last else {
                     print("Something wrong with locationManager")
                     return }
-                        
-                DispatchQueue.main.async {
-                        self.user.latitude = newLocation.coordinate.latitude
-                        self.user.longitude = newLocation.coordinate.longitude
-                        var speed = newLocation.speed * 60 * 60 / 1000
-                        if speed < 0.0 {
-                            speed = 0.0
+                
+                if kalmanFilter == nil {
+                       self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                    }
+                    else {
+                        if let kalmanFilter = self.kalmanFilter {
+                            if resetKalmanFilter == true {
+                                kalmanFilter.resetKalman(newStartLocation: newLocation)
+                                resetKalmanFilter = false
+                            }
+                            else {
+                                let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
+                                
+                                DispatchQueue.main.async {
+                                        self.user.latitude = kalmanLocation.coordinate.latitude
+                                        self.user.longitude = kalmanLocation.coordinate.longitude
+                                        var speed = newLocation.speed * 60 * 60 / 1000
+                                        if speed < 0.0 {
+                                            speed = 0.0
+                                        }
+                                        self.user.speed = speed
+                                        
+                                        self.locationAccuracy = newLocation.horizontalAccuracy
+                                        
+                                        self.updateStatistic()
+                                }
+                            }
                         }
-                        self.user.speed = speed
+                    }
                         
-                        self.locationAccuracy = newLocation.horizontalAccuracy
-                        
-                        self.updateStatistic()
-                }
+                
             }
         
     }
