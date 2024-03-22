@@ -36,7 +36,7 @@ struct StatisticsControlCenter: View {
             
             let currentRunStatistic = downwindManager.runStatistics[downwindManager.currentRunStatisticIndex]
             
-            Text("Distance: \(makePrettyDistance(meters: currentRunStatistic.runDistance, system: downwindManager.measurementSystem))")
+            Text("Distance: \(makePrettyDistance(meters: currentRunStatistic.runDistance, system: downwindManager.measurementSystem, statistics: true))")
             
             let averageSpeed = makePrettySpeed(speed: (currentRunStatistic.runDistance / 1000) / (currentRunStatistic.runTime / 60), system: downwindManager.measurementSystem)
             Text("Average Speed: \(averageSpeed)")

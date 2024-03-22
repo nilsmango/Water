@@ -42,13 +42,13 @@ private let yardsPerMile = 1760.0
 private let metersPerMile = 1609.344
 
 /// Takes a distance in m and gives us back a string of the distance that looks great with km or m or mi or yd.
-func makePrettyDistance(meters: Double, system: MeasurementSystem) -> String {
+func makePrettyDistance(meters: Double, system: MeasurementSystem, statistics: Bool = false) -> String {
     switch system {
     case .metric:
         if meters >= 1000.0 {
             let km = meters / 1000
             let kilometer: String
-            if km >= 100 {
+            if km >= 100 || !statistics {
                 kilometer = String(Int(km.rounded()))
             } else {
                 // rounding to two decimals
