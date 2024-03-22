@@ -16,6 +16,7 @@ struct StartView: View {
     
     @State private var showOptionsSheet = false
     @State private var showAboutSheet = false
+    @State private var showCaptureStatistics = false
     
     @State private var showFirstTimeUserName = false
     
@@ -104,13 +105,9 @@ struct StartView: View {
                         runType = .watch
                         showStartRunSheet = true
                     }
-                    NavigationLink {
-                        CaptureRunStatisticsView(downwindManager: downwindManager)
-                    } label: {
-                        Text("Run Statistics only")
+                    Button("Run Statistics only") {
+                        showCaptureStatistics = true
                     }
-
-                   
                 })
                 .sheet(isPresented: $showStartRunSheet, content: {
                     NavigationStack {
@@ -143,6 +140,14 @@ struct StartView: View {
                                     }
                                 }
                             }
+                    }
+                    
+                })
+                
+                .fullScreenCover(isPresented: $showCaptureStatistics, content: {
+                    NavigationStack {
+                        CaptureRunStatisticsView(downwindManager: downwindManager, showCapture: $showCaptureStatistics)
+                            .navigationTitle("Capture Run")
                     }
                     
                 })

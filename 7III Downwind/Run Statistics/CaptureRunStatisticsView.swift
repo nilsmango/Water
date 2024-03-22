@@ -9,13 +9,27 @@ import SwiftUI
 
 struct CaptureRunStatisticsView: View {
     @ObservedObject var downwindManager: DownwindManager
+    
+    @Binding var showCapture: Bool
 
     var body: some View {
-        StatisticsControlCenter(downwindManager: downwindManager, onlyStatistics: true)
-            .navigationTitle("Capture Run")
+        VStack {
+            if downwindManager.activeStatistics == false {
+                Button(action: {
+                    showCapture = false
+                }, label: {
+                    Label("Back Home", systemImage: "arrowshape.backward.fill")
+                })
+                .buttonStyle(.bordered)
+                .padding(.bottom)
+            }
+            
+            StatisticsControlCenter(downwindManager: downwindManager, onlyStatistics: true)
+        }
+        
     }
 }
 
 #Preview {
-    CaptureRunStatisticsView(downwindManager: DownwindManager())
+    CaptureRunStatisticsView(downwindManager: DownwindManager(), showCapture: .constant(true))
 }
