@@ -71,9 +71,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             if onlyStatistic {
                 // Stop location update
-                print("Stopping location tracking")
-                self.locationManager?.stopUpdatingLocation()
-                self.locationManager?.stopUpdatingHeading()
+                stopLocationService()
             }
             
             // save the statistics to disk
@@ -397,6 +395,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 //        }
 //    }
     
+    /// stops the location service and resets the ignore var
+    private func stopLocationService() {
+        print("Stopping location tracking")
+        self.locationManager?.stopUpdatingLocation()
+        self.locationManager?.stopUpdatingHeading()
+        ignoreFirstFewLocations = true
+    }
+    
     /// checks and starts location service
     private func checkAndStartLocationService(cloudService: Bool = true) {
         if self.locationAuthorization {
@@ -407,6 +413,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             print("Starting location tracking")
             self.locationManager?.startUpdatingLocation()
             self.locationManager?.startUpdatingHeading()
+            locationManagerStartTime = Date.now
             
             if cloudService {
                 // starting the upload/download timer
@@ -554,9 +561,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.runTimer = nil
             
             // stop location and header updating
-            print("Stopping location tracking")
-            self.locationManager?.stopUpdatingLocation()
-            self.locationManager?.stopUpdatingHeading()
+            self.stopLocationService()
             
             // set location of user to nil
             self.user.latitude = nil
@@ -583,9 +588,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.runTimer = nil
             
             // stop location and header updating
-            print("Stopping location tracking")
-            self.locationManager?.stopUpdatingLocation()
-            self.locationManager?.stopUpdatingHeading()
+            self.stopLocationService()
             
             // set location of user to nil
             self.user.latitude = nil
@@ -692,6 +695,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager: CLLocationManager?
     
     private var isUpdatingLocation = false
+    private var ignoreFirstFewLocations = true
+    private let secondsWeIgnoreLocations = 2.4
+    private var locationManagerStartTime = Date.now
     
     override init() {
         super.init()
@@ -732,23 +738,34 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // Location and Speed
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        guard let newLocation = locations.last else { 
-            print("Something wrong with locationManager")
-            return }
+        // ignoring the locations for a few seconds
+        if ignoreFirstFewLocations {
+            
+            if locationManagerStartTime.addingTimeInterval(secondsWeIgnoreLocations) < Date.now || locations.last!.horizontalAccuracy < 5.1 {
+                ignoreFirstFewLocations = false
+            }
+            
+            } else {
                 
-        DispatchQueue.main.async {
-                self.user.latitude = newLocation.coordinate.latitude
-                self.user.longitude = newLocation.coordinate.longitude
-                var speed = newLocation.speed * 60 * 60 / 1000
-                if speed < 0.0 {
-                    speed = 0.0
+                guard let newLocation = locations.last else {
+                    print("Something wrong with locationManager")
+                    return }
+                        
+                DispatchQueue.main.async {
+                        self.user.latitude = newLocation.coordinate.latitude
+                        self.user.longitude = newLocation.coordinate.longitude
+                        var speed = newLocation.speed * 60 * 60 / 1000
+                        if speed < 0.0 {
+                            speed = 0.0
+                        }
+                        self.user.speed = speed
+                        
+                        self.locationAccuracy = newLocation.horizontalAccuracy
+                        
+                        self.updateStatistic()
                 }
-                self.user.speed = speed
-                
-                self.locationAccuracy = newLocation.horizontalAccuracy
-                
-                self.updateStatistic()
-        }
+            }
+        
     }
     
 }
