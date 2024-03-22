@@ -106,20 +106,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         // calculate distance from location
                         let lastLatitude = lastData.latitude
                         let lastLongitude = lastData.longitude
-                        let addedLocationDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: user) ?? 0.0
+                        let addedDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: user) ?? 0.0
                         
-                        // calculate distance from speed
-                        let currentSpeedInMPerS: Double
-                        if user.speed ?? 0.0 > 0.0 {
-                            currentSpeedInMPerS = user.speed! * 1000 / 3600
-                        } else {
-                            currentSpeedInMPerS = 0.0
-                        }
-                        
-                        let timeSinceLastData = secondsBetweenDates(from: lastData.date)
-                        let addedSpeedDistance = timeSinceLastData * currentSpeedInMPerS
-                        
-                        let addedDistance = (addedSpeedDistance + addedLocationDistance) / 2
                         runStatistics[currentRunStatisticIndex].runDistance += addedDistance
                     }
                     
