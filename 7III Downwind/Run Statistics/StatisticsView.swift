@@ -21,6 +21,9 @@ struct StatisticsView: View {
                     RunOverView(runDate: downwindManager.createDateString(from: statistic.data.first?.date), runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed)
                 }
             }
+            .onDelete { indexSet in
+                downwindManager.delete(at: indexSet)
+            }
         }
             .navigationTitle("Run Statistics")
     }

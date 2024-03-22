@@ -162,6 +162,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return Double(components.second ?? 0)
     }
     
+    /// delete a statistic
+    func delete(at indexSet: IndexSet) {
+        // remove statistics
+        for index in indexSet.sorted(by: >) {
+                if index < runStatistics.count {
+                    runStatistics.remove(at: index)
+                }
+            }
+        // save to disk
+        saveRunStatistics()
+    }
+    
+    // saving and loading statistics
+    
     func createDateString(from date: Date?) -> String {
         if date != nil {
             let dateFormatter = DateFormatter()
