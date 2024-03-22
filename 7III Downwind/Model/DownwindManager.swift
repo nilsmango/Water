@@ -757,44 +757,44 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 ignoreFirstFewLocations = false
             }
             
-            } else {
+        } else {
+            
+            guard let newLocation = locations.last else {
+                print("Something wrong with locationManager")
+                return }
+            
+            if kalmanFilter == nil {
+                // initializing the kalman filter
+                self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
                 
-                guard let newLocation = locations.last else {
-                    print("Something wrong with locationManager")
-                    return }
-                
-                if kalmanFilter == nil {
-                       self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                // setting the rValue of the kalman filter. Higher values will give higher roundness to trajectories.
+                self.kalmanFilter?.rValue = 35.0
+            }
+            else {
+                if let kalmanFilter = self.kalmanFilter {
+                    if resetKalmanFilter == true {
+                        kalmanFilter.resetKalman(newStartLocation: newLocation)
+                        resetKalmanFilter = false
                     }
                     else {
-                        if let kalmanFilter = self.kalmanFilter {
-                            if resetKalmanFilter == true {
-                                kalmanFilter.resetKalman(newStartLocation: newLocation)
-                                resetKalmanFilter = false
+                        let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
+                        
+                        DispatchQueue.main.async {
+                            self.user.latitude = kalmanLocation.coordinate.latitude
+                            self.user.longitude = kalmanLocation.coordinate.longitude
+                            var speed = newLocation.speed * 60 * 60 / 1000
+                            if speed < 0.0 {
+                                speed = 0.0
                             }
-                            else {
-                                let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
-                                
-                                DispatchQueue.main.async {
-                                        self.user.latitude = kalmanLocation.coordinate.latitude
-                                        self.user.longitude = kalmanLocation.coordinate.longitude
-                                        var speed = newLocation.speed * 60 * 60 / 1000
-                                        if speed < 0.0 {
-                                            speed = 0.0
-                                        }
-                                        self.user.speed = speed
-                                        
-                                        self.locationAccuracy = newLocation.horizontalAccuracy
-                                        
-                                        self.updateStatistic()
-                                }
-                            }
+                            self.user.speed = speed
+                            
+                            self.locationAccuracy = newLocation.horizontalAccuracy
+                            
+                            self.updateStatistic()
                         }
                     }
-                        
-                
+                }
             }
-        
+        }
     }
-    
 }
