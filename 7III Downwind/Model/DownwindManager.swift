@@ -767,7 +767,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 // initializing the kalman filter
                 self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
                 
-                // setting the rValue of the kalman filter. Higher values will give higher roundness to trajectories.
+                // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
                 self.kalmanFilter?.rValue = 35.0
             }
             else {
