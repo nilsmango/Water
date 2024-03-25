@@ -60,6 +60,12 @@ struct StartView: View {
                             }
                             .buttonStyle(.bordered)
                             .padding()
+                            
+                            NavigationLink(destination: StatisticTestsView(downwindManager: downwindManager)) {
+                                Label("Statistics Test", systemImage: "chart.xyaxis.line")
+                            }
+                            .buttonStyle(.bordered)
+                            .padding()
                         }
                     }
                     

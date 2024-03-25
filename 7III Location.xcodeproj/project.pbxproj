@@ -12,6 +12,8 @@
 		781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
 		78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
 		78320BC02BB1C28400D6A772 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
+		78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
+		78320BC72BB1D97800D6A772 /* StatisticsModelings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */; };
 		783A53C02B59A61B00701D7F /* MemberListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53BF2B59A61B00701D7F /* MemberListView.swift */; };
 		783A53C32B5D930400701D7F /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C22B5D930400701D7F /* MapView.swift */; };
 		783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C42B5D9DB000701D7F /* CircleAndText.swift */; };
@@ -66,6 +68,8 @@
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
 		781562A62B94DD7500E081FC /* ShareDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDialog.swift; sourceTree = "<group>"; };
 		78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCKalmanAlgorithm.swift; sourceTree = "<group>"; };
+		78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTestsView.swift; sourceTree = "<group>"; };
+		78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsModelings.swift; sourceTree = "<group>"; };
 		783A53BF2B59A61B00701D7F /* MemberListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberListView.swift; sourceTree = "<group>"; };
 		783A53C22B5D930400701D7F /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		783A53C42B5D9DB000701D7F /* CircleAndText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAndText.swift; sourceTree = "<group>"; };
@@ -130,6 +134,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		78320BC52BB1D95D00D6A772 /* FilterTesting */ = {
+			isa = PBXGroup;
+			children = (
+				78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */,
+				78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */,
+			);
+			path = FilterTesting;
+			sourceTree = "<group>";
+		};
 		783A53C12B5D92EC00701D7F /* RunMap */ = {
 			isa = PBXGroup;
 			children = (
@@ -294,6 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
+				78320BC52BB1D95D00D6A772 /* FilterTesting */,
 				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
 				78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */,
 				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
@@ -382,6 +396,7 @@
 				785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */,
 				78C4D2452BAC8B8A00639E65 /* CrewStatistic.swift in Sources */,
 				785C4AC32B40B84300EB07F8 /* StartView.swift in Sources */,
+				78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */,
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */,
@@ -411,6 +426,7 @@
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
 				781562A32B94D92900E081FC /* QRCodeView.swift in Sources */,
+				78320BC72BB1D97800D6A772 /* StatisticsModelings.swift in Sources */,
 				783A53D32B5FD18000701D7F /* NoActiveRunnersView.swift in Sources */,
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
 				78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */,

@@ -767,20 +767,42 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 return }
             
                 if kalmanFilter == nil {
-                    // initializing the kalman filter
-                    self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
-                    
                     // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
                     self.kalmanFilter?.rValue = rValue
                     self.kalmanFilter?.sigma = sigma
+                    
+                    // initializing the kalman filter
+                    self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                    
+                    
+                    
+                    DispatchQueue.main.async {
+                        self.user.latitude = newLocation.coordinate.latitude
+                        self.user.longitude = newLocation.coordinate.longitude
+                        var speed = newLocation.speed * 60 * 60 / 1000
+                        if speed < 0.0 {
+                            speed = 0.0
+                        }
+                        self.user.speed = speed
+                        
+                        self.locationAccuracy = newLocation.horizontalAccuracy
+                        
+                        self.updateStatistic()
+                    }
                 }
                 else {
                     if let kalmanFilter = self.kalmanFilter {
                         if resetKalmanFilter == true {
-                            kalmanFilter.resetKalman(newStartLocation: newLocation)
-                            resetKalmanFilter = false
+                            
+                            self.kalmanFilter?.rValue = rValue
+                            self.kalmanFilter?.sigma = sigma
                             kalmanFilter.rValue = rValue
                             kalmanFilter.sigma = sigma
+                            
+                            kalmanFilter.resetKalman(newStartLocation: newLocation)
+                            
+                            resetKalmanFilter = false
+                            
                         }
                         else {
                             let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
@@ -804,4 +826,100 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
         }
     }
+    
+    // MARK: - Kalman Filter Tests
+    
+    @Published var testStatistics = [RunStatistic]()
+    
+    /// creating a filtered kalman locations thing
+    func createFilteredLocations(statisticsData: RunStatistic, sigma: Double, rValue: Double) -> RunStatistic {
+        var updatedStatistics = statisticsData
+        updatedStatistics.locationData = []
+        updatedStatistics.runDistance = 0.0
+        
+        for location in statisticsData.locationData {
+            if kalmanFilter == nil {
+                // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
+                self.kalmanFilter?.rValue = rValue
+                self.kalmanFilter?.sigma = sigma
+                
+                // initializing the kalman filter
+                self.kalmanFilter = HCKalmanAlgorithm(initialLocation: CLLocation(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude), altitude: 440, horizontalAccuracy: 4.7, verticalAccuracy: 3.5, timestamp: location.timestamp))
+                
+                
+            } else {
+                if let kalmanFilter = self.kalmanFilter {
+                    if resetKalmanFilter == true {
+                        self.kalmanFilter?.rValue = rValue
+                        self.kalmanFilter?.sigma = sigma
+                        kalmanFilter.rValue = rValue
+                        kalmanFilter.sigma = sigma
+                        
+                        kalmanFilter.resetKalman(newStartLocation: CLLocation(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude), altitude: 440, horizontalAccuracy: 4.7, verticalAccuracy: 3.5, timestamp: location.timestamp))
+                        
+                        resetKalmanFilter = false
+                        
+                    }
+                    
+                    else {
+                        let kalmanLocation = kalmanFilter.processState(currentLocation: CLLocation(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude), altitude: 440, horizontalAccuracy: 4.7, verticalAccuracy: 3.5, timestamp: location.timestamp))
+                        let newLocation = LocationData(timestamp: location.timestamp, latitude: kalmanLocation.coordinate.latitude, longitude: kalmanLocation.coordinate.longitude)
+                                                
+                        if let lastData = updatedStatistics.locationData.last {
+                            
+                            // calculate distance from location
+                            let lastLatitude = lastData.latitude
+                            let lastLongitude = lastData.longitude
+                            let addedDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "newLocation", latitude: newLocation.latitude, longitude: newLocation.longitude)) ?? 0.0
+                                                        
+                            updatedStatistics.runDistance += addedDistance
+                        }
+                        
+                        updatedStatistics.locationData.append(newLocation)
+                    }
+                }
+            }
+        }
+        
+        // clean up
+        resetKalmanFilter = true
+        
+        return updatedStatistics
+    }
+    
+    /// making different kalman filter statistics
+    func makingKalmanVersions(statistic: RunStatistic) -> [RunStatistic] {
+        // try sigma 0.0625 up
+        // try rValue 29 down
+        // TODO: somehow give out a list of sigma and rValue
+        var resultingStatistics = [RunStatistic]()
+        
+        for sigma in sigmas {
+            for rValue in rValues {
+                let newLocations = createFilteredLocations(statisticsData: statistic, sigma: sigma, rValue: rValue)
+                resultingStatistics.append(newLocations)
+            }
+        }
+        
+        return resultingStatistics
+        
+    }
+    
+    /// making strings with sigma an rValues
+    func makingSigmaAndRs() -> [String] {
+        var strings = [String]()
+        for sigma in sigmas {
+            for rValue in rValues {
+                let newString = "sig: \(sigma), r: \(rValue)"
+                strings.append(newString)
+            }
+        }
+        return strings
+    }
+    
+    /// different sigmas and rvalues
+    let sigmas = [0.0625, 0.25, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    let rValues = [29.0, 24.0, 20, 15, 9, 1, 0.5]
+    
+    
 }
