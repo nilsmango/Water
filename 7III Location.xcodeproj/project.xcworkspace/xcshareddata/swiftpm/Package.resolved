@@ -1,15 +1,6 @@
 {
-  "originHash" : "e2c88787c5f6ad177c8c2ef4b3d6572c9a5d2eba986422e5ea3a71809e1278a9",
+  "originHash" : "f55e1e2e4f67b077ff62e32bf3c38d689b7120de30e32497c9bb974428c9544d",
   "pins" : [
-    {
-      "identity" : "hckalmanfilter",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nilsmango/HCKalmanFilter",
-      "state" : {
-        "branch" : "master",
-        "revision" : "7a9d03cc91899d0ff8fe8b58f02dea8f3e4161e0"
-      }
-    },
     {
       "identity" : "keychain-swift",
       "kind" : "remoteSourceControl",

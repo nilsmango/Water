@@ -12,12 +12,12 @@ import HCKalmanFilter
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
-    // MARK: App Storage
+    // MARK: - App Storage
     @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
     @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
     
-    // MARK: Statistics
+    // MARK: - Statistics
     @Published var activeStatistics: Bool = false
     @Published var runStatistics: [RunStatistic] = []
     // TODO: make this non published
@@ -219,7 +219,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    // MARK: Run
+    // MARK: - Run
+    
     @Published var activeRun: Run = Run(name: "", members: [], active: false)
 
 
@@ -654,7 +655,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
 
-    // MARK: User
+    // MARK: - User
 
     @Published var user: Member = Member(id: nil, name: "Your Name", status: "All good.")
     @Published var trueHeading: Double = 0.0
@@ -699,17 +700,19 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     
-    // MARK: Location
+    // MARK: - Location
+    
     private var locationManager: CLLocationManager?
     
-    private var isUpdatingLocation = false
     private var ignoreFirstFewLocations = true
-    private let secondsWeIgnoreLocations = 2.0
-    private var locationManagerStartTime = Date.now
+    private let secondsWeIgnoreLocations = 5.0
+    private var locationManagerStartTime = Date.distantPast
     
     // Kalman Filter
     var resetKalmanFilter: Bool = false
     var kalmanFilter: HCKalmanAlgorithm?
+    @Published var rValue = 29.0
+    @Published var sigma = 0.0625
     
     override init() {
         super.init()
@@ -763,38 +766,42 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 print("Something wrong with locationManager")
                 return }
             
-            if kalmanFilter == nil {
-                // initializing the kalman filter
-                self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
-                
-                // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
-                self.kalmanFilter?.rValue = 29.0
-            }
-            else {
-                if let kalmanFilter = self.kalmanFilter {
-                    if resetKalmanFilter == true {
-                        kalmanFilter.resetKalman(newStartLocation: newLocation)
-                        resetKalmanFilter = false
-                    }
-                    else {
-                        let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
-                        
-                        DispatchQueue.main.async {
-                            self.user.latitude = kalmanLocation.coordinate.latitude
-                            self.user.longitude = kalmanLocation.coordinate.longitude
-                            var speed = newLocation.speed * 60 * 60 / 1000
-                            if speed < 0.0 {
-                                speed = 0.0
+                if kalmanFilter == nil {
+                    // initializing the kalman filter
+                    self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                    
+                    // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
+                    self.kalmanFilter?.rValue = rValue
+                    self.kalmanFilter?.sigma = sigma
+                }
+                else {
+                    if let kalmanFilter = self.kalmanFilter {
+                        if resetKalmanFilter == true {
+                            kalmanFilter.resetKalman(newStartLocation: newLocation)
+                            resetKalmanFilter = false
+                            kalmanFilter.rValue = rValue
+                            kalmanFilter.sigma = sigma
+                        }
+                        else {
+                            let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
+                            
+                            DispatchQueue.main.async {
+                                self.user.latitude = kalmanLocation.coordinate.latitude
+                                self.user.longitude = kalmanLocation.coordinate.longitude
+                                var speed = newLocation.speed * 60 * 60 / 1000
+                                if speed < 0.0 {
+                                    speed = 0.0
+                                }
+                                self.user.speed = speed
+                                
+                                self.locationAccuracy = newLocation.horizontalAccuracy
+                                
+                                self.updateStatistic()
                             }
-                            self.user.speed = speed
-                            
-                            self.locationAccuracy = newLocation.horizontalAccuracy
-                            
-                            self.updateStatistic()
                         }
                     }
                 }
-            }
+            
         }
     }
 }
