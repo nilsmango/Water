@@ -54,6 +54,10 @@ struct StartView: View {
                         
                         Spacer()
                         Spacer()
+                        
+                        Toggle("Collect Raw GPS", isOn: $downwindManager.collectRawGPS)
+                            .padding()
+                        
                         HStack {
                             NavigationLink(destination: StatisticsView(downwindManager: downwindManager)) {
                                 Label("Statistics", systemImage: "chart.xyaxis.line")

@@ -713,6 +713,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var kalmanFilter: HCKalmanAlgorithm?
     @Published var rValue = 29.0
     @Published var sigma = 0.0625
+    @Published var collectRawGPS = false
     
     override init() {
         super.init()
@@ -766,63 +767,84 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 print("Something wrong with locationManager")
                 return }
             
-                if kalmanFilter == nil {
-                    // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
-                    self.kalmanFilter?.rValue = rValue
-                    self.kalmanFilter?.sigma = sigma
-                    
-                    // initializing the kalman filter
-                    self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
-                    
-                    
-                    
-                    DispatchQueue.main.async {
-                        self.user.latitude = newLocation.coordinate.latitude
-                        self.user.longitude = newLocation.coordinate.longitude
-                        var speed = newLocation.speed * 60 * 60 / 1000
-                        if speed < 0.0 {
-                            speed = 0.0
-                        }
-                        self.user.speed = speed
-                        
-                        self.locationAccuracy = newLocation.horizontalAccuracy
-                        
-                        self.updateStatistic()
+            if collectRawGPS {
+                
+                DispatchQueue.main.async {
+                    self.user.latitude = newLocation.coordinate.latitude
+                    self.user.longitude = newLocation.coordinate.longitude
+                    var speed = newLocation.speed * 60 * 60 / 1000
+                    if speed < 0.0 {
+                        speed = 0.0
                     }
+                    self.user.speed = speed
+                    
+                    self.locationAccuracy = newLocation.horizontalAccuracy
+                    
+                    self.updateStatistic()
                 }
-                else {
-                    if let kalmanFilter = self.kalmanFilter {
-                        if resetKalmanFilter == true {
+                
+            } else {
+                
+                    if kalmanFilter == nil {
+                        // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
+                        self.kalmanFilter?.rValue = rValue
+                        self.kalmanFilter?.sigma = sigma
+                        
+                        // initializing the kalman filter
+                        self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                        
+                        
+                        
+                        DispatchQueue.main.async {
+                            self.user.latitude = newLocation.coordinate.latitude
+                            self.user.longitude = newLocation.coordinate.longitude
+                            var speed = newLocation.speed * 60 * 60 / 1000
+                            if speed < 0.0 {
+                                speed = 0.0
+                            }
+                            self.user.speed = speed
                             
-                            self.kalmanFilter?.rValue = rValue
-                            self.kalmanFilter?.sigma = sigma
-                            kalmanFilter.rValue = rValue
-                            kalmanFilter.sigma = sigma
+                            self.locationAccuracy = newLocation.horizontalAccuracy
                             
-                            kalmanFilter.resetKalman(newStartLocation: newLocation)
-                            
-                            resetKalmanFilter = false
-                            
+                            self.updateStatistic()
                         }
-                        else {
-                            let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
-                            
-                            DispatchQueue.main.async {
-                                self.user.latitude = kalmanLocation.coordinate.latitude
-                                self.user.longitude = kalmanLocation.coordinate.longitude
-                                var speed = newLocation.speed * 60 * 60 / 1000
-                                if speed < 0.0 {
-                                    speed = 0.0
+                    }
+                    else {
+                        if let kalmanFilter = self.kalmanFilter {
+                            if resetKalmanFilter == true {
+                                
+                                // two of these four are not needed, but save is save
+                                self.kalmanFilter?.rValue = rValue
+                                self.kalmanFilter?.sigma = sigma
+                                kalmanFilter.rValue = rValue
+                                kalmanFilter.sigma = sigma
+                                
+                                kalmanFilter.resetKalman(newStartLocation: newLocation)
+                                
+                                resetKalmanFilter = false
+                                
+                            }
+                            else {
+                                let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
+                                
+                                DispatchQueue.main.async {
+                                    self.user.latitude = kalmanLocation.coordinate.latitude
+                                    self.user.longitude = kalmanLocation.coordinate.longitude
+                                    var speed = newLocation.speed * 60 * 60 / 1000
+                                    if speed < 0.0 {
+                                        speed = 0.0
+                                    }
+                                    self.user.speed = speed
+                                    
+                                    self.locationAccuracy = newLocation.horizontalAccuracy
+                                    
+                                    self.updateStatistic()
                                 }
-                                self.user.speed = speed
-                                
-                                self.locationAccuracy = newLocation.horizontalAccuracy
-                                
-                                self.updateStatistic()
                             }
                         }
                     }
-                }
+            }
+            
             
         }
     }
@@ -918,8 +940,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// different sigmas and rvalues
-    let sigmas = [0.0625, 0.25, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    let rValues = [29.0, 24.0, 20, 15, 9, 1, 0.5]
+    let sigmas = [0.01, 0.03, 0.0625, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9]
+    let rValues = [42, 35, 29.0, 24.0, 15, 9, 1]
     
     
 }
