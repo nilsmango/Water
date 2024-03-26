@@ -121,7 +121,7 @@ struct StartView: View {
                         runType = .watch
                         showStartRunSheet = true
                     }
-                    Button("Run Statistics only") {
+                    Button("Run Tracking only") {
                         showCaptureStatistics = true
                     }
                 })

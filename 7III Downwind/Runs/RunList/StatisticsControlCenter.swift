@@ -17,7 +17,7 @@ struct StatisticsControlCenter: View {
                 downwindManager.startStatistic(onlyStatistics: onlyStatistics)
                 downwindManager.activeRun.startedOn = Date.now
             } label: {
-                Label("Start Statistics", systemImage: "play.fill")
+                Label("Start Tracking", systemImage: "play.fill")
             }
             .buttonStyle(.bordered)
             .padding()
@@ -26,7 +26,7 @@ struct StatisticsControlCenter: View {
             Button(role: .destructive) {
                 downwindManager.stopStatistic(onlyStatistic: onlyStatistics)
             } label: {
-                Label("Stop Statistics", systemImage: "stop.fill")
+                Label("Stop Tracking", systemImage: "stop.fill")
             }
             .buttonStyle(.bordered)
             .padding()
