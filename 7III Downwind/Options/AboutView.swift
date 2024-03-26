@@ -14,7 +14,7 @@ struct AboutView: View {
                 Text("What can you do with this app?")
                     .font(.headline)
                 
-                Text("Start runs, share them with friends, and watch them unfold in real-time. Track the speed and location of your whole group. You can save all the location data collected and analyze it later when you activate statistics.\nOriginally, this app was made for downwind runs only, but you can track the location of any person or group doing any kind of activity.")
+                Text("Start runs, share them with friends, and watch them unfold in real-time. Track the speed and location of your whole group. You can save all the location data collected and analyze it later when you activate statistics.\nOriginally, this app was made for downwind runs only, but you can track the location of any person or group doing any kind of activity.\nPlease note that the GPS data processing has been optimized for outdoor activities and may not perform well indoors.")
                     .font(.body)
                     .padding(.bottom)
                 
@@ -23,7 +23,7 @@ struct AboutView: View {
                         .font(.headline)
                         .padding(.top, 10)
                     
-                    Text("This app is designed for recreational use and should not be considered a substitute for emergency beacons or other rescue devices. Safety is our top priority, and you should always exercise caution and adhere to maritime safety guidelines while using this app. Please note that GPS usage consumes a significant amount of battery. Therefore, you should be mindful and periodically check the battery level to ensure safety during tracking.")
+                    Text("This app is designed for recreational use and should not be considered a substitute for emergency beacons or other rescue devices. Safety is our top priority, and you should always exercise caution and adhere to maritime safety guidelines while using this app. Please be advised that prolonged usage of this application may result in substantial battery consumption. Therefore, you should be mindful and periodically check the battery level to ensure safety during tracking.")
                         .font(.body)
                 }
                 .padding([.horizontal, .bottom])
