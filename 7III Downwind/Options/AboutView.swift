@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AboutView: View {
+    @ObservedObject var downwindManager: DownwindManager
+
     var body: some View {
         ScrollView() {
             VStack(alignment: .leading, spacing: 10) {
@@ -25,6 +27,9 @@ struct AboutView: View {
                     
                     Text("This app is designed for recreational use and should not be considered a substitute for emergency beacons or other rescue devices. Safety is our top priority, and you should always exercise caution and adhere to maritime safety guidelines while using this app. Please be advised that prolonged usage of this application may result in substantial battery consumption. Therefore, you should be mindful and periodically check the battery level to ensure safety during tracking.")
                         .font(.body)
+                        .onTapGesture(count: 3, perform: {
+                            downwindManager.developerMode.toggle()
+                        })
                 }
                 .padding([.horizontal, .bottom])
                 .padding(.top, 8)
@@ -74,5 +79,5 @@ struct AboutView: View {
 }
 
 #Preview {
-    AboutView()
+    AboutView(downwindManager: DownwindManager())
 }

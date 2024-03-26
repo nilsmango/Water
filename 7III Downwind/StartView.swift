@@ -55,8 +55,11 @@ struct StartView: View {
                         Spacer()
                         Spacer()
                         
-                        Toggle("Collect Raw GPS", isOn: $downwindManager.collectRawGPS)
-                            .padding()
+                        if downwindManager.developerMode {
+                            Toggle("Collect Raw GPS", isOn: $downwindManager.collectRawGPS)
+                                .padding()
+                        }
+                        
                         
                         HStack {
                             NavigationLink(destination: StatisticsView(downwindManager: downwindManager)) {
@@ -65,11 +68,14 @@ struct StartView: View {
                             .buttonStyle(.bordered)
                             .padding()
                             
-                            NavigationLink(destination: StatisticTestsView(downwindManager: downwindManager)) {
-                                Label("Statistics Test", systemImage: "chart.xyaxis.line")
+                            if downwindManager.developerMode {
+                                NavigationLink(destination: StatisticTestsView(downwindManager: downwindManager)) {
+                                    Label("Statistics Test", systemImage: "chart.xyaxis.line")
+                                }
+                                .buttonStyle(.bordered)
+                                .padding()
                             }
-                            .buttonStyle(.bordered)
-                            .padding()
+                            
                         }
                     }
                     
@@ -164,7 +170,7 @@ struct StartView: View {
                 
                 .sheet(isPresented: $showAboutSheet, content: {
                     NavigationStack {
-                        AboutView()
+                        AboutView(downwindManager: downwindManager)
                             .navigationTitle("About")
                             .toolbar {
                                 ToolbarItem(placement: .topBarTrailing) {

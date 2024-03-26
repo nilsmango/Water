@@ -711,9 +711,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // Kalman Filter
     var resetKalmanFilter: Bool = false
     var kalmanFilter: HCKalmanAlgorithm?
-    @Published var rValue = 29.0
-    @Published var sigma = 0.0625
-    @Published var collectRawGPS = false
+    @Published var rValue = 1.0
+    @Published var sigma = 0.6
     
     override init() {
         super.init()
@@ -849,9 +848,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    // MARK: - Kalman Filter Tests
+    // MARK: - Kalman Filter Tests (Developer Mode)
     
     @Published var testStatistics = [RunStatistic]()
+    @Published var collectRawGPS = false
+    @Published var developerMode = false
     
     /// creating a filtered kalman locations thing
     func createFilteredLocations(statisticsData: RunStatistic, sigma: Double, rValue: Double) -> RunStatistic {
