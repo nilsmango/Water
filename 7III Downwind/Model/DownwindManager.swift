@@ -85,7 +85,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         if activeStatistics {
             
             // only count if we have some accuracy
-//            if locationAccuracy <= 9.0 {
+            if locationAccuracy <= 16.0 {
 
             // only update if we have valid data
                 if user.latitude != nil && user.longitude != nil {
@@ -120,7 +120,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     let newData = LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
                     runStatistics[currentRunStatisticIndex].locationData.append(newData)
                 }
-//            }
+            }
         }
     }
     
