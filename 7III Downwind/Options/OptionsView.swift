@@ -176,6 +176,7 @@ struct OptionsView: View {
                     showFirstTimeUserName = true
                     showOptionsSheet = false
                     
+                    downwindManager.deleteStatistics()
                     Task {
                         do {
                             try await downwindManager.deleteUserFromDB()

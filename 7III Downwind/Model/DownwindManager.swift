@@ -162,6 +162,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         saveRunStatistics()
     }
     
+    /// delete all statistics
+    func deleteStatistics() {
+        runStatistics = []
+        saveRunStatistics()
+    }
+    
     // saving and loading statistics
     
     func createDateString(from date: Date?) -> String {
