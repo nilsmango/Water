@@ -225,6 +225,22 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    // print runStatistics
+    func printRunStatistics(statistics: RunStatistic) -> String {
+        var string = "["
+        var secondsToAddToDate = 0
+        let secondsAgoStarted = 24 * 60 * 60 * 2
+        
+        for location in statistics.locationData {
+            let locationString = "LocationData(timestamp: Date().addingTimeInterval(-\(secondsAgoStarted - secondsToAddToDate)), latitude: \(location.latitude), longitude: \(location.longitude), speed: \(location.speed ?? 0.0)), "
+            string.append(locationString)
+            
+            secondsToAddToDate += 2
+        }
+        string.append("]")
+        return string
+    }
+    
     // MARK: - Run
     
     @Published var activeRun: Run = Run(name: "", members: [], active: false)
