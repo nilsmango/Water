@@ -27,7 +27,7 @@ struct RunOverView: View {
             HStack {
                 Text(distance)
                 Text(time)
-                Text(averageSpeed)
+                Text("∅ " + averageSpeed)
                 Spacer()
             }
         }
