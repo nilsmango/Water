@@ -225,7 +225,24 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    // print runStatistics
+    /// encoding and printing location data
+    func encodeAndPrintRunStatistics(statistics: RunStatistic) {
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try JSONEncoder().encode(statistics.locationData)
+                if let jsonString = String(data: data, encoding: .utf8) {
+                        print(jsonString)
+                    } else {
+                        print("Error: Unable to convert JSON data to string")
+                    }
+            } catch {
+                print("Error saving runStatistics: \(error)")
+            }
+        }
+    }
+    
+    
+    /// print runStatistics
     func printRunStatistics(statistics: RunStatistic) -> String {
         var string = "["
         var secondsToAddToDate = 0
@@ -235,10 +252,56 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let locationString = "LocationData(timestamp: Date().addingTimeInterval(-\(secondsAgoStarted - secondsToAddToDate)), latitude: \(location.latitude), longitude: \(location.longitude), speed: \(location.speed ?? 0.0)), "
             string.append(locationString)
             
-            secondsToAddToDate += 2
+            secondsToAddToDate += 1
         }
         string.append("]")
         return string
+    }
+    
+    /// create rounds from locationData
+    func createRounds(for locations: [LocationData]) -> [(String, String)] {
+        var accumulatedDistance = 0.0
+        var numberOfKm = 0
+        var lastKmIndex = 0
+        var roundsArray = [(String, String)]()
+        
+        for index in 1..<locations.count {
+            // Update distance
+            let lastLatitude = locations[index-1].latitude
+            let lastLongitude = locations[index-1].longitude
+            let presentLatitude = locations[index].latitude
+            let presentLongitude = locations[index].longitude
+            let addedDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)) ?? 0.0
+            
+            accumulatedDistance += (addedDistance / 1000.0)
+            
+            if accumulatedDistance >= 1.0 {
+                // updating km
+                numberOfKm += 1
+                accumulatedDistance = 0.0
+                
+                // calculate time from last time
+                let calendar = Calendar.current
+                let totalTime = calendar.dateComponents([.second], from: locations[lastKmIndex].timestamp, to: locations[index].timestamp).second ?? 0
+                let minutes = Double(totalTime) / 60.0
+                let seconds = totalTime % 60
+                let timeInMinutesString = String(format: "%.0f", minutes)
+                let additionToSeconds: String
+                if seconds > 9 {
+                    additionToSeconds = ""
+                } else {
+                    additionToSeconds = "0"
+                }
+                let prettyTime = timeInMinutesString + ":" + additionToSeconds + String(seconds)
+                
+                roundsArray.append((String(numberOfKm), prettyTime))
+                
+                // updating the last km index
+                lastKmIndex = index
+            }
+        }
+        
+        return roundsArray
     }
     
     // MARK: - Run

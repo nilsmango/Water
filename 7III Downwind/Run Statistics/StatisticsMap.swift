@@ -56,5 +56,5 @@ struct StatisticsMap: View {
 
 #Preview {
     
-    StatisticsMap(statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: Constants.locationSampleData))
+    StatisticsMap(statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData))
 }

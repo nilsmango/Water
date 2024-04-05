@@ -24,6 +24,11 @@ struct StatisticsView: View {
             .onDelete { indexSet in
                 downwindManager.delete(at: indexSet)
             }
+            .onAppear {
+                if downwindManager.runStatistics.count > 10 {
+                    downwindManager.encodeAndPrintRunStatistics(statistics: downwindManager.runStatistics[10])
+                }
+            }
         }
             .navigationTitle("Run Statistics")
     }

@@ -51,3 +51,19 @@ func generateQRCode(from string: String) -> UIImage {
     }
     return UIImage(systemName: "xmark.circle") ?? UIImage()
 }
+
+
+/// decoding sample location data
+func decodeLocationSampleData() -> [LocationData]? {
+    if let url = Bundle.main.url(forResource: "locationData", withExtension: "json") {
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            let locations = try decoder.decode([LocationData].self, from: data)
+            return locations
+        } catch {
+            print("Error decoding JSON: \(error)")
+        }
+    }
+    return nil
+}
