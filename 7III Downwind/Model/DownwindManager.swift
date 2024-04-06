@@ -258,7 +258,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return string
     }
     
-    /// create rounds from locationData
+    /// create rounds from locationData for Statistics
     func createRounds(for locations: [LocationData]) -> [(String, String)] {
         var accumulatedDistance = 0.0
         var numberOfKm = 0
@@ -281,18 +281,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 accumulatedDistance = 0.0
                 
                 // calculate time from last time
-                let calendar = Calendar.current
-                let totalTime = calendar.dateComponents([.second], from: locations[lastKmIndex].timestamp, to: locations[index].timestamp).second ?? 0
-                let minutes = Double(totalTime) / 60.0
-                let seconds = totalTime % 60
-                let timeInMinutesString = String(format: "%.0f", minutes)
-                let additionToSeconds: String
-                if seconds > 9 {
-                    additionToSeconds = ""
-                } else {
-                    additionToSeconds = "0"
-                }
-                let prettyTime = timeInMinutesString + ":" + additionToSeconds + String(seconds)
+                let prettyTime = calculateTimeFromDates(from: locations[lastKmIndex].timestamp, to: locations[index].timestamp)
                 
                 roundsArray.append((String(numberOfKm), prettyTime))
                 
@@ -301,7 +290,34 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         
+        // also get the last distance
+        if accumulatedDistance > 0.0 {
+            let totalDistance = accumulatedDistance + Double(numberOfKm)
+            let roundedDistance = (totalDistance * 10).rounded() / 10
+            
+            let prettyTime = calculateTimeFromDates(from: locations[lastKmIndex].timestamp, to: locations.last!.timestamp)
+            
+            roundsArray.append((String(format: "%.1f", roundedDistance), prettyTime))
+        }
+        
         return roundsArray
+    }
+    
+    /// calculates time between dates and returns a pretty minutes time string
+    private func calculateTimeFromDates(from: Date, to: Date) -> String {
+        let calendar = Calendar.current
+        let totalTime = calendar.dateComponents([.second], from: from, to: to).second ?? 0
+        let minutes = Double(totalTime) / 60.0
+        let seconds = totalTime % 60
+        let timeInMinutesString = String(format: "%.0f", minutes)
+        let additionToSeconds: String
+        if seconds > 9 {
+            additionToSeconds = ""
+        } else {
+            additionToSeconds = "0"
+        }
+        let prettyTime = timeInMinutesString + ":" + additionToSeconds + String(seconds)
+        return prettyTime
     }
     
     // MARK: - Run
