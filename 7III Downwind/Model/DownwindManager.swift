@@ -316,26 +316,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // calculating average pace
         let totalCalculatedTime = locations.last!.timestamp.timeIntervalSince(locations.first!.timestamp)
         let pace = totalCalculatedTime / totalDistance
-        let prettyPace = makePrettyMinutesString(timeInSeconds: pace)
+        let prettyPace = makePrettyMinutesString(timeInSeconds: pace, paceFormat: true)
         
-        roundsArray.append(("Average pace:", prettyPace + " min/km"))
-        
-        // calculating the total time to see if everything is right
-//        let timeStrings = roundsArray.map { $0.1 }
-//        
-//        func totalSeconds(from timeString: String) -> Int? {
-//            let components = timeString.components(separatedBy: ":")
-//            if components.count == 2, let minutes = Int(components[0]), let seconds = Int(components[1]) {
-//                return minutes * 60 + seconds
-//            }
-//            return nil
-//        }
-//        
-//        let totalSeconds = timeStrings.compactMap { totalSeconds(from: $0) }.reduce(0, +)
-//        
-//        roundsArray.append(("total from rounds", String(totalSeconds / 60)))
-        
-        
+        roundsArray.append(("Average pace:", prettyPace + " /km"))
+
         return roundsArray
     }
     
@@ -346,7 +330,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return prettyTime
     }
     
-    private func makePrettyMinutesString(timeInSeconds: Double) -> String {
+    private func makePrettyMinutesString(timeInSeconds: Double, paceFormat: Bool = false) -> String {
         let roundedTime = timeInSeconds.rounded()
         let minutes = Int(roundedTime / 60.0)
         let seconds = Int(roundedTime) % 60
@@ -357,7 +341,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         } else {
             additionToSeconds = "0"
         }
-        let prettyTime = timeInMinutesString + ":" + additionToSeconds + String(seconds)
+        let dividers = paceFormat ? ("'", "\"") : (":", "")
+        
+        let prettyTime = timeInMinutesString + dividers.0 + additionToSeconds + String(seconds) + dividers.1
         
         return prettyTime
     }
