@@ -20,6 +20,7 @@ struct StatisticsRounds: View {
     var body: some View {
         let rounds = downwindManager.createRounds(for: statisticsData.locationData)
         List {
+            
             HStack {
                 Text("km")
                 Spacer()

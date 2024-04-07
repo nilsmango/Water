@@ -262,8 +262,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func createRounds(for locations: [LocationData]) -> [(String, String)] {
         var accumulatedDistance = 0.0
         var numberOfKm = 0
-        var lastKmIndex = 0
+        var lastKmDate = locations.first!.timestamp
         var roundsArray = [(String, String)]()
+        let roundLength = 1.0
         
         for index in 1..<locations.count {
             // Update distance
@@ -271,45 +272,85 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let lastLongitude = locations[index-1].longitude
             let presentLatitude = locations[index].latitude
             let presentLongitude = locations[index].longitude
-            let addedDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)) ?? 0.0
+            let addedDistance = (calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)) ?? 0.0) / 1000.0
             
-            accumulatedDistance += (addedDistance / 1000.0)
+            accumulatedDistance += addedDistance
             
-            if accumulatedDistance >= 1.0 {
-                // updating km
-                numberOfKm += 1
-                accumulatedDistance = 0.0
+            // check if we have crossed 1 km (round length)
+            if accumulatedDistance >= roundLength {
                 
+                // speed of the last segment
+                let timeInSeconds = locations[index].timestamp.timeIntervalSince(locations[index-1].timestamp)
+                let kmPerSecond = addedDistance / timeInSeconds
+
+                // time it took for the distance to 1.0 km
+                let distanceOverRoundLength = accumulatedDistance - roundLength
+                let distanceToRoundLength = addedDistance - distanceOverRoundLength
+                let secondsToRoundLength = distanceToRoundLength / kmPerSecond
+                
+                // new crossing date
+                let kmCrossingDate = locations[index-1].timestamp.addingTimeInterval(secondsToRoundLength)
+
                 // calculate time from last time
-                let prettyTime = calculateTimeFromDates(from: locations[lastKmIndex].timestamp, to: locations[index].timestamp)
+                let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: kmCrossingDate)
+                
+                // updating distances
+                numberOfKm += Int(roundLength)
+                accumulatedDistance -= roundLength
                 
                 roundsArray.append((String(numberOfKm), prettyTime))
                 
-                // updating the last km index
-                lastKmIndex = index
+                // updating the last km crossing date
+                lastKmDate = kmCrossingDate
             }
         }
         
         // also get the last distance
+        let totalDistance = accumulatedDistance + Double(numberOfKm)
+        
         if accumulatedDistance > 0.0 {
-            let totalDistance = accumulatedDistance + Double(numberOfKm)
-            let roundedDistance = (totalDistance * 10).rounded() / 10
-            
-            let prettyTime = calculateTimeFromDates(from: locations[lastKmIndex].timestamp, to: locations.last!.timestamp)
-            
-            roundsArray.append((String(format: "%.1f", roundedDistance), prettyTime))
+            let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: locations.last!.timestamp)
+            roundsArray.append((String(format: "%.1f", totalDistance), prettyTime))
         }
+        
+        // calculating average pace
+        let totalCalculatedTime = locations.last!.timestamp.timeIntervalSince(locations.first!.timestamp)
+        let pace = totalCalculatedTime / totalDistance
+        let prettyPace = makePrettyMinutesString(timeInSeconds: pace)
+        
+        roundsArray.append(("Average pace:", prettyPace + " min/km"))
+        
+        // calculating the total time to see if everything is right
+//        let timeStrings = roundsArray.map { $0.1 }
+//        
+//        func totalSeconds(from timeString: String) -> Int? {
+//            let components = timeString.components(separatedBy: ":")
+//            if components.count == 2, let minutes = Int(components[0]), let seconds = Int(components[1]) {
+//                return minutes * 60 + seconds
+//            }
+//            return nil
+//        }
+//        
+//        let totalSeconds = timeStrings.compactMap { totalSeconds(from: $0) }.reduce(0, +)
+//        
+//        roundsArray.append(("total from rounds", String(totalSeconds / 60)))
+        
         
         return roundsArray
     }
     
     /// calculates time between dates and returns a pretty minutes time string
-    private func calculateTimeFromDates(from: Date, to: Date) -> String {
-        let calendar = Calendar.current
-        let totalTime = calendar.dateComponents([.second], from: from, to: to).second ?? 0
-        let minutes = Double(totalTime) / 60.0
-        let seconds = totalTime % 60
-        let timeInMinutesString = String(format: "%.0f", minutes)
+    private func calculatePrettyTimeString(from: Date, to: Date) -> String {
+        let totalTime = to.timeIntervalSince(from)
+        let prettyTime = makePrettyMinutesString(timeInSeconds: totalTime)
+        return prettyTime
+    }
+    
+    private func makePrettyMinutesString(timeInSeconds: Double) -> String {
+        let roundedTime = timeInSeconds.rounded()
+        let minutes = Int(roundedTime / 60.0)
+        let seconds = Int(roundedTime) % 60
+        let timeInMinutesString = String(minutes)
         let additionToSeconds: String
         if seconds > 9 {
             additionToSeconds = ""
@@ -317,6 +358,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             additionToSeconds = "0"
         }
         let prettyTime = timeInMinutesString + ":" + additionToSeconds + String(seconds)
+        
         return prettyTime
     }
     
