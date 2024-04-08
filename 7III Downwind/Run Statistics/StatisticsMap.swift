@@ -24,15 +24,11 @@ struct StatisticsMap: View {
         let coordinatesCount = statisticsData.locationData.count
         
         Map {
-            
-                    ForEach(polylineData) { polyline in
-                        MapPolyline(coordinates: polyline.coordinates)
-                            .stroke(polyline.strokeColor.opacity(0.5), style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
-                    }
-                
-            
-            
-            
+            ForEach(polylineData) { polyline in
+                MapPolyline(coordinates: polyline.coordinates)
+                    .stroke(polyline.strokeColor.opacity(0.5), style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
+            }
+
             // start and end annotations
             if coordinatesCount > 0 {
                 let startData = statisticsData.locationData.first!
@@ -54,7 +50,7 @@ struct StatisticsMap: View {
                 }
             }
         }
-        .onMapCameraChange { context in
+        .onMapCameraChange(frequency: .onEnd) { context in
             if abs(mapSpan.latitudeDelta - context.region.span.latitudeDelta) > 0.001  {
                 mapSpan = context.region.span
                 // calculating coordinates factor
