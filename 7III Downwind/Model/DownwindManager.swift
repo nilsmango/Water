@@ -445,6 +445,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         try await startActiveRun(run: updatedRun)
     }
     
+    /// creates a random run name
+    func createRandomRunName() -> String {
+        let firstWords = ["dolphin", "shark", "turtle", "whale", "gust", "glide", "swell", "current", "breeze", "flow", "tailwind", "Gorgier", "Hawaii", "Maui", "Oahu", "Kauai", "Molokai", "Lanai", "Niihau", "Kahoolawe", "Tenerife", "Portugal", "Italy", "Biel", "lake", "river", "puddle", "chocolate", "eagle", "Switzerland", "Netherlands", "Spain", "F-ONE", "Unifoil", "Lift", "Armstrong", "Vietnam", "shuttle", "hill", "Nazaré", "Wave", "virtual"]
+        let secondWords = ["paddle", "surf", "foiling", "flight", "foil", "soaring", "breaching", "kook", "cooking", "runners", "losers", "pro", "carve", "carving", "bomb", "bombing", "eagles", "frequent"]
+        let thirdWords = ["kooks", "crew", "run", "race", "club", "gang", "group", "school", "anonymous", "squad", "slicers", "flyers"]
+        
+        let name = "\(firstWords.randomElement()!) \(secondWords.randomElement()!) \(thirdWords.randomElement()!)".capitalized
+        
+        return name
+    }
+    
     private func getRunNameFromId(runId: UUID) async throws -> String {
         
         let runIDString = runId.uuidString

@@ -42,6 +42,24 @@ struct StartRun: View {
                         }
                 } header: {
                     Text("Run Name")
+                } footer: {
+                    if runType == .start {
+                        HStack {
+                            Spacer()
+                            
+                            Button(action: {
+                                runName = downwindManager.createRandomRunName()
+                            }, label: {
+                                Label("Create Random Name", systemImage: "dice.fill")
+                            })
+                            .buttonStyle(.bordered)
+                            
+                            Spacer()
+
+                        }
+                        .padding()
+                        
+                    }
                 }
             }
             
