@@ -50,6 +50,8 @@
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
 		7877E1202BBFF14C00776890 /* locationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 7877E11F2BBFF14C00776890 /* locationData.json */; };
+		7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
+		7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
 		787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
@@ -110,6 +112,8 @@
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
 		7877E11F2BBFF14C00776890 /* locationData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = locationData.json; path = ../../../../../locationData.json; sourceTree = "<group>"; };
+		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
+		7877E1232BC3D87C00776890 /* PolylineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineData.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -231,6 +235,7 @@
 				78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */,
 				78C4D2392BA6DADB00639E65 /* LocationData.swift */,
 				78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */,
+				7877E1232BC3D87C00776890 /* PolylineData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -311,12 +316,13 @@
 		78C4D23D2BA750D200639E65 /* Run Statistics */ = {
 			isa = PBXGroup;
 			children = (
-				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
 				78320BC52BB1D95D00D6A772 /* FilterTesting */,
+				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
 				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
-				78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */,
+				7877E1212BC2989300776890 /* StatisticsRunView.swift */,
 				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
 				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
+				78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */,
 			);
 			path = "Run Statistics";
 			sourceTree = "<group>";
@@ -425,6 +431,7 @@
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
 				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,
 				783A53C02B59A61B00701D7F /* MemberListView.swift in Sources */,
+				7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */,
 				785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */,
 				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
 				78C4D2412BAA149000639E65 /* CaptureRunStatisticsView.swift in Sources */,
@@ -445,6 +452,7 @@
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
 				785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */,
 				78C4D23A2BA6DADB00639E65 /* LocationData.swift in Sources */,
+				7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */,

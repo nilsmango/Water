@@ -19,7 +19,6 @@ struct StatisticsRounds: View {
 
     var body: some View {
         let rounds = downwindManager.createRounds(for: statisticsData.locationData)
-        List {
             
             HStack {
                 Text("km")
@@ -34,10 +33,12 @@ struct StatisticsRounds: View {
                 }
                 .monospacedDigit()
             }
-        }
     }
 }
 
 #Preview {
-    StatisticsRounds(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData))
+    List {
+        StatisticsRounds(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData))
+    }
+    
 }

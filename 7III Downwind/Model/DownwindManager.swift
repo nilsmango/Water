@@ -9,6 +9,7 @@ import SwiftUI
 import KeychainSwift
 import CoreLocation
 import HCKalmanFilter
+import _MapKit_SwiftUI
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
@@ -347,6 +348,68 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         return prettyTime
     }
+    
+    /// calculates the coordinates factor
+    func calculateCoordinatesFactor(context: MapCameraUpdateContext, locations: [LocationData], maxPointsToShow: Int) -> Int {
+        // count how many coordinates are visible for the camera
+        let mapRect = context.rect
+        var coordinatesVisible = 0
+        
+        for location in locations {
+            if mapRect.contains(MKMapPoint(CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude))) {
+                coordinatesVisible += 1
+            }
+        }
+        // calculating coordinates factor
+        let coordinatesFactor = max(coordinatesVisible / maxPointsToShow, 1)
+        return coordinatesFactor
+    }
+    
+    /// creates polyline coordinates and colors
+    func createPolylineData(locationData: [LocationData], coordinatesFactor: Int, coordinatesCount: Int) async -> [PolylineData] {
+        // create an array of all the location pairs
+        var locationPairs = [(LocationData, LocationData)]()
+        
+        for index in locationData.indices {
+            if index % coordinatesFactor == 0 {
+                if coordinatesCount > index + coordinatesFactor {
+                    let firstLocationData = locationData[index]
+                    let secondLocationData = locationData[index+coordinatesFactor]
+                    locationPairs.append((firstLocationData, secondLocationData))
+                }
+            }
+        }
+        // create an array for all the speeds of the location pairs
+        func calculateSpeedsOfLocationPairs(locationPair: (LocationData, LocationData)) -> Double {
+            let distance = calculateDirectDistance(from: Member(name: "from", latitude: locationPair.0.latitude, longitude: locationPair.0.longitude), to: Member(name: "to", latitude: locationPair.1.latitude, longitude: locationPair.1.longitude)) ?? 0.0
+            let time = locationPair.1.timestamp.timeIntervalSince(locationPair.0.timestamp)
+            let speed = distance / time
+            return speed
+        }
+        
+        let locationSpeeds = locationPairs.map { calculateSpeedsOfLocationPairs(locationPair: $0) }
+        let maxSpeed = locationSpeeds.max() ?? 1.0
+        let quantizedSpeeds = locationSpeeds.map { $0 / maxSpeed }
+        
+        func createColorFromQuantizedSpeed(speed: Double) -> Color {
+            let hue = 0.33 * speed
+            return Color(hue: hue, saturation: 1.0, brightness: 1.0)
+        }
+        
+        let lineColors = quantizedSpeeds.map { createColorFromQuantizedSpeed(speed: $0)}
+        
+        // create the polyline data
+        var polylineData = [PolylineData]()
+        
+        for (index, line) in locationPairs.enumerated() {
+            let polyline = PolylineData(coordinates: [CLLocationCoordinate2D(latitude: line.0.latitude, longitude: line.0.longitude), CLLocationCoordinate2D(latitude: line.1.latitude, longitude: line.1.longitude)], strokeColor: lineColors[index])
+            polylineData.append(polyline)
+        }
+        
+        return polylineData
+    }
+    
+    
     
     // MARK: - Run
     

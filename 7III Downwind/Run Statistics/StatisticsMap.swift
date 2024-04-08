@@ -9,25 +9,29 @@ import SwiftUI
 import MapKit
 
 struct StatisticsMap: View {
+    @ObservedObject var downwindManager: DownwindManager
+    
     let statisticsData: RunStatistic
     
+    @State private var mapSpan: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+    
+    @State private var coordinatesFactor = 30
+    private let maxPointsToShow = 40
+    
+    @State private var polylineData: [PolylineData] = []
+    
     var body: some View {
+        let coordinatesCount = statisticsData.locationData.count
+        
         Map {
             
-            let coordinatesCount = statisticsData.locationData.count
+                    ForEach(polylineData) { polyline in
+                        MapPolyline(coordinates: polyline.coordinates)
+                            .stroke(polyline.strokeColor.opacity(0.5), style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
+                    }
+                
             
-            // coordinates pairs lines
-            ForEach(statisticsData.locationData.indices, id: \.self) { index in
-                if coordinatesCount > index + 1 {
-                    let firstData = statisticsData.locationData[index]
-                    let firstCoordinate = CLLocationCoordinate2D(latitude: firstData.latitude, longitude: firstData.longitude)
-                    let secondData = statisticsData.locationData[index+1]
-                    let secondCoordinate = CLLocationCoordinate2D(latitude: secondData.latitude, longitude: secondData.longitude)
-                    let segmentCoordinates = [firstCoordinate, secondCoordinate]
-                    MapPolyline(coordinates: segmentCoordinates)
-                        .stroke(.orange.opacity(0.6), style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
-                }
-            }
+            
             
             // start and end annotations
             if coordinatesCount > 0 {
@@ -50,11 +54,32 @@ struct StatisticsMap: View {
                 }
             }
         }
+        .onMapCameraChange { context in
+            if abs(mapSpan.latitudeDelta - context.region.span.latitudeDelta) > 0.001  {
+                mapSpan = context.region.span
+                // calculating coordinates factor
+                let newCoordinatesFactor = downwindManager.calculateCoordinatesFactor(context: context, locations: statisticsData.locationData, maxPointsToShow: maxPointsToShow)
+                if coordinatesFactor != newCoordinatesFactor {
+                    coordinatesFactor = newCoordinatesFactor
+                    Task {
+                        // coordinates pairs lines
+                        polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, coordinatesFactor: coordinatesFactor, coordinatesCount: coordinatesCount)
+                    }
+                }
+            }
+        }
+        .onAppear {
+            coordinatesFactor = max(coordinatesCount / maxPointsToShow, 1)
+            Task {
+                // coordinates pairs lines
+                polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, coordinatesFactor: coordinatesFactor, coordinatesCount: coordinatesCount)
+            }
+        }
         .navigationTitle(statisticsData.runName)
     }
 }
 
 #Preview {
     
-    StatisticsMap(statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData))
+    StatisticsMap(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData))
 }

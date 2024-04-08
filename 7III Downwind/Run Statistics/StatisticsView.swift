@@ -16,7 +16,7 @@ struct StatisticsView: View {
                 let averageSpeed = makePrettySpeed(speed: (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
                 
                 NavigationLink {
-                    StatisticsMap(statisticsData: statistic)
+                    StatisticsMap(downwindManager: downwindManager, statisticsData: statistic)
                 } label: {
                     RunOverView(runDate: downwindManager.createDateString(from: statistic.locationData.first?.timestamp), runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed)
                 }

@@ -19,7 +19,7 @@ struct StatisticsModelings: View {
                 let statistic = downwindManager.testStatistics[index]
                 let string = strings[index]
                 NavigationLink {
-                    StatisticsMap(statisticsData: statistic)
+                    StatisticsMap(downwindManager: downwindManager, statisticsData: statistic)
                 } label: {
                     RunOverView(runDate: string, runName: "", distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: "", averageSpeed: "")
                 }
