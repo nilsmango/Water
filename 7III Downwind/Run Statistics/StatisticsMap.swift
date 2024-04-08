@@ -16,7 +16,8 @@ struct StatisticsMap: View {
     @State private var mapSpan: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     
     @State private var coordinatesFactor = 30
-    private let maxPointsToShow = 40
+    private let maxPointsToShow = 60
+    private let lineWidth = 9.0
     
     @State private var polylineData: [PolylineData] = []
     
@@ -26,7 +27,7 @@ struct StatisticsMap: View {
         Map {
             ForEach(polylineData) { polyline in
                 MapPolyline(coordinates: polyline.coordinates)
-                    .stroke(polyline.strokeColor.opacity(0.5), style: StrokeStyle(lineWidth: 10.0, lineCap: .round))
+                    .stroke(polyline.strokeColor.opacity(0.5), style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
             }
 
             // start and end annotations

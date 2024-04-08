@@ -73,7 +73,7 @@ struct StatisticsRunView: View {
                     
                 } header: {
                     HStack {
-                        Text("Best & Worst Rounds")
+                        Text("Rounds")
                             .textCase(nil)
                             .font(.title3)
                             .fontWeight(.bold)
@@ -81,7 +81,7 @@ struct StatisticsRunView: View {
                         
                         Spacer()
                         
-                        Button("Show more") {
+                        Button("Show all") {
                             showRounds = true
                         }
                         .textCase(nil)
@@ -96,10 +96,13 @@ struct StatisticsRunView: View {
                     StatisticsMap(downwindManager: downwindManager, statisticsData: statisticsData)
                         .frame(height: 300)
                         .cornerRadius(5.0)
-                        .onTapGesture {
-                            showMapSheet = true
-                        }
-                        
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { _ in
+                                    showMapSheet = true
+                                }
+                        )
+                    
                 } header: {
                     HStack {
                         Text("Map")
@@ -134,7 +137,7 @@ struct StatisticsRunView: View {
                                 }, label: {
                                     Label("Close", systemImage: "xmark.circle.fill")
                                         .symbolRenderingMode(.palette)
-                                        .foregroundStyle(.foreground, .gray)
+                                        .foregroundStyle(.black, .gray)
                                 })
                             }
                     }
@@ -153,7 +156,7 @@ struct StatisticsRunView: View {
                                 Label("Close", systemImage: "xmark.circle.fill")
                                     .labelStyle(.iconOnly)
                                     .symbolRenderingMode(.palette)
-                                    .foregroundStyle(.foreground, .gray)
+                                    .foregroundStyle(.black, .gray)
                                     
                             })
                             .font(.title2)
