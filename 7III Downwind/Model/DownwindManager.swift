@@ -260,11 +260,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// create rounds from locationData for Statistics
-    func createRounds(for locations: [LocationData]) -> [(String, String)] {
+    func createRounds(for locations: [LocationData]) -> [(String, String, String)] {
         var accumulatedDistance = 0.0
         var numberOfKm = 0
         var lastKmDate = locations.first!.timestamp
         var roundsArray = [(String, String)]()
+        var timesArray = [Double]()
         let roundLength = 1.0
         
         for index in 1..<locations.count {
@@ -294,6 +295,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
                 // calculate time from last time
                 let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: kmCrossingDate)
+                timesArray.append(kmCrossingDate.timeIntervalSince(lastKmDate))
                 
                 // updating distances
                 numberOfKm += Int(roundLength)
@@ -312,17 +314,36 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         if accumulatedDistance > 0.0 {
             let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: locations.last!.timestamp)
             roundsArray.append((String(format: "%.1f", totalDistance), prettyTime))
+            
+            timesArray.append((locations.last!.timestamp.timeIntervalSince(lastKmDate)) / accumulatedDistance)
         }
         
-        // calculating average pace
-        let totalCalculatedTime = locations.last!.timestamp.timeIntervalSince(locations.first!.timestamp)
-        let pace = totalCalculatedTime / totalDistance
+        var returnArray = roundsArray.map { ($0.0, $0.1, "")}
+        
+        if let slowestKM = timesArray.max() {
+            if let slowestIndex = timesArray.firstIndex(of: slowestKM) {
+                returnArray[slowestIndex].2 = "🐌"
+            }
+        }
+        
+        if let fastestKM = timesArray.min() {
+            if let fastestIndex = timesArray.firstIndex(of: fastestKM) {
+                returnArray[fastestIndex].2 = "🚀"
+            }
+        }
+
+        return returnArray
+    }
+    
+    /// calculating average pace
+    func calculateAveragePace(statistic: RunStatistic) -> String {
+        let totalCalculatedTime = statistic.locationData.last!.timestamp.timeIntervalSince(statistic.locationData.first!.timestamp)
+        let pace = totalCalculatedTime / (statistic.runDistance / 1000)
         let prettyPace = makePrettyMinutesString(timeInSeconds: pace, paceFormat: true)
         
-        roundsArray.append(("Average pace:", prettyPace + " /km"))
-
-        return roundsArray
+        return prettyPace + " /km"
     }
+    
     
     /// calculates time between dates and returns a pretty minutes time string
     private func calculatePrettyTimeString(from: Date, to: Date) -> String {
@@ -409,7 +430,37 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return polylineData
     }
     
+    /// tries to get a location name from coordinates
+    func getNameOfLocation(location: LocationData, completion: @escaping (String?) -> Void) {
+        let location = CLLocation(latitude: location.latitude, longitude: location.longitude)
+        // Perform reverse geocoding to get the address from coordinates
+        CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
+            guard let placemark = placemarks?.first, error == nil else {
+                completion(nil)
+                return
+            }
+            
+            completion(placemark.locality)
+        }
+    }
     
+    /// creates a date string from two dates
+    func makeTimeIntervalDate(startDate: Date, endDate: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd HH:mm"
+        
+        let startDateComponents = Calendar.current.dateComponents([.day, .month], from: startDate)
+        let endDateComponents = Calendar.current.dateComponents([.day, .month], from: endDate)
+        
+        let startString = dateFormatter.string(from: startDate)
+        let endString = dateFormatter.string(from: endDate)
+        
+        if startDateComponents.day == endDateComponents.day {
+            return "\(startString) - \(endString.suffix(5))"
+        } else {
+            return "\(startString) - \(endString)"
+        }
+    }
     
     // MARK: - Run
     

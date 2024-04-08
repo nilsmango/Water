@@ -37,7 +37,7 @@ struct RunOverView: View {
 
 #Preview {
     List {
-        RunOverView(runDate: "2024-03-02", runName: "Testrun", distance: "21 km", time: "1.3 h", averageSpeed: "15 km/h")
+        RunOverView(runDate: "Jan 03 20:30 - 23:00", runName: "Testrun", distance: "21 km", time: "1.3 h", averageSpeed: "15 km/h")
     }
     
 }

@@ -14,11 +14,12 @@ struct StatisticsView: View {
         List {
             ForEach(downwindManager.runStatistics) { statistic in
                 let averageSpeed = makePrettySpeed(speed: (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
+                let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.locationData.first!.timestamp, endDate: statistic.locationData.last!.timestamp)
                 
                 NavigationLink {
-                    StatisticsMap(downwindManager: downwindManager, statisticsData: statistic)
+                    StatisticsRunView(downwindManager: downwindManager, statisticsData: statistic, averageSpeed: averageSpeed, runDates: runDates)
                 } label: {
-                    RunOverView(runDate: downwindManager.createDateString(from: statistic.locationData.first?.timestamp), runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed)
+                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed)
                 }
             }
             .onDelete { indexSet in
@@ -35,5 +36,8 @@ struct StatisticsView: View {
 }
 
 #Preview {
-    StatisticsView(downwindManager: DownwindManager())
+    NavigationStack {
+        
+        StatisticsView(downwindManager: DownwindManager())
+    }
 }
