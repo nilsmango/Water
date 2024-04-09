@@ -25,19 +25,22 @@ struct StatisticsView: View {
             .onDelete { indexSet in
                 downwindManager.delete(at: indexSet)
             }
-            .onAppear {
-                if downwindManager.runStatistics.count > 10 {
-                    downwindManager.encodeAndPrintRunStatistics(statistics: downwindManager.runStatistics[10])
-                }
-            }
+            
         }
             .navigationTitle("Run Statistics")
+            .toolbar {
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink("Filter by Tags") {
+                        TagsListView(downwindManager: downwindManager)
+                    }
+                }
+            }
     }
 }
 
 #Preview {
     NavigationStack {
-        
         StatisticsView(downwindManager: DownwindManager())
     }
 }

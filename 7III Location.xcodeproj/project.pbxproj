@@ -49,11 +49,18 @@
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
+		786BDE2A2BC592B100F16630 /* TagsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BDE292BC592B100F16630 /* TagsListView.swift */; };
 		7877E1202BBFF14C00776890 /* locationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 7877E11F2BBFF14C00776890 /* locationData.json */; };
 		7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
 		7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
 		7877E1262BC3F7A800776890 /* StatisticsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1252BC3F7A800776890 /* StatisticsDetails.swift */; };
 		7877E1282BC41DB300776890 /* StatisticsInfoViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */; };
+		7877E12C2BC52A0900776890 /* TagsEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E12B2BC52A0900776890 /* TagsEditView.swift */; };
+		7877E1382BC52BB400776890 /* SelectionButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */; };
+		7877E1392BC52BB400776890 /* _FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1372BC52BB400776890 /* _FlexibleView.swift */; };
+		7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1352BC52BB300776890 /* FlexibleView.swift */; };
+		7877E1492BC52C9600776890 /* View+readSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1482BC52C9600776890 /* View+readSize.swift */; };
+		7877E14B2BC5850C00776890 /* TagsFlexiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E14A2BC5850C00776890 /* TagsFlexiView.swift */; };
 		787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
@@ -113,11 +120,18 @@
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
+		786BDE292BC592B100F16630 /* TagsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsListView.swift; sourceTree = "<group>"; };
 		7877E11F2BBFF14C00776890 /* locationData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = locationData.json; path = ../../../../../locationData.json; sourceTree = "<group>"; };
 		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
 		7877E1232BC3D87C00776890 /* PolylineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineData.swift; sourceTree = "<group>"; };
 		7877E1252BC3F7A800776890 /* StatisticsDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsDetails.swift; sourceTree = "<group>"; };
 		7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsInfoViews.swift; sourceTree = "<group>"; };
+		7877E12B2BC52A0900776890 /* TagsEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsEditView.swift; sourceTree = "<group>"; };
+		7877E1352BC52BB300776890 /* FlexibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexibleView.swift; sourceTree = "<group>"; };
+		7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionButtonLabel.swift; sourceTree = "<group>"; };
+		7877E1372BC52BB400776890 /* _FlexibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _FlexibleView.swift; sourceTree = "<group>"; };
+		7877E1482BC52C9600776890 /* View+readSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+readSize.swift"; sourceTree = "<group>"; };
+		7877E14A2BC5850C00776890 /* TagsFlexiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsFlexiView.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -208,6 +222,7 @@
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
 				785CF9562B4FE85100528B6D /* Options */,
 				78C4D23D2BA750D200639E65 /* Run Statistics */,
+				7877E1342BC52BB300776890 /* FlexibleView */,
 				78A9EB062B56C01B0054E9F9 /* Alerts */,
 				785CF9602B53D50D00528B6D /* Runs */,
 				785C4AD42B44095300EB07F8 /* Experiments */,
@@ -247,6 +262,7 @@
 		785C4AA82B35916900EB07F8 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				7877E1482BC52C9600776890 /* View+readSize.swift */,
 				78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */,
 				785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */,
 				785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */,
@@ -308,6 +324,16 @@
 			path = Runs;
 			sourceTree = "<group>";
 		};
+		7877E1342BC52BB300776890 /* FlexibleView */ = {
+			isa = PBXGroup;
+			children = (
+				7877E1372BC52BB400776890 /* _FlexibleView.swift */,
+				7877E1352BC52BB300776890 /* FlexibleView.swift */,
+				7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */,
+			);
+			path = FlexibleView;
+			sourceTree = "<group>";
+		};
 		78A9EB062B56C01B0054E9F9 /* Alerts */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,8 +348,11 @@
 			children = (
 				78320BC52BB1D95D00D6A772 /* FilterTesting */,
 				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
+				786BDE292BC592B100F16630 /* TagsListView.swift */,
 				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
 				7877E1212BC2989300776890 /* StatisticsRunView.swift */,
+				7877E14A2BC5850C00776890 /* TagsFlexiView.swift */,
+				7877E12B2BC52A0900776890 /* TagsEditView.swift */,
 				7877E1252BC3F7A800776890 /* StatisticsDetails.swift */,
 				7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */,
 				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
@@ -415,22 +444,27 @@
 				785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */,
 				78C4D2452BAC8B8A00639E65 /* CrewStatistic.swift in Sources */,
 				785C4AC32B40B84300EB07F8 /* StartView.swift in Sources */,
+				7877E1492BC52C9600776890 /* View+readSize.swift in Sources */,
 				78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */,
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */,
 				788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */,
+				786BDE2A2BC592B100F16630 /* TagsListView.swift in Sources */,
 				7877E1282BC41DB300776890 /* StatisticsInfoViews.swift in Sources */,
 				78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */,
 				78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */,
+				7877E1382BC52BB400776890 /* SelectionButtonLabel.swift in Sources */,
 				78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */,
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
 				783A53C72B5DA57C00701D7F /* RunMapView.swift in Sources */,
 				783A53CF2B5FBF5000701D7F /* RunType.swift in Sources */,
 				783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
+				7877E12C2BC52A0900776890 /* TagsEditView.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
+				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
 				78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */,
 				781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */,
@@ -445,6 +479,7 @@
 				78C4D2412BAA149000639E65 /* CaptureRunStatisticsView.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				783A53CD2B5E6C9A00701D7F /* ListInfoLabel.swift in Sources */,
+				7877E1392BC52BB400776890 /* _FlexibleView.swift in Sources */,
 				783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
@@ -458,6 +493,7 @@
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
 				781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */,
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
+				7877E14B2BC5850C00776890 /* TagsFlexiView.swift in Sources */,
 				785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */,
 				78C4D23A2BA6DADB00639E65 /* LocationData.swift in Sources */,
 				7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */,

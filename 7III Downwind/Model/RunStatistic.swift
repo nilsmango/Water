@@ -21,4 +21,5 @@ struct RunStatistic: Identifiable, Codable {
     
     var locationData: [LocationData]
     
+    var tags: [String]?
 }

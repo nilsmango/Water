@@ -21,6 +21,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - Statistics
     @Published var activeStatistics: Bool = false
     @Published var runStatistics: [RunStatistic] = []
+    @Published var tags = [String]()
     // TODO: make this non published
     @Published var locationAccuracy: Double = 1000.0
     var currentRunStatisticIndex = 0
@@ -195,7 +196,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let fileName = "locationStatistics.data"
     
     
-    // Save runStatistics to disk
+    /// Save runStatistics to disk
     private func saveRunStatistics() {
         DispatchQueue.global(qos: .background).async {
             do {
@@ -208,7 +209,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    // Load runStatistics from disk
+    /// Load runStatistics from disk
     func loadRunStatistics() {
         DispatchQueue.global(qos: .background).async {
             do {
@@ -216,14 +217,72 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 let data = try Data(contentsOf: url)
                 let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
                 
+                let tags = self.updateMetaData(statistics: decodedStatistics)
+                
                 DispatchQueue.main.async {
                     // Update UI on the main thread
                     self.runStatistics = decodedStatistics
+                    self.tags = tags
+                    print(self.tags)
                 }
             } catch {
                 print("Error loading runStatistics: \(error)")
             }
         }
+    }
+    
+    /// save statistic to disk with new tags
+    func saveStatisticWithNewTags(tags: [String], statisticsData: RunStatistic) {
+        if let index = runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
+            runStatistics[index].tags = tags
+            saveRunStatistics()
+            
+            // adding tags to tags
+            for tag in tags {
+                if !tags.contains(where: { $0.lowercased() == tag.lowercased() }) {
+                    self.tags.append(tag)
+                }
+            }
+            self.tags = self.tags.sorted()
+        }
+    }
+    
+    /// updates the metadata of the run statistics
+    private func updateMetaData(statistics: [RunStatistic]) -> [String] {
+        var tags = [String]()
+        
+        for statistic in statistics {
+            if statistic.tags != nil {
+                for tag in statistic.tags! {
+                    if !tags.contains(where: { $0.lowercased() == tag.lowercased() }) {
+                        tags.append(tag)
+                    }
+                }
+            }
+        }
+        
+        return tags.sorted()
+    }
+    
+    /// filter the statistics array
+    func filterStatistics(tags: [String]) -> [RunStatistic] {
+        if tags.isEmpty {
+            return runStatistics
+        } else {
+            let filteredStatistics = runStatistics.filter { statistic in
+                tags.allSatisfy { tag in
+                    if let statisticTags = statistic.tags {
+                        let tagString = statisticTags.joined(separator: " ").lowercased()
+                        return tagString.contains(tag.lowercased())
+                    } else {
+                        return false
+                    }
+                }
+            }
+            
+            return filteredStatistics
+        }
+        
     }
     
     /// encoding and printing location data
