@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78096F3D2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
 		781562A32B94D92900E081FC /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
 		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
 		781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
@@ -77,6 +78,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsEditViewStatisticCapture.swift; sourceTree = "<group>"; };
 		781562A22B94D92900E081FC /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
 		781562A62B94DD7500E081FC /* ShareDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDialog.swift; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 			children = (
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
+				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				783A53D62B62C53C00701D7F /* RunListMapSheet.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
 				783A53CB2B5E6C8B00701D7F /* List */,
@@ -448,6 +451,7 @@
 				78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */,
 				785C4ACD2B41D28400EB07F8 /* DBRun.swift in Sources */,
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
+				78096F3D2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift in Sources */,
 				7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */,
 				788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */,
 				786BDE2A2BC592B100F16630 /* TagsListView.swift in Sources */,

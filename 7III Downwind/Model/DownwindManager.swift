@@ -27,7 +27,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var currentRunStatisticIndex = 0
     
     /// Activates the run statistic
-    func startStatistic(onlyStatistics: Bool) {
+    func startStatistic(onlyStatistics: Bool, tags: [String] = []) {
         // Safety first
         if !activeStatistics {
             activeStatistics = true
@@ -53,9 +53,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // make the first data entry if there is a location
             let newStatistic: RunStatistic
             if user.latitude != nil && user.longitude != nil {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)])
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)], tags: tags)
             } else {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [])
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [], tags: tags)
             }
             
             runStatistics.append(newStatistic)

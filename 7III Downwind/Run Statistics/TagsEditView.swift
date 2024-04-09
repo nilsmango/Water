@@ -110,8 +110,8 @@ struct TagsEditView: View {
 }
 
 #Preview {
-    List {
+//    List {
         
         TagsEditView(tags: .constant(["#140p", "#bise"]), downwindManager: DownwindManager())
-    }
+//    }
 }

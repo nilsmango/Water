@@ -11,16 +11,32 @@ struct StatisticsControlCenter: View {
     @ObservedObject var downwindManager: DownwindManager
     var onlyStatistics: Bool = false
     
+    @State private var tags = [String]()
+    
+    @State private var showTagsEditView = false
+    
     var body: some View {
         if downwindManager.activeStatistics == false {
-            Button {
-                downwindManager.startStatistic(onlyStatistics: onlyStatistics)
-                downwindManager.activeRun.startedOn = Date.now
-            } label: {
-                Label("Start Tracking", systemImage: "play.fill")
+            VStack {
+                Button {
+                    downwindManager.startStatistic(onlyStatistics: onlyStatistics, tags: tags)
+                    downwindManager.activeRun.startedOn = Date.now
+                } label: {
+                    Label("Start Tracking", systemImage: "play.fill")
+                }
+                .buttonStyle(.bordered)
+                .padding()
+                
+                VStack {
+                    Text(tags.isEmpty ? "No Tags Active" : "Tracking Tags")
+                .fontWeight(.bold)
+                    
+                TagsEditViewStatisticCapture(tags: $tags, downwindManager: downwindManager)
+                    .frame(width: UIScreen.main.bounds.width / 1.75)
+                }
+                
+                        
             }
-            .buttonStyle(.bordered)
-            .padding()
             
         } else {
             Button(role: .destructive) {
@@ -44,7 +60,7 @@ struct StatisticsControlCenter: View {
             Text("Top Speed: \(makePrettySpeed(speed: currentRunStatistic.topSpeed, system: downwindManager.measurementSystem))")
             Text("Accuracy of location: \(downwindManager.locationAccuracy) m")
         }
-        
+            
 
     }
 }
