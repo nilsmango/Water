@@ -16,7 +16,7 @@ struct StatisticsMap: View {
     @State private var mapSpan: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     
     @State private var coordinatesFactor = 30
-    private let maxPointsToShow = 60
+    private let maxPointsToShow = 70
     private let lineWidth = 9.0
     
     @State private var polylineData: [PolylineData] = []
@@ -52,7 +52,7 @@ struct StatisticsMap: View {
             }
         }
         .onMapCameraChange(frequency: .onEnd) { context in
-            if abs(mapSpan.latitudeDelta - context.region.span.latitudeDelta) > 0.001  {
+            if abs(mapSpan.latitudeDelta - context.region.span.latitudeDelta) > 0.002  {
                 mapSpan = context.region.span
                 // calculating coordinates factor
                 let newCoordinatesFactor = downwindManager.calculateCoordinatesFactor(context: context, locations: statisticsData.locationData, maxPointsToShow: maxPointsToShow)
