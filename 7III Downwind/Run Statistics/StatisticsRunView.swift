@@ -98,12 +98,8 @@ struct StatisticsRunView: View {
                 StatisticsMap(downwindManager: downwindManager, statisticsData: statisticsData)
                     .frame(height: 300)
                     .cornerRadius(5.0)
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                showMapSheet = true
-                            }
-                    )
+                    .disabled(true)
+                
                 
             } header: {
                 HStack {
@@ -227,6 +223,7 @@ struct StatisticsRunView: View {
                         }, label: {
                             Text("Cancel")
                         })
+                        .tint(.red)
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
