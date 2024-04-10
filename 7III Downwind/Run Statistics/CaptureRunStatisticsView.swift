@@ -13,23 +13,27 @@ struct CaptureRunStatisticsView: View {
     @Binding var showCapture: Bool
 
     var body: some View {
-        VStack {
-            if downwindManager.activeStatistics == false {
-                Button(action: {
-                    showCapture = false
-                }, label: {
-                    Label("Back Home", systemImage: "arrowshape.backward.fill")
-                })
-                .buttonStyle(.bordered)
-                .padding(.bottom)
-            }
-            
+        NavigationStack {
             StatisticsControlCenter(downwindManager: downwindManager, onlyStatistics: true)
         }
-        
+        .navigationTitle("Tracking")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                if downwindManager.activeStatistics == false {
+                    Button(action: {
+                        showCapture = false
+                    }, label: {
+                        Text("Cancel")
+                    })
+                    .tint(.red)
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    CaptureRunStatisticsView(downwindManager: DownwindManager(), showCapture: .constant(true))
+    NavigationStack {
+        CaptureRunStatisticsView(downwindManager: DownwindManager(), showCapture: .constant(true))
+    }
 }

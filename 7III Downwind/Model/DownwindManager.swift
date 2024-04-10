@@ -223,7 +223,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     // Update UI on the main thread
                     self.runStatistics = decodedStatistics
                     self.tags = tags
-                    print(self.tags)
                 }
             } catch {
                 print("Error loading runStatistics: \(error)")
