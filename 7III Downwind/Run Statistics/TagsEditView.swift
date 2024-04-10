@@ -101,7 +101,6 @@ struct TagsEditView: View {
                         
                     }
                 }
-                
             }
             
         }
@@ -110,8 +109,16 @@ struct TagsEditView: View {
 }
 
 #Preview {
-//    List {
+    List {
         
-        TagsEditView(tags: .constant(["#140p", "#bise"]), downwindManager: DownwindManager())
-//    }
+        TagsEditView(tags: .constant(createArray()), downwindManager: DownwindManager())
+    }
+}
+
+private func createArray() -> [String] {
+    var array = [String]()
+    for index in 0...50 {
+        array.append("#hash\(index)")
+    }
+    return array
 }

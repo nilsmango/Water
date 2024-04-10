@@ -17,26 +17,29 @@ struct StatisticsControlCenter: View {
     
     var body: some View {
         if downwindManager.activeStatistics == false {
-            VStack {
-                Button {
-                    downwindManager.startStatistic(onlyStatistics: onlyStatistics, tags: tags)
-                    downwindManager.activeRun.startedOn = Date.now
-                } label: {
-                    Label("Start Tracking", systemImage: "play.fill")
-                }
-                .buttonStyle(.bordered)
-                .padding()
-                
+            ScrollView {
                 VStack {
-                    Text(tags.isEmpty ? "No Tags Active" : "Tracking Tags")
-                .fontWeight(.bold)
+                    Button {
+                        downwindManager.startStatistic(onlyStatistics: onlyStatistics, tags: tags)
+                        downwindManager.activeRun.startedOn = Date.now
+                    } label: {
+                        Label("Start Tracking", systemImage: "play.fill")
+                    }
+                    .buttonStyle(.bordered)
+                    .padding()
                     
-                TagsEditViewStatisticCapture(tags: $tags, downwindManager: downwindManager)
-                    .frame(width: UIScreen.main.bounds.width / 1.75)
-                }
-                
+                    VStack {
+                        Text(tags.isEmpty ? "No Tags Active" : "Tracking Tags")
+                    .fontWeight(.bold)
+                    .padding(.bottom)
                         
+                    TagsEditViewStatisticCapture(tags: $tags, downwindManager: downwindManager)
+                            .padding(.horizontal)
+                    }
+                    
+                }
             }
+            
             
         } else {
             Button(role: .destructive) {

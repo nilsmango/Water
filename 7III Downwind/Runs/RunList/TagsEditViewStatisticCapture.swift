@@ -44,7 +44,6 @@ struct TagsEditViewStatisticCapture: View {
         }
         
         var body: some View {
-            Section {
                 FlexibleView(
                     data: allTags,
                     spacing: 5,
@@ -61,32 +60,31 @@ struct TagsEditViewStatisticCapture: View {
                                 }
                         }
                 }
-            }
             .onAppear {
                 allTags = Array(Set(trackerTags + tags)).sorted()
             }
-            Section {
+            Group {
                 HStack {
                     TextField("Add a new tag ...", text: $newTag)
                         
                         .focused($isFieldFocused)
                         .onSubmit {
                             isFieldFocused = true
-                            withAnimation {
+//                            withAnimation {
                                 tags.append(makeWordTag(newTag))
                                 newTag = ""
                                 updateAllTags()
-                            }
+//                            }
                         }
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .onChange(of: newTag) {
                             if canMakeTag(from: newTag) {
-                                withAnimation {
+//                                withAnimation {
                                     tags.append(makeWordTag(newTag))
                                     newTag = ""
                                     updateAllTags()
-                                }
+//                                }
                                 
                             }
                         }
@@ -110,8 +108,11 @@ struct TagsEditViewStatisticCapture: View {
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundStyle(.uiGray)
                 )
-                
+                .frame(width: UIScreen.main.bounds.width / 1.75)
             }
+            .padding(.top)
+                
+                
             
         }
     }
@@ -119,5 +120,13 @@ struct TagsEditViewStatisticCapture: View {
  
 
 #Preview {
-    TagsEditViewStatisticCapture(tags: .constant(["#140p", "#bise"]), downwindManager: DownwindManager())
+    TagsEditViewStatisticCapture(tags: .constant(createArray()), downwindManager: DownwindManager())
+}
+
+private func createArray() -> [String] {
+    var array = [String]()
+    for index in 0...50 {
+        array.append("#hash\(index)")
+    }
+    return array
 }
