@@ -378,15 +378,37 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         var returnArray = roundsArray.map { ($0.0, $0.1, "")}
         
+        // find the slowest and fastest rounds
         if let slowestKM = timesArray.max() {
             if let slowestIndex = timesArray.firstIndex(of: slowestKM) {
                 returnArray[slowestIndex].2 = "🐌"
+                
+                if timesArray.count > 2 {
+                    let slowestTime = timesArray[slowestIndex]
+                    timesArray[slowestIndex] = 0
+                    if let secondSlowestKM = timesArray.max() {
+                        if let secondSlowestIndex = timesArray.firstIndex(of: secondSlowestKM) {
+                            returnArray[secondSlowestIndex].2 = "🐢"
+                            timesArray[slowestIndex] = slowestTime
+                        }
+                    }
+                }
             }
         }
+        
         
         if let fastestKM = timesArray.min() {
             if let fastestIndex = timesArray.firstIndex(of: fastestKM) {
                 returnArray[fastestIndex].2 = "🚀"
+                
+                if timesArray.count > 2 {
+                    timesArray[fastestIndex] = 1000000
+                    if let secondFastestKM = timesArray.min() {
+                        if let secondFastestIndex = timesArray.firstIndex(of: secondFastestKM) {
+                            returnArray[secondFastestIndex].2 = "🐇"
+                        }
+                    }
+                }
             }
         }
 
