@@ -16,7 +16,7 @@ struct AboutView: View {
                 Text("What can you do with this app?")
                     .font(.headline)
                 
-                Text("Start runs, share them with friends, and watch them unfold in real-time. Track the speed and location of your whole group. You can save all the location data collected and analyze it later when you activate statistics.\nOriginally, this app was made for downwind runs only, but you can track the location of any person or group doing any kind of activity.\nPlease note that the GPS data processing has been optimized for outdoor activities and may not perform well indoors.")
+                Text("Track yourself and your friends during your outdoor activities. You can save all the location data collected and analyze it later when you activate statistics.\nOriginally, this app was made for downwind runs only, but you can track the location of any person or group doing any kind of activity.\nPlease note that the GPS data processing has been optimized for outdoor activities and may not perform well indoors.")
                     .font(.body)
                     .padding(.bottom)
                 

@@ -319,105 +319,110 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// create rounds from locationData for Statistics
     func createRounds(for locations: [LocationData]) -> [(String, String, String)] {
-        var accumulatedDistance = 0.0
-        var numberOfKm = 0
-        var lastKmDate = locations.first!.timestamp
-        var roundsArray = [(String, String)]()
-        var timesArray = [Double]()
-        let roundLength = 1.0
-        
-        for index in 1..<locations.count {
-            // Update distance
-            let lastLatitude = locations[index-1].latitude
-            let lastLongitude = locations[index-1].longitude
-            let presentLatitude = locations[index].latitude
-            let presentLongitude = locations[index].longitude
-            let addedDistance = (calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)) ?? 0.0) / 1000.0
+        // safety measure
+        if !locations.isEmpty {
+            var accumulatedDistance = 0.0
+            var numberOfKm = 0
+            var lastKmDate = locations.first?.timestamp ?? Date.now
+            var roundsArray = [(String, String)]()
+            var timesArray = [Double]()
+            let roundLength = 1.0
             
-            accumulatedDistance += addedDistance
-            
-            // check if we have crossed 1 km (round length)
-            if accumulatedDistance >= roundLength {
+            for index in 1..<locations.count {
+                // Update distance
+                let lastLatitude = locations[index-1].latitude
+                let lastLongitude = locations[index-1].longitude
+                let presentLatitude = locations[index].latitude
+                let presentLongitude = locations[index].longitude
+                let addedDistance = (calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)) ?? 0.0) / 1000.0
                 
-                // speed of the last segment
-                let timeInSeconds = locations[index].timestamp.timeIntervalSince(locations[index-1].timestamp)
-                let kmPerSecond = addedDistance / timeInSeconds
-
-                // time it took for the distance to 1.0 km
-                let distanceOverRoundLength = accumulatedDistance - roundLength
-                let distanceToRoundLength = addedDistance - distanceOverRoundLength
-                let secondsToRoundLength = distanceToRoundLength / kmPerSecond
+                accumulatedDistance += addedDistance
                 
-                // new crossing date
-                let kmCrossingDate = locations[index-1].timestamp.addingTimeInterval(secondsToRoundLength)
-
-                // calculate time from last time
-                let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: kmCrossingDate)
-                timesArray.append(kmCrossingDate.timeIntervalSince(lastKmDate))
-                
-                // updating distances
-                numberOfKm += Int(roundLength)
-                accumulatedDistance -= roundLength
-                
-                roundsArray.append((String(numberOfKm), prettyTime))
-                
-                // updating the last km crossing date
-                lastKmDate = kmCrossingDate
+                // check if we have crossed 1 km (round length)
+                if accumulatedDistance >= roundLength {
+                    
+                    // speed of the last segment
+                    let timeInSeconds = locations[index].timestamp.timeIntervalSince(locations[index-1].timestamp)
+                    let kmPerSecond = addedDistance / timeInSeconds
+                    
+                    // time it took for the distance to 1.0 km
+                    let distanceOverRoundLength = accumulatedDistance - roundLength
+                    let distanceToRoundLength = addedDistance - distanceOverRoundLength
+                    let secondsToRoundLength = distanceToRoundLength / kmPerSecond
+                    
+                    // new crossing date
+                    let kmCrossingDate = locations[index-1].timestamp.addingTimeInterval(secondsToRoundLength)
+                    
+                    // calculate time from last time
+                    let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: kmCrossingDate)
+                    timesArray.append(kmCrossingDate.timeIntervalSince(lastKmDate))
+                    
+                    // updating distances
+                    numberOfKm += Int(roundLength)
+                    accumulatedDistance -= roundLength
+                    
+                    roundsArray.append((String(numberOfKm), prettyTime))
+                    
+                    // updating the last km crossing date
+                    lastKmDate = kmCrossingDate
+                }
             }
-        }
-        
-        // also get the last distance
-        let totalDistance = accumulatedDistance + Double(numberOfKm)
-        
-        if accumulatedDistance > 0.0 {
-            let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: locations.last!.timestamp)
-            roundsArray.append((String(format: "%.1f", totalDistance), prettyTime))
             
-            timesArray.append((locations.last!.timestamp.timeIntervalSince(lastKmDate)) / accumulatedDistance)
-        }
-        
-        var returnArray = roundsArray.map { ($0.0, $0.1, "")}
-        
-        // find the slowest and fastest rounds
-        if let slowestKM = timesArray.max() {
-            if let slowestIndex = timesArray.firstIndex(of: slowestKM) {
-                returnArray[slowestIndex].2 = "🐌"
+            // also get the last distance
+            let totalDistance = accumulatedDistance + Double(numberOfKm)
+            
+            if accumulatedDistance > 0.0 {
+                let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: locations.last!.timestamp)
+                roundsArray.append((String(format: "%.1f", totalDistance), prettyTime))
                 
-                if timesArray.count > 2 {
-                    let slowestTime = timesArray[slowestIndex]
-                    timesArray[slowestIndex] = 0
-                    if let secondSlowestKM = timesArray.max() {
-                        if let secondSlowestIndex = timesArray.firstIndex(of: secondSlowestKM) {
-                            returnArray[secondSlowestIndex].2 = "🐢"
-                            timesArray[slowestIndex] = slowestTime
+                timesArray.append((locations.last!.timestamp.timeIntervalSince(lastKmDate)) / accumulatedDistance)
+            }
+            
+            var returnArray = roundsArray.map { ($0.0, $0.1, "")}
+            
+            // find the slowest and fastest rounds
+            if let slowestKM = timesArray.max() {
+                if let slowestIndex = timesArray.firstIndex(of: slowestKM) {
+                    returnArray[slowestIndex].2 = "🐌"
+                    
+                    if timesArray.count > 2 {
+                        let slowestTime = timesArray[slowestIndex]
+                        timesArray[slowestIndex] = 0
+                        if let secondSlowestKM = timesArray.max() {
+                            if let secondSlowestIndex = timesArray.firstIndex(of: secondSlowestKM) {
+                                returnArray[secondSlowestIndex].2 = "🐢"
+                                timesArray[slowestIndex] = slowestTime
+                            }
                         }
                     }
                 }
             }
-        }
-        
-        
-        if let fastestKM = timesArray.min() {
-            if let fastestIndex = timesArray.firstIndex(of: fastestKM) {
-                returnArray[fastestIndex].2 = "🚀"
-                
-                if timesArray.count > 2 {
-                    timesArray[fastestIndex] = 1000000
-                    if let secondFastestKM = timesArray.min() {
-                        if let secondFastestIndex = timesArray.firstIndex(of: secondFastestKM) {
-                            returnArray[secondFastestIndex].2 = "🐇"
+            
+            
+            if let fastestKM = timesArray.min() {
+                if let fastestIndex = timesArray.firstIndex(of: fastestKM) {
+                    returnArray[fastestIndex].2 = "🚀"
+                    
+                    if timesArray.count > 2 {
+                        timesArray[fastestIndex] = 1000000
+                        if let secondFastestKM = timesArray.min() {
+                            if let secondFastestIndex = timesArray.firstIndex(of: secondFastestKM) {
+                                returnArray[secondFastestIndex].2 = "🐇"
+                            }
                         }
                     }
                 }
             }
+            
+            return returnArray
+        } else {
+            return []
         }
-
-        return returnArray
     }
     
     /// calculating average pace
     func calculateAveragePace(statistic: RunStatistic) -> String {
-        let totalCalculatedTime = statistic.locationData.last!.timestamp.timeIntervalSince(statistic.locationData.first!.timestamp)
+        let totalCalculatedTime = (statistic.locationData.last?.timestamp ?? Date.now).timeIntervalSince(statistic.locationData.first?.timestamp ?? Date.now)
         let pace = totalCalculatedTime / (statistic.runDistance / 1000)
         let prettyPace = makePrettyMinutesString(timeInSeconds: pace, paceFormat: true)
         
@@ -433,21 +438,26 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     private func makePrettyMinutesString(timeInSeconds: Double, paceFormat: Bool = false) -> String {
-        let roundedTime = timeInSeconds.rounded()
-        let minutes = Int(roundedTime / 60.0)
-        let seconds = Int(roundedTime) % 60
-        let timeInMinutesString = String(minutes)
-        let additionToSeconds: String
-        if seconds > 9 {
-            additionToSeconds = ""
+        if !timeInSeconds.isNaN && timeInSeconds != .infinity && timeInSeconds != -.infinity {
+            let roundedTime = timeInSeconds.rounded()
+            let minutes = Int(roundedTime / 60.0)
+            let seconds = Int(roundedTime) % 60
+            let timeInMinutesString = String(minutes)
+            let additionToSeconds: String
+            if seconds > 9 {
+                additionToSeconds = ""
+            } else {
+                additionToSeconds = "0"
+            }
+            let dividers = paceFormat ? ("'", "\"") : (":", "")
+            
+            let prettyTime = timeInMinutesString + dividers.0 + additionToSeconds + String(seconds) + dividers.1
+            
+            return prettyTime
         } else {
-            additionToSeconds = "0"
+            return ""
         }
-        let dividers = paceFormat ? ("'", "\"") : (":", "")
         
-        let prettyTime = timeInMinutesString + dividers.0 + additionToSeconds + String(seconds) + dividers.1
-        
-        return prettyTime
     }
     
     /// calculates the coordinates factor

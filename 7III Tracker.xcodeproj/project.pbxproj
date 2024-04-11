@@ -95,7 +95,7 @@
 		783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActiveRunnersView.swift; sourceTree = "<group>"; };
 		783A53D42B626BF500701D7F /* HeadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingIndicator.swift; sourceTree = "<group>"; };
 		783A53D62B62C53C00701D7F /* RunListMapSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListMapSheet.swift; sourceTree = "<group>"; };
-		785C4A952B358F7B00EB07F8 /* 7III Location.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Location.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		785C4A952B358F7B00EB07F8 /* 7III Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		785C4A9E2B358F7D00EB07F8 /* _III_Downwind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = _III_Downwind.entitlements; sourceTree = "<group>"; };
@@ -211,7 +211,7 @@
 		785C4A962B358F7B00EB07F8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				785C4A952B358F7B00EB07F8 /* 7III Location.app */,
+				785C4A952B358F7B00EB07F8 /* 7III Tracker.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -368,9 +368,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		785C4A942B358F7B00EB07F8 /* 7III Location */ = {
+		785C4A942B358F7B00EB07F8 /* 7III Tracker */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 785C4AA42B358F7D00EB07F8 /* Build configuration list for PBXNativeTarget "7III Location" */;
+			buildConfigurationList = 785C4AA42B358F7D00EB07F8 /* Build configuration list for PBXNativeTarget "7III Tracker" */;
 			buildPhases = (
 				785C4A912B358F7B00EB07F8 /* Sources */,
 				785C4A922B358F7B00EB07F8 /* Frameworks */,
@@ -380,13 +380,13 @@
 			);
 			dependencies = (
 			);
-			name = "7III Location";
+			name = "7III Tracker";
 			packageProductDependencies = (
 				785C4AC02B40B62E00EB07F8 /* KeychainSwift */,
 				78320BBF2BB1C28400D6A772 /* Surge */,
 			);
 			productName = "7III Downwind";
-			productReference = 785C4A952B358F7B00EB07F8 /* 7III Location.app */;
+			productReference = 785C4A952B358F7B00EB07F8 /* 7III Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -404,7 +404,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 785C4A902B358F7B00EB07F8 /* Build configuration list for PBXProject "7III Location" */;
+			buildConfigurationList = 785C4A902B358F7B00EB07F8 /* Build configuration list for PBXProject "7III Tracker" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -421,7 +421,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				785C4A942B358F7B00EB07F8 /* 7III Location */,
+				785C4A942B358F7B00EB07F8 /* 7III Tracker */,
 			);
 		};
 /* End PBXProject section */
@@ -639,7 +639,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
-				DEVELOPMENT_TEAM = XDR8Y54N77;
+				DEVELOPMENT_TEAM = A9H57996U3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
@@ -662,7 +662,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.-III-Downwind";
+				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -682,7 +682,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
-				DEVELOPMENT_TEAM = XDR8Y54N77;
+				DEVELOPMENT_TEAM = A9H57996U3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
@@ -705,7 +705,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.-III-Downwind";
+				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -718,7 +718,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		785C4A902B358F7B00EB07F8 /* Build configuration list for PBXProject "7III Location" */ = {
+		785C4A902B358F7B00EB07F8 /* Build configuration list for PBXProject "7III Tracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				785C4AA22B358F7D00EB07F8 /* Debug */,
@@ -727,7 +727,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		785C4AA42B358F7D00EB07F8 /* Build configuration list for PBXNativeTarget "7III Location" */ = {
+		785C4AA42B358F7D00EB07F8 /* Build configuration list for PBXNativeTarget "7III Tracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				785C4AA52B358F7D00EB07F8 /* Debug */,

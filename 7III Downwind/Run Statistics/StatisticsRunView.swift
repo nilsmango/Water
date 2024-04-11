@@ -57,18 +57,25 @@ struct StatisticsRunView: View {
                 
             }
             .onAppear {
-                downwindManager.getNameOfLocation(location: statisticsData.locationData.first!) { name in
-                    if let name = name {
-                        locationName = name
-                    }
-                    downwindManager.getNameOfLocation(location: statisticsData.locationData.last!) { name in
+                if let firstDataPoint = statisticsData.locationData.first {
+                    downwindManager.getNameOfLocation(location: firstDataPoint) { name in
                         if let name = name {
-                            if locationName.contains("→") == false {
-                                locationName += " → " + name
+                            locationName = name
+                        }
+                        
+                        if let lastDataPoint = statisticsData.locationData.last {
+                            downwindManager.getNameOfLocation(location: lastDataPoint) { name in
+                                if let name = name {
+                                    if locationName.contains("→") == false && locationName != name {
+                                        locationName += " → " + name
+                                    }
+                                }
                             }
                         }
+                        
                     }
                 }
+                
                 
             }
             
