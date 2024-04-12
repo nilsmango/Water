@@ -460,7 +460,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// calculates the coordinates factor
-    func calculateCoordinatesFactor(context: MapCameraUpdateContext, locations: [LocationData], maxPointsToShow: Int) -> Int {
+    func calculateCoordinatesFactor(context: MapCameraUpdateContext, locations: [LocationData], maxPointsToShow: Int, maxPolylines: Int) -> Int {
         // count how many coordinates are visible for the camera
         let mapRect = context.rect
         var coordinatesVisible = 0
@@ -471,7 +471,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         // calculating coordinates factor
-        let coordinatesFactor = max(coordinatesVisible / maxPointsToShow, 1)
+        var coordinatesFactor = max(coordinatesVisible / maxPointsToShow, 1)
+        
+        // making sure we over all draw less then the max polylines for reasons of performance
+        if locations.count / coordinatesFactor >= maxPolylines {
+            coordinatesFactor = Int((Double(locations.count) / Double(maxPolylines)).rounded())
+        }
+
         return coordinatesFactor
     }
     
@@ -515,7 +521,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let polyline = PolylineData(coordinates: [CLLocationCoordinate2D(latitude: line.0.latitude, longitude: line.0.longitude), CLLocationCoordinate2D(latitude: line.1.latitude, longitude: line.1.longitude)], strokeColor: lineColors[index])
             polylineData.append(polyline)
         }
-        
+        print("polylines: \(polylineData.count)")
         return polylineData
     }
     
@@ -928,6 +934,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// quit active run: removes user from run, stops run timer, stops updating location, stops updating header, sets location, speed and heading to nil and updates the user in the DB to that
     func quitActiveRun() async throws {
+        
         // reset the active run var
         DispatchQueue.main.async {
             // Stop statistics if they are on

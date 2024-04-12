@@ -18,6 +18,7 @@ struct StatisticsMap: View {
     @State private var coordinatesFactor = 30
     private let maxPointsToShow = 70
     private let lineWidth = 9.0
+    private let maxPolylines = 1600
     
     @State private var polylineData: [PolylineData] = []
     
@@ -55,7 +56,7 @@ struct StatisticsMap: View {
             if abs(mapSpan.latitudeDelta - context.region.span.latitudeDelta) > 0.002  {
                 mapSpan = context.region.span
                 // calculating coordinates factor
-                let newCoordinatesFactor = downwindManager.calculateCoordinatesFactor(context: context, locations: statisticsData.locationData, maxPointsToShow: maxPointsToShow)
+                let newCoordinatesFactor = downwindManager.calculateCoordinatesFactor(context: context, locations: statisticsData.locationData, maxPointsToShow: maxPointsToShow, maxPolylines: maxPolylines)
                 if coordinatesFactor != newCoordinatesFactor {
                     coordinatesFactor = newCoordinatesFactor
                     Task {
