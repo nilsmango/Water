@@ -254,6 +254,6 @@ struct StatisticsRunView: View {
 
 #Preview {
     NavigationStack {
-        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 47, runDistance: 22900, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#140p", "#17kn"]), averageSpeed: "14.2 km/h", runDates: "Jan 03 13:12 - 13:59")
+        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 47.1, runDistance: 22900, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#140p", "#17kn"]), averageSpeed: "14.2 km/h", runDates: "Jan 03 13:12 - 13:59")
     }
 }

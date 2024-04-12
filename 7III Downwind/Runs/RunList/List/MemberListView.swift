@@ -99,11 +99,11 @@ struct MemberListView: View {
 
 #Preview {
     List {
-        MemberListView(member: Member(id: UUID(), name: "Lay Kenny", status: "🥶🥶🥶", latitude: 47.127145, longitude: 7.220062, speed: 15.3, lastUpdated: "2024-01-21T13:36:12Z"), distance: nil, degrees: 23, measurementSystem: .metric, showDetail: true)
+        MemberListView(member: Member(id: UUID(), name: "Lay Kenny", status: "🥶🥶🥶", latitude: 47.127145, longitude: 7.220062, speed: 15.3, lastUpdated: "2024-01-21T13:36:12Z"), distance: 7.3, degrees: 172, measurementSystem: .metric, showDetail: true)
         
-        MemberListView(member: Member(id: UUID(), name: "Mister Bennetts", status: "Foil Flow", latitude: 47.127165, longitude: 7.2200672, speed: 15.3), distance: 20.0, degrees: 23, measurementSystem: .metric, showDetail: true)
+        MemberListView(member: Member(id: UUID(), name: "James Casey", status: "Foil Flow", latitude: 47.127165, longitude: 7.2200672, speed: 24.3), distance: 210.0, degrees: 210, measurementSystem: .metric, showDetail: true)
         
-        MemberListView(member: Member(id: UUID(), name: "Nils Mango", status: "Please Wait", latitude: 47.127165, longitude: 7.2200672, speed: 1.3), distance: 4000.0, degrees: 23, measurementSystem: .metric, showDetail: true)
+        MemberListView(member: Member(id: UUID(), name: "Nils Mango", status: "Please Wait", latitude: 47.127165, longitude: 7.2200672, speed: 31.3), distance: 4000.0, degrees: 23, measurementSystem: .metric, showDetail: true)
         
     }
 }

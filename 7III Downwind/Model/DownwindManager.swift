@@ -8,7 +8,6 @@
 import SwiftUI
 import KeychainSwift
 import CoreLocation
-import HCKalmanFilter
 import _MapKit_SwiftUI
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {

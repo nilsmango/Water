@@ -156,7 +156,7 @@ struct OptionsView: View {
                         isShowingAlert = true
                         
                     }, label: {
-                        Label("Delete All Your Data", systemImage: "xmark.circle")
+                        Label("Delete All My Data", systemImage: "xmark.circle")
                     })
                     .buttonStyle(.bordered)
                     
