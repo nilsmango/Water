@@ -123,9 +123,9 @@ func makePrettyTime(timeInMinutes: Double) -> String {
         }
         
     } else {
-        let roundedMinutes = Int(timeInMinutes.rounded())
-        let minutesString = String(roundedMinutes)
-        return "\(minutesString) min"
+        let minutes = Int(timeInMinutes)
+        let seconds = Int((timeInMinutes - Double(minutes)) * 60)
+        return "\(minutes) min \(seconds) s"
     }
 }
 
