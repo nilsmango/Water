@@ -40,6 +40,15 @@ struct StartRun: View {
                                 editorIsFocused = .field
                             }
                         }
+                        .onChange(of: runName) { oldValue, newValue in
+                                        // Filter out characters that won't work in a URL
+                                        let filteredText = newValue.filter { character in
+                                            character.isLetter || character.isNumber || character.isWhitespace ||
+                                                                character == "-" || character == "." || character == "_"
+                                        }
+                                        
+                                        runName = filteredText
+                                    }
                 } header: {
                     Text("Run Name")
                 } footer: {
