@@ -121,7 +121,7 @@ struct StartView: View {
                         runType = .watch
                         showStartRunSheet = true
                     }
-                    Button("Run Tracking only") {
+                    Button("Tracking Statistics only") {
                         showCaptureStatistics = true
                     }
                 })
@@ -163,7 +163,6 @@ struct StartView: View {
                 .fullScreenCover(isPresented: $showCaptureStatistics, content: {
                     NavigationStack {
                         CaptureRunStatisticsView(downwindManager: downwindManager, showCapture: $showCaptureStatistics)
-                            .navigationTitle("Capture Run")
                     }
                     
                 })

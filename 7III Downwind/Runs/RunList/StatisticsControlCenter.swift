@@ -24,7 +24,7 @@ struct StatisticsControlCenter: View {
                         downwindManager.startStatistic(onlyStatistics: onlyStatistics, tags: tags)
                         downwindManager.activeRun.startedOn = Date.now
                     } label: {
-                        Label("Start Tracking Data", systemImage: "play.fill")
+                        Label("Start Tracking Statistics", systemImage: "play.fill")
                     }
                     .buttonStyle(.bordered)
                     .padding()

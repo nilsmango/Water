@@ -16,14 +16,14 @@ struct CaptureRunStatisticsView: View {
         NavigationStack {
             StatisticsControlCenter(downwindManager: downwindManager, onlyStatistics: true)
         }
-        .navigationTitle("Tracking")
+        .navigationTitle("Tracking Statistics")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 if downwindManager.activeStatistics == false {
                     Button(action: {
                         showCapture = false
                     }, label: {
-                        Text("Cancel")
+                        Text("← Back")
                     })
                     .tint(.red)
                 }
