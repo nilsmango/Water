@@ -67,3 +67,16 @@ func decodeLocationSampleData() -> [LocationData]? {
     }
     return nil
 }
+
+
+/// making a string work as an URL by replacing strings with %20
+func replaceSpacesInString(input: String) -> String {
+    return input.replacingOccurrences(of: " ", with: "%20")
+}
+
+/// creates a string from an url
+func makeURLToRunName(url: URL) -> String {
+    let stringFromURL = url.absoluteString
+    let rawRunName = stringFromURL.replacingOccurrences(of: Constants.deepLinkBase, with: "")
+    return rawRunName.replacingOccurrences(of: "%20", with: " ")
+}

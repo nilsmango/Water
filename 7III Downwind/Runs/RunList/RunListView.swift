@@ -117,7 +117,7 @@ struct RunListView: View {
 
             })
             .confirmationDialog("Share Run via", isPresented: $showShareDialog, actions: {
-                ShareDialog(urlString: "\(Constants.deepLinkBase)\(downwindManager.activeRun.name)", isShowingShareSheet: $isShowingShareSheet)
+                ShareDialog(urlString: "\(Constants.deepLinkBase)\(replaceSpacesInString(input: downwindManager.activeRun.name))", isShowingShareSheet: $isShowingShareSheet)
             })
             .navigationTitle(downwindManager.activeRun.name)
             .navigationBarTitleDisplayMode(.inline)

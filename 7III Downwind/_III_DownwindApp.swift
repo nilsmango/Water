@@ -29,7 +29,7 @@ struct _III_DownwindApp: App {
                             do {
                                 try await downwindManager.joinRun(name: runToJoin)
                             } catch GetRunError.badResponse {
-                                alertText = "No run with that name found!"
+                                alertText = "No run with the name \"\(runToJoin)\" found!"
                                 showAlert = true
                             } catch {
                                 alertText = "Error joining run: \(error)"
@@ -42,7 +42,7 @@ struct _III_DownwindApp: App {
                             do {
                                 try await downwindManager.watchRun(name: runToJoin)
                             } catch GetRunError.badResponse {
-                                alertText = "No run with that name found!"
+                                alertText = "No run with the name \"\(runToJoin)\" found!"
                                 showAlert = true
                             } catch {
                                 alertText = "Error joining run: \(error)"
@@ -54,7 +54,8 @@ struct _III_DownwindApp: App {
                 .onOpenURL(perform: { url in
                     // show overlay to ask if you want to join or watch the run. give it the url too.
                     showOpenURLDialog = true
-                    runToJoin = url.lastPathComponent
+                    runToJoin = makeURLToRunName(url: url)
+                    
                 })
         }
     }

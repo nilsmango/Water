@@ -12,7 +12,7 @@ struct ShareDialog: View {
     @Binding var isShowingShareSheet: Bool
     
     var body: some View {
-        ShareLink(item: (URL(string: urlString)!)) {
+        ShareLink(item: ((URL(string: urlString) ?? URL(string: "https://project7iii.com/not-found"))!)) {
             Text("Link")
         }
         
