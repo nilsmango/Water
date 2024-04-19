@@ -397,7 +397,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
             }
             
-            
             if let fastestKM = timesArray.min() {
                 if let fastestIndex = timesArray.firstIndex(of: fastestKM) {
                     returnArray[fastestIndex].2 = "🚀"
@@ -759,6 +758,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         self.locationManager?.stopUpdatingHeading()
         ignoreFirstFewLocations = true
         resetKalmanFilter = true
+        
+        // set location of user to nil
+        self.user.latitude = nil
+        self.user.longitude = nil
+        self.user.speed = nil
     }
     
     /// checks and starts location service
@@ -949,10 +953,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // stop location and header updating
             self.stopLocationService()
             
-            // set location of user to nil
-            self.user.latitude = nil
-            self.user.longitude = nil
-            self.user.speed = nil
+            
             
         }
         // remove user from run / delete run if user is last member
@@ -1055,7 +1056,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager: CLLocationManager?
     
     private var ignoreFirstFewLocations = true
-    private let secondsWeIgnoreLocations = 5.0
+    private let secondsWeIgnoreLocations = 3.5
     private var locationManagerStartTime = Date.distantPast
     
     // Kalman Filter
@@ -1141,8 +1142,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         // initializing the kalman filter
                         self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
-                        
-                        
                         
                         DispatchQueue.main.async {
                             self.user.latitude = newLocation.coordinate.latitude
