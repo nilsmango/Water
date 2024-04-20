@@ -39,7 +39,6 @@ struct MapView: View {
         }
         .mapControlVisibility(.visible)
         
-        
         .onAppear {
             Timer.scheduledTimer(withTimeInterval: Constants.updateTimer, repeats: true) { _ in
                 showLastUpdate.toggle()

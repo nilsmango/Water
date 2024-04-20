@@ -41,14 +41,15 @@ struct StartRun: View {
                             }
                         }
                         .onChange(of: runName) { oldValue, newValue in
-                                        // Filter out characters that won't work in a URL
-                                        let filteredText = newValue.filter { character in
-                                            character.isLetter || character.isNumber || character.isWhitespace ||
-                                                                character == "-" || character == "." || character == "_"
-                                        }
-                                        
-                                        runName = filteredText
-                                    }
+                            // Filter out characters that won't work in a URL
+                            let allowedCharacterSet = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._").union(.whitespaces)
+                            
+                            let filteredText = newValue.filter { character in
+                                allowedCharacterSet.contains(character.unicodeScalars.first!)
+                            }
+                            
+                            runName = filteredText
+                        }
                 } header: {
                     Text("Run Name")
                 } footer: {
