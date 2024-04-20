@@ -1056,7 +1056,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager: CLLocationManager?
     
     private var ignoreFirstFewLocations = true
-    private let secondsWeIgnoreLocations = 3.5
+    private let secondsWeIgnoreLocations = 5.0
     private var locationManagerStartTime = Date.distantPast
     
     // Kalman Filter
