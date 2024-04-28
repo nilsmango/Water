@@ -40,7 +40,7 @@ struct TagsListView: View {
                     let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.locationData.first!.timestamp, endDate: statistic.locationData.last!.timestamp)
                     
                     NavigationLink {
-                        StatisticsRunView(downwindManager: downwindManager, statisticsData: statistic, averageSpeed: averageSpeed, runDates: runDates)
+                        StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
                     } label: {
                         RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed)
                     }
@@ -48,6 +48,13 @@ struct TagsListView: View {
             }
         }
         .navigationTitle("Filter by Tags")
+    }
+    
+    private func binding(for statistic: RunStatistic) -> Binding<RunStatistic> {
+        guard let index = downwindManager.runStatistics.firstIndex(where: { $0.id == statistic.id }) else {
+            fatalError("Can't find the statistic in array")
+        }
+        return $downwindManager.runStatistics[index]
     }
 }
 

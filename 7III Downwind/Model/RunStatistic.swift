@@ -23,3 +23,17 @@ struct RunStatistic: Identifiable, Codable {
     
     var tags: [String]?
 }
+
+
+extension RunStatistic {
+    static func empty() -> RunStatistic {
+        return RunStatistic(id: UUID(),
+                            runName: "",
+                            crewStatistics: [],
+                            runTime: 0,
+                            runDistance: 0,
+                            topSpeed: 0,
+                            locationData: [],
+                            tags: [])
+    }
+}

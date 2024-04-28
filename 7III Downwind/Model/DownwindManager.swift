@@ -196,7 +196,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     /// Save runStatistics to disk
-    private func saveRunStatistics() {
+    func saveRunStatistics() {
         DispatchQueue.global(qos: .background).async {
             do {
                 let data = try JSONEncoder().encode(self.runStatistics)
@@ -474,9 +474,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // making sure we over all draw less then the max polylines for reasons of performance
         if locations.count / coordinatesFactor >= maxPolylines {
-            coordinatesFactor = Int((Double(locations.count) / Double(maxPolylines)).rounded())
+            coordinatesFactor = Int((Double(locations.count) / Double(maxPolylines)).rounded(.up))
+            
         }
-
         return coordinatesFactor
     }
     
@@ -553,6 +553,107 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             return "\(startString) - \(endString.suffix(5))"
         } else {
             return "\(startString) - \(endString)"
+        }
+    }
+    
+    /// returns time in minutes from two dates
+    private func timeInMinutesFromDates(startDate: Date, finishDate: Date) -> Double {
+        let timeInterval = finishDate.timeIntervalSince(startDate)
+        let timeInMinutes = timeInterval / 60
+            
+        return timeInMinutes
+    }
+    
+    /// calculates a total distance in meter and find the top speed from an array of locations
+    private func calculateTotalDistanceAndTopSpeed(locations: [LocationData]) -> (totalDistance: Double, topSpeed: Double) {
+        var totalDistance = 0.0
+        var topSpeed = locations.first!.speed ?? 0.0
+        
+        for index in 1..<locations.count {
+            // Update top speed
+            if locations[index].speed ?? 0.0 > topSpeed {
+                topSpeed = locations[index].speed!
+            }
+            
+            // Update distance
+            let lastLatitude = locations[index-1].latitude
+            let lastLongitude = locations[index-1].longitude
+            let presentLatitude = locations[index].latitude
+            let presentLongitude = locations[index].longitude
+            let addedDistance = (calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)) ?? 0.0)
+            
+            totalDistance += addedDistance
+        }
+        
+        return (totalDistance, topSpeed)
+    }
+    
+    
+    /// set a new start point for a run statistic
+    func setStart(for statistic: RunStatistic, coordinate: CLLocationCoordinate2D) async -> RunStatistic {
+        // remove all points before the start
+        if let startIndex = statistic.locationData.firstIndex(where: { $0.latitude == coordinate.latitude && $0.longitude == coordinate.longitude }) {
+
+            let newLocationData = Array(statistic.locationData[startIndex..<statistic.locationData.endIndex])
+            
+            // recalculate distance, max speed, etc.
+            let startTime = newLocationData.first!.timestamp
+            let finishTime = newLocationData.last!.timestamp
+            let newRunTime = timeInMinutesFromDates(startDate: startTime, finishDate: finishTime)
+            let distanceAndSpeed = calculateTotalDistanceAndTopSpeed(locations: newLocationData)
+            let newRunDistance = distanceAndSpeed.totalDistance
+            let newTopSpeed = distanceAndSpeed.topSpeed
+            
+            return RunStatistic(id: statistic.id, runName: statistic.runName, crewStatistics: statistic.crewStatistics, runTime: newRunTime, runDistance: newRunDistance, topSpeed: newTopSpeed, locationData: newLocationData, tags: statistic.tags)
+            
+        } else {
+            return statistic
+        }
+        
+    }
+    
+    /// set a new finish point for a run statistic
+    func setFinish(for statistic: RunStatistic, coordinate: CLLocationCoordinate2D) async -> RunStatistic {
+        // remove all points before the start
+        if let finishIndex = statistic.locationData.lastIndex(where: { $0.latitude == coordinate.latitude && $0.longitude == coordinate.longitude }) {
+            
+            let newLocationData = Array(statistic.locationData[statistic.locationData.startIndex...finishIndex])
+            
+            // recalculate distance, max speed, etc.
+            let startTime = newLocationData.first!.timestamp
+            let finishTime = newLocationData.last!.timestamp
+            let newRunTime = timeInMinutesFromDates(startDate: startTime, finishDate: finishTime)
+            let distanceAndSpeed = calculateTotalDistanceAndTopSpeed(locations: newLocationData)
+            let newRunDistance = distanceAndSpeed.totalDistance
+            let newTopSpeed = distanceAndSpeed.topSpeed
+            
+            return RunStatistic(id: statistic.id, runName: statistic.runName, crewStatistics: statistic.crewStatistics, runTime: newRunTime, runDistance: newRunDistance, topSpeed: newTopSpeed, locationData: newLocationData, tags: statistic.tags)
+            
+        } else {
+            return statistic
+        }
+    }
+    
+    /// remove a point from a run statistic
+    func removePoint(for statistic: RunStatistic, coordinate: CLLocationCoordinate2D) async -> RunStatistic {
+        // remove all points before the start
+        if let removeIndex = statistic.locationData.firstIndex(where: { $0.latitude == coordinate.latitude && $0.longitude == coordinate.longitude }) {
+            
+            var newLocationData = statistic.locationData
+            newLocationData.remove(at: removeIndex)
+            
+            // recalculate distance, max speed, etc.
+            let startTime = newLocationData.first!.timestamp
+            let finishTime = newLocationData.last!.timestamp
+            let newRunTime = timeInMinutesFromDates(startDate: startTime, finishDate: finishTime)
+            let distanceAndSpeed = calculateTotalDistanceAndTopSpeed(locations: newLocationData)
+            let newRunDistance = distanceAndSpeed.totalDistance
+            let newTopSpeed = distanceAndSpeed.topSpeed
+            
+            return RunStatistic(id: statistic.id, runName: statistic.runName, crewStatistics: statistic.crewStatistics, runTime: newRunTime, runDistance: newRunDistance, topSpeed: newTopSpeed, locationData: newLocationData, tags: statistic.tags)
+            
+        } else {
+            return statistic
         }
     }
     

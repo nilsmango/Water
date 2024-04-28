@@ -10,18 +10,23 @@ import SwiftUI
 struct StatisticsRunView: View {
     @ObservedObject var downwindManager: DownwindManager
     
-    let statisticsData: RunStatistic
-    let averageSpeed: String
-    let runDates: String
+    @Binding var statisticsData: RunStatistic
+        
+    var averageSpeed: String { makePrettySpeed(speed: (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) }
+    
+    var runDates: String { downwindManager.makeTimeIntervalDate(startDate: statisticsData.locationData.first?.timestamp ?? Date.now, endDate: statisticsData.locationData.last?.timestamp ?? Date.now) }
     
     @State private var locationName: String = ""
     
     @State private var showRounds = false
     @State private var showMapSheet = false
     @State private var showTagsEditView = false
+    @State private var showRunEditView = false
     
     @State private var tags = [String]()
     @State private var editTags = [String]()
+    
+    @State private var statisticsDataEdit = RunStatistic.empty()
     
     var body: some View {
         let cutDate = runDates.components(separatedBy: " ")
@@ -105,15 +110,13 @@ struct StatisticsRunView: View {
                 Button {
                     showMapSheet = true
                 } label: {
-                    StatisticsMap(downwindManager: downwindManager, statisticsData: statisticsData)
+                    // sometimes the map does not update, so I try this trick.
+                    let mapData = statisticsData
+                    StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(mapData))
                         .frame(height: 300)
                         .cornerRadius(5.0)
                         .disabled(true)
                 }
-
-                    
-                
-                
                 
             } header: {
                 HStack {
@@ -163,7 +166,7 @@ struct StatisticsRunView: View {
                             Spacer()
                             
                             
-                            Button("Edit") {
+                            Button("Edit Tags") {
                                 editTags = tags
                                 showTagsEditView = true
                             }
@@ -178,6 +181,19 @@ struct StatisticsRunView: View {
         .onAppear {
             if statisticsData.tags != nil {
                 tags = statisticsData.tags!
+            }
+        }
+        .navigationTitle(statisticsData.runName)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    // update the edit data
+                    statisticsDataEdit = statisticsData
+                    showRunEditView = true
+                }, label: {
+                    Text("Edit Data")
+                })
             }
         }
         
@@ -203,7 +219,7 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showMapSheet, content: {
             ZStack {
-                StatisticsMap(downwindManager: downwindManager, statisticsData: statisticsData)
+                StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                 VStack {
                     HStack {
                         Spacer()
@@ -253,14 +269,42 @@ struct StatisticsRunView: View {
             }
             
         })
-        .navigationTitle(statisticsData.runName)
-        .navigationBarTitleDisplayMode(.inline)
-        
+        .sheet(isPresented: $showRunEditView, content: {
+            NavigationStack {
+                StatisticsEditView(downwindManager: downwindManager, statisticsData: $statisticsDataEdit)
+                    .navigationTitle("Edit Run Data")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(role: .destructive, action: {
+                                showRunEditView = false
+                            }, label: {
+                                Text("Cancel")
+                            })
+                            .tint(.red)
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                // update the binding
+                                statisticsData = statisticsDataEdit
+                                
+                                showRunEditView = false
+                                
+                                // save the new data
+                                downwindManager.saveRunStatistics()
+                                
+                            }, label: {
+                                Text("Save")
+                            })
+                        }
+                    }
+            }
+        })
     }
 }
 
 #Preview {
     NavigationStack {
-        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 47.1, runDistance: 22900, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#140p", "#17kn"]), averageSpeed: "14.2 km/h", runDates: "Jan 03 13:12 - 13:59")
+        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 22900, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#140p", "#17kn"])))
     }
 }
