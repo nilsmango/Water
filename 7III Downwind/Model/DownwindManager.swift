@@ -372,7 +372,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             if accumulatedDistance > 0.0 {
                 let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: locations.last!.timestamp)
-                roundsArray.append((String(format: "%.1f", totalDistance), prettyTime))
+                let timePerKilometer = locations.last!.timestamp.timeIntervalSince(lastKmDate) / accumulatedDistance
+                let paceString = makePrettyMinutesString(timeInSeconds: timePerKilometer, paceFormat: false)
+                let lastRoundTimeString = prettyTime + " (" + paceString + " /km)"
+                roundsArray.append((String(format: "%.1f", totalDistance), lastRoundTimeString))
                 
                 timesArray.append((locations.last!.timestamp.timeIntervalSince(lastKmDate)) / accumulatedDistance)
             }
