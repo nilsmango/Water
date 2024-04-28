@@ -102,10 +102,17 @@ struct StatisticsRunView: View {
             }
             
             Section {
-                StatisticsMap(downwindManager: downwindManager, statisticsData: statisticsData)
-                    .frame(height: 300)
-                    .cornerRadius(5.0)
-                    .disabled(true)
+                Button {
+                    showMapSheet = true
+                } label: {
+                    StatisticsMap(downwindManager: downwindManager, statisticsData: statisticsData)
+                        .frame(height: 300)
+                        .cornerRadius(5.0)
+                        .disabled(true)
+                }
+
+                    
+                
                 
                 
             } header: {
