@@ -25,17 +25,16 @@ struct StatisticsView: View {
             .onDelete { indexSet in
                 downwindManager.delete(at: indexSet)
             }
-            
         }
-            .navigationTitle("Run Statistics")
-            .toolbar {
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink("Filter by Tags") {
-                        TagsListView(downwindManager: downwindManager)
-                    }
+        .navigationTitle("Run Statistics")
+        .navigationBarItems(trailing: EditButton())
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink("Filter by Tags") {
+                    TagsListView(downwindManager: downwindManager)
                 }
             }
+        }
     }
     
     private func binding(for statistic: RunStatistic) -> Binding<RunStatistic> {
