@@ -9,6 +9,8 @@ import SwiftUI
 import KeychainSwift
 import CoreLocation
 import _MapKit_SwiftUI
+import HealthKit
+
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
@@ -660,6 +662,39 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    // MARK: - Health
+    
+    let healthStore = HKHealthStore()
+        
+        override init() {
+            super.init()
+            requestAuthorization()
+            setupLocationManager()
+        }
+
+        private func requestAuthorization() {
+            let typesToShare: Set = [
+                HKObjectType.workoutType(),
+                HKObjectType.quantityType(forIdentifier: .heartRate)!,
+                HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
+                HKSeriesType.workoutRoute()
+            ]
+
+            let typesToRead: Set = [
+                HKObjectType.workoutType(),
+                HKObjectType.quantityType(forIdentifier: .heartRate)!,
+                HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
+                HKSeriesType.workoutRoute()
+            ]
+
+            healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
+                if !success {
+                    print("Health Store authorization failed with error: \(String(describing: error))")
+                }
+            }
+        }
+    
+    
     // MARK: - Run
     
     @Published var activeRun: Run = Run(name: "", members: [], active: false)
@@ -1169,10 +1204,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var rValue = 1.0
     @Published var sigma = 0.6
     
-    override init() {
-        super.init()
-        setupLocationManager()
-    }
     
     private func setupLocationManager() {
         locationManager = CLLocationManager()

@@ -651,6 +651,8 @@
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to health so we can save and load your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to health so we can save and load your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to work as intended (showing you how far everybody else is and showing your crew where you are).";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -695,6 +697,8 @@
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to health so we can save and load your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to health so we can save and load your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to work as intended (showing you how far everybody else is and showing your crew where you are).";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
