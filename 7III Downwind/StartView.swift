@@ -190,6 +190,7 @@ struct StartView: View {
                 
                 .onAppear {
                     downwindManager.loadUser()
+                    downwindManager.requestHealthAuthorization()
                     downwindManager.loadRunStatistics()
                     if downwindManager.user.id == nil {
                         showFirstTimeUserName = true

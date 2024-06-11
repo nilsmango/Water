@@ -14,10 +14,15 @@ import HealthKit
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
-    // MARK: - App Storage
+    // MARK: - App Storage and Init
     @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
     @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
+    
+    override init() {
+        super.init()
+        setupLocationManager()
+    }
     
     // MARK: - Statistics
     @Published var activeStatistics: Bool = false
@@ -213,22 +218,143 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// Load runStatistics from disk
     func loadRunStatistics() {
         DispatchQueue.global(qos: .background).async {
-            do {
-                let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
-                let data = try Data(contentsOf: url)
-                let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
-                
-                let tags = self.updateMetaData(statistics: decodedStatistics)
-                
-                DispatchQueue.main.async {
-                    // Update UI on the main thread
-                    self.runStatistics = decodedStatistics
-                    self.tags = tags
+            self.loadWorkoutsFromHealthKit { workouts in
+                do {
+                    let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
+                    let data = try Data(contentsOf: url)
+                    var decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+                    
+                    // Merge the workouts with health data
+                    if HKHealthStore.isHealthDataAvailable() {
+                        decodedStatistics = self.mergeWorkoutsWithStatistics(workouts, statistics: decodedStatistics)
+                        print("finished decoding from health")
+                    }
+                    print("updating tags")
+                    let tags = self.updateMetaData(statistics: decodedStatistics)
+                    
+                    DispatchQueue.main.async {
+                        // Update UI on the main thread
+                        self.runStatistics = decodedStatistics
+                        self.tags = tags
+                    }
+                } catch {
+                    print("Error loading runStatistics: \(error)")
                 }
-            } catch {
-                print("Error loading runStatistics: \(error)")
             }
         }
+    }
+    
+    private func loadWorkoutsFromHealthKit(completion: @escaping ([HKWorkout]) -> Void) {
+        let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+            HKQuery.predicateForWorkouts(with: .paddleSports),
+            HKQuery.predicateForWorkouts(with: .surfingSports)
+        ])
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let query = HKSampleQuery(sampleType: HKQuantityType.workoutType(),
+                                  predicate: predicate,
+                                  limit: HKObjectQueryNoLimit,
+                                  sortDescriptors: [sortDescriptor]) { (query, samples, error) in
+            guard let workouts = samples as? [HKWorkout] else {
+                print("Error fetching workouts: \(String(describing: error))")
+                completion([])
+                return
+            }
+            completion(workouts)
+        }
+        healthStore.execute(query)
+    }
+    
+    private func loadWorkoutRouteFromHealth(workout: HKWorkout, completion: @escaping (HKWorkoutRoute) -> Void) {
+        let runningObjectQuery = HKQuery.predicateForObjects(from: workout)
+
+       
+        let routeQuery = HKAnchoredObjectQuery(type: HKSeriesType.workoutRoute(), predicate: runningObjectQuery, anchor: nil, limit: HKObjectQueryNoLimit) { (query, samples, deletedObjects, anchor, error) in
+            
+            guard error == nil else {
+                // Handle any errors here.
+                fatalError("The initial query failed.")
+            }
+            print(samples?.count ?? "nothing")
+            // Process the initial route data here.
+            guard let routes = samples as? [HKWorkoutRoute], let route = routes.first else {
+                print("Error fetching workout route: \(String(describing: error))")
+                
+                return
+            }
+            completion(route)
+            
+        }
+
+//        routeQuery.updateHandler = { (query, samples, deleted, anchor, error) in
+//            
+//            guard error == nil else {
+//                // Handle any errors here.
+//                fatalError("The update failed.")
+//            }
+//            
+//            // Process updates or additions here.
+//        }
+
+
+        healthStore.execute(routeQuery)
+    }
+    
+    private func locationDataFromWorkoutRoute(route: HKWorkoutRoute, completion: @escaping ([LocationData]) -> Void) {
+        var allLocations = [LocationData]()
+        
+        let query = HKWorkoutRouteQuery(route: route) { (query, locationsOrNil, done, errorOrNil) in
+            
+            // This block may be called multiple times.
+            
+            if let error = errorOrNil {
+                // Handle any errors here.
+                return
+            }
+            
+            guard let locations = locationsOrNil else {
+                fatalError("*** Invalid State: This can only fail if there was an error. ***")
+            }
+            
+            print("getting locations: \(locations.count)")
+            // Do something with this batch of location data.
+            for location in locations {
+                let locationData = LocationData(timestamp: location.timestamp, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, speed: location.speed)
+                allLocations.append(locationData)
+            }
+            
+            if done {
+                // The query returned all the location data associated with the route.
+                // Do something with the complete data set.
+                print("sent locations")
+                completion(allLocations)
+            }
+            
+            // You can stop the query by calling:
+            // store.stop(query)
+            
+        }
+        healthStore.execute(query)
+    }
+
+    private func mergeWorkoutsWithStatistics(_ workouts: [HKWorkout], statistics: [RunStatistic]) -> [RunStatistic] {
+        var mergedStatistics = statistics
+        print("running merge")
+        for workout in workouts {
+            self.loadWorkoutRouteFromHealth(workout: workout) { route in
+                self.locationDataFromWorkoutRoute(route: route) { allLocations in
+                    let runStatistic = RunStatistic(from: workout, locationData: allLocations)
+                    print("got runstatistc with \(allLocations.count)")
+                if let index = mergedStatistics.firstIndex(where: { $0.id == runStatistic.id }) {
+                    mergedStatistics[index].merge(with: runStatistic)
+                } else {
+                    mergedStatistics.append(runStatistic)
+                    
+                }
+                }
+            }
+        }
+
+        return mergedStatistics
     }
     
     /// save statistic to disk with new tags
@@ -665,34 +791,28 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - Health
     
     let healthStore = HKHealthStore()
+    
+    func requestHealthAuthorization() {
+        let typesToShare: Set = [
+            HKQuantityType.workoutType(),
+            HKQuantityType(.heartRate),
+            HKQuantityType(.activeEnergyBurned),
+            HKSeriesType.workoutRoute()
+        ]
         
-        override init() {
-            super.init()
-            requestAuthorization()
-            setupLocationManager()
-        }
-
-        private func requestAuthorization() {
-            let typesToShare: Set = [
-                HKObjectType.workoutType(),
-                HKObjectType.quantityType(forIdentifier: .heartRate)!,
-                HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
-                HKSeriesType.workoutRoute()
-            ]
-
-            let typesToRead: Set = [
-                HKObjectType.workoutType(),
-                HKObjectType.quantityType(forIdentifier: .heartRate)!,
-                HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
-                HKSeriesType.workoutRoute()
-            ]
-
-            healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
-                if !success {
-                    print("Health Store authorization failed with error: \(String(describing: error))")
-                }
+        let typesToRead: Set = [
+            HKQuantityType.workoutType(),
+            HKQuantityType(.heartRate),
+            HKQuantityType(.activeEnergyBurned),
+            HKSeriesType.workoutRoute()
+        ]
+        
+        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
+            if !success {
+                print("Health Store authorization failed with error: \(String(describing: error))")
             }
         }
+    }
     
     
     // MARK: - Run
