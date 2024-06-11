@@ -20,13 +20,17 @@ struct RunStatistic: Identifiable, Codable {
     /// top speed in km/h
     var topSpeed: Double
     
-    var calories: Double?
+    var averageSpeed: Double?
+    var kcalories: Double?
     var heartRates: [Double]?
     var averageHeartRate: Double?
     
     var locationData: [LocationData]
     
     var tags: [String]?
+    var workoutType: WorkoutType?
+    var startDate: Date?
+    var endDate: Date?
     
     init(from workout: HKWorkout, locationData: [LocationData]) {
             self.id = workout.uuid
@@ -35,7 +39,7 @@ struct RunStatistic: Identifiable, Codable {
             self.runTime = workout.duration / 60 // Convert seconds to minutes
             self.runDistance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
             self.topSpeed = 0 // Need to calculate this
-            self.calories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
+            self.kcalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
             self.heartRates = [] // Need to fetch samples
             self.averageHeartRate = 0 // Need to calculate this
             self.locationData = locationData
@@ -50,7 +54,7 @@ struct RunStatistic: Identifiable, Codable {
             self.runTime = 0
             self.runDistance = 0
             self.topSpeed = 0
-            self.calories = 0
+            self.kcalories = 0
             self.heartRates = []
             self.averageHeartRate = 0
             self.locationData = []
@@ -65,7 +69,7 @@ struct RunStatistic: Identifiable, Codable {
             self.runTime = runTime
             self.runDistance = runDistance
             self.topSpeed = topSpeed
-            self.calories = 0 // Assuming calories are not provided in this initializer
+            self.kcalories = 0 // Assuming calories are not provided in this initializer
             self.heartRates = [] // Assuming heart rates are not provided in this initializer
             self.averageHeartRate = 0 // Assuming average heart rate is not provided in this initializer
             self.locationData = locationData
@@ -80,7 +84,7 @@ struct RunStatistic: Identifiable, Codable {
         self.runTime = runTime
         self.runDistance = runDistance
         self.topSpeed = topSpeed
-        self.calories = 0 // Assuming calories are not provided in this initializer
+        self.kcalories = 0 // Assuming calories are not provided in this initializer
         self.heartRates = [] // Assuming heart rates are not provided in this initializer
         self.averageHeartRate = 0 // Assuming average heart rate is not provided in this initializer
         self.locationData = locationData
