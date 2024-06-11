@@ -261,6 +261,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     self.runStatistics.append(statistic)
                                 }
                             }
+                            
                             // also add the workout route
                             self.loadWorkoutRouteFromHealth(workout: workout) { route in
                                 self.locationDataFromWorkoutRoute(route: route) { locationData in
