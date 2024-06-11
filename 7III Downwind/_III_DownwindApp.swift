@@ -20,6 +20,11 @@ struct _III_DownwindApp: App {
     var body: some Scene {
         WindowGroup {
             StartView(downwindManager: downwindManager)
+                .onAppear {
+                    downwindManager.loadUser()
+                    downwindManager.requestHealthAuthorization()
+                    downwindManager.loadRunStatistics()
+                }
                 .overlay {
                     OverlayAlertView(showAlert: $showAlert, text: alertText)
                 }

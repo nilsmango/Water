@@ -186,12 +186,8 @@ struct StartView: View {
                     Rectangle()
                         .ignoresSafeArea()
                         .foregroundStyle(.listBackground)
-                }
-                
+                } 
                 .onAppear {
-                    downwindManager.loadUser()
-                    downwindManager.requestHealthAuthorization()
-                    downwindManager.loadRunStatistics()
                     if downwindManager.user.id == nil {
                         showFirstTimeUserName = true
                     } else {

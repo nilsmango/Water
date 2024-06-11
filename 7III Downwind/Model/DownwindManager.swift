@@ -222,19 +222,54 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 do {
                     let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
                     let data = try Data(contentsOf: url)
-                    var decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
-                    
-                    // Merge the workouts with health data
-                    if HKHealthStore.isHealthDataAvailable() {
-                        decodedStatistics = self.mergeWorkoutsWithStatistics(workouts, statistics: decodedStatistics)
-                        print("finished decoding from health")
-                    }
-                    print("updating tags")
-                    let tags = self.updateMetaData(statistics: decodedStatistics)
-                    
+                    let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
                     DispatchQueue.main.async {
                         // Update UI on the main thread
                         self.runStatistics = decodedStatistics
+                    }
+                    
+                    // Merge the workouts with health data
+                    if HKHealthStore.isHealthDataAvailable() {
+                        print("workout number: \(workouts.count)")
+                        for workout in workouts {
+                            if let runIndex = self.runStatistics.firstIndex(where: { $0.id == workout.uuid }) {
+                                
+                                DispatchQueue.main.async {
+                                    self.runStatistics[runIndex].runTime = workout.startDate.distance(to: workout.endDate) / 60
+                                }
+                            } else {
+                                
+                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.startDate.distance(to: workout.endDate) / 60, runDistance: 0, topSpeed: workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0, locationData: [])
+                                
+                                DispatchQueue.main.async {
+                                    self.runStatistics.append(statistic)
+                                }
+                            }
+                            // also add the workout route
+                            self.loadWorkoutRouteFromHealth(workout: workout) { route in
+                                self.locationDataFromWorkoutRoute(route: route) { locationData in
+                                    // TODO: calculate run time, distance and top speed from locationData
+                                    if let runIndex = self.runStatistics.firstIndex(where: { $0.id == workout.uuid }) {
+                                        DispatchQueue.main.async {
+                                            self.runStatistics[runIndex].locationData = locationData
+                                        }
+                                    } else {
+                                        let run = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
+                                        DispatchQueue.main.async {
+                                            self.runStatistics.append(run)
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+                    
+                    print("updating tags")
+                    let tags = self.updateMetaData(statistics: self.runStatistics)
+                    
+                    DispatchQueue.main.async {
+                        // Update UI on the main thread
                         self.tags = tags
                     }
                 } catch {
@@ -243,6 +278,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
     }
+    
+//        for workout in workouts {
+//            self.loadWorkoutRouteFromHealth(workout: workout) { route in
+//                self.locationDataFromWorkoutRoute(route: route) { locationData in
+//                    // TODO: calculate run time, distance and top speed from locationData
+//                    let run = RunStatistic(id: UUID(), runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
+//                    healthStatistics.append(run)
+//                }
+//            }
+//        }
     
     private func loadWorkoutsFromHealthKit(completion: @escaping ([HKWorkout]) -> Void) {
         let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
@@ -261,6 +306,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             completion(workouts)
         }
+        
         healthStore.execute(query)
     }
     
@@ -356,6 +402,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
         return mergedStatistics
     }
+    
     
     /// save statistic to disk with new tags
     func saveStatisticWithNewTags(tags: [String], statisticsData: RunStatistic) {
