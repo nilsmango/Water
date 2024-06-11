@@ -8,5 +8,5 @@
 import Foundation
 
 enum WorkoutType: Codable {
-case foilSurf, supFoilSurf, supDownwind, wingFoil, windFoil, kiteFoil, kite, surf, windsurf, pumpFoil, wakeThief, wakeFoil
+case foilSurf, supFoil, downwindSUPFoil, downwindSUP, wingFoil, windFoil, kiteFoil, kite, surf, windsurf, pumpFoil, wakeThief, wakeFoil
 }
