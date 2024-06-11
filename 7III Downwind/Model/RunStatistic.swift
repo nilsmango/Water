@@ -19,9 +19,9 @@ struct RunStatistic: Identifiable, Codable {
     var runDistance: Double
     /// top speed in km/h
     var topSpeed: Double
-    
+    /// average speed in km/h
     var averageSpeed: Double?
-    var kcalories: Double?
+    var kCalories: Double?
     var heartRates: [Double]?
     var averageHeartRate: Double?
     
@@ -39,7 +39,7 @@ struct RunStatistic: Identifiable, Codable {
             self.runTime = workout.duration / 60 // Convert seconds to minutes
             self.runDistance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
             self.topSpeed = 0 // Need to calculate this
-            self.kcalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
+            self.kCalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
             self.heartRates = [] // Need to fetch samples
             self.averageHeartRate = 0 // Need to calculate this
             self.locationData = locationData
@@ -54,27 +54,43 @@ struct RunStatistic: Identifiable, Codable {
             self.runTime = 0
             self.runDistance = 0
             self.topSpeed = 0
-            self.kcalories = 0
+            self.kCalories = 0
             self.heartRates = []
             self.averageHeartRate = 0
             self.locationData = []
             self.tags = []
         }
         
-        // Custom initializer for direct initialization
-        init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, locationData: [LocationData], tags: [String]?) {
-            self.id = id
-            self.runName = runName
-            self.crewStatistics = crewStatistics
-            self.runTime = runTime
-            self.runDistance = runDistance
-            self.topSpeed = topSpeed
-            self.kcalories = 0 // Assuming calories are not provided in this initializer
-            self.heartRates = [] // Assuming heart rates are not provided in this initializer
-            self.averageHeartRate = 0 // Assuming average heart rate is not provided in this initializer
-            self.locationData = locationData
-            self.tags = tags
-        }
+        // Custom initializer for direct initialization 1
+    init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, averageSpeed: Double, kCalories: Double, locationData: [LocationData], tags: [String], workoutType: WorkoutType, startDate: Date, endDate: Date) {
+        self.id = id
+        self.runName = runName
+        self.crewStatistics = crewStatistics
+        self.runTime = runTime
+        self.runDistance = runDistance
+        self.topSpeed = topSpeed
+        self.kCalories = kCalories
+//        self.heartRates = [] // Assuming heart rates are not provided in this initializer
+//        self.averageHeartRate = 0 // Assuming average heart rate is not provided in this initializer
+        self.locationData = locationData
+        self.tags = tags
+        self.workoutType = workoutType
+        self.startDate = startDate
+        self.endDate = endDate
+    }
+    // Custom initializer for direct initialization 2
+    init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, locationData: [LocationData], tags: [String]?) {
+        self.id = id
+        self.runName = runName
+        self.crewStatistics = crewStatistics
+        self.runTime = runTime
+        self.runDistance = runDistance
+        self.topSpeed = topSpeed
+        self.locationData = locationData
+        self.tags = tags
+
+    }
+    
     
     // Custom initializer for direct initialization without tags
     init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, locationData: [LocationData]) {
@@ -84,9 +100,9 @@ struct RunStatistic: Identifiable, Codable {
         self.runTime = runTime
         self.runDistance = runDistance
         self.topSpeed = topSpeed
-        self.kcalories = 0 // Assuming calories are not provided in this initializer
-        self.heartRates = [] // Assuming heart rates are not provided in this initializer
-        self.averageHeartRate = 0 // Assuming average heart rate is not provided in this initializer
+//        self.kCalories = 0 // Assuming calories are not provided in this initializer
+//        self.heartRates = [] // Assuming heart rates are not provided in this initializer
+//        self.averageHeartRate = 0 // Assuming average heart rate is not provided in this initializer
         self.locationData = locationData
         self.tags = []
     }

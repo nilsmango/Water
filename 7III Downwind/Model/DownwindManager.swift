@@ -222,7 +222,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 do {
                     let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
                     let data = try Data(contentsOf: url)
-                    let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+                    var decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+                    // some cleaning up for old data
+                    for (index, statistic) in decodedStatistics.enumerated() {
+                        if statistic.startDate == nil {
+                            decodedStatistics[index].startDate = statistic.locationData.first?.timestamp
+                            decodedStatistics[index].endDate = statistic.locationData.last?.timestamp
+                        }
+                    }
+                    
                     DispatchQueue.main.async {
                         // Update UI on the main thread
                         self.runStatistics = decodedStatistics
@@ -233,13 +241,21 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         print("workout number: \(workouts.count)")
                         for workout in workouts {
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == workout.uuid }) {
-                                
                                 DispatchQueue.main.async {
-                                    self.runStatistics[runIndex].runTime = workout.startDate.distance(to: workout.endDate) / 60
+                                    // TODO: implement workout HKMetadataKeyActivityType to tags and workout type
+                                    self.runStatistics[runIndex].runTime = workout.duration / 60
+                                    self.runStatistics[runIndex].runDistance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
+                                    self.runStatistics[runIndex].topSpeed = workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0
+                                    self.runStatistics[runIndex].averageSpeed = workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0
+                                    self.runStatistics[runIndex].kCalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
+                                    self.runStatistics[runIndex].tags = ["#WIP"]
+                                    self.runStatistics[runIndex].workoutType = .foilSurf
+                                    self.runStatistics[runIndex].startDate = workout.startDate
+                                    self.runStatistics[runIndex].endDate = workout.endDate
                                 }
                             } else {
-                                
-                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.startDate.distance(to: workout.endDate) / 60, runDistance: 0, topSpeed: workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0, locationData: [])
+                                // TODO: implement workout HKMetadataKeyActivityType to tags and workout type
+                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: workout.totalDistance?.doubleValue(for: .meter()) ?? 0, topSpeed: workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0, averageSpeed: workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: ["#WIP"], workoutType: .foilSurf, startDate: workout.startDate, endDate: workout.endDate)
                                 
                                 DispatchQueue.main.async {
                                     self.runStatistics.append(statistic)
