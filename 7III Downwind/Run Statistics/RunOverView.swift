@@ -14,13 +14,17 @@ struct RunOverView: View {
     let time: String
     let averageSpeed: String
     let kCal: String
+    let activityType: String
     
     var body: some View {
         VStack {
             HStack {
                 Text(runDate)
                     .fontWeight(.bold)
-                
+                Text(activityType)
+                    .fontWeight(.bold)
+                    .fontDesign(.rounded)
+                    .foregroundStyle(.accent)
                 Spacer()
             }
             
@@ -64,7 +68,7 @@ struct RunOverView: View {
             NavigationLink {
                 Text("Run run run")
             } label: {
-                RunOverView(runDate: "Jan 03 20:30 - 23:00", runName: "Flying Eagles Club", distance: "21 km", time: "43 min 12 s", averageSpeed: "15 km/h", kCal: "1083 kcal")
+                RunOverView(runDate: "Jan 03 20:30 - 23:00", runName: "Flying Eagles Club", distance: "21 km", time: "43 min 12 s", averageSpeed: "15 km/h", kCal: "1083 kcal", activityType: "DW SUP Foil")
             }
         }
         

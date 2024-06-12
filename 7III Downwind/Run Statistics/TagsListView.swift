@@ -42,7 +42,7 @@ struct TagsListView: View {
                     NavigationLink {
                         StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
                     } label: {
-                        RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal")
+                        RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "")
                     }
                 }
             }

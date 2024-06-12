@@ -265,22 +265,21 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     if HKHealthStore.isHealthDataAvailable() {
                         print("workout number: \(workouts.count)")
                         for workout in workouts {
+                            let metaData = self.getWorkoutMetadata(workout: workout)
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == workout.uuid }) {
                                 DispatchQueue.main.async {
-                                    // TODO: implement workout HKMetadataKeyActivityType to tags and workout type
                                     self.runStatistics[runIndex].runTime = workout.duration / 60
                                     self.runStatistics[runIndex].runDistance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
                                     self.runStatistics[runIndex].topSpeed = workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0
                                     self.runStatistics[runIndex].averageSpeed = workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0
                                     self.runStatistics[runIndex].kCalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
-                                    self.runStatistics[runIndex].tags = ["#WIP"]
-                                    self.runStatistics[runIndex].workoutType = .foilSurf
+                                    self.runStatistics[runIndex].tags = metaData.tags
+                                    self.runStatistics[runIndex].workoutType = metaData.workoutType
                                     self.runStatistics[runIndex].startDate = workout.startDate
                                     self.runStatistics[runIndex].endDate = workout.endDate
                                 }
                             } else {
-                                // TODO: implement workout HKMetadataKeyActivityType to tags and workout type
-                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: workout.totalDistance?.doubleValue(for: .meter()) ?? 0, topSpeed: workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0, averageSpeed: workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: ["#WIP"], workoutType: .foilSurf, startDate: workout.startDate, endDate: workout.endDate)
+                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: workout.totalDistance?.doubleValue(for: .meter()) ?? 0, topSpeed: workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0, averageSpeed: workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: metaData.tags, workoutType: metaData.workoutType, startDate: workout.startDate, endDate: workout.endDate)
                                 
                                 DispatchQueue.main.async {
                                     self.runStatistics.append(statistic)
@@ -305,6 +304,29 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     print("Error loading runStatistics: \(error)")
                 }
             }
+        }
+    }
+    
+    private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType) {
+        let rawString = workout.metadata?[HKMetadataKeyActivityType] as? String ?? ""
+        if rawString == "" {
+            var workoutType: WorkoutType = .surfingSport
+            if workout.workoutActivityType == .paddleSports {
+                workoutType = .paddleSport
+            }
+            return (tags: [], workoutType: workoutType)
+            
+        } else {
+            var tags: [String] = []
+            let components = rawString.components(separatedBy: " ")
+            for component in components {
+                        if component.hasPrefix("#") {
+                            tags.append(component)
+                        }
+                    }
+            let workoutType = WorkoutType(rawValue: components.first ?? "SurfingSport") ?? .surfingSport
+            
+            return (tags: tags, workoutType: workoutType)
         }
     }
     
