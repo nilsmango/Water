@@ -125,7 +125,11 @@ func makePrettyTime(timeInMinutes: Double) -> String {
     } else {
         let minutes = Int(timeInMinutes)
         let seconds = Int((timeInMinutes - Double(minutes)) * 60)
-        return "\(minutes) min \(seconds) s"
+        if seconds == 0 {
+            return "\(minutes) min"
+        } else {
+            return "\(minutes) min \(seconds) s"
+        }
     }
 }
 

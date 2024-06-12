@@ -23,7 +23,7 @@ struct StatisticTestsView: View {
                     showSheet = true
                     
                 } label: {
-                    RunOverView(runDate: downwindManager.createDateString(from: statistic.locationData.first?.timestamp), runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed)
+                    RunOverView(runDate: downwindManager.createDateString(from: statistic.locationData.first?.timestamp), runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal")
                 }
             }
             .onDelete { indexSet in

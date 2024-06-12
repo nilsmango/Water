@@ -14,7 +14,7 @@ struct StatisticsRunView: View {
         
     var averageSpeed: String { makePrettySpeed(speed: (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) }
     
-    var runDates: String { downwindManager.makeTimeIntervalDate(startDate: statisticsData.locationData.first?.timestamp ?? Date.now, endDate: statisticsData.locationData.last?.timestamp ?? Date.now) }
+    var runDates: String { downwindManager.makeTimeIntervalDate(startDate: statisticsData.startDate ?? statisticsData.locationData.first?.timestamp ?? Date.now, endDate: statisticsData.endDate ?? statisticsData.locationData.last?.timestamp ?? Date.now, withYear: true) }
     
     @State private var locationName: String = ""
     
@@ -34,15 +34,19 @@ struct StatisticsRunView: View {
         
         List {
             Section {
-                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: averageSpeed, averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem))
+                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: averageSpeed, averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm")
             } header: {
                 VStack(alignment: .leading) {
                     Group {
-                        Text(cutDate[0] + " " + cutDate[1])
-                            .fontWeight(.bold)
-                            .font(.title)
+                        HStack(alignment: .firstTextBaseline) {
+                            Text(cutDate[0] + " " + cutDate[1])
+                                .fontWeight(.bold)
+                                .font(.title)
+                            Text(cutDate[2])
+                                .font(.body)
+                        }
                             .padding(.bottom, -12)
-                        Text(cutDate.dropFirst(2).joined(separator: " "))
+                        Text(cutDate.dropFirst(3).joined(separator: " "))
                             .font(.body)
                     }
                     .padding(.bottom, 9)
@@ -85,73 +89,76 @@ struct StatisticsRunView: View {
                     }
             }
             
-            Section {
-                StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
-                
-            } header: {
-                HStack {
-                    Text("Rounds")
+            if !statisticsData.locationData.isEmpty {
+                Section {
+                    StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
+                    
+                } header: {
+                    HStack {
+                        Text("Rounds")
+                            .textCase(nil)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                        
+                        Button("Show all") {
+                            showRounds = true
+                        }
                         .textCase(nil)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
-                    
-                    Button("Show all") {
-                        showRounds = true
+                        .font(.body)
                     }
-                    .textCase(nil)
-                    .font(.body)
+                    .padding(.bottom, 9)
                 }
-                .padding(.bottom, 9)
+                
+                Section {
+                    Button {
+                        showMapSheet = true
+                    } label: {
+                        // sometimes the map does not update, so I try this trick.
+                        let mapData = statisticsData
+                        StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(mapData))
+                            .frame(height: 300)
+                            .cornerRadius(5.0)
+                            .disabled(true)
+                    }
+                    
+                } header: {
+                    HStack {
+                        Text("Map")
+                            .textCase(nil)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                        
+                        Button("Show more") {
+                            showMapSheet = true
+                        }
+                        .textCase(nil)
+                        .font(.body)
+                    }
+                    .padding(.bottom, 9)
+                } footer: {
+                    
+                    if tags.isEmpty {
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showTagsEditView = true
+                            }, label: {
+                                Label("Add tags", systemImage: "tag")
+                            })
+                            .buttonStyle(.borderedProminent)
+                            Spacer()
+                        }
+                        .padding()
+                    }
+                }
             }
             
-            Section {
-                Button {
-                    showMapSheet = true
-                } label: {
-                    // sometimes the map does not update, so I try this trick.
-                    let mapData = statisticsData
-                    StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(mapData))
-                        .frame(height: 300)
-                        .cornerRadius(5.0)
-                        .disabled(true)
-                }
-                
-            } header: {
-                HStack {
-                    Text("Map")
-                        .textCase(nil)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
-                    
-                    Button("Show more") {
-                        showMapSheet = true
-                    }
-                    .textCase(nil)
-                    .font(.body)
-                }
-                .padding(.bottom, 9)
-            } footer: {
-                
-                if tags.isEmpty {
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            showTagsEditView = true
-                        }, label: {
-                            Label("Add tags", systemImage: "tag")
-                        })
-                        .buttonStyle(.borderedProminent)
-                        Spacer()
-                    }
-                    .padding()
-                }
-            }
                 if tags != [] {
                     Section {
                         TagsFlexiView(strings: tags)

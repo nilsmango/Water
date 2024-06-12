@@ -21,7 +21,7 @@ struct StatisticsModelings: View {
                 NavigationLink {
                     StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statistic))
                 } label: {
-                    RunOverView(runDate: string, runName: "", distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: "", averageSpeed: "")
+                    RunOverView(runDate: string, runName: "", distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: "", averageSpeed: "", kCal: String(Int(statistic.kCalories?.rounded() ?? 0)) + " kcal")
                 }
             }
 

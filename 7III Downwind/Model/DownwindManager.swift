@@ -264,7 +264,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                         // sort the array
                         DispatchQueue.main.async {
-                            self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast < $1.startDate ?? $0.locationData.last?.timestamp ?? Date.distantPast})
+                            self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast > $1.startDate ?? $1.locationData.first?.timestamp ?? Date.distantPast})
                         }
                     }
                     
@@ -761,9 +761,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// creates a date string from two dates
-    func makeTimeIntervalDate(startDate: Date, endDate: Date) -> String {
+    func makeTimeIntervalDate(startDate: Date, endDate: Date, withYear: Bool = false) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM dd HH:mm"
+        if withYear {
+            dateFormatter.dateFormat = "MMM dd YYYY HH:mm"
+        } else {
+            dateFormatter.dateFormat = "MMM dd HH:mm"
+        }
         
         let startDateComponents = Calendar.current.dateComponents([.day, .month], from: startDate)
         let endDateComponents = Calendar.current.dateComponents([.day, .month], from: endDate)
