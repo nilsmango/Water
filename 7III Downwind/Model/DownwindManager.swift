@@ -308,6 +308,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let id = statistic.id
         // also add the workout route
         self.loadWorkoutRouteFromHealth(id: id) { route in
+            if let route = route {
                 self.locationDataFromWorkoutRoute(route: route) { locationData in
                     // TODO: calculate run time, distance and top speed from locationData (if it is nil or zero)
                     if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
@@ -322,21 +323,48 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     completion(true)
                 }
+            }
         }
         completion(false)
     }
     
-    private func loadWorkoutRouteFromHealth(id: UUID, completion: @escaping (HKWorkoutRoute) -> Void) {
-        let runningObjectQuery = HKQuery.predicateForObject(with: id)
+    private func loadWorkoutRouteFromHealth(id: UUID, completion: @escaping (HKWorkoutRoute?) -> Void) {
+        // Create a predicate to fetch the workout with the given UUID
+        let workoutPredicate = HKQuery.predicateForObject(with: id)
+        
+        // Create a query to fetch the workout
+        let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: workoutPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (_, samples, error) in
+            guard error == nil else {
+                // Handle error
+                print("Error fetching workout: \(error!.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            guard let workout = samples?.first as? HKWorkout else {
+                print("No workout found with the specified UUID.")
+                completion(nil)
+                return
+            }
+            
+            // Once the workout is fetched, load its associated route
+            self.loadWorkoutRoute(workout: workout, completion: completion)
+        }
+        
+        healthStore.execute(workoutQuery)
+    }
+    
+    private func loadWorkoutRoute(workout: HKWorkout, completion: @escaping (HKWorkoutRoute) -> Void) {
+        let runningObjectQuery = HKQuery.predicateForObjects(from: workout)
 
-       
         let routeQuery = HKAnchoredObjectQuery(type: HKSeriesType.workoutRoute(), predicate: runningObjectQuery, anchor: nil, limit: HKObjectQueryNoLimit) { (query, samples, deletedObjects, anchor, error) in
             
             guard error == nil else {
                 // Handle any errors here.
                 fatalError("The initial query failed.")
             }
-            print(samples?.count ?? "nothing")
+            print("workout route samples found:")
+            print(samples?.count ?? "nil")
             // Process the initial route data here.
             guard let routes = samples as? [HKWorkoutRoute], let route = routes.first else {
 //                print("Error fetching workout route: \(String(describing: error))")

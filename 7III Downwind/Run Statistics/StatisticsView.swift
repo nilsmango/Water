@@ -12,21 +12,23 @@ struct StatisticsView: View {
     
     var body: some View {
         List {
-            ForEach(downwindManager.runStatistics) { statistic in
-                
-                
-                
-                let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
-                let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
-                
-                NavigationLink {
-                    StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
-                } label: {
-                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString)
+            ForEach(groupedRunStatistics.keys.sorted(by: >), id: \.self) { year in
+                Section(header: Text(String(year))) {
+                    ForEach(groupedRunStatistics[year]!) { statistic in
+                        
+                        let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
+                        let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
+                        
+                        NavigationLink {
+                            StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
+                        } label: {
+                            RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString)
+                        }
+                    }
+                    .onDelete { indexSet in
+                        downwindManager.delete(at: indexSet)
+                    }
                 }
-            }
-            .onDelete { indexSet in
-                downwindManager.delete(at: indexSet)
             }
         }
         .navigationTitle("Run Statistics")
@@ -46,6 +48,13 @@ struct StatisticsView: View {
         }
         return $downwindManager.runStatistics[index]
     }
+    
+    // Group statistics by year
+        private var groupedRunStatistics: [Int: [RunStatistic]] {
+            Dictionary(grouping: downwindManager.runStatistics) { statistic in
+                Calendar.current.component(.year, from: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.distantPast)
+            }
+        }
 }
 
 #Preview {
