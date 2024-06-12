@@ -27,6 +27,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - Statistics
     @Published var activeStatistics: Bool = false
     @Published var runStatistics: [RunStatistic] = []
+    @Published var groupedRunStatistics: [[[RunStatistic]]] = []
     @Published var tags = [String]()
     // TODO: make this non published
     @Published var locationAccuracy: Double = 1000.0
@@ -262,9 +263,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 }
                             }
                         }
-                        // sort the array
+                        // sort the array, update the grouped array
                         DispatchQueue.main.async {
                             self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast > $1.startDate ?? $1.locationData.first?.timestamp ?? Date.distantPast})
+                            self.updateGroupedRunArray()
                         }
                     }
                     
@@ -282,6 +284,29 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    private func updateGroupedRunArray() {
+            let calendar = Calendar.current
+            var grouped: [[[RunStatistic]]] = []
+
+
+            for statistic in runStatistics {
+                let components = calendar.dateComponents([.year, .month], from: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.distantPast)
+                let year = components.year!
+                let month = components.month!
+
+                if grouped.isEmpty || calendar.component(.year, from: grouped.last!.last!.first!.startDate ?? Date.distantPast) != year {
+                    grouped.append([])
+                }
+
+                if grouped.last!.isEmpty || calendar.component(.month, from: grouped.last!.last!.first!.startDate ?? Date.distantPast) != month {
+                    grouped[grouped.count - 1].append([])
+                }
+
+                grouped[grouped.count - 1][grouped.last!.count - 1].append(statistic)
+            }
+
+            groupedRunStatistics = grouped
+        }
     
     private func loadWorkoutsFromHealthKit(completion: @escaping ([HKWorkout]) -> Void) {
         let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [

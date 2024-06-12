@@ -12,25 +12,38 @@ struct StatisticsView: View {
     
     var body: some View {
         List {
-            ForEach(groupedRunStatistics.keys.sorted(by: >), id: \.self) { year in
-                Section(header: Text(String(year))) {
-                    ForEach(groupedRunStatistics[year]!) { statistic in
-                        
-                        let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
-                        let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
-                        
-                        NavigationLink {
-                            StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
-                        } label: {
-                            RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal")
+            ForEach(0..<downwindManager.groupedRunStatistics.count, id: \.self) { yearIndex in
+                    ForEach(0..<downwindManager.groupedRunStatistics[yearIndex].count, id: \.self) { monthIndex in
+                        Section {
+                            ForEach(downwindManager.groupedRunStatistics[yearIndex][monthIndex]) { statistic in
+                                
+                                let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
+                                let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
+                                
+                                NavigationLink {
+                                    StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
+                                } label: {
+                                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal")
+                                }
+                            }
+                            .onDelete { indexSet in
+                                downwindManager.delete(at: indexSet)
+                            }
+                        } header: {
+                            VStack(alignment: .leading) {
+                                if monthIndex == 0 {
+                                    Text(yearSectionHeader(yearIndex: yearIndex))
+                                        .font(.title)
+                                }
+                                Text(monthSectionHeader(yearIndex: yearIndex, monthIndex: monthIndex))
+                                    .font(.title2)
+                            }
+                            .foregroundStyle(.primary)
+                            .fontWeight(.bold)
                         }
-                    }
-                    .onDelete { indexSet in
-                        downwindManager.delete(at: indexSet)
                     }
                 }
             }
-        }
         .navigationTitle("Run Statistics")
         .navigationBarItems(trailing: EditButton())
         .toolbar {
@@ -49,12 +62,16 @@ struct StatisticsView: View {
         return $downwindManager.runStatistics[index]
     }
     
-    // Group statistics by year
-        private var groupedRunStatistics: [Int: [RunStatistic]] {
-            Dictionary(grouping: downwindManager.runStatistics) { statistic in
-                Calendar.current.component(.year, from: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.distantPast)
-            }
-        }
+    private func yearSectionHeader(yearIndex: Int) -> String {
+        let year = Calendar.current.component(.year, from: downwindManager.groupedRunStatistics[yearIndex].first?.first?.startDate ?? Date.distantPast)
+        return String(year)
+    }
+
+    private func monthSectionHeader(yearIndex: Int, monthIndex: Int) -> String {
+        let month = Calendar.current.component(.month, from: downwindManager.groupedRunStatistics[yearIndex][monthIndex].first?.startDate ?? Date.distantPast)
+        let monthName = Calendar.current.monthSymbols[month - 1]
+        return monthName
+    }
 }
 
 #Preview {
