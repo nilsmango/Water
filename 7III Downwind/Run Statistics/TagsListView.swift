@@ -37,7 +37,7 @@ struct TagsListView: View {
             List {
                 ForEach(downwindManager.filterStatistics(tags: chosenTags)) { statistic in
                     let averageSpeed = makePrettySpeed(speed: (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
-                    let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.locationData.first!.timestamp, endDate: statistic.locationData.last!.timestamp)
+                    let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
                     
                     NavigationLink {
                         StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))

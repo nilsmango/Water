@@ -199,6 +199,30 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    func calculateSessions(for index: Int) -> Int {
+        var totalSessions = 0
+        if groupedRunStatistics.count > index {
+            for runs in groupedRunStatistics[index] {
+                for (index, run) in runs.enumerated() {
+                    // if startDate is in between start and endDate of last run, don't count the run as a own session
+                    if index > 0 {
+                        if runs[index-1].startDate! < run.endDate! {
+                            // don't count
+                        } else {
+                            totalSessions += 1
+                        }
+                    } else {
+                        totalSessions += 1
+                    }
+                }
+//                totalSessions += runs.count
+                
+            }
+        }
+        return totalSessions
+    }
+    
+    
     // File name of the statistics data
     private let fileName = "locationStatistics.data"
     

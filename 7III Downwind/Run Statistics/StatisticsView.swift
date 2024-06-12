@@ -34,12 +34,17 @@ struct StatisticsView: View {
                                 if monthIndex == 0 {
                                     Text(yearSectionHeader(yearIndex: yearIndex))
                                         .font(.title)
+                                        .fontWeight(.bold)
+                                        .padding(.bottom, 0)
+                                    
+                                    YearlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex)
                                 }
                                 Text(monthSectionHeader(yearIndex: yearIndex, monthIndex: monthIndex))
                                     .font(.title2)
+                                    .fontWeight(.bold)
                             }
                             .foregroundStyle(.primary)
-                            .fontWeight(.bold)
+                            .textCase(nil)
                         }
                     }
                 }
