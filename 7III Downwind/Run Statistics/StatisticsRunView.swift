@@ -90,27 +90,30 @@ struct StatisticsRunView: View {
             }
             
             if !statisticsData.locationData.isEmpty {
-                Section {
-                    StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
-                    
-                } header: {
-                    HStack {
-                        Text("Rounds")
+                if statisticsData.runDistance > 1999 {
+                    Section {
+                        StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
+                        
+                    } header: {
+                        HStack {
+                            Text("Rounds")
+                                .textCase(nil)
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                            
+                            Spacer()
+                            
+                            Button("Show all") {
+                                showRounds = true
+                            }
                             .textCase(nil)
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundColor(.primary)
-                        
-                        Spacer()
-                        
-                        Button("Show all") {
-                            showRounds = true
+                            .font(.body)
                         }
-                        .textCase(nil)
-                        .font(.body)
+                        .padding(.bottom, 9)
                     }
-                    .padding(.bottom, 9)
                 }
+                
                 
                 Section {
                     Button {
@@ -313,6 +316,6 @@ struct StatisticsRunView: View {
 
 #Preview {
     NavigationStack {
-        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 22900, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#140p", "#17kn"])))
+        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#140p", "#17kn"])))
     }
 }
