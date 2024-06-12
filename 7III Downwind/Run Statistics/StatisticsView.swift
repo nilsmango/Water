@@ -12,7 +12,10 @@ struct StatisticsView: View {
     
     var body: some View {
         List {
-            ForEach(downwindManager.runStatistics.sorted(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast < $1.startDate ?? $0.locationData.last?.timestamp ?? Date.distantPast})) { statistic in
+            ForEach(downwindManager.runStatistics) { statistic in
+                
+                
+                
                 let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
                 let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
                 

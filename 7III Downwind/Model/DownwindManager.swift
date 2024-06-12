@@ -261,24 +261,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     self.runStatistics.append(statistic)
                                 }
                             }
-                            
-                            // also add the workout route
-                            self.loadWorkoutRouteFromHealth(workout: workout) { route in
-                                self.locationDataFromWorkoutRoute(route: route) { locationData in
-                                    // TODO: calculate run time, distance and top speed from locationData
-                                    if let runIndex = self.runStatistics.firstIndex(where: { $0.id == workout.uuid }) {
-                                        DispatchQueue.main.async {
-                                            self.runStatistics[runIndex].locationData = locationData
-                                        }
-                                    } else {
-                                        let run = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
-                                        DispatchQueue.main.async {
-                                            self.runStatistics.append(run)
-                                        }
-                                    }
-                                }
-                            }
-                            
+                        }
+                        // sort the array
+                        DispatchQueue.main.async {
+                            self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast < $1.startDate ?? $0.locationData.last?.timestamp ?? Date.distantPast})
                         }
                     }
                     
@@ -296,15 +282,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-//        for workout in workouts {
-//            self.loadWorkoutRouteFromHealth(workout: workout) { route in
-//                self.locationDataFromWorkoutRoute(route: route) { locationData in
-//                    // TODO: calculate run time, distance and top speed from locationData
-//                    let run = RunStatistic(id: UUID(), runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
-//                    healthStatistics.append(run)
-//                }
-//            }
-//        }
     
     private func loadWorkoutsFromHealthKit(completion: @escaping ([HKWorkout]) -> Void) {
         let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
@@ -327,8 +304,30 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         healthStore.execute(query)
     }
     
-    private func loadWorkoutRouteFromHealth(workout: HKWorkout, completion: @escaping (HKWorkoutRoute) -> Void) {
-        let runningObjectQuery = HKQuery.predicateForObjects(from: workout)
+    func loadRouteFromHealth(statistic: RunStatistic, completion: @escaping (Bool) -> Void) {
+        let id = statistic.id
+        // also add the workout route
+        self.loadWorkoutRouteFromHealth(id: id) { route in
+                self.locationDataFromWorkoutRoute(route: route) { locationData in
+                    // TODO: calculate run time, distance and top speed from locationData (if it is nil or zero)
+                    if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                        DispatchQueue.main.async {
+                            self.runStatistics[runIndex].locationData = locationData
+                        }
+                    } else {
+                        let run = RunStatistic(id: id, runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
+                        DispatchQueue.main.async {
+                            self.runStatistics.append(run)
+                        }
+                    }
+                    completion(true)
+                }
+        }
+        completion(false)
+    }
+    
+    private func loadWorkoutRouteFromHealth(id: UUID, completion: @escaping (HKWorkoutRoute) -> Void) {
+        let runningObjectQuery = HKQuery.predicateForObject(with: id)
 
        
         let routeQuery = HKAnchoredObjectQuery(type: HKSeriesType.workoutRoute(), predicate: runningObjectQuery, anchor: nil, limit: HKObjectQueryNoLimit) { (query, samples, deletedObjects, anchor, error) in
@@ -340,8 +339,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             print(samples?.count ?? "nothing")
             // Process the initial route data here.
             guard let routes = samples as? [HKWorkoutRoute], let route = routes.first else {
-                print("Error fetching workout route: \(String(describing: error))")
-                
+//                print("Error fetching workout route: \(String(describing: error))")
                 return
             }
             completion(route)
@@ -371,6 +369,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             if let error = errorOrNil {
                 // Handle any errors here.
+                print("Error: \(error)")
                 return
             }
             
@@ -399,26 +398,26 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         healthStore.execute(query)
     }
 
-    private func mergeWorkoutsWithStatistics(_ workouts: [HKWorkout], statistics: [RunStatistic]) -> [RunStatistic] {
-        var mergedStatistics = statistics
-        print("running merge")
-        for workout in workouts {
-            self.loadWorkoutRouteFromHealth(workout: workout) { route in
-                self.locationDataFromWorkoutRoute(route: route) { allLocations in
-                    let runStatistic = RunStatistic(from: workout, locationData: allLocations)
-                    print("got runstatistc with \(allLocations.count)")
-                if let index = mergedStatistics.firstIndex(where: { $0.id == runStatistic.id }) {
-                    mergedStatistics[index].merge(with: runStatistic)
-                } else {
-                    mergedStatistics.append(runStatistic)
-                    
-                }
-                }
-            }
-        }
-
-        return mergedStatistics
-    }
+//    private func mergeWorkoutsWithStatistics(_ workouts: [HKWorkout], statistics: [RunStatistic]) -> [RunStatistic] {
+//        var mergedStatistics = statistics
+//        print("running merge")
+//        for workout in workouts {
+//            self.loadWorkoutRouteFromHealth(workout: workout) { route in
+//                self.locationDataFromWorkoutRoute(route: route) { allLocations in
+//                    let runStatistic = RunStatistic(from: workout, locationData: allLocations)
+//                    print("got runstatistc with \(allLocations.count)")
+//                if let index = mergedStatistics.firstIndex(where: { $0.id == runStatistic.id }) {
+//                    mergedStatistics[index].merge(with: runStatistic)
+//                } else {
+//                    mergedStatistics.append(runStatistic)
+//                    
+//                }
+//                }
+//            }
+//        }
+//
+//        return mergedStatistics
+//    }
     
     
     /// save statistic to disk with new tags

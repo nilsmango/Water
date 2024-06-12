@@ -62,26 +62,27 @@ struct StatisticsRunView: View {
                 
             }
             .onAppear {
-                if let firstDataPoint = statisticsData.locationData.first {
-                    downwindManager.getNameOfLocation(location: firstDataPoint) { name in
-                        if let name = name {
-                            locationName = name
-                        }
-                        
-                        if let lastDataPoint = statisticsData.locationData.last {
-                            downwindManager.getNameOfLocation(location: lastDataPoint) { name in
+                downwindManager.loadRouteFromHealth(statistic: statisticsData) { _ in
+                    // create location start and end names after loading route
+                        if let firstDataPoint = statisticsData.locationData.first {
+                            downwindManager.getNameOfLocation(location: firstDataPoint) { name in
                                 if let name = name {
-                                    if locationName.contains("→") == false && locationName != name {
-                                        locationName += " → " + name
+                                    locationName = name
+                                }
+                                
+                                if let lastDataPoint = statisticsData.locationData.last {
+                                    downwindManager.getNameOfLocation(location: lastDataPoint) { name in
+                                        if let name = name {
+                                            if locationName.contains("→") == false && locationName != name {
+                                                locationName += " → " + name
+                                            }
+                                        }
                                     }
                                 }
+                                
                             }
                         }
-                        
                     }
-                }
-                
-                
             }
             
             Section {
