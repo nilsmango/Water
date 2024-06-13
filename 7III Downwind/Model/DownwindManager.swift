@@ -18,7 +18,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
     @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
-    @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUP
+    @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUPFoil
     
     override init() {
         super.init()
@@ -79,6 +79,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 configuration.locationType = .outdoor
                 
                 workoutBuilder = HKWorkoutBuilder(healthStore: healthStore, configuration: configuration, device: .local())
+                workoutBuilder?.beginCollection(withStart: Date(), completion: { _, _ in
+                    // starting
+                })
                 
                 routeBuilder = HKWorkoutRouteBuilder(healthStore: healthStore, device: .local())
             }
@@ -111,26 +114,28 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    let customMetadataKeyWorkoutType = "7III Workout Type"
+    let customMetadataKeyTags = "Tags"
+    let customTotalDistanceKey = "Total Distance"
+    
     private func saveHealthWorkout() {
         let activeRunStatistic = runStatistics[currentRunStatisticIndex]
         
-        //        let startDate = activeRunStatistic.startDate ?? activeRunStatistic.locationData.first?.timestamp
-        //        let endDate = activeRunStatistic.endDate ?? activeRunStatistic.locationData.last?.timestamp
-        //        let runTimeInSeconds = activeRunStatistic.runTime * 60
-        //        let runDistance = HKQuantity(unit: .meter(), doubleValue: activeRunStatistic.runDistance)
-        let topSpeed = activeRunStatistic.topSpeed / 3.6
-        let averageSpeed = (activeRunStatistic.averageSpeed ?? 0) / 3.6
+        let runDistance = HKQuantity(unit: .meter(), doubleValue: activeRunStatistic.runDistance)
+        let topSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: activeRunStatistic.topSpeed / 3.6)
+        let averageSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: (activeRunStatistic.averageSpeed ?? 0) / 3.6)
         let tags = activeRunStatistic.tags?.joined(separator: " ") ?? ""
         let workoutType = activeRunStatistic.workoutType ?? .surfingSport
-        let metadataString = workoutType.rawValue + " " + tags
         
         let allMetadata: [String: Any] = [
-            HKMetadataKeyActivityType: metadataString,
+            customMetadataKeyWorkoutType: workoutType.rawValue,
+            customMetadataKeyTags: tags,
+            customTotalDistanceKey: runDistance,
             HKMetadataKeyMaximumSpeed: topSpeed,
             HKMetadataKeyAverageSpeed: averageSpeed
         ]
+       
         
-        // TODO: add runDistance(probably already in the route)
         workoutBuilder?.addMetadata(allMetadata, completion: { success, error in
             if let error = error {
                 print("Error adding metadata: \(error.localizedDescription)")
@@ -165,7 +170,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         return
                     }
                     
-                    // TODO: add crew statistic as metada!
+                    // TODO: add crew statistic as own metada here!
                     self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
                         if let error = error {
                             print("Error finishing route: \(error.localizedDescription)")
@@ -182,14 +187,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         // Add the new statistic to the grouped array
                         let newStatistic = self.runStatistics[self.currentRunStatisticIndex]
-                        if self.groupedRunStatistics.isEmpty {
-                            self.groupedRunStatistics.append([[newStatistic]])
-                        } else if self.groupedRunStatistics[0].isEmpty {
-                            self.groupedRunStatistics[0].append([newStatistic])
-                        } else {
-                            self.groupedRunStatistics[0][0].insert(newStatistic, at: 0)
+                        DispatchQueue.main.async {
+                            if self.groupedRunStatistics.isEmpty {
+                                self.groupedRunStatistics.append([[newStatistic]])
+                            } else if self.groupedRunStatistics[0].isEmpty {
+                                self.groupedRunStatistics[0].append([newStatistic])
+                            } else {
+                                self.groupedRunStatistics[0][0].insert(newStatistic, at: 0)
+                            }
                         }
-                        
                         // Discard the routeBuilder and workoutBuilder
                         self.routeBuilder = nil
                         self.workoutBuilder = nil
@@ -372,7 +378,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         self.runStatistics = decodedStatistics
                     }
                     
-                    // Merge the workouts with health data
+                    // Update the statistic from health
                     if HKHealthStore.isHealthDataAvailable() {
                         print("workout number: \(workouts.count)")
                         for workout in workouts {
@@ -380,9 +386,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == workout.uuid }) {
                                 DispatchQueue.main.async {
                                     self.runStatistics[runIndex].runTime = workout.duration / 60
-                                    self.runStatistics[runIndex].runDistance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
-                                    self.runStatistics[runIndex].topSpeed = (workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0) * 3.6
-                                    self.runStatistics[runIndex].averageSpeed = (workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0) * 3.6
+                                    self.runStatistics[runIndex].runDistance = metaData.totalDistance
+                                    self.runStatistics[runIndex].topSpeed = metaData.topSpeed
+                                    self.runStatistics[runIndex].averageSpeed = metaData.averageSpeed
                                     self.runStatistics[runIndex].kCalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
                                     self.runStatistics[runIndex].tags = metaData.tags
                                     self.runStatistics[runIndex].workoutType = metaData.workoutType
@@ -390,7 +396,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     self.runStatistics[runIndex].endDate = workout.endDate
                                 }
                             } else {
-                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: workout.totalDistance?.doubleValue(for: .meter()) ?? 0, topSpeed: (workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0) * 3.6, averageSpeed: (workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0) * 3.6, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: metaData.tags, workoutType: metaData.workoutType, startDate: workout.startDate, endDate: workout.endDate)
+                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: metaData.totalDistance, topSpeed: metaData.topSpeed, averageSpeed: metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: metaData.tags, workoutType: metaData.workoutType, startDate: workout.startDate, endDate: workout.endDate)
                                 
                                 DispatchQueue.main.async {
                                     self.runStatistics.append(statistic)
@@ -417,29 +423,42 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
     }
-    
-    private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType) {
-        let rawString = workout.metadata?[HKMetadataKeyActivityType] as? String ?? ""
-        if rawString == "" {
-            var workoutType: WorkoutType = .surfingSport
-            if workout.workoutActivityType == .paddleSports {
-                workoutType = .paddleSport
-            }
-            return (tags: [], workoutType: workoutType)
+        
+    private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double) {
+        let rawWorkoutType = workout.metadata?[customMetadataKeyWorkoutType] as? String ?? ""
+            let tagsString = workout.metadata?[customMetadataKeyTags] as? String ?? ""
+            let tags = tagsString.split(separator: " ").map { String($0) }
             
+            let workoutType = WorkoutType(rawValue: rawWorkoutType) ?? .surfingSport
+        
+        let topSpeed: Double
+        if let maxSpeedQuantity = workout.metadata?[HKMetadataKeyMaximumSpeed] as? HKQuantity {
+            // Assuming the unit is meters per second (m/s), convert it to kilometers per hour (km/h)
+            topSpeed = maxSpeedQuantity.doubleValue(for: .meter().unitDivided(by: .second())) * 3.6
         } else {
-            var tags: [String] = []
-            let components = rawString.components(separatedBy: " ")
-            for component in components {
-                        if component.hasPrefix("#") {
-                            tags.append(component)
-                        }
-                    }
-            let workoutType = WorkoutType(rawValue: components.first ?? "SurfingSport") ?? .surfingSport
-            
-            return (tags: tags, workoutType: workoutType)
+            topSpeed = 0
         }
-    }
+        
+        let averageSpeed: Double
+        if let averageSpeedQuantity = workout.metadata?[HKMetadataKeyAverageSpeed] as? HKQuantity {
+            // Assuming the unit is meters per second (m/s), convert it to kilometers per hour (km/h)
+            averageSpeed = averageSpeedQuantity.doubleValue(for: .meter().unitDivided(by: .second())) * 3.6
+        } else {
+            averageSpeed = 0
+        }
+        
+        let totalDistance: Double
+        if let distanceQuantity = workout.metadata?[customTotalDistanceKey] as? HKQuantity {
+            // Assuming the unit is meters per second (m/s), convert it to kilometers per hour (km/h)
+            totalDistance = distanceQuantity.doubleValue(for: .meter())
+        } else {
+            totalDistance = 0
+        }
+        
+        
+            
+        return (tags: tags, workoutType: workoutType, averageSpeed: averageSpeed, topSpeed: topSpeed, totalDistance: totalDistance)
+        }
     
     private func updateGroupedRunArray() {
             let calendar = Calendar.current

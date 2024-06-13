@@ -20,14 +20,32 @@ struct StatisticsControlCenter: View {
         if downwindManager.activeStatistics == false {
             
                 VStack {
-                    Button {
-                        downwindManager.startStatistic(onlyStatistics: onlyStatistics, tags: tags)
-                        downwindManager.activeRun.startedOn = Date.now
-                    } label: {
-                        Label("Start Tracking Statistics", systemImage: "play.fill")
+                    HStack {
+                        Button {
+                            downwindManager.startStatistic(onlyStatistics: onlyStatistics, tags: tags)
+                            downwindManager.activeRun.startedOn = Date.now
+                        } label: {
+                            Label("Start Tracking", systemImage: "play.fill")
+                        }
+                        .buttonStyle(.bordered)
+                        .padding()
+                        
+                        Menu {
+                            ForEach(WorkoutType.allCases, id: \.self) { type in
+                                Button(action: {
+                                    downwindManager.workoutType = type
+                                }) {
+                                    Text(type.prettyString)
+                                }
+                            }
+                        } label: {
+                            Text(downwindManager.workoutType.prettyString)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.orange)
+                        .padding()
                     }
-                    .buttonStyle(.bordered)
-                    .padding()
+                    
                     
                         Text(tags.isEmpty ? "No Tags Active" : "Tracking Tags")
                     .fontWeight(.bold)

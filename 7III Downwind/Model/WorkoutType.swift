@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-enum WorkoutType: String, Codable {
+enum WorkoutType: String, Codable, CaseIterable {
     case foilSurf = "FoilSurf"
     case supFoil = "SUPFoil"
     case downwindSUPFoil = "DownwindSUPFoil"
@@ -69,43 +69,11 @@ enum WorkoutType: String, Codable {
         }
     }
     var activityType: HKWorkoutActivityType {
-        switch self {
-        case .foilSurf:
-                .surfingSports
-        case .supFoil:
-                .surfingSports
-        case .downwindSUPFoil:
-                .surfingSports
-        case .downwindSUP:
-                .surfingSports
-        case .wingFoil:
-                .surfingSports
-        case .windFoil:
-                .surfingSports
-        case .kiteFoil:
-                .surfingSports
-        case .kite:
-                .surfingSports
-        case .surf:
-                .surfingSports
-        case .windsurf:
-                .surfingSports
-        case .pumpFoil:
-                .surfingSports
-        case .wakeThief:
-                .surfingSports
-        case .wakeFoil:
-                .surfingSports
-        case .surfingSport:
-                .surfingSports
-        case .paddleSport:
-                .paddleSports
-        case .sup:
-                .paddleSports
-        case .kayak:
-                .paddleSports
-        case .canoe:
-                .paddleSports
+            switch self {
+            case .foilSurf, .supFoil, .downwindSUPFoil, .downwindSUP, .wingFoil, .windFoil, .kiteFoil, .kite, .surf, .windsurf, .pumpFoil, .wakeThief, .wakeFoil, .surfingSport:
+                return .surfingSports
+            case .paddleSport, .sup, .kayak, .canoe:
+                return .paddleSports
+            }
         }
-    }
 }
