@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HealthKit
 
 enum WorkoutType: String, Codable {
     case foilSurf = "FoilSurf"
@@ -23,6 +24,9 @@ enum WorkoutType: String, Codable {
     case wakeFoil = "WakeFoil"
     case surfingSport = "SurfingSport"
     case paddleSport = "PaddleSport"
+    case sup = "SUP"
+    case kayak = "Kayak"
+    case canoe = "Canoe"
     
     var prettyString: String {
         switch self {
@@ -56,6 +60,52 @@ enum WorkoutType: String, Codable {
             return "Surfing"
         case .paddleSport:
             return "Paddling"
+        case .sup:
+            return "SUP"
+        case .kayak:
+            return "Kayak"
+        case .canoe:
+            return "Canoe"
+        }
+    }
+    var activityType: HKWorkoutActivityType {
+        switch self {
+        case .foilSurf:
+                .surfingSports
+        case .supFoil:
+                .surfingSports
+        case .downwindSUPFoil:
+                .surfingSports
+        case .downwindSUP:
+                .surfingSports
+        case .wingFoil:
+                .surfingSports
+        case .windFoil:
+                .surfingSports
+        case .kiteFoil:
+                .surfingSports
+        case .kite:
+                .surfingSports
+        case .surf:
+                .surfingSports
+        case .windsurf:
+                .surfingSports
+        case .pumpFoil:
+                .surfingSports
+        case .wakeThief:
+                .surfingSports
+        case .wakeFoil:
+                .surfingSports
+        case .surfingSport:
+                .surfingSports
+        case .paddleSport:
+                .paddleSports
+        case .sup:
+                .paddleSports
+        case .kayak:
+                .paddleSports
+        case .canoe:
+                .paddleSports
         }
     }
 }

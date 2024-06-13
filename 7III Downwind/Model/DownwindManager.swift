@@ -18,6 +18,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
     @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
+    @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUP
     
     override init() {
         super.init()
@@ -32,6 +33,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // TODO: make this non published
     @Published var locationAccuracy: Double = 1000.0
     var currentRunStatisticIndex = 0
+    var routeBuilder: HKWorkoutRouteBuilder? = nil
+    var workoutBuilder: HKWorkoutBuilder? = nil
     
     /// Activates the run statistic
     func startStatistic(onlyStatistics: Bool, tags: [String] = []) {
@@ -58,15 +61,27 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             // make the first data entry if there is a location
-            let newStatistic: RunStatistic
+            var newStatistic: RunStatistic
             if user.latitude != nil && user.longitude != nil {
                 newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)], tags: tags)
             } else {
                 newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [], tags: tags)
             }
             
+            newStatistic.workoutType = workoutType
+            newStatistic.startDate = Date()
             runStatistics.append(newStatistic)
             currentRunStatisticIndex = runStatistics.endIndex - 1
+            
+            if HKHealthStore.isHealthDataAvailable() {
+                let configuration = HKWorkoutConfiguration()
+                configuration.activityType = newStatistic.workoutType?.activityType ?? .surfingSports
+                configuration.locationType = .outdoor
+                
+                workoutBuilder = HKWorkoutBuilder(healthStore: healthStore, configuration: configuration, device: .local())
+                
+                routeBuilder = HKWorkoutRouteBuilder(healthStore: healthStore, device: .local())
+            }
         }
     }
     
@@ -78,15 +93,111 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             updateStatistic()
             // deactivate statistic recording
             activeStatistics = false
+            // save endDate
+            runStatistics[currentRunStatisticIndex].endDate = Date()
             
             if onlyStatistic {
                 // Stop location update
                 stopLocationService()
             }
             
-            // save the statistics to disk
-            saveRunStatistics()
+            // saving the workout
+            if HKHealthStore.isHealthDataAvailable() {
+                saveHealthWorkout()
+            } else {
+                // save the statistics to disk if we don't have health available
+                saveRunStatistics()
+            }
         }
+    }
+    
+    private func saveHealthWorkout() {
+        let activeRunStatistic = runStatistics[currentRunStatisticIndex]
+        
+        //        let startDate = activeRunStatistic.startDate ?? activeRunStatistic.locationData.first?.timestamp
+        //        let endDate = activeRunStatistic.endDate ?? activeRunStatistic.locationData.last?.timestamp
+        //        let runTimeInSeconds = activeRunStatistic.runTime * 60
+        //        let runDistance = HKQuantity(unit: .meter(), doubleValue: activeRunStatistic.runDistance)
+        let topSpeed = activeRunStatistic.topSpeed / 3.6
+        let averageSpeed = (activeRunStatistic.averageSpeed ?? 0) / 3.6
+        let tags = activeRunStatistic.tags?.joined(separator: " ") ?? ""
+        let workoutType = activeRunStatistic.workoutType ?? .surfingSport
+        let metadataString = workoutType.rawValue + " " + tags
+        
+        let allMetadata: [String: Any] = [
+            HKMetadataKeyActivityType: metadataString,
+            HKMetadataKeyMaximumSpeed: topSpeed,
+            HKMetadataKeyAverageSpeed: averageSpeed
+        ]
+        
+        // TODO: add runDistance(probably already in the route)
+        workoutBuilder?.addMetadata(allMetadata, completion: { success, error in
+            if let error = error {
+                print("Error adding metadata: \(error.localizedDescription)")
+                return
+            }
+            
+            guard success else {
+                print("Failed to add metadata.")
+                return
+            }
+            
+            
+            self.workoutBuilder?.endCollection(withEnd: Date(), completion: { success, error in
+                if let error = error {
+                    print("Error ending collection: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard success else {
+                    print("Failed to end collection.")
+                    return
+                }
+                
+                self.workoutBuilder?.finishWorkout(completion: { workout, error in
+                    if let error = error {
+                        print("Error finishing workout: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    guard let myWorkout = workout else {
+                        print("Failed to finish workout.")
+                        return
+                    }
+                    
+                    // TODO: add crew statistic as metada!
+                    self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
+                        if let error = error {
+                            print("Error finishing route: \(error.localizedDescription)")
+                            return
+                        }
+                        
+                        guard newRoute != nil else {
+                            print("Failed to finish route.")
+                            return
+                        }
+                        
+                        // Optional: Do something with the route here
+                        print("Successfully saved workout and route to HealthKit.")
+                        
+                        // Add the new statistic to the grouped array
+                        let newStatistic = self.runStatistics[self.currentRunStatisticIndex]
+                        if self.groupedRunStatistics.isEmpty {
+                            self.groupedRunStatistics.append([[newStatistic]])
+                        } else if self.groupedRunStatistics[0].isEmpty {
+                            self.groupedRunStatistics[0].append([newStatistic])
+                        } else {
+                            self.groupedRunStatistics[0][0].insert(newStatistic, at: 0)
+                        }
+                        
+                        // Discard the routeBuilder and workoutBuilder
+                        self.routeBuilder = nil
+                        self.workoutBuilder = nil
+                        
+                    }
+                })
+            })
+        })
     }
     
     /// Updates the run statistic
@@ -270,8 +381,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 DispatchQueue.main.async {
                                     self.runStatistics[runIndex].runTime = workout.duration / 60
                                     self.runStatistics[runIndex].runDistance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
-                                    self.runStatistics[runIndex].topSpeed = workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0
-                                    self.runStatistics[runIndex].averageSpeed = workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0
+                                    self.runStatistics[runIndex].topSpeed = (workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0) * 3.6
+                                    self.runStatistics[runIndex].averageSpeed = (workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0) * 3.6
                                     self.runStatistics[runIndex].kCalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
                                     self.runStatistics[runIndex].tags = metaData.tags
                                     self.runStatistics[runIndex].workoutType = metaData.workoutType
@@ -279,7 +390,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     self.runStatistics[runIndex].endDate = workout.endDate
                                 }
                             } else {
-                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: workout.totalDistance?.doubleValue(for: .meter()) ?? 0, topSpeed: workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0, averageSpeed: workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: metaData.tags, workoutType: metaData.workoutType, startDate: workout.startDate, endDate: workout.endDate)
+                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: workout.totalDistance?.doubleValue(for: .meter()) ?? 0, topSpeed: (workout.metadata?[HKMetadataKeyMaximumSpeed] as? Double ?? 0) * 3.6, averageSpeed: (workout.metadata?[HKMetadataKeyAverageSpeed] as? Double ?? 0) * 3.6, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: metaData.tags, workoutType: metaData.workoutType, startDate: workout.startDate, endDate: workout.endDate)
                                 
                                 DispatchQueue.main.async {
                                     self.runStatistics.append(statistic)
@@ -1539,6 +1650,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 return }
             
             if collectRawGPS {
+                routeBuilder?.insertRouteData(locations) { (success, error) in
+                    if !success {
+                        // Handle any errors here.
+                    }
+                }
                 
                 DispatchQueue.main.async {
                     self.user.latitude = newLocation.coordinate.latitude
@@ -1563,6 +1679,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         // initializing the kalman filter
                         self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                        
+                        routeBuilder?.insertRouteData(locations) { (success, error) in
+                            if !success {
+                                // Handle any errors here.
+                            }
+                        }
                         
                         DispatchQueue.main.async {
                             self.user.latitude = newLocation.coordinate.latitude
@@ -1595,6 +1717,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             }
                             else {
                                 let kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
+                                
+                                routeBuilder?.insertRouteData([kalmanLocation]) { (success, error) in
+                                    if !success {
+                                        // Handle any errors here.
+                                    }
+                                }
                                 
                                 DispatchQueue.main.async {
                                     self.user.latitude = kalmanLocation.coordinate.latitude
