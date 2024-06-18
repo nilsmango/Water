@@ -27,7 +27,7 @@ struct StatisticsDetails: View {
             }
         }
         
-        if averagePace != " /km" {
+        if averagePace != " /km" && averagePace != "0'00\" /km" {
             HStack {
                 StatisticsInfoViews(header: "∅-Pace", bodyText: averagePace)
                     .frame(width: width, alignment: .leading)
@@ -40,17 +40,21 @@ struct StatisticsDetails: View {
                 StatisticsInfoViews(header: "Top Speed", bodyText: topSpeed)
                     .frame(width: width, alignment: .leading)
             }
-            if kCal != "0 kcal" {
-                StatisticsInfoViews(header: "Activity Calories", bodyText: kCal)
+            
+            if heartRate != "0 bpm" {
+                HStack {
+                    StatisticsInfoViews(header: "∅-Heart Rate", bodyText: heartRate)
+                        .frame(width: width, alignment: .leading)
+                }
             }
+            
         }
         
-        if heartRate != "0 bpm" {
-            HStack {
-                StatisticsInfoViews(header: "∅-Heart Rate", bodyText: heartRate)
-                    .frame(width: width, alignment: .leading)
-            }
+        if kCal != "0 kcal" {
+            StatisticsInfoViews(header: "Activity Calories", bodyText: kCal)
         }
+        
+        
     }
 }
 

@@ -30,6 +30,7 @@ struct StatisticsRunView: View {
     @State private var statisticsDataEdit = RunStatistic.empty()
     
     @Environment(\.dismiss) private var dismiss
+
     
     var body: some View {
         let cutDate = runDates.components(separatedBy: " ")
@@ -39,37 +40,14 @@ struct StatisticsRunView: View {
             Section {
                 StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: averageSpeed, averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm")
             } header: {
-                VStack(alignment: .leading) {
-                    Group {
-                        HStack(alignment: .firstTextBaseline) {
-                            Text(cutDate[0] + " " + cutDate[1])
-                                .fontWeight(.bold)
-                                .font(.title)
-                            Text(cutDate[2])
-                                .font(.body)
-                        }
-                            .padding(.bottom, -12)
-                        Text(cutDate.dropFirst(3).joined(separator: " "))
-                            .font(.body)
-                    }
-                    .padding(.bottom, 9)
-                    
-                    if locationName != "" {
-                        HStack {
-                            Image(systemName: "location.fill")
-                                .foregroundStyle(.accent)
-                            Text(locationName)
-                        }
-                        .textCase(nil)
-                        .font(.body)
-                        .padding(.bottom)
-                    }
-                }
-                .foregroundStyle(.primary)
-                
+                StatisticsMainHeader(cutDate: cutDate, locationName: locationName)
             }
             .onAppear {
-                downwindManager.loadRouteFromHealth(statistic: statisticsData) { _ in
+                if statisticsData.tags != nil {
+                    tags = statisticsData.tags!
+                }
+                
+                downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
                     // create location start and end names after loading route
                         if let firstDataPoint = statisticsData.locationData.first {
                             downwindManager.getNameOfLocation(location: firstDataPoint) { name in
@@ -89,66 +67,16 @@ struct StatisticsRunView: View {
                                 
                             }
                         }
+                    
                     }
             }
             
             if !statisticsData.locationData.isEmpty {
-                if statisticsData.runDistance > 1999 {
-                    Section {
-                        StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
-                        
-                    } header: {
-                        HStack {
-                            Text("Rounds")
-                                .textCase(nil)
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .foregroundColor(.primary)
-                            
-                            Spacer()
-                            
-                            Button("Show all") {
-                                showRounds = true
-                            }
-                            .textCase(nil)
-                            .font(.body)
-                        }
-                        .padding(.bottom, 9)
-                    }
-                }
-                
-                
-                Section {
-                    Button {
-                        showMapSheet = true
-                    } label: {
-                        // sometimes the map does not update, so I try this trick.
-                        let mapData = statisticsData
-                        StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(mapData))
-                            .frame(height: 300)
-                            .cornerRadius(5.0)
-                            .disabled(true)
-                    }
-                    
-                } header: {
-                    HStack {
-                        Text("Map")
-                            .textCase(nil)
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundColor(.primary)
-                        
-                        Spacer()
-                        
-                        Button("Show more") {
-                            showMapSheet = true
-                        }
-                        .textCase(nil)
-                        .font(.body)
-                    }
-                    .padding(.bottom, 9)
-                }
+                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, rounds: rounds, statisticsData: $statisticsData)
             }
+            
+            HeartRateView(downwindManager: downwindManager, startDate: statisticsData.startDate, endDate: statisticsData.endDate)
+                
             
                     Section {
                         TagsFlexiView(strings: tags)
@@ -173,6 +101,7 @@ struct StatisticsRunView: View {
                             
                         }
                         .padding(.bottom, 9)
+                        
                     } footer: {
                         HStack {
                             Spacer()
@@ -188,11 +117,7 @@ struct StatisticsRunView: View {
                     }
                 
         }
-        .onAppear {
-            if statisticsData.tags != nil {
-                tags = statisticsData.tags!
-            }
-        }
+
         .navigationTitle(statisticsData.runName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

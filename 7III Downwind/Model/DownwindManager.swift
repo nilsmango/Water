@@ -521,9 +521,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     self.runStatistics[runIndex].workoutType = metaData.workoutType
                                     self.runStatistics[runIndex].startDate = workout.startDate
                                     self.runStatistics[runIndex].endDate = workout.endDate
-
-//                                    self.runStatistics[runIndex].heartRates =
-//                                    self.runStatistics[runIndex].averageHeartRate =
                                 }
                             } else {
                                 let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: metaData.totalDistance, topSpeed: metaData.topSpeed, averageSpeed: metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: metaData.tags, workoutType: metaData.workoutType, startDate: workout.startDate, endDate: workout.endDate)
@@ -635,10 +632,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         healthStore.execute(query)
     }
     
-    func loadRouteFromHealth(statistic: RunStatistic, completion: @escaping (Bool) -> Void) {
+    func loadRouteAndHeartFromHealth(statistic: RunStatistic, completion: @escaping (Bool) -> Void) {
         let id = statistic.id
         // also add the workout route
-        self.loadWorkoutRouteFromHealth(id: id) { route in
+        self.loadWorkoutRouteHeartFromHealth(id: id) { route, averageHeartRate in
             if let route = route {
                 self.locationDataFromWorkoutRoute(route: route) { locationData in
                     // TODO: calculate run time, distance and top speed from locationData (if it is nil or zero)
@@ -652,14 +649,21 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             self.runStatistics.append(run)
                         }
                     }
-                    completion(true)
                 }
             }
+            if let averageHeartRate = averageHeartRate {
+                if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                    DispatchQueue.main.async {
+                        self.runStatistics[runIndex].averageHeartRate = averageHeartRate
+                    }
+                }
+            }
+            completion(true)
         }
         completion(false)
     }
     
-    private func loadWorkoutRouteFromHealth(id: UUID, completion: @escaping (HKWorkoutRoute?) -> Void) {
+    private func loadWorkoutRouteHeartFromHealth(id: UUID, completion: @escaping (HKWorkoutRoute?, Double?) -> Void) {
         // Create a predicate to fetch the workout with the given UUID
         let workoutPredicate = HKQuery.predicateForObject(with: id)
         
@@ -668,24 +672,29 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             guard error == nil else {
                 // Handle error
                 print("Error fetching workout: \(error!.localizedDescription)")
-                completion(nil)
+                completion(nil, nil)
                 return
             }
             
             guard let workout = samples?.first as? HKWorkout else {
                 print("No workout found with the specified UUID.")
-                completion(nil)
+                completion(nil, nil)
                 return
             }
             
-            // Once the workout is fetched, load its associated route
-            self.loadWorkoutRoute(workout: workout, completion: completion)
+            // Once the workout is fetched, load its associated route and heart rates
+            self.loadWorkoutRoute(workout: workout) { route in
+                    
+                self.getAVGHeartRate(for: workout) { averageHeartRate in
+                    completion(route, averageHeartRate)
+                }
+            }
         }
         
         healthStore.execute(workoutQuery)
     }
     
-    private func loadWorkoutRoute(workout: HKWorkout, completion: @escaping (HKWorkoutRoute) -> Void) {
+    private func loadWorkoutRoute(workout: HKWorkout, completion: @escaping (HKWorkoutRoute?) -> Void) {
         let runningObjectQuery = HKQuery.predicateForObjects(from: workout)
 
         let routeQuery = HKAnchoredObjectQuery(type: HKSeriesType.workoutRoute(), predicate: runningObjectQuery, anchor: nil, limit: HKObjectQueryNoLimit) { (query, samples, deletedObjects, anchor, error) in
@@ -699,6 +708,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // Process the initial route data here.
             guard let routes = samples as? [HKWorkoutRoute], let route = routes.first else {
 //                print("Error fetching workout route: \(String(describing: error))")
+                completion(nil)
                 return
             }
             completion(route)
@@ -718,6 +728,94 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
         healthStore.execute(routeQuery)
     }
+    
+    private func getAVGHeartRate(for workout: HKWorkout, completion: @escaping (Double?) -> Void) {
+        let healthStore = HKHealthStore()
+        
+        guard let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate) else {
+            completion(nil)
+            return
+        }
+        
+        let startDate = workout.startDate
+        let endDate = workout.endDate
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictEndDate)
+        
+        let query = HKStatisticsQuery(quantityType: heartRateType, quantitySamplePredicate: predicate, options: .discreteAverage) { query, statistics, error in
+            DispatchQueue.main.async {
+                guard let statistics = statistics, error == nil else {
+                    print("Error: \(error!.localizedDescription)")
+                    completion(nil)
+                    return
+                }
+                
+                if let averageQuantity = statistics.averageQuantity() {
+                    let averageBPM = averageQuantity.doubleValue(for: HKUnit.count().unitDivided(by: .minute()))
+                    completion(averageBPM)
+                } else {
+                    completion(nil)
+                }
+            }
+        }
+        
+        healthStore.execute(query)
+    }
+    
+    func fetchHeartRatesOverTime(startTime: Date?, endTime: Date?, completion: @escaping ([Date: (Double, Double)]?, Error?) -> Void) {
+        guard let startTime = startTime, let endTime = endTime else {
+            completion(nil, NSError(domain: "com.7iiitracker", code: -1, userInfo: [NSLocalizedDescriptionKey: "Heart rate type not available"]))
+            return
+        }
+        
+        guard let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate) else {
+            completion(nil, NSError(domain: "com.7iiitracker", code: -1, userInfo: [NSLocalizedDescriptionKey: "Heart rate type not available"]))
+            return
+        }
+
+        // Calculate the interval based on the startTime, endTime, and desired number of samples
+        let interval = DateInterval(start: startTime, end: endTime)
+        let intervalDuration = interval.duration
+        let samplesCount = 100
+        let timeInterval = intervalDuration / Double(samplesCount)
+
+        // Define the query to fetch heart rate statistics collection
+        let query = HKStatisticsCollectionQuery(quantityType: heartRateType,
+                                                quantitySamplePredicate: nil,
+                                                options: [.discreteMin, .discreteMax],
+                                                anchorDate: startTime,
+                                                intervalComponents: DateComponents(second: Int(timeInterval)))
+
+        // Handle the results from the query
+        query.initialResultsHandler = { query, statisticsCollection, error in
+            guard let statisticsCollection = statisticsCollection, error == nil else {
+                completion(nil, error)
+                return
+            }
+
+            var heartRateData: [Date: (Double, Double)] = [:]
+
+            // Enumerate through the statistics collection to populate heartRateData
+            statisticsCollection.enumerateStatistics(from: startTime, to: endTime) { statistics, _ in
+                    var minHeartRate: Double = 0
+                    var maxHeartRate: Double = 0
+
+                    if let minValue = statistics.minimumQuantity() {
+                        minHeartRate = minValue.doubleValue(for: HKUnit.count().unitDivided(by: HKUnit.minute()))
+                    }
+
+                    if let maxValue = statistics.maximumQuantity() {
+                        maxHeartRate = maxValue.doubleValue(for: HKUnit.count().unitDivided(by: HKUnit.minute()))
+                    }
+
+                    heartRateData[statistics.startDate] = (minHeartRate, maxHeartRate)
+                }
+            completion(heartRateData, nil)
+        }
+
+        // Execute the query
+        healthStore.execute(query)
+    }
+    
     
     private func locationDataFromWorkoutRoute(route: HKWorkoutRoute, completion: @escaping ([LocationData]) -> Void) {
         var allLocations = [LocationData]()

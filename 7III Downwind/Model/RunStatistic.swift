@@ -22,7 +22,6 @@ struct RunStatistic: Identifiable, Codable {
     /// average speed in km/h
     var averageSpeed: Double?
     var kCalories: Double?
-    var heartRates: [Double]?
     var averageHeartRate: Double?
     
     var locationData: [LocationData]
@@ -40,7 +39,6 @@ struct RunStatistic: Identifiable, Codable {
             self.runDistance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
             self.topSpeed = 0 // Need to calculate this
             self.kCalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
-            self.heartRates = [] // Need to fetch samples
             self.averageHeartRate = 0 // Need to calculate this
             self.locationData = locationData
             self.tags = []
@@ -55,7 +53,6 @@ struct RunStatistic: Identifiable, Codable {
             self.runDistance = 0
             self.topSpeed = 0
             self.kCalories = 0
-            self.heartRates = []
             self.averageHeartRate = 0
             self.locationData = []
             self.tags = []
