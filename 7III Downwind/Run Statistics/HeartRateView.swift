@@ -10,7 +10,7 @@ import SwiftUI
 struct HeartRateView: View {
     @ObservedObject var downwindManager: DownwindManager
 
-    @State private var heartRates: [Date: (Double, Double)] = [:]
+    var heartRates: [Date: (Double, Double)]
     
     @State private var isFetchingData: Bool = false
     
@@ -21,41 +21,8 @@ struct HeartRateView: View {
     
     var body: some View {
         
-        if heartRates.isEmpty {
-            
-            Section {
-                
-            if isFetchingData {
-                HStack {
-                    Spacer()
-                    Label("Fetching Heart Rate Data", systemImage: "heart.fill")
-                        .labelStyle(.iconOnly)
-                        .foregroundStyle(.accent)
-                        .rotationEffect(rotation)
-                        .font(.title3)
-                    Spacer()
-                }
-                .onAppear {
-                    withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
-                        rotation = Angle(degrees: 360)
-                    }
-                }
-                
-                            } else {
-                                    Button(action: {
-                                        isFetchingData = true
-                                        downwindManager.fetchHeartRatesOverTime(startTime: startDate, endTime: endDate) { heartRateData, _  in
-                                                if let heartRateData = heartRateData {
-                                                    heartRates = heartRateData
-                                                }
-                                                isFetchingData = false
-                                        }
-                                    }, label: {
-                                        Label("Fetch Heart Rate", systemImage: "heart.fill")
-                                    })
-                                }
-                            }
-        } else {
+        if !heartRates.isEmpty {
+                                    
             Section {
                 HeartRateChartView(measurements: heartRates)
                 
@@ -79,6 +46,6 @@ struct HeartRateView: View {
 
 #Preview {
     List {
-        HeartRateView(downwindManager: DownwindManager(), startDate: Date().addingTimeInterval(-232323), endDate: Date().addingTimeInterval(-22323))
+        HeartRateView(downwindManager: DownwindManager(), heartRates: [Date.now : (140, 150), Date.now.addingTimeInterval(-2000) : (100, 105), Date.now.addingTimeInterval(-6000) : (60, 105)], startDate: Date().addingTimeInterval(-232323), endDate: Date().addingTimeInterval(-22323))
     }
 }

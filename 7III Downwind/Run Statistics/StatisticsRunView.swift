@@ -31,6 +31,7 @@ struct StatisticsRunView: View {
     
     @Environment(\.dismiss) private var dismiss
 
+    @State private var heartRates: [Date: (Double, Double)] = [:]
     
     var body: some View {
         let cutDate = runDates.components(separatedBy: " ")
@@ -67,15 +68,19 @@ struct StatisticsRunView: View {
                                 
                             }
                         }
-                    
+                    downwindManager.fetchHeartRatesOverTime(startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
+                        if let heartRateData = heartRateData {
+                            heartRates = heartRateData
+                        }
                     }
+                }
             }
             
             if !statisticsData.locationData.isEmpty {
                 MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, rounds: rounds, statisticsData: $statisticsData)
             }
             
-            HeartRateView(downwindManager: downwindManager, startDate: statisticsData.startDate, endDate: statisticsData.endDate)
+                HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate)
                 
             
                     Section {

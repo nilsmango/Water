@@ -8,59 +8,50 @@
 import SwiftUI
 import Charts
 
-// SwiftUI View to display heart rate chart
 struct HeartRateChartView: View {
-    
     let measurements: [Date: (Double, Double)] // Data fetched from HealthKit
     
     var body: some View {
-//        VStack {
-//            Text("Heart Rate Chart")
-//                .font(.title)
-//                .padding()
-            
-            // Swift Charts BarChart view
-            BarChartView(data: measurements.map { date, span in
-                let (min, max) = span
-                return BarChartData(id: UUID(), date: date, min: Int(min), max: Int(max))
-            })
-//            .frame(height: 300)
-//            .padding()
-//        }
+        let data = measurements.map { date, span in
+            let (min, max) = span
+            return BarChartData(id: UUID(), date: date, min: min, max: max)
+        }
+        
+        let filteredData = data.filter { $0.min >= 30}
+
+        // Calculate min and max Y values
+        let minYValue = (filteredData.map { $0.min }.min() ?? 0) - 5
+//        let calculatedMinYValue = (data.map { $0.min }.min() ?? 0) - 5
+//        let minYValue = max(calculatedMinYValue, 40)
+        let maxYValue = (data.map { $0.max }.max() ?? 0) + 10
+        
+        BarChartView(data: data, minY: minYValue, maxY: maxYValue)
     }
 }
 
-// Struct to represent bar chart data
 struct BarChartData: Identifiable {
     let id: UUID
     let date: Date
-    let min: Int
-    let max: Int
+    let min: Double
+    let max: Double
 }
 
-// SwiftUI View for BarChart using Swift Charts
 struct BarChartView: View {
     let data: [BarChartData]
+    let minY: Double
+    let maxY: Double
     
     var body: some View {
         Chart(data, id: \.id) {
             BarMark(
-                x: .value("", $0.date, unit: .minute),
-                yStart: .value("", $0.min),
-                yEnd: .value("", $0.max)
-//               , width: .fixed(10)
+                x: .value("Time", $0.date, unit: .minute),
+                yStart: .value("bpm Min", $0.min),
+                yEnd: .value("bpm Max", $0.max)
             )
             .clipShape(Capsule())
             .foregroundStyle(.red)
         }
-//        .chartXAxis {
-//            AxisMarks(values: .stride(by: ChartStrideBy.hour.time)) { _ in
-//                AxisValueLabel(
-//                            format: .dateTime.hour(.defaultDigits(amPM: .narrow))
-//                        )
-//            }
-//        }
-//        .chartYScale(domain: 50...190)
+        .chartYScale(domain: minY...maxY)
         .frame(height: 150)
     }
 }

@@ -775,12 +775,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // Calculate the interval based on the startTime, endTime, and desired number of samples
         let interval = DateInterval(start: startTime, end: endTime)
         let intervalDuration = interval.duration
-        let samplesCount = 100
+        let samplesCount = 80
         let timeInterval = intervalDuration / Double(samplesCount)
 
+        let predicate = HKQuery.predicateForSamples(withStart: startTime, end: endTime)
+        
         // Define the query to fetch heart rate statistics collection
         let query = HKStatisticsCollectionQuery(quantityType: heartRateType,
-                                                quantitySamplePredicate: nil,
+                                                quantitySamplePredicate: predicate,
                                                 options: [.discreteMin, .discreteMax],
                                                 anchorDate: startTime,
                                                 intervalComponents: DateComponents(second: Int(timeInterval)))
