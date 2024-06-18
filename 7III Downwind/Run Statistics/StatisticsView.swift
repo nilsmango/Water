@@ -26,9 +26,7 @@ struct StatisticsView: View {
                                     RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil")
                                 }
                             }
-                            .onDelete { indexSet in
-                                downwindManager.delete(at: indexSet)
-                            }
+                            
                         } header: {
                             VStack(alignment: .leading) {
                                 if monthIndex == 0 {
@@ -50,7 +48,6 @@ struct StatisticsView: View {
                 }
             }
         .navigationTitle("Run Statistics")
-        .navigationBarItems(trailing: EditButton())
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink("Filter by Tags") {

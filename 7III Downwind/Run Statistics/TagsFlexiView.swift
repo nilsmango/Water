@@ -11,22 +11,27 @@ struct TagsFlexiView: View {
     var strings: [String]
     
     var body: some View {
-        FlexibleView(
-            data: strings,
-            spacing: 5,
-            alignment: .leading
-        ) { string in
-                Text(string)
-                    .foregroundColor(.white)
-                    .fontWeight(.semibold)
-                    .fontDesign(.rounded)
-                    .padding(8)
-                    .background(
-                        Capsule()
-                            .fill(.accent)
-                        
-                    )
-            }
+        if strings.isEmpty {
+            EmptyTagsView()
+        } else {
+            FlexibleView(
+                data: strings,
+                spacing: 5,
+                alignment: .leading
+            ) { string in
+                    Text(string)
+                        .foregroundColor(.white)
+                        .fontWeight(.semibold)
+                        .fontDesign(.rounded)
+                        .padding(8)
+                        .background(
+                            Capsule()
+                                .fill(.accent)
+                            
+                        )
+                }
+        }
+        
     }
 }
 

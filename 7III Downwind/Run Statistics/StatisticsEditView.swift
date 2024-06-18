@@ -22,7 +22,6 @@ struct StatisticsEditView: View {
             
             HStack {
                 Label("Select a point to edit", systemImage: "info.circle")
-                    
                 
                 Spacer()
             }

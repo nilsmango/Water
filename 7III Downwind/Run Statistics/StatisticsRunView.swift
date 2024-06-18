@@ -22,11 +22,14 @@ struct StatisticsRunView: View {
     @State private var showMapSheet = false
     @State private var showTagsEditView = false
     @State private var showRunEditView = false
+    @State private var showAlert = false
     
     @State private var tags = [String]()
     @State private var editTags = [String]()
     
     @State private var statisticsDataEdit = RunStatistic.empty()
+    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         let cutDate = runDates.components(separatedBy: " ")
@@ -144,25 +147,9 @@ struct StatisticsRunView: View {
                         .font(.body)
                     }
                     .padding(.bottom, 9)
-                } footer: {
-                    
-                    if tags.isEmpty {
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                showTagsEditView = true
-                            }, label: {
-                                Label("Add tags", systemImage: "tag")
-                            })
-                            .buttonStyle(.borderedProminent)
-                            Spacer()
-                        }
-                        .padding()
-                    }
                 }
             }
             
-                if tags != [] {
                     Section {
                         TagsFlexiView(strings: tags)
                         
@@ -177,7 +164,7 @@ struct StatisticsRunView: View {
                             Spacer()
                             
                             
-                            Button("Edit Tags") {
+                            Button(tags.isEmpty ? "Add Tags" : "Edit Tags") {
                                 editTags = tags
                                 showTagsEditView = true
                             }
@@ -186,8 +173,20 @@ struct StatisticsRunView: View {
                             
                         }
                         .padding(.bottom, 9)
-                }
-            }
+                    } footer: {
+                        HStack {
+                            Spacer()
+                            Button(role: .destructive) {
+                                showAlert = true
+                            } label: {
+                                Label("Delete Run", systemImage: "trash")
+                            }
+                            .buttonStyle(.bordered)
+                            Spacer()
+                        }
+                        .padding(.top, 32)
+                    }
+                
         }
         .onAppear {
             if statisticsData.tags != nil {
@@ -207,6 +206,18 @@ struct StatisticsRunView: View {
                 })
             }
         }
+        
+        .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Are you sure?"),
+                            message: Text("This will also delete the workout from Health."),
+                            primaryButton: .destructive(Text("Delete")) {
+                                dismiss()
+                                downwindManager.deleteWorkout(id: statisticsData.id)
+                            },
+                            secondaryButton: .cancel()
+                        )
+                    }
         
         .sheet(isPresented: $showRounds, content: {
             NavigationStack {
@@ -301,8 +312,8 @@ struct StatisticsRunView: View {
                                 
                                 showRunEditView = false
                                 
-                                // save the new data
-                                downwindManager.saveRunStatistics()
+                                // TODO: save the new data
+//                                downwindManager.saveEditedRoute(statistic: statisticsData)
                                 
                             }, label: {
                                 Text("Save")
@@ -316,6 +327,6 @@ struct StatisticsRunView: View {
 
 #Preview {
     NavigationStack {
-        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#140p", "#17kn"])))
+        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
     }
 }

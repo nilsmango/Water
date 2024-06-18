@@ -45,22 +45,27 @@ struct TagsEditView: View {
     
     var body: some View {
         Section {
-            FlexibleView(
-                data: allTags,
-                spacing: 5,
-                alignment: .leading
-            ) { tag in
-                SelectionButtonLabel(string: tag, chosenStrings: $tags, allStrings: trackerTags)
-                    .onTapGesture {
-                            if tags.contains(tag) {
-                                tags.removeAll(where: { $0 == tag })
-                                updateAllTags()
-                            } else {
-                                    tags.append(tag)
+            if allTags.isEmpty {
+                EmptyTagsView()
+            } else {
+                FlexibleView(
+                    data: allTags,
+                    spacing: 5,
+                    alignment: .leading
+                ) { tag in
+                    SelectionButtonLabel(string: tag, chosenStrings: $tags, allStrings: trackerTags)
+                        .onTapGesture {
+                                if tags.contains(tag) {
+                                    tags.removeAll(where: { $0 == tag })
                                     updateAllTags()
-                            }
-                    }
+                                } else {
+                                        tags.append(tag)
+                                        updateAllTags()
+                                }
+                        }
+                }
             }
+            
         }
         .onAppear {
             allTags = Array(Set(trackerTags + tags)).sorted()

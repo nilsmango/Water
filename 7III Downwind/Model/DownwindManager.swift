@@ -276,21 +276,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return Double(components.second ?? 0)
     }
     
-    /// delete a statistic
-    func delete(at indexSet: IndexSet) {
-        // remove statistics
-        for index in indexSet.sorted(by: >) {
-                if index < runStatistics.count {
-                    runStatistics.remove(at: index)
-                }
-            }
-        // save to disk
-        saveRunStatistics()
-    }
-    
     /// delete all statistics
     func deleteStatistics() {
         runStatistics = []
+        groupedRunStatistics = []
         saveRunStatistics()
     }
     
@@ -346,16 +335,154 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// Save runStatistics to disk
     func saveRunStatistics() {
-        DispatchQueue.global(qos: .background).async {
-            do {
-                let data = try JSONEncoder().encode(self.runStatistics)
-                let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
-                try data.write(to: url)
-            } catch {
-                print("Error saving runStatistics: \(error)")
+            DispatchQueue.global(qos: .background).async {
+                do {
+                    let data = try JSONEncoder().encode(self.runStatistics)
+                    let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
+                    try data.write(to: url)
+                } catch {
+                    print("Error saving runStatistics: \(error)")
+                }
             }
-        }
     }
+    
+    
+    func deleteWorkout(id: UUID) {
+        let workoutPredicate = HKQuery.predicateForObject(with: id)
+        
+        // Create a query to fetch the workout
+        let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: workoutPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (_, samples, error) in
+            guard error == nil else {
+                // Handle error
+                print("Error fetching workout: \(error!.localizedDescription)")
+                return
+            }
+            
+            if let workout = samples?.first as? HKWorkout {
+                
+                // remove workout
+                self.healthStore.delete(workout) { (success, error) in
+                                    if let error = error {
+                                        print("Error deleting workout: \(error.localizedDescription)")
+                                        return
+                                    }
+                                    
+                                    if success {
+                                        print("Successfully deleted workout from health.")
+                                        
+                                        // also remove it from the arrays
+                                        if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                                            DispatchQueue.main.async {
+                                                self.runStatistics.remove(at: runIndex)
+                                            }
+                                        forOuter: for i in 0..<self.groupedRunStatistics.count {
+                                                for j in 0..<self.groupedRunStatistics[i].count {
+                                                    if let index = self.groupedRunStatistics[i][j].firstIndex(where: { $0.id == id }) {
+                                                        DispatchQueue.main.async {
+                                                            self.groupedRunStatistics[i][j].remove(at: index)
+                                                        }
+                                                        break forOuter
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                
+            } else {
+                print("No workout found with the specified UUID. Saving the array to disk")
+                // if can't find in health
+                self.saveRunStatistics()
+            }
+            
+            
+        }
+        
+        healthStore.execute(workoutQuery)
+    }
+    
+//    func saveEditedRoute(statistic: RunStatistic) {
+//        
+//        let workoutPredicate = HKQuery.predicateForObject(with: statistic.id)
+//        
+//        // Create a query to fetch the workout
+//        let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: workoutPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (_, samples, error) in
+//            guard error == nil else {
+//                // Handle error
+//                print("Error fetching workout: \(error!.localizedDescription)")
+//                return
+//            }
+//            
+//            if let workout = samples?.first as? HKWorkout {
+//                
+//                // remove workout
+//                self.healthStore.delete(workout) { (success, error) in
+//                                    if let error = error {
+//                                        print("Error deleting workout: \(error.localizedDescription)")
+//                                        return
+//                                    }
+//                                    
+//                                    if success {
+//                                        // Create and save a new workout with the updated route and parameters
+//                                        self.addWorkout(from: statistic, oldWorkout: workout)
+//                                    }
+//                                }
+//                
+//            } else {
+//                print("No workout found with the specified UUID. Saving the array to disk")
+//                // if can't find in health
+//                self.saveRunStatistics()
+//            }
+//            
+//            
+//        }
+//        
+//        healthStore.execute(workoutQuery)
+//        
+//    }
+    
+//    // Function to update the workout with the new route and parameters
+//    private func addWorkout(from statistic: RunStatistic, oldWorkout: HKWorkout) {
+//        // TODO: total distance,startTime, endTime, totalTime, max, average speed, totalDistance, route, tags, kcal, heart rate fucking everything
+//        
+//            // TODO: Prepare the new route data (do it really, not this crap) and other parameters to update
+//            let newRoute = statistic.locationData.map { location in
+//                HKWorkoutRouteBuilder(healthStore: healthStore, device: nil)
+//            }
+//            
+//            // Example for updating other parameters (e.g., metadata)
+//            let metadata: [String: Any] = [
+//                // metadata
+//            ]
+//            
+//            // Create a new workout builder to save the updated data
+//            let configuration = HKWorkoutConfiguration()
+//            configuration.activityType = statistic.workoutType?.activityType ?? .surfingSports
+//            configuration.locationType = .outdoor
+//            
+//            workoutBuilder = HKWorkoutBuilder(healthStore: healthStore, configuration: configuration, device: oldWorkout.device ?? nil)
+//            
+//            // Add metadata to the workout builder
+//            workoutBuilder.addMetadata(metadata)
+//            
+//            // Add the new route data
+//            for route in newRoute {
+//                workoutBuilder.add([route], completion: { (success, error) in
+//                    if let error = error {
+//                        print("Error adding route to workout: \(error.localizedDescription)")
+//                    }
+//                })
+//            }
+//            
+//            // Finish the workout
+//            workoutBuilder.finishWorkout { (workout, error) in
+//                if let error = error {
+//                    print("Error finishing workout: \(error.localizedDescription)")
+//                } else {
+//                    print("Workout updated successfully")
+//                }
+//            }
+//        }
     
     /// Load runStatistics from disk
     func loadRunStatistics() {
@@ -394,6 +521,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     self.runStatistics[runIndex].workoutType = metaData.workoutType
                                     self.runStatistics[runIndex].startDate = workout.startDate
                                     self.runStatistics[runIndex].endDate = workout.endDate
+
+//                                    self.runStatistics[runIndex].heartRates =
+//                                    self.runStatistics[runIndex].averageHeartRate =
                                 }
                             } else {
                                 let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: metaData.totalDistance, topSpeed: metaData.topSpeed, averageSpeed: metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: metaData.tags, workoutType: metaData.workoutType, startDate: workout.startDate, endDate: workout.endDate)
@@ -1031,7 +1161,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let newRunDistance = distanceAndSpeed.totalDistance
             let newTopSpeed = distanceAndSpeed.topSpeed
             
-            return RunStatistic(id: statistic.id, runName: statistic.runName, crewStatistics: statistic.crewStatistics, runTime: newRunTime, runDistance: newRunDistance, topSpeed: newTopSpeed, locationData: newLocationData, tags: statistic.tags)
+            // editing the statistic
+            var newStatistic = statistic
+            newStatistic.runTime = newRunTime
+            newStatistic.runDistance = newRunDistance
+            newStatistic.topSpeed = newTopSpeed
+            newStatistic.locationData = newLocationData
+            newStatistic.startDate = startTime
+            newStatistic.endDate = finishTime
+            
+            return newStatistic
+            
             
         } else {
             return statistic
@@ -1054,7 +1194,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let newRunDistance = distanceAndSpeed.totalDistance
             let newTopSpeed = distanceAndSpeed.topSpeed
             
-            return RunStatistic(id: statistic.id, runName: statistic.runName, crewStatistics: statistic.crewStatistics, runTime: newRunTime, runDistance: newRunDistance, topSpeed: newTopSpeed, locationData: newLocationData, tags: statistic.tags)
+            var newStatistic = statistic
+            newStatistic.runTime = newRunTime
+            newStatistic.runDistance = newRunDistance
+            newStatistic.topSpeed = newTopSpeed
+            newStatistic.locationData = newLocationData
+            newStatistic.startDate = startTime
+            newStatistic.endDate = finishTime
+            
+            return newStatistic
             
         } else {
             return statistic
@@ -1077,7 +1225,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let newRunDistance = distanceAndSpeed.totalDistance
             let newTopSpeed = distanceAndSpeed.topSpeed
             
-            return RunStatistic(id: statistic.id, runName: statistic.runName, crewStatistics: statistic.crewStatistics, runTime: newRunTime, runDistance: newRunDistance, topSpeed: newTopSpeed, locationData: newLocationData, tags: statistic.tags)
+            var newStatistic = statistic
+            newStatistic.runTime = newRunTime
+            newStatistic.runDistance = newRunDistance
+            newStatistic.topSpeed = newTopSpeed
+            newStatistic.locationData = newLocationData
+            newStatistic.startDate = startTime
+            newStatistic.endDate = finishTime
+            
+            return newStatistic
             
         } else {
             return statistic

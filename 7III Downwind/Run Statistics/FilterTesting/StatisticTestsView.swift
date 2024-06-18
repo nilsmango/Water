@@ -26,9 +26,7 @@ struct StatisticTestsView: View {
                     RunOverView(runDate: downwindManager.createDateString(from: statistic.locationData.first?.timestamp), runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeed, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "")
                 }
             }
-            .onDelete { indexSet in
-                downwindManager.delete(at: indexSet)
-            }
+            
         }
             .navigationTitle("Run Statistics")
             .sheet(isPresented: $showSheet, content: {
