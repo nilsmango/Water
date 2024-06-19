@@ -10,6 +10,7 @@ import SwiftUI
 struct StatisticsMainHeader: View {
     let cutDate: [String]
     var locationName: String
+    let activity: String
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -20,6 +21,15 @@ struct StatisticsMainHeader: View {
                         .font(.title)
                     Text(cutDate[2])
                         .font(.body)
+                    
+                    Spacer()
+                    
+                    Text(activity)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .fontDesign(.rounded)
+                        .foregroundStyle(.accent)
+                        .textCase(nil)
                 }
                     .padding(.bottom, -12)
                 Text(cutDate.dropFirst(3).joined(separator: " "))
@@ -43,5 +53,8 @@ struct StatisticsMainHeader: View {
 }
 
 #Preview {
-    StatisticsMainHeader(cutDate: ["12312", "21323"], locationName: "Mage")
+    StatisticsMainHeader(cutDate: ["APR", "01", "2023"], locationName: "Magglingen", activity: "SUP DW Foil")
+        .background {
+            Color.gray.opacity(0.5)
+        }
 }

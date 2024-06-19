@@ -41,7 +41,7 @@ struct StatisticsRunView: View {
             Section {
                 StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: averageSpeed, averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm")
             } header: {
-                StatisticsMainHeader(cutDate: cutDate, locationName: locationName)
+                StatisticsMainHeader(cutDate: cutDate, locationName: locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
             }
             .onAppear {
                 if statisticsData.tags != nil {
@@ -170,24 +170,20 @@ struct StatisticsRunView: View {
             
         })
         .sheet(isPresented: $showMapSheet, content: {
-            ZStack {
-                StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            showMapSheet = false
-                        }, label: {
-                            Label("Close", systemImage: "xmark.circle.fill")
-                                .labelStyle(.iconOnly)
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(.black, .gray)
-                            
-                        })
-                        .font(.title2)
-                        .padding()
-                    }
-                    Spacer()
+            NavigationStack {
+                    StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
+                        .navigationTitle(locationName)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button(action: {
+                                    showMapSheet = false
+                                }, label: {
+                                    Label("Close", systemImage: "xmark.circle.fill")
+                                        .symbolRenderingMode(.palette)
+                                        .foregroundStyle(.black, .gray)
+                                })
+                            }
                 }
             }
             
@@ -223,7 +219,25 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showRunEditView, content: {
             NavigationStack {
-                StatisticsEditView(downwindManager: downwindManager, statisticsData: $statisticsDataEdit)
+                ZStack {
+                    StatisticsEditView(downwindManager: downwindManager, statisticsData: $statisticsDataEdit)
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Label("Select a point to edit", systemImage: "info.circle")
+//                                .font(.caption)
+                                .padding(.vertical, 6)
+                                .padding(.horizontal, 10)
+                                .background {
+                                    Capsule()
+                                        .foregroundStyle(.listForeground)
+                                }
+                        }
+                        .padding(.trailing, 10)
+                    }
+                }
+                
                     .navigationTitle("Edit Run Data")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {

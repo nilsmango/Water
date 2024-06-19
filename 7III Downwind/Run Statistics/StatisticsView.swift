@@ -72,7 +72,9 @@ struct StatisticsView: View {
     private func monthSectionHeader(yearIndex: Int, monthIndex: Int) -> String {
         let month = Calendar.current.component(.month, from: downwindManager.groupedRunStatistics[yearIndex][monthIndex].first?.startDate ?? Date.distantPast)
         let monthName = Calendar.current.monthSymbols[month - 1]
-        return monthName
+        let year = Calendar.current.component(.year, from: downwindManager.groupedRunStatistics[yearIndex].first?.first?.startDate ?? Date.distantPast)
+        let yearString = String(year % 100)
+        return monthName + " " + yearString
     }
 }
 

@@ -15,21 +15,21 @@ struct StatisticsEditView: View {
     let padding = 16.0
     
     var body: some View {
-        VStack {
+//        VStack {
             StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, editMode: true)
-                .frame(width: UIScreen.main.bounds.width - padding * 2, height: UIScreen.main.bounds.height / 1.5)
-                .cornerRadius(16.0)
+//                .frame(width: UIScreen.main.bounds.width - padding * 2, height: UIScreen.main.bounds.height / 1.5)
+//                .cornerRadius(16.0)
             
-            HStack {
-                Label("Select a point to edit", systemImage: "info.circle")
-                
-                Spacer()
-            }
-            .padding(padding)
-            
-            Spacer()
-        }
-        .padding()
+//            HStack {
+//                Label("Select a point to edit", systemImage: "info.circle")
+//                
+//                Spacer()
+//            }
+//            .padding(padding)
+//            
+//            Spacer()
+//        }
+//        .padding()
     }
 }
 
