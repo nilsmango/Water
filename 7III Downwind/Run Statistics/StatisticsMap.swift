@@ -107,6 +107,7 @@ struct StatisticsMap: View {
                                 .fill(.purple.opacity(0.8))
                                 .frame(width: lineWidth)
                         }
+                        .contentShape(Rectangle())
                         
                     }
                 } else {
