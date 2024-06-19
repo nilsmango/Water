@@ -1111,8 +1111,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
     }
     
-    /// calculates the coordinates factor
-    func calculateCoordinatesFactor(context: MapCameraUpdateContext, locations: [LocationData], maxPointsToShow: Int, maxPolylines: Int) -> Int {
+    /// calculates the new poly line number
+    func calculatePolylineNumber(context: MapCameraUpdateContext, locations: [LocationData], maxPolylinesToShow: Int) -> Int {
         // count how many coordinates are visible for the camera
         let mapRect = context.rect
         var coordinatesVisible = 0
@@ -1122,31 +1122,48 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 coordinatesVisible += 1
             }
         }
-        // calculating coordinates factor
-        var coordinatesFactor = max(coordinatesVisible / maxPointsToShow, 1)
         
-        // making sure we over all draw less then the max polylines for reasons of performance
-        if locations.count / coordinatesFactor >= maxPolylines {
-            coordinatesFactor = Int((Double(locations.count) / Double(maxPolylines)).rounded(.up))
-            
+        if coordinatesVisible == 0 {
+            return 0
         }
-        return coordinatesFactor
+        
+        let totalCoordinates = locations.count
+        
+        let visibleToTotalFactor = Double(totalCoordinates) / Double(coordinatesVisible)
+        
+        let newPolyLineNumber: Int
+        if coordinatesVisible > maxPolylinesToShow {
+         // show only max
+            newPolyLineNumber = Int(round(Double(maxPolylinesToShow) * visibleToTotalFactor))
+        } else {
+            newPolyLineNumber = Int(round(Double(coordinatesVisible) * visibleToTotalFactor))
+        }
+        
+        print("new poly lines: \(newPolyLineNumber)")
+        return newPolyLineNumber
+        
     }
     
     /// creates polyline coordinates and colors
-    func createPolylineData(locationData: [LocationData], coordinatesFactor: Int, coordinatesCount: Int) async -> [PolylineData] {
+    func createPolylineData(locationData: [LocationData], numberOfElementsToKeep: Int, coordinatesCount: Int) async -> [PolylineData] {
+        guard numberOfElementsToKeep > 0 else {
+            return []
+        }
         // create an array of all the location pairs
         var locationPairs = [(LocationData, LocationData)]()
         
-        for index in locationData.indices {
-            if index % coordinatesFactor == 0 {
-                if coordinatesCount > index + coordinatesFactor {
-                    let firstLocationData = locationData[index]
-                    let secondLocationData = locationData[index+coordinatesFactor]
-                    locationPairs.append((firstLocationData, secondLocationData))
-                }
+        let stepSize = Double(coordinatesCount) / Double(numberOfElementsToKeep)
+        
+        
+        for i in 0..<numberOfElementsToKeep - 1 {
+            let index = Int(round(Double(i) * stepSize))
+            let index2 = Int(round(Double(i + 1) * stepSize))
+            // Ensure the index is within bounds of the array
+            if index != index2 && index2 < coordinatesCount {
+                locationPairs.append((locationData[index], locationData[index2]))
             }
         }
+       
         // create an array for all the speeds of the location pairs
         func calculateSpeedsOfLocationPairs(locationPair: (LocationData, LocationData)) -> Double {
             let distance = calculateDirectDistance(from: Member(name: "from", latitude: locationPair.0.latitude, longitude: locationPair.0.longitude), to: Member(name: "to", latitude: locationPair.1.latitude, longitude: locationPair.1.longitude)) ?? 0.0
@@ -1173,7 +1190,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let polyline = PolylineData(coordinates: [CLLocationCoordinate2D(latitude: line.0.latitude, longitude: line.0.longitude), CLLocationCoordinate2D(latitude: line.1.latitude, longitude: line.1.longitude)], strokeColor: lineColors[index])
             polylineData.append(polyline)
         }
-        print("polylines: \(polylineData.count)")
+        print("drawing polylines: \(polylineData.count)")
         return polylineData
     }
     

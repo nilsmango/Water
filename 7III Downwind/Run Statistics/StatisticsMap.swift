@@ -14,26 +14,43 @@ struct StatisticsMap: View {
     @Binding var statisticsData: RunStatistic
     
     @State private var mapSpan: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-    
-    @State private var coordinatesFactor = 30
-    
+        
     @State private var polylineData: [PolylineData] = []
+    
+    @State private var statePolyLineNumber = 100
     
     var editMode = false
     
     var maxPointsToShow: Int {
-        if editMode {
-            return 35
+        if let workoutType = statisticsData.workoutType {
+            switch workoutType {
+            case .foilSurf, .supFoil, .wingFoil, .windsurf, .windFoil, .pumpFoil, .surfingSport, .surf, .kite, .supSurf:
+                if editMode {
+                    return 45
+                } else {
+                    return 300
+                }
+            default:
+                if editMode {
+                    return 45
+                } else {
+                    return 70
+                }
+            }
         } else {
-            return 70
+            if editMode {
+                return 45
+            } else {
+                return 70
+            }
         }
     }
     
-    var maxPolylines: Int {
+    var maxTotalPolyLineNumber: Int {
         if editMode {
-            return 999
+            return 1000
         } else {
-            return 1600
+            return 1000
         }
     }
     
@@ -56,7 +73,7 @@ struct StatisticsMap: View {
                                     statisticsData = await downwindManager.removePoint(for: statisticsData, coordinate: polyline.coordinates.first!)
                                                                         
                                     // coordinates pairs lines
-                                    polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, coordinatesFactor: coordinatesFactor, coordinatesCount: statisticsData.locationData.count)
+                                    polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
                                 }
                             } label: {
                                 Label("Remove Point", systemImage: "trash")
@@ -67,7 +84,7 @@ struct StatisticsMap: View {
                                     statisticsData = await downwindManager.setFinish(for: statisticsData, coordinate: polyline.coordinates.first!)
                                                                         
                                     // coordinates pairs lines
-                                    polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, coordinatesFactor: coordinatesFactor, coordinatesCount: statisticsData.locationData.count)
+                                    polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
                                 }
                             } label: {
                                 Label("Set Finish here", systemImage: "flag.checkered")
@@ -78,7 +95,7 @@ struct StatisticsMap: View {
                                     statisticsData = await downwindManager.setStart(for: statisticsData, coordinate: polyline.coordinates.first!)
                                                                         
                                     // coordinates pairs lines
-                                    polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, coordinatesFactor: coordinatesFactor, coordinatesCount: statisticsData.locationData.count)
+                                    polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
                                 }
                                 
                             } label: {
@@ -130,22 +147,25 @@ struct StatisticsMap: View {
         .onMapCameraChange(frequency: .onEnd) { context in
             if abs(mapSpan.latitudeDelta - context.region.span.latitudeDelta) > 0.002  {
                 mapSpan = context.region.span
-                // calculating coordinates factor
-                let newCoordinatesFactor = downwindManager.calculateCoordinatesFactor(context: context, locations: statisticsData.locationData, maxPointsToShow: maxPointsToShow, maxPolylines: maxPolylines)
-                if coordinatesFactor != newCoordinatesFactor {
-                    coordinatesFactor = newCoordinatesFactor
+                let newPolyLineNumber = downwindManager.calculatePolylineNumber(context: context, locations: statisticsData.locationData, maxPolylinesToShow: maxPointsToShow)
+                if statePolyLineNumber != newPolyLineNumber {
+                    if newPolyLineNumber <= maxTotalPolyLineNumber {
+                        statePolyLineNumber = newPolyLineNumber
+                    } else {
+                        statePolyLineNumber = maxTotalPolyLineNumber
+                    }
+                    
                     Task {
-                        // coordinates pairs lines
-                        polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, coordinatesFactor: coordinatesFactor, coordinatesCount: statisticsData.locationData.count)
+                        polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
                     }
                 }
             }
         }
         .onAppear {
-            coordinatesFactor = max(statisticsData.locationData.count / maxPointsToShow, 1)
+            statePolyLineNumber = maxPointsToShow
             Task {
                 // coordinates pairs lines
-                polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, coordinatesFactor: coordinatesFactor, coordinatesCount: statisticsData.locationData.count)
+                polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
             }
             
         }

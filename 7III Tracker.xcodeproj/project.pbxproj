@@ -32,6 +32,7 @@
 		7840835E2C21B279004C0857 /* MapSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835D2C21B279004C0857 /* MapSectionView.swift */; };
 		784083602C21C096004C0857 /* HeartRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835F2C21C096004C0857 /* HeartRateView.swift */; };
 		784083622C21C2AD004C0857 /* StatisticsMainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */; };
+		784083642C21FB54004C0857 /* RunEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083632C21FB54004C0857 /* RunEdit.swift */; };
 		785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
 		785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
 		785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
@@ -111,6 +112,7 @@
 		7840835D2C21B279004C0857 /* MapSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSectionView.swift; sourceTree = "<group>"; };
 		7840835F2C21C096004C0857 /* HeartRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateView.swift; sourceTree = "<group>"; };
 		784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMainHeader.swift; sourceTree = "<group>"; };
+		784083632C21FB54004C0857 /* RunEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunEdit.swift; sourceTree = "<group>"; };
 		785C4A952B358F7B00EB07F8 /* 7III Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				785C4ACC2B41D28400EB07F8 /* DBRun.swift */,
 				785C4AD22B433D4000EB07F8 /* MemberRunData.swift */,
 				78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */,
+				784083632C21FB54004C0857 /* RunEdit.swift */,
 				78B388E32C18C93F00C75A60 /* WorkoutType.swift */,
 				78C4D2392BA6DADB00639E65 /* LocationData.swift */,
 				78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */,
@@ -538,6 +541,7 @@
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,
+				784083642C21FB54004C0857 /* RunEdit.swift in Sources */,
 				7840835C2C218985004C0857 /* ChartStrideBy.swift in Sources */,
 				788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */,
 				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,
