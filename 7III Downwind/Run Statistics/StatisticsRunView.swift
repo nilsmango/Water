@@ -220,7 +220,7 @@ struct StatisticsRunView: View {
         .sheet(isPresented: $showRunEditView, content: {
             NavigationStack {
                 ZStack {
-                    StatisticsEditView(downwindManager: downwindManager, statisticsData: $statisticsDataEdit)
+                    StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit, editMode: true)
                     VStack {
                         Spacer()
                         HStack {

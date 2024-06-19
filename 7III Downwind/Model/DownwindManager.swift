@@ -28,6 +28,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - Statistics
     @Published var activeStatistics: Bool = false
     @Published var runStatistics: [RunStatistic] = []
+    var runEdits: [RunEdit] = []
     @Published var groupedRunStatistics: [[[RunStatistic]]] = []
     @Published var tags = [String]()
     // TODO: make this non published
@@ -170,7 +171,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         return
                     }
                     
-                    // TODO: add crew statistic as own metada here!
+                    // TODO: add crew statistic as own metada here?
                     self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
                         if let error = error {
                             print("Error finishing route: \(error.localizedDescription)")
@@ -331,6 +332,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // File name of the statistics data
     private let fileName = "locationStatistics.data"
+    private let editFileName = "runEdits.data"
     
     
     /// Save runStatistics to disk
@@ -339,6 +341,19 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 do {
                     let data = try JSONEncoder().encode(self.runStatistics)
                     let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
+                    try data.write(to: url)
+                } catch {
+                    print("Error saving runStatistics: \(error)")
+                }
+            }
+    }
+    
+    /// Save runEdits to disk
+    func saveRunEdits() {
+            DispatchQueue.global(qos: .background).async {
+                do {
+                    let data = try JSONEncoder().encode(self.runEdits)
+                    let url = try self.getDocumentsDirectory().appendingPathComponent(self.editFileName)
                     try data.write(to: url)
                 } catch {
                     print("Error saving runStatistics: \(error)")
@@ -400,95 +415,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         healthStore.execute(workoutQuery)
     }
-    
-//    func saveEditedRoute(statistic: RunStatistic) {
-//        
-//        let workoutPredicate = HKQuery.predicateForObject(with: statistic.id)
-//        
-//        // Create a query to fetch the workout
-//        let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: workoutPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (_, samples, error) in
-//            guard error == nil else {
-//                // Handle error
-//                print("Error fetching workout: \(error!.localizedDescription)")
-//                return
-//            }
-//            
-//            if let workout = samples?.first as? HKWorkout {
-//                
-//                // remove workout
-//                self.healthStore.delete(workout) { (success, error) in
-//                                    if let error = error {
-//                                        print("Error deleting workout: \(error.localizedDescription)")
-//                                        return
-//                                    }
-//                                    
-//                                    if success {
-//                                        // Create and save a new workout with the updated route and parameters
-//                                        self.addWorkout(from: statistic, oldWorkout: workout)
-//                                    }
-//                                }
-//                
-//            } else {
-//                print("No workout found with the specified UUID. Saving the array to disk")
-//                // if can't find in health
-//                self.saveRunStatistics()
-//            }
-//            
-//            
-//        }
-//        
-//        healthStore.execute(workoutQuery)
-//        
-//    }
-    
-//    // Function to update the workout with the new route and parameters
-//    private func addWorkout(from statistic: RunStatistic, oldWorkout: HKWorkout) {
-//        // TODO: total distance,startTime, endTime, totalTime, max, average speed, totalDistance, route, tags, kcal, heart rate fucking everything
-//        
-//            // TODO: Prepare the new route data (do it really, not this crap) and other parameters to update
-//            let newRoute = statistic.locationData.map { location in
-//                HKWorkoutRouteBuilder(healthStore: healthStore, device: nil)
-//            }
-//            
-//            // Example for updating other parameters (e.g., metadata)
-//            let metadata: [String: Any] = [
-//                // metadata
-//            ]
-//            
-//            // Create a new workout builder to save the updated data
-//            let configuration = HKWorkoutConfiguration()
-//            configuration.activityType = statistic.workoutType?.activityType ?? .surfingSports
-//            configuration.locationType = .outdoor
-//            
-//            workoutBuilder = HKWorkoutBuilder(healthStore: healthStore, configuration: configuration, device: oldWorkout.device ?? nil)
-//            
-//            // Add metadata to the workout builder
-//            workoutBuilder.addMetadata(metadata)
-//            
-//            // Add the new route data
-//            for route in newRoute {
-//                workoutBuilder.add([route], completion: { (success, error) in
-//                    if let error = error {
-//                        print("Error adding route to workout: \(error.localizedDescription)")
-//                    }
-//                })
-//            }
-//            
-//            // Finish the workout
-//            workoutBuilder.finishWorkout { (workout, error) in
-//                if let error = error {
-//                    print("Error finishing workout: \(error.localizedDescription)")
-//                } else {
-//                    print("Workout updated successfully")
-//                }
-//            }
-//        }
+
     
     /// Load runStatistics from disk
     func loadRunStatistics() {
         DispatchQueue.global(qos: .background).async {
             self.loadWorkoutsFromHealthKit { workouts in
                 do {
+                    // getting the runStatistics (if no health or for older files)
                     let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
                     let data = try Data(contentsOf: url)
                     var decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
@@ -499,36 +433,56 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             decodedStatistics[index].endDate = statistic.locationData.last?.timestamp
                         }
                     }
-                    
                     DispatchQueue.main.async {
                         // Update UI on the main thread
                         self.runStatistics = decodedStatistics
                     }
+                } catch {
+                    print("Error loading runStatistics: \(error)")
+                }
+                do {
+                    // getting the runEdits
+                    let editURL = try self.getDocumentsDirectory().appendingPathComponent(self.editFileName)
+                    let editData = try Data(contentsOf: editURL)
+                    let decodedEdits = try JSONDecoder().decode([RunEdit].self, from: editData)
                     
+                    self.runEdits = decodedEdits
+                    
+                } catch {
+                    print("Error loading runEdits: \(error)")
+                }
+            
                     // Update the statistic from health
                     if HKHealthStore.isHealthDataAvailable() {
                         print("workout number: \(workouts.count)")
                         for workout in workouts {
+                            // TODO: find runEdit, and use that one for anything it has and save it to runStatistics[runIndex]
+                            var runEdit: RunEdit?
+                            if let runEditIndex = self.runEdits.firstIndex(where: { $0.id == workout.uuid }) {
+                                runEdit = self.runEdits[runEditIndex]
+                            }
+                            
                             let metaData = self.getWorkoutMetadata(workout: workout)
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == workout.uuid }) {
                                 DispatchQueue.main.async {
-                                    self.runStatistics[runIndex].runTime = workout.duration / 60
-                                    self.runStatistics[runIndex].runDistance = metaData.totalDistance
-                                    self.runStatistics[runIndex].topSpeed = metaData.topSpeed
-                                    self.runStatistics[runIndex].averageSpeed = metaData.averageSpeed
+                                    self.runStatistics[runIndex].runTime = runEdit?.newTotalTime ?? workout.duration / 60
+                                    self.runStatistics[runIndex].runDistance = runEdit?.newTotalDistance ?? metaData.totalDistance
+                                    self.runStatistics[runIndex].topSpeed = runEdit?.newTopSpeed ?? metaData.topSpeed
+                                    self.runStatistics[runIndex].averageSpeed = runEdit?.newAverageSpeed ?? metaData.averageSpeed
                                     self.runStatistics[runIndex].kCalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
-                                    self.runStatistics[runIndex].tags = metaData.tags
-                                    self.runStatistics[runIndex].workoutType = metaData.workoutType
-                                    self.runStatistics[runIndex].startDate = workout.startDate
-                                    self.runStatistics[runIndex].endDate = workout.endDate
+                                    self.runStatistics[runIndex].tags = runEdit?.newTags ?? metaData.tags
+                                    self.runStatistics[runIndex].workoutType = runEdit?.newWorkoutType ?? metaData.workoutType
+                                    self.runStatistics[runIndex].startDate = runEdit?.startLocation?.timestamp ?? workout.startDate
+                                    self.runStatistics[runIndex].endDate = runEdit?.finishLocation?.timestamp ?? workout.endDate
                                 }
                             } else {
-                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: workout.duration / 60, runDistance: metaData.totalDistance, topSpeed: metaData.topSpeed, averageSpeed: metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: metaData.tags, workoutType: metaData.workoutType, startDate: workout.startDate, endDate: workout.endDate)
+                                let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate)
                                 
                                 DispatchQueue.main.async {
                                     self.runStatistics.append(statistic)
                                 }
                             }
+                            
                         }
                         // sort the array, update the grouped array
                         DispatchQueue.main.async {
@@ -544,12 +498,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         // Update UI on the main thread
                         self.tags = tags
                     }
-                } catch {
-                    print("Error loading runStatistics: \(error)")
                 }
             }
         }
-    }
+    
         
     private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double) {
         let rawWorkoutType = workout.metadata?[customMetadataKeyWorkoutType] as? String ?? ""
@@ -881,18 +833,28 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// save statistic to disk with new tags
     func saveStatisticWithNewTags(tags: [String], statisticsData: RunStatistic) {
+        if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsData.id }) {
+            runEdits[editIndex].newTags = tags
+        } else {
+            let runEdit = RunEdit(id: statisticsData.id, newTags: tags)
+            runEdits.append(runEdit)
+        }
+        saveRunEdits()
+        
         if let index = runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
             runStatistics[index].tags = tags
-            saveRunStatistics()
-            
-            // adding tags to tags
-            for tag in tags {
-                if !tags.contains(where: { $0.lowercased() == tag.lowercased() }) {
-                    self.tags.append(tag)
-                }
-            }
-            self.tags = self.tags.sorted()
         }
+        
+        updateGroupedRunArray()
+        
+        // adding tags to tags
+        for tag in tags {
+            if !tags.contains(where: { $0.lowercased() == tag.lowercased() }) {
+                self.tags.append(tag)
+            }
+        }
+        self.tags = self.tags.sorted()
+        
     }
     
     /// updates the metadata of the run statistics

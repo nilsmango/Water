@@ -22,8 +22,10 @@ struct RunEdit: Identifiable, Codable {
     /// average speed in km/h
     var newAverageSpeed: Double?
     
-    var newKCalories: Double?
-    var newAverageHeartRate: Double?
+//    var newKCalories: Double?
+//    var newAverageHeartRate: Double?
     
     var newTags: [String]?
+    
+    var newWorkoutType: WorkoutType?
 }
