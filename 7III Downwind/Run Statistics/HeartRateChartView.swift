@@ -17,10 +17,8 @@ struct HeartRateChartView: View {
             return BarChartData(id: UUID(), date: date, min: min, max: max)
         }
         
-        let filteredData = data.filter { $0.min >= 30}
-
         // Calculate min and max Y values
-        let minYValue = (filteredData.map { $0.min }.min() ?? 0) - 5
+        let minYValue = (data.map { $0.min }.min() ?? 0) - 5
 //        let calculatedMinYValue = (data.map { $0.min }.min() ?? 0) - 5
 //        let minYValue = max(calculatedMinYValue, 40)
         let maxYValue = (data.map { $0.max }.max() ?? 0) + 10

@@ -798,7 +798,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let interval = DateInterval(start: startTime, end: endTime)
         let intervalDuration = interval.duration
         let samplesCount = 80
-        let timeInterval = intervalDuration / Double(samplesCount)
+        let timeInterval = max(Int(intervalDuration / Double(samplesCount)), 1)
 
         let predicate = HKQuery.predicateForSamples(withStart: startTime, end: endTime)
         
@@ -830,9 +830,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     if let maxValue = statistics.maximumQuantity() {
                         maxHeartRate = maxValue.doubleValue(for: HKUnit.count().unitDivided(by: HKUnit.minute()))
                     }
-
+                if minHeartRate != 0.0 && maxHeartRate != 0.0 {
                     heartRateData[statistics.startDate] = (minHeartRate, maxHeartRate)
                 }
+                }
+            print(heartRateData)
             completion(heartRateData, nil)
         }
 
