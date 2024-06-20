@@ -11,8 +11,6 @@ struct StatisticsRunView: View {
     @ObservedObject var downwindManager: DownwindManager
     
     @Binding var statisticsData: RunStatistic
-        
-    var averageSpeed: String { makePrettySpeed(speed: (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) }
     
     var runDates: String { downwindManager.makeTimeIntervalDate(startDate: statisticsData.startDate ?? statisticsData.locationData.first?.timestamp ?? Date.now, endDate: statisticsData.endDate ?? statisticsData.locationData.last?.timestamp ?? Date.now, withYear: true) }
     
@@ -39,41 +37,9 @@ struct StatisticsRunView: View {
         
         List {
             Section {
-                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: averageSpeed, averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm")
+                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm")
             } header: {
                 StatisticsMainHeader(cutDate: cutDate, locationName: locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
-            }
-            .onAppear {
-                if statisticsData.tags != nil {
-                    tags = statisticsData.tags!
-                }
-                
-                downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
-                    // create location start and end names after loading route
-                        if let firstDataPoint = statisticsData.locationData.first {
-                            downwindManager.getNameOfLocation(location: firstDataPoint) { name in
-                                if let name = name {
-                                    locationName = name
-                                }
-                                
-                                if let lastDataPoint = statisticsData.locationData.last {
-                                    downwindManager.getNameOfLocation(location: lastDataPoint) { name in
-                                        if let name = name {
-                                            if locationName.contains("→") == false && locationName != name {
-                                                locationName += " → " + name
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                            }
-                        }
-                    downwindManager.fetchHeartRatesOverTime(startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
-                        if let heartRateData = heartRateData {
-                            heartRates = heartRateData
-                        }
-                    }
-                }
             }
             
             if !statisticsData.locationData.isEmpty {
@@ -122,7 +88,40 @@ struct StatisticsRunView: View {
                     }
                 
         }
-
+        .onAppear {
+            if statisticsData.tags != nil {
+                tags = statisticsData.tags!
+            }
+            
+            downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
+                
+                downwindManager.fetchHeartRatesOverTime(startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
+                    if let heartRateData = heartRateData {
+                        heartRates = heartRateData
+                    }
+                }
+                
+                // create location start and end names after loading route
+                    if let firstDataPoint = statisticsData.locationData.first {
+                        downwindManager.getNameOfLocation(location: firstDataPoint) { name in
+                            if let name = name {
+                                locationName = name
+                            }
+                            
+                            if let lastDataPoint = statisticsData.locationData.last {
+                                downwindManager.getNameOfLocation(location: lastDataPoint) { name in
+                                    if let name = name {
+                                        if locationName.contains("→") == false && locationName != name {
+                                            locationName += " → " + name
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+            }
+        }
         .navigationTitle(statisticsData.runName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -251,13 +250,10 @@ struct StatisticsRunView: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button(action: {
-                                // update the binding
-                                statisticsData = statisticsDataEdit
                                 
                                 showRunEditView = false
                                 
-                                // TODO: save the new data
-//                                downwindManager.saveEditedRoute(statistic: statisticsData)
+                                downwindManager.saveEditedRoute(newStatistic: statisticsDataEdit)
                                 
                             }, label: {
                                 Text("Save")

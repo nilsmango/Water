@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LocationData: Codable {
+struct LocationData: Codable, Equatable {
     var timestamp: Date
     var latitude: Double
     var longitude: Double

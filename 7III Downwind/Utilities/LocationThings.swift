@@ -84,7 +84,6 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem, statistics: B
 
 /// Takes a speed in km/h, returns a pretty speed in km/h or mph
 func makePrettySpeed(speed: Double, system: MeasurementSystem) -> String {
-    
     switch system {
     case .metric:
         if speed.isNaN || speed.isInfinite {
