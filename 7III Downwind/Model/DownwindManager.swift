@@ -951,10 +951,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             newRunEdit.newTotalDistance = newDistanceAndSpeed.totalDistance
             
             runStatistics[index].topSpeed = newDistanceAndSpeed.topSpeed
-            print("new calculated top speed: \(newDistanceAndSpeed.topSpeed)")
             newRunEdit.newTopSpeed = newDistanceAndSpeed.topSpeed
             
-            runStatistics[index].averageSpeed = newDistanceAndSpeed.totalDistance / (runStatistics[index].runTime / 60)
+            runStatistics[index].averageSpeed = (newDistanceAndSpeed.totalDistance / 1000) / (runStatistics[index].runTime / 60)
             newRunEdit.newAverageSpeed = runStatistics[index].averageSpeed
             
             updateGroupedRunArray()
