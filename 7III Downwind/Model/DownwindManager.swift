@@ -1418,20 +1418,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let newLocationData = Array(statistic.locationData[statistic.locationData.startIndex...finishIndex])
             
             // recalculate distance, max speed, etc.
-            let startTime = newLocationData.first!.timestamp
-            let finishTime = newLocationData.last!.timestamp
-            let newRunTime = timeInMinutesFromDates(startDate: startTime, finishDate: finishTime)
-            let distanceAndSpeed = calculateTotalDistanceAndTopSpeed(locations: newLocationData)
-            let newRunDistance = distanceAndSpeed.totalDistance
-            let newTopSpeed = distanceAndSpeed.topSpeed
+//            let startTime = newLocationData.first!.timestamp
+//            let finishTime = newLocationData.last!.timestamp
+//            let newRunTime = timeInMinutesFromDates(startDate: startTime, finishDate: finishTime)
+//            let distanceAndSpeed = calculateTotalDistanceAndTopSpeed(locations: newLocationData)
+//            let newRunDistance = distanceAndSpeed.totalDistance
+//            let newTopSpeed = distanceAndSpeed.topSpeed
             
             var newStatistic = statistic
-            newStatistic.runTime = newRunTime
-            newStatistic.runDistance = newRunDistance
-            newStatistic.topSpeed = newTopSpeed
+//            newStatistic.runTime = newRunTime
+//            newStatistic.runDistance = newRunDistance
+//            newStatistic.topSpeed = newTopSpeed
             newStatistic.locationData = newLocationData
-            newStatistic.startDate = startTime
-            newStatistic.endDate = finishTime
+//            newStatistic.startDate = startTime
+//            newStatistic.endDate = finishTime
             
             return newStatistic
             
@@ -1449,20 +1449,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             newLocationData.remove(at: removeIndex)
             
             // recalculate distance, max speed, etc.
-            let startTime = newLocationData.first!.timestamp
-            let finishTime = newLocationData.last!.timestamp
-            let newRunTime = timeInMinutesFromDates(startDate: startTime, finishDate: finishTime)
-            let distanceAndSpeed = calculateTotalDistanceAndTopSpeed(locations: newLocationData)
-            let newRunDistance = distanceAndSpeed.totalDistance
-            let newTopSpeed = distanceAndSpeed.topSpeed
+//            let startTime = newLocationData.first!.timestamp
+//            let finishTime = newLocationData.last!.timestamp
+//            let newRunTime = timeInMinutesFromDates(startDate: startTime, finishDate: finishTime)
+//            let distanceAndSpeed = calculateTotalDistanceAndTopSpeed(locations: newLocationData)
+//            let newRunDistance = distanceAndSpeed.totalDistance
+//            let newTopSpeed = distanceAndSpeed.topSpeed
             
             var newStatistic = statistic
-            newStatistic.runTime = newRunTime
-            newStatistic.runDistance = newRunDistance
-            newStatistic.topSpeed = newTopSpeed
+//            newStatistic.runTime = newRunTime
+//            newStatistic.runDistance = newRunDistance
+//            newStatistic.topSpeed = newTopSpeed
             newStatistic.locationData = newLocationData
-            newStatistic.startDate = startTime
-            newStatistic.endDate = finishTime
+//            newStatistic.startDate = startTime
+//            newStatistic.endDate = finishTime
             
             return newStatistic
             
