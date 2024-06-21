@@ -182,7 +182,7 @@ struct StatisticsMap: View {
                             }
                             
                         }, label: {
-                            Label("Revert All Changes", systemImage: "arrow.counterclockwise")
+                            Label("Undo All Edits", systemImage: "arrow.counterclockwise")
                         })
                         .buttonStyle(.borderedProminent)
                         .tint(.purple)
