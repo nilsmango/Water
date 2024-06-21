@@ -130,11 +130,11 @@ struct OptionsView: View {
             }
             
             Section {
-                Picker("Run List Sorting", selection: $downwindManager.runListSorting) {
-                    ForEach(RunListSorting.allCases) { sortCase in
-                        Text(sortCase.rawValue)
-                    }
-                }
+//                Picker("Run List Sorting", selection: $downwindManager.runListSorting) {
+//                    ForEach(RunListSorting.allCases) { sortCase in
+//                        Text(sortCase.rawValue)
+//                    }
+//                }
                 
                 Picker("Measurement System", selection: $downwindManager.measurementSystem) {
                     ForEach(MeasurementSystem.allCases) { system in

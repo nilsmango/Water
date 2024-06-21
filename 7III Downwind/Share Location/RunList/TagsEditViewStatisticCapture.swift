@@ -65,8 +65,7 @@ struct TagsEditViewStatisticCapture: View {
             }
             Group {
                 HStack {
-                    TextField("Add a new tag ...", text: $newTag)
-                        
+                    TextField(tags.isEmpty ? "Add a tag ..." : "Add a new tag ...", text: $newTag)
                         .focused($isFieldFocused)
                         .onSubmit {
                             isFieldFocused = true
@@ -108,7 +107,7 @@ struct TagsEditViewStatisticCapture: View {
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundStyle(.uiGray)
                 )
-                .frame(width: UIScreen.main.bounds.width / 1.75)
+                .frame(width: UIScreen.main.bounds.width / 2)
             }
             .padding(.top)
                 

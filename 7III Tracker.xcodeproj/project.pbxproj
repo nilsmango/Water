@@ -81,7 +81,6 @@
 		78C4D23A2BA6DADB00639E65 /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* LocationData.swift */; };
 		78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */; };
 		78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
-		78C4D2412BAA149000639E65 /* CaptureRunStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */; };
 		78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
 		78C4D2452BAC8B8A00639E65 /* CrewStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */; };
 /* End PBXBuildFile section */
@@ -162,7 +161,6 @@
 		78C4D2392BA6DADB00639E65 /* LocationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationData.swift; sourceTree = "<group>"; };
 		78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
 		78C4D23E2BA7512A00639E65 /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
-		78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureRunStatisticsView.swift; sourceTree = "<group>"; };
 		78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMap.swift; sourceTree = "<group>"; };
 		78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStatistic.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -233,7 +231,6 @@
 				7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */,
 				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
 				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
-				78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */,
 			);
 			path = "Statistic Details";
 			sourceTree = "<group>";
@@ -260,11 +257,12 @@
 				785C4ADF2B49517700EB07F8 /* -III-Downwind-Info.plist */,
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
+				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
 				785CF9562B4FE85100528B6D /* Options */,
 				78C4D23D2BA750D200639E65 /* Run Statistics */,
 				7877E1342BC52BB300776890 /* FlexibleView */,
 				78A9EB062B56C01B0054E9F9 /* Alerts */,
-				785CF9602B53D50D00528B6D /* Runs */,
+				785CF9602B53D50D00528B6D /* Share Location */,
 				785C4AD42B44095300EB07F8 /* Experiments */,
 				785C4AA72B35914100EB07F8 /* Model */,
 				785C4AA82B35916900EB07F8 /* Utilities */,
@@ -334,7 +332,6 @@
 			isa = PBXGroup;
 			children = (
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
-				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				783A53D62B62C53C00701D7F /* RunListMapSheet.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
@@ -354,7 +351,7 @@
 			path = Options;
 			sourceTree = "<group>";
 		};
-		785CF9602B53D50D00528B6D /* Runs */ = {
+		785CF9602B53D50D00528B6D /* Share Location */ = {
 			isa = PBXGroup;
 			children = (
 				787A7EE72B4B03C20083ECEF /* StartRun.swift */,
@@ -365,7 +362,7 @@
 				785C4ADD2B45EBDC00EB07F8 /* RunList */,
 				783A53C12B5D92EC00701D7F /* RunMap */,
 			);
-			path = Runs;
+			path = "Share Location";
 			sourceTree = "<group>";
 		};
 		7877E1342BC52BB300776890 /* FlexibleView */ = {
@@ -520,7 +517,6 @@
 				784083622C21C2AD004C0857 /* StatisticsMainHeader.swift in Sources */,
 				785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */,
 				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
-				78C4D2412BAA149000639E65 /* CaptureRunStatisticsView.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				783A53CD2B5E6C9A00701D7F /* ListInfoLabel.swift in Sources */,
 				7877E1392BC52BB400776890 /* _FlexibleView.swift in Sources */,

@@ -16,10 +16,9 @@ struct StatisticsControlCenter: View {
     @State private var showTagsEditView = false
     
     var body: some View {
-        ScrollView {
+        List {
         if downwindManager.activeStatistics == false {
-            
-                VStack {
+            VStack {
                     HStack {
                         Button {
                             downwindManager.startStatistic(onlyStatistics: onlyStatistics, tags: tags)
@@ -28,7 +27,6 @@ struct StatisticsControlCenter: View {
                             Label("Start Tracking", systemImage: "play.fill")
                         }
                         .buttonStyle(.bordered)
-                        .padding()
                         
                         Menu {
                             ForEach(WorkoutType.allCases, id: \.self) { type in
@@ -43,22 +41,14 @@ struct StatisticsControlCenter: View {
                         }
                         .buttonStyle(.bordered)
                         .tint(.orange)
-                        .padding()
                     }
+                    .padding()
                     
-                    
-                        Text(tags.isEmpty ? "No Tags Active" : "Tracking Tags")
-                    .fontWeight(.bold)
-                    .padding(.bottom)
                         
                     TagsEditViewStatisticCapture(tags: $tags, downwindManager: downwindManager)
                             .padding(.horizontal)
-                    
-                    
+                            .padding(.bottom)
                 }
-                
-            
-            
             
         } else {
             VStack {
@@ -83,7 +73,6 @@ struct StatisticsControlCenter: View {
                 Text("Top Speed: \(makePrettySpeed(speed: currentRunStatistic.topSpeed, system: downwindManager.measurementSystem))")
                 Text("Accuracy of location: \(downwindManager.locationAccuracy) m")
                 
-                Spacer()
             }
             .frame(width: UIScreen.main.bounds.width / 1.2)
         }

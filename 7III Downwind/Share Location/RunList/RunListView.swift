@@ -51,9 +51,6 @@ struct RunListView: View {
                         VStack {
                             ListInfoLabel(members: downwindManager.activeRun.members, userWatching: downwindManager.user.onlyWatching ?? false)
                             
-                            if downwindManager.user.onlyWatching != true {
-                                StatisticsControlCenter(downwindManager: downwindManager)
-                            }
                         }
                         
                     }
