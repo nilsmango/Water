@@ -59,7 +59,7 @@ struct StatisticsView: View {
     
     private func binding(for statistic: RunStatistic) -> Binding<RunStatistic> {
         guard let index = downwindManager.runStatistics.firstIndex(where: { $0.id == statistic.id }) else {
-            fatalError("Can't find the statistic in array")
+            return .constant(RunStatistic.empty())
         }
         return $downwindManager.runStatistics[index]
     }

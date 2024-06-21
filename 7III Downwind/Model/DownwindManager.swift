@@ -363,55 +363,92 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     func deleteWorkout(id: UUID) {
-        let workoutPredicate = HKQuery.predicateForObject(with: id)
-        
-        // Create a query to fetch the workout
-        let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: workoutPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (_, samples, error) in
-            guard error == nil else {
-                // Handle error
-                print("Error fetching workout: \(error!.localizedDescription)")
-                return
-            }
+        if HKHealthStore.isHealthDataAvailable() {
+            let workoutPredicate = HKQuery.predicateForObject(with: id)
             
-            if let workout = samples?.first as? HKWorkout {
+            // Create a query to fetch the workout
+            let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: workoutPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (_, samples, error) in
+                guard error == nil else {
+                    // Handle error
+                    print("Error fetching workout: \(error!.localizedDescription)")
+                    return
+                }
                 
-                // remove workout
-                self.healthStore.delete(workout) { (success, error) in
-                                    if let error = error {
-                                        print("Error deleting workout: \(error.localizedDescription)")
-                                        return
-                                    }
-                                    
-                                    if success {
-                                        print("Successfully deleted workout from health.")
+                if let workout = samples?.first as? HKWorkout {
+                    
+                    // remove workout
+                    self.healthStore.delete(workout) { (success, error) in
+                                        if let error = error {
+                                            print("Error deleting workout: \(error.localizedDescription)")
+                                            return
+                                        }
                                         
-                                        // also remove it from the arrays
-                                        if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
-                                            DispatchQueue.main.async {
-                                                self.runStatistics.remove(at: runIndex)
+                                        if success {
+                                            print("Successfully deleted workout from health.")
+                                            
+                                            // also remove it from the arrays
+                                            if let editIndex = self.runEdits.firstIndex(where: { $0.id == id }) {
+                                                DispatchQueue.main.async {
+                                                    self.runEdits.remove(at: editIndex)
+                                                    self.saveRunEdits()
+                                                }
                                             }
-                                        forOuter: for i in 0..<self.groupedRunStatistics.count {
-                                                for j in 0..<self.groupedRunStatistics[i].count {
-                                                    if let index = self.groupedRunStatistics[i][j].firstIndex(where: { $0.id == id }) {
-                                                        DispatchQueue.main.async {
-                                                            self.groupedRunStatistics[i][j].remove(at: index)
+                                            
+                                            if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                                                DispatchQueue.main.async {
+                                                    self.runStatistics.remove(at: runIndex)
+                                                }
+                                            forOuter: for i in 0..<self.groupedRunStatistics.count {
+                                                    for j in 0..<self.groupedRunStatistics[i].count {
+                                                        if let index = self.groupedRunStatistics[i][j].firstIndex(where: { $0.id == id }) {
+                                                            DispatchQueue.main.async {
+                                                                self.groupedRunStatistics[i][j].remove(at: index)
+                                                            }
+                                                            break forOuter
                                                         }
-                                                        break forOuter
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
+                    
+                } else {
+                    print("No workout found with the specified UUID. Saving the array to disk")
+                    // if can't find in health
+                    self.saveRunStatistics()
+                }
+            }
+            
+            healthStore.execute(workoutQuery)
+        } else {
+            // only remove it from the arrays
+            if let editIndex = runEdits.firstIndex(where: { $0.id == id }) {
+                DispatchQueue.main.async {
+                    self.runEdits.remove(at: editIndex)
+                    self.saveRunEdits()
+                }
                 
-            } else {
-                print("No workout found with the specified UUID. Saving the array to disk")
-                // if can't find in health
-                self.saveRunStatistics()
+            }
+            
+            if let runIndex = runStatistics.firstIndex(where: { $0.id == id }) {
+                DispatchQueue.main.async {
+                    self.runStatistics.remove(at: runIndex)
+                    self.saveRunStatistics()
+                }
+                
+                
+            forOuter: for i in 0..<groupedRunStatistics.count {
+                    for j in 0..<groupedRunStatistics[i].count {
+                        if let index = groupedRunStatistics[i][j].firstIndex(where: { $0.id == id }) {
+                            DispatchQueue.main.async {
+                                self.groupedRunStatistics[i][j].remove(at: index)
+                            }
+                            break forOuter
+                        }
+                    }
+                }
             }
         }
-        
-        healthStore.execute(workoutQuery)
     }
 
     
@@ -451,7 +488,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             self.loadWorkoutsFromHealthKit { workouts in
-                
             
                     // Update the statistic from health
                     if HKHealthStore.isHealthDataAvailable() {
@@ -834,7 +870,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     heartRateData[statistics.startDate] = (minHeartRate, maxHeartRate)
                 }
                 }
-            print(heartRateData)
             completion(heartRateData, nil)
         }
 
@@ -975,7 +1010,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             } else {
                                 self.runEdits.append(newRunEdit)
                             }
-                            print("RunEdits getting saved. New run edit is: \(newRunEdit)")
                             self.saveRunEdits()
                         }
                     }
