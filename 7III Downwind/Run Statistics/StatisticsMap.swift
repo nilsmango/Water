@@ -13,6 +13,8 @@ struct StatisticsMap: View {
     
     @Binding var statisticsData: RunStatistic
     
+    var refreshPolyLines: Bool = false
+    
     @State private var mapSpan: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         
     @State private var polylineData: [PolylineData] = []
@@ -169,6 +171,12 @@ struct StatisticsMap: View {
                 polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
             }
             
+        }
+        .onChange(of: refreshPolyLines) { _, _ in
+            Task {
+                // coordinates pairs lines
+                polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
+            }
         }
     }
 }

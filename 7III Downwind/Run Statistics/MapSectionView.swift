@@ -16,6 +16,8 @@ struct MapSectionView: View {
     let rounds: [(String, String, String)]
     @Binding var statisticsData: RunStatistic
     
+    var refreshPolyLines: Bool = false
+    
     var body: some View {
         if statisticsData.runDistance > 1999 {
             Section {
@@ -46,9 +48,7 @@ struct MapSectionView: View {
             Button {
                 showMapSheet = true
             } label: {
-                // sometimes the map does not update, so I try this trick.
-                let mapData = statisticsData
-                StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(mapData))
+                StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
                     .frame(height: 300)
                     .cornerRadius(5.0)
                     .disabled(true)

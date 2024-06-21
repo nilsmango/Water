@@ -31,6 +31,9 @@ struct StatisticsRunView: View {
 
     @State private var heartRates: [Date: (Double, Double)] = [:]
     
+    // trick for updating the map
+    @State private var refreshPolyLines = false
+    
     var body: some View {
         let cutDate = runDates.components(separatedBy: " ")
         let rounds = downwindManager.createRounds(for: statisticsData.locationData)
@@ -43,7 +46,7 @@ struct StatisticsRunView: View {
             }
             
             if !statisticsData.locationData.isEmpty {
-                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, rounds: rounds, statisticsData: $statisticsData)
+                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, rounds: rounds, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
             }
             
                 HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate)
@@ -254,6 +257,8 @@ struct StatisticsRunView: View {
                                 showRunEditView = false
                                 
                                 downwindManager.saveEditedRoute(newStatistic: statisticsDataEdit)
+                                
+                                refreshPolyLines.toggle()
                                 
                             }, label: {
                                 Text("Save")
