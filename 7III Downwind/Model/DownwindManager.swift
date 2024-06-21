@@ -384,7 +384,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                         }
                                         
                                         if success {
-                                            print("Successfully deleted workout from health.")
                                             
                                             // also remove it from the arrays
                                             if let editIndex = self.runEdits.firstIndex(where: { $0.id == id }) {
@@ -491,9 +490,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
                     // Update the statistic from health
                     if HKHealthStore.isHealthDataAvailable() {
-                        print("workout number: \(workouts.count)")
                         for workout in workouts {
-                            // TODO: find runEdit, and use that one for anything it has and save it to runStatistics[runIndex]
+                            // find runEdit, and use that one for anything it has and save it to runStatistics[runIndex]
                             var runEdit: RunEdit?
                             if let runEditIndex = self.runEdits.firstIndex(where: { $0.id == workout.uuid }) {
                                 runEdit = self.runEdits[runEditIndex]
@@ -528,17 +526,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                     }
                     
-                    print("updating tags")
                     let tags = self.updateMetaData(statistics: self.runStatistics)
                     
                     DispatchQueue.main.async {
-                        // Update UI on the main thread
                         self.tags = tags
                     }
                 }
             }
         }
-    
         
     private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double) {
         let rawWorkoutType = workout.metadata?[customMetadataKeyWorkoutType] as? String ?? ""
@@ -577,7 +572,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func updateGroupedRunArray() {
             let calendar = Calendar.current
             var grouped: [[[RunStatistic]]] = []
-
 
             for statistic in runStatistics {
                 let components = calendar.dateComponents([.year, .month], from: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.distantPast)
@@ -624,19 +618,18 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // only do this part when we have health
         if HKHealthStore.isHealthDataAvailable() {
-            print("loading route")
-            // also add the workout route
+
+            // load the route and average heart rate
             self.loadWorkoutRouteHeartFromHealth(id: id) { route, averageHeartRate in
                 if let route = route {
                     self.locationDataFromWorkoutRoute(route: route) { locationData in
-//                        print("random location: \(String(describing: locationData.randomElement()))")
                         if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                            
+                            // we only need to edit if we have a run edit
                             if let runEdit = self.runEdits.first(where: { $0.id == id }) {
-                                print("Run Edit found number of locations to remove: \(String(describing: runEdit.deletedLocations?.count))")
+                                // filtering out the deleted locations
                                 if let deletedLocations = runEdit.deletedLocations {
-                                    print("locations before removing: \(locationData.count)")
                                     let newLocationData = locationData.filter { !deletedLocations.contains($0)}
-                                    print("locations after removing: \(newLocationData.count)")
                                     DispatchQueue.main.async {
                                         self.runStatistics[runIndex].locationData = newLocationData
                                     }
@@ -678,26 +671,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }                
             }
         } else {
-            // do this part when we have health available or not
+            // when we don't save to health we need this process
             if let runEdit = runEdits.first(where: { $0.id == id }) {
-                print("Run Edit found: \(runEdit)")
                 if let deletedLocations = runEdit.deletedLocations {
                     if let runIndex = runStatistics.firstIndex(where: { $0.id == id }) {
-                        print("filtering locations")
                         let locationData = runStatistics[runIndex].locationData
-                        print("locations before removing: \(locationData.count)")
                         let newLocationData = locationData.filter { !deletedLocations.contains($0)}
-                        print("locations after removing: \(newLocationData.count)")
                         DispatchQueue.main.async {
                             self.runStatistics[runIndex].locationData = newLocationData
                         }
                     }
                 } else {
-                    print("no deleted locations found???")
+                    print("no deleted locations found")
                 }
-                
             }
-            
             completion(false)
         }
     }
@@ -773,11 +760,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 // Handle any errors here.
                 fatalError("The initial query failed.")
             }
-            print("workout route samples found:")
-            print(samples?.count ?? "nil")
+
             // Process the initial route data here.
             guard let routes = samples as? [HKWorkoutRoute], let route = routes.first else {
-//                print("Error fetching workout route: \(String(describing: error))")
                 completion(nil)
                 return
             }
@@ -946,6 +931,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         if newStatistic.locationData.isEmpty {
             return
         }
+        
         // we have to do this because health sometimes had no speed. should be fixed now.
         if newStatistic.locationData.randomElement()?.speed == -1.0 {
             var newStatistic = newStatistic
@@ -958,25 +944,31 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         
         if let index = runStatistics.firstIndex(where: { $0.id == newStatistic.id }) {
+            // snapshot the run for later comparison
             let oldRoute = runStatistics[index].locationData
             
             guard oldRoute != newStatistic.locationData else {
                 return
             }
+            // update the locationData of the run
             runStatistics[index].locationData = newStatistic.locationData
             
             // find what changed in the route
             var newRunEdit = RunEdit(id: newStatistic.id)
+
+            // update start if changed
             if oldRoute.first! != newStatistic.locationData.first! {
                 newRunEdit.startLocation = newStatistic.locationData.first!
                 runStatistics[index].startDate = newRunEdit.startLocation?.timestamp
-                
             }
+            
+            // update finish if changed
             if oldRoute.last! != newStatistic.locationData.last! {
                 newRunEdit.finishLocation = newStatistic.locationData.last!
                 runStatistics[index].endDate = newRunEdit.finishLocation?.timestamp
             }
             
+            // update run time, speeds etc.
             runStatistics[index].runTime = runStatistics[index].endDate!.timeIntervalSince(runStatistics[index].startDate!) / 60
             newRunEdit.newTotalTime = runStatistics[index].runTime
             
@@ -991,6 +983,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             runStatistics[index].averageSpeed = (newDistanceAndSpeed.totalDistance / 1000) / (runStatistics[index].runTime / 60)
             newRunEdit.newAverageSpeed = runStatistics[index].averageSpeed
             
+            // now update the grouped array
             updateGroupedRunArray()
             
             // if we don't have health kit available we have to go another way of saving the edit
@@ -1028,14 +1021,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
                 saveRunEdits()
             }
-            
         }
     }
     
     /// returns missing locations
     private func findMissingLocationData(original: [LocationData], new: [LocationData]) -> [LocationData] {
         let missingData = original.filter { !new.contains($0) }
-        print("deleted locations: \(missingData.count)")
         return missingData
     }
     
@@ -1284,9 +1275,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             newPolyLineNumber = Int(round(Double(coordinatesVisible) * visibleToTotalFactor))
         }
         
-        print("new poly lines: \(newPolyLineNumber)")
         return newPolyLineNumber
-        
     }
     
     /// creates polyline coordinates and colors
@@ -1335,7 +1324,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let polyline = PolylineData(coordinates: [CLLocationCoordinate2D(latitude: line.0.latitude, longitude: line.0.longitude), CLLocationCoordinate2D(latitude: line.1.latitude, longitude: line.1.longitude)], strokeColor: lineColors[index])
             polylineData.append(polyline)
         }
-        print("drawing polylines: \(polylineData.count)")
         return polylineData
     }
     
