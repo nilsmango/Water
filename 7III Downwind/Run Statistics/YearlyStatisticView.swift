@@ -20,13 +20,8 @@ struct YearlyStatisticView: View {
     }
     
     var body: some View {
-        Text("\(sessionsText)\(downwindManager.calculateSessions(for: yearIndex))")
-            .font(.body)
-            .padding()
-            .background {
-                RoundedRectangle(cornerRadius: 25.0)
-                    .fill(.listForeground)
-            }
+            Text("\(sessionsText)\(downwindManager.calculateSessions(for: yearIndex))")
+
     }
 }
 

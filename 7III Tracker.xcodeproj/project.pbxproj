@@ -32,6 +32,7 @@
 		784083602C21C096004C0857 /* HeartRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835F2C21C096004C0857 /* HeartRateView.swift */; };
 		784083622C21C2AD004C0857 /* StatisticsMainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */; };
 		784083642C21FB54004C0857 /* RunEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083632C21FB54004C0857 /* RunEdit.swift */; };
+		784083672C258112004C0857 /* GroupedTagsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083662C258112004C0857 /* GroupedTagsListView.swift */; };
 		785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
 		785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
 		785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
@@ -57,7 +58,6 @@
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
-		786BDE2A2BC592B100F16630 /* TagsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BDE292BC592B100F16630 /* TagsListView.swift */; };
 		7877E1202BBFF14C00776890 /* locationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 7877E11F2BBFF14C00776890 /* locationData.json */; };
 		7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
 		7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
@@ -111,6 +111,7 @@
 		7840835F2C21C096004C0857 /* HeartRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateView.swift; sourceTree = "<group>"; };
 		784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMainHeader.swift; sourceTree = "<group>"; };
 		784083632C21FB54004C0857 /* RunEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunEdit.swift; sourceTree = "<group>"; };
+		784083662C258112004C0857 /* GroupedTagsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedTagsListView.swift; sourceTree = "<group>"; };
 		785C4A952B358F7B00EB07F8 /* 7III Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -138,7 +139,6 @@
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
-		786BDE292BC592B100F16630 /* TagsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsListView.swift; sourceTree = "<group>"; };
 		7877E11F2BBFF14C00776890 /* locationData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = locationData.json; path = ../../../../../locationData.json; sourceTree = "<group>"; };
 		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
 		7877E1232BC3D87C00776890 /* PolylineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineData.swift; sourceTree = "<group>"; };
@@ -394,7 +394,7 @@
 				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
 				78B388E52C1A136800C75A60 /* YearlyStatisticView.swift */,
 				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
-				786BDE292BC592B100F16630 /* TagsListView.swift */,
+				784083662C258112004C0857 /* GroupedTagsListView.swift */,
 				784083652C2572D8004C0857 /* Statistic Details */,
 			);
 			path = "Run Statistics";
@@ -492,7 +492,6 @@
 				78096F3D2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift in Sources */,
 				7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */,
 				788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */,
-				786BDE2A2BC592B100F16630 /* TagsListView.swift in Sources */,
 				7877E1282BC41DB300776890 /* StatisticsInfoViews.swift in Sources */,
 				78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */,
 				78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */,
@@ -500,6 +499,7 @@
 				78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */,
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
 				783A53C72B5DA57C00701D7F /* RunMapView.swift in Sources */,
+				784083672C258112004C0857 /* GroupedTagsListView.swift in Sources */,
 				783A53CF2B5FBF5000701D7F /* RunType.swift in Sources */,
 				783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,

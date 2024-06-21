@@ -1048,25 +1048,27 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return tags.sorted()
     }
     
-    /// filter the statistics array
-    func filterStatistics(tags: [String]) -> [RunStatistic] {
+    /// filter the grouped statistics array
+    func filterGroupedStatistics(tags: [String]) -> [[[RunStatistic]]] {
         if tags.isEmpty {
-            return runStatistics
+            return groupedRunStatistics
         } else {
-            let filteredStatistics = runStatistics.filter { statistic in
-                tags.allSatisfy { tag in
-                    if let statisticTags = statistic.tags {
-                        let tagString = statisticTags.joined(separator: " ").lowercased()
-                        return tagString.contains(tag.lowercased())
-                    } else {
-                        return false
+            let filteredGroupedStatistics = groupedRunStatistics.map { group in
+                group.map { subGroup in
+                    subGroup.filter { statistic in
+                        tags.allSatisfy { tag in
+                            if let statisticTags = statistic.tags {
+                                let tagString = statisticTags.joined(separator: " ").lowercased()
+                                return tagString.contains(tag.lowercased())
+                            } else {
+                                return false
+                            }
+                        }
                     }
                 }
             }
-            
-            return filteredStatistics
+            return filteredGroupedStatistics
         }
-        
     }
     
     /// encoding and printing location data
