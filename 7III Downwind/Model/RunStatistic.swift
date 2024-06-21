@@ -31,18 +31,6 @@ struct RunStatistic: Identifiable, Codable {
     var startDate: Date?
     var endDate: Date?
     
-    init(from workout: HKWorkout, locationData: [LocationData]) {
-            self.id = workout.uuid
-            self.runName = workout.workoutActivityType == .paddleSports ? "Paddle Sport" : "Surfing Sport"
-            self.crewStatistics = []
-            self.runTime = workout.duration / 60 // Convert seconds to minutes
-            self.runDistance = workout.totalDistance?.doubleValue(for: .meter()) ?? 0
-            self.topSpeed = 0 // Need to calculate this
-            self.kCalories = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
-            self.averageHeartRate = 0 // Need to calculate this
-            self.locationData = locationData
-            self.tags = []
-        }
     
     // Parameterless initializer for empty()
         init() {
@@ -109,9 +97,5 @@ struct RunStatistic: Identifiable, Codable {
 extension RunStatistic {
     static func empty() -> RunStatistic {
         return RunStatistic()
-    }
-
-    mutating func merge(with other: RunStatistic) {
-        // TODO: Implement merging logic merging everything from health with the tags and crewstatistic already in the runStatistics array
     }
 }
