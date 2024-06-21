@@ -1398,6 +1398,41 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return (totalDistance, topSpeed)
     }
     
+    /// reverts all changes of the route
+    func revertChangesForRoute(for statistic: RunStatistic, completion: @escaping (RunStatistic?) -> Void) {
+        if HKHealthStore.isHealthDataAvailable() {
+            loadWorkoutRouteFromID(id: statistic.id) { route in
+                if let route = route {
+                    self.locationDataFromWorkoutRoute(route: route) { locationData in
+                        var revertedRunStatistic = statistic
+                        revertedRunStatistic.locationData = locationData
+                        completion(revertedRunStatistic)
+                    }
+                } else {
+                    completion(nil) // Return nil if the route is not found
+                }
+            }
+        } else {
+            do {
+                // getting the runStatistics (if no health or for older files)
+                let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
+                let data = try Data(contentsOf: url)
+                let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+                
+                if let ogRunStatistic = decodedStatistics.first(where: { $0.id == statistic.id }) {
+                    var revertedRunStatistic = statistic
+                    revertedRunStatistic.locationData = ogRunStatistic.locationData
+                    
+                    completion(revertedRunStatistic)
+                } else {
+                    completion(nil)
+                }
+            } catch {
+                print("Error loading runStatistics: \(error)")
+                completion(nil)
+            }
+        }
+    }
     
     /// set a new start point for a run statistic
     func setStart(for statistic: RunStatistic, coordinate: CLLocationCoordinate2D) async -> RunStatistic {

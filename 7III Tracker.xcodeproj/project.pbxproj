@@ -218,6 +218,26 @@
 			path = List;
 			sourceTree = "<group>";
 		};
+		784083652C2572D8004C0857 /* Statistic Details */ = {
+			isa = PBXGroup;
+			children = (
+				7877E1212BC2989300776890 /* StatisticsRunView.swift */,
+				784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */,
+				7840835D2C21B279004C0857 /* MapSectionView.swift */,
+				7877E14A2BC5850C00776890 /* TagsFlexiView.swift */,
+				7877E12B2BC52A0900776890 /* TagsEditView.swift */,
+				784083572C2170A3004C0857 /* EmptyTagsView.swift */,
+				7840835F2C21C096004C0857 /* HeartRateView.swift */,
+				784083592C2188CF004C0857 /* HeartRateChartView.swift */,
+				7877E1252BC3F7A800776890 /* StatisticsDetails.swift */,
+				7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */,
+				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
+				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
+				78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */,
+			);
+			path = "Statistic Details";
+			sourceTree = "<group>";
+		};
 		785C4A8C2B358F7B00EB07F8 = {
 			isa = PBXGroup;
 			children = (
@@ -375,19 +395,7 @@
 				78B388E52C1A136800C75A60 /* YearlyStatisticView.swift */,
 				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
 				786BDE292BC592B100F16630 /* TagsListView.swift */,
-				7877E1212BC2989300776890 /* StatisticsRunView.swift */,
-				784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */,
-				7840835D2C21B279004C0857 /* MapSectionView.swift */,
-				7877E14A2BC5850C00776890 /* TagsFlexiView.swift */,
-				7877E12B2BC52A0900776890 /* TagsEditView.swift */,
-				784083572C2170A3004C0857 /* EmptyTagsView.swift */,
-				7840835F2C21C096004C0857 /* HeartRateView.swift */,
-				784083592C2188CF004C0857 /* HeartRateChartView.swift */,
-				7877E1252BC3F7A800776890 /* StatisticsDetails.swift */,
-				7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */,
-				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
-				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
-				78C4D2402BAA149000639E65 /* CaptureRunStatisticsView.swift */,
+				784083652C2572D8004C0857 /* Statistic Details */,
 			);
 			path = "Run Statistics";
 			sourceTree = "<group>";

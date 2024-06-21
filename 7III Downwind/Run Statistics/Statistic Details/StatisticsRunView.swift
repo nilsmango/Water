@@ -221,25 +221,7 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showRunEditView, content: {
             NavigationStack {
-                ZStack {
                     StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit, editMode: true)
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Label("Select a point to edit", systemImage: "info.circle")
-//                                .font(.caption)
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 10)
-                                .background {
-                                    Capsule()
-                                        .foregroundStyle(.listForeground)
-                                }
-                        }
-                        .padding(.trailing, 10)
-                    }
-                }
-                
                     .navigationTitle("Edit Run Data")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
