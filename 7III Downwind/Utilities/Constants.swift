@@ -15,9 +15,9 @@ enum Constants {
     static let heightOfMap = 300.0
     
     /// location up-, and downloading timer interval in seconds
-    static let locationTimerInterval: Double = 25
+    static let locationTimerInterval: Double = 120
     
-    /// timer interval for the information toggling
+    /// timer interval for the information toggling in the online locations view (run)
     static let updateTimer: Double = 5.0
     
     /// max character number for username and status
