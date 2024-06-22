@@ -24,7 +24,7 @@ struct StartView: View {
         NavigationStack {
                     VStack {
                         
-                        StatisticsControlCenter(downwindManager: downwindManager, onlyStatistics: true)
+                        StatisticsControlCenter(downwindManager: downwindManager)
                             .padding()
                         
                         if downwindManager.activeRun.active {

@@ -59,9 +59,13 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem, statistics: B
             return string
             
         } else {
-            let rounded = Int(meters.rounded())
-            let string = "\(rounded) m"
-            return string
+            if meters.isNaN || meters.isInfinite {
+                return ""
+            } else {
+                let rounded = Int(meters.rounded())
+                let string = "\(rounded) m"
+                return string
+            }
         }
     case .imperial:
         // get yards
@@ -74,12 +78,15 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem, statistics: B
             return string
             
         } else {
-            let roundedYards = Int(yards.rounded())
-            let string = "\(roundedYards) yd"
-            return string
+            if yards.isNaN || yards.isInfinite {
+                return ""
+            } else {
+                let roundedYards = Int(yards.rounded())
+                let string = "\(roundedYards) yd"
+                return string
+            }
         }
     }
-    
 }
 
 /// Takes a speed in km/h, returns a pretty speed in km/h or mph

@@ -80,6 +80,7 @@ struct StartRun: View {
                     Task {
                         do {
                             try await downwindManager.startNewRun(name: runName)
+                            showSheet = false
                         } catch {
                             print("Error starting new run: \(error)")
                             alertText = """
@@ -87,6 +88,7 @@ struct StartRun: View {
                             Make sure you are connected to the internet.
                             """
                             showAlert = true
+                            downwindManager.activeRun.active = false
                         }
                     }
                 case .join:
@@ -96,24 +98,30 @@ struct StartRun: View {
                     Task {
                         do {
                             try await downwindManager.joinRun(name: runName)
+                            showSheet = false
                         } catch GetRunError.badResponse {
                             alertText = "No run with that name found!"
                             showAlert = true
+                            downwindManager.activeRun.active = false
                         } catch {
                             alertText = "Error joining run: \(error)"
                             showAlert = true
+                            downwindManager.activeRun.active = false
                         }
                     }
                 case .watch:
                     Task {
                         do {
                             try await downwindManager.watchRun(name: runName)
+                            showSheet = false
                         } catch GetRunError.badResponse {
                             alertText = "No run with that name found!"
                             showAlert = true
+                            downwindManager.activeRun.active = false
                         } catch {
                             alertText = "Error joining run: \(error)"
                             showAlert = true
+                            downwindManager.activeRun.active = false
                         }
                     }
                 }

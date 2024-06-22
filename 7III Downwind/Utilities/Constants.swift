@@ -17,6 +17,9 @@ enum Constants {
     /// location up-, and downloading timer interval in seconds
     static let locationTimerInterval: Double = 120
     
+    /// min accuracy to use in statistics
+    static let minHorizontalAccuracy = 18.0
+    
     /// timer interval for the information toggling in the online locations view (run)
     static let updateTimer: Double = 5.0
     

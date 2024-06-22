@@ -9,7 +9,6 @@ import SwiftUI
 
 struct StatisticsControlCenter: View {
     @ObservedObject var downwindManager: DownwindManager
-    var onlyStatistics: Bool = false
     
     @State private var tags = [String]()
     
@@ -22,8 +21,8 @@ struct StatisticsControlCenter: View {
             VStack {
                 HStack {
                     Button {
-                        downwindManager.startStatistic(onlyStatistics: onlyStatistics, tags: tags)
-                        downwindManager.activeRun.startedOn = Date.now
+                        downwindManager.startStatistic(tags: tags)
+//                        downwindManager.activeRun.startedOn = Date.now
                     } label: {
                         Label("Start Tracking", systemImage: "play.fill")
                     }
@@ -56,7 +55,7 @@ struct StatisticsControlCenter: View {
         } else {
             VStack {
                 Button(role: .destructive) {
-                    downwindManager.stopStatistic(onlyStatistic: onlyStatistics)
+                    downwindManager.stopStatistic()
                 } label: {
                     Label("Stop Tracking", systemImage: "stop.fill")
                 }
@@ -72,7 +71,7 @@ struct StatisticsControlCenter: View {
                         Text("Total Time")
                             .font(.caption)
                         
-                        Text(downwindManager.activeRun.startedOn ?? Date.now, style: .timer)
+                        Text(currentRunStatistic.startDate ?? Date.now, style: .timer)
                             .monospacedDigit()
                             .font(.body)
                             .foregroundColor(.primary)
