@@ -258,6 +258,7 @@
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
+				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				785CF9562B4FE85100528B6D /* Options */,
 				78C4D23D2BA750D200639E65 /* Run Statistics */,
 				7877E1342BC52BB300776890 /* FlexibleView */,
@@ -332,7 +333,6 @@
 			isa = PBXGroup;
 			children = (
 				785C4AD52B44096400EB07F8 /* RunListView.swift */,
-				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				783A53D62B62C53C00701D7F /* RunListMapSheet.swift */,
 				785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */,
 				783A53CB2B5E6C8B00701D7F /* List */,

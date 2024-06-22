@@ -32,7 +32,7 @@ import SwiftUI
         }
         .background(
             Capsule()
-                .fill(active ? .accent : .gray.opacity(0.5))
+                .fill(active ? .accent : .uiGray)
         )
         
     }
