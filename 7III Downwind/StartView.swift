@@ -25,6 +25,7 @@ struct StartView: View {
                     VStack {
                         
                         StatisticsControlCenter(downwindManager: downwindManager, onlyStatistics: true)
+                            .padding()
                         
                         if downwindManager.activeRun.active {
                             if downwindManager.user.onlyWatching == true {
@@ -36,11 +37,11 @@ struct StartView: View {
                             Button(action: {
                                 showRunPicker = true
                             }, label: {
-                                Label("Share Run", systemImage: "wifi")
+                                Label("Online Locations", systemImage: "wifi")
                             })
                             .buttonStyle(.bordered)
                             .tint(.accentColor)
-//                            .padding(.bottom, 50)
+                            .padding(.top, 8)
                         }
                         
                         if downwindManager.developerMode {
@@ -53,7 +54,7 @@ struct StartView: View {
                             .padding()
                         }
                         
-                        
+                        Spacer()
                         
                     }
                     .navigationTitle("Aloha \(downwindManager.user.name)!")

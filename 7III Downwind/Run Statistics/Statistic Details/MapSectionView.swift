@@ -50,7 +50,7 @@ struct MapSectionView: View {
             } label: {
                 StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
                     .frame(height: 300)
-                    .cornerRadius(5.0)
+                    .cornerRadius(8.0)
                     .disabled(true)
             }
             
