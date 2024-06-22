@@ -22,12 +22,12 @@ struct StatisticsControlCenter: View {
                 HStack {
                     Button {
                         downwindManager.startStatistic(tags: tags)
-//                        downwindManager.activeRun.startedOn = Date.now
+
                     } label: {
                         Label("Start Tracking", systemImage: "play.fill")
                     }
                     .buttonStyle(.bordered)
-                    
+                    .padding(.trailing)
                     Menu {
                         ForEach(WorkoutType.allCases, id: \.self) { type in
                             Button(action: {
