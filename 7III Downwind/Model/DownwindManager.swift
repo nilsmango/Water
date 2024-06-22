@@ -20,6 +20,23 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
     @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUPFoil
     
+    @AppStorage("statisticTags") private var tagsData: Data = Data()
+        
+        var tags: [String] {
+            get {
+                if let decodedTags = try? JSONDecoder().decode([String].self, from: tagsData) {
+                    return decodedTags
+                } else {
+                    return []
+                }
+            }
+            set {
+                if let encodedTags = try? JSONEncoder().encode(newValue) {
+                    tagsData = encodedTags
+                }
+            }
+        }
+    
     override init() {
         super.init()
         setupLocationManager()
@@ -31,8 +48,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var runStatistics: [RunStatistic] = []
     var runEdits: [RunEdit] = []
     @Published var groupedRunStatistics: [[[RunStatistic]]] = []
-    @Published var tags = [String]()
-    // TODO: make this non published
+    // TODO: make this non published?
     @Published var locationAccuracy: Double = 1000.0
     var currentRunStatisticIndex = 0
     var routeBuilder: HKWorkoutRouteBuilder? = nil
