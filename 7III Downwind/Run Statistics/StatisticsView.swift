@@ -55,9 +55,7 @@ struct StatisticsView: View {
         }
         .refreshable {
             // Reload both statistic arrays
-            downwindManager.runStatistics = []
-            downwindManager.groupedRunStatistics = []
-            downwindManager.loadRunStatistics()
+            downwindManager.reloadRunStatistics()
         }
         .navigationTitle("Run Statistics")
         .toolbar {

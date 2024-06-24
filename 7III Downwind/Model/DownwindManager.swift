@@ -241,10 +241,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         self.workoutBuilder = nil
                         
                         // Reload both statistic arrays
-                        self.runStatistics = []
-                        self.groupedRunStatistics = []
-                        self.loadRunStatistics()
-                        
+                        DispatchQueue.main.async {
+                            self.reloadRunStatistics()
+                        }
                     }
                 })
             })
@@ -492,6 +491,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             }
         }
+    }
+    
+    func reloadRunStatistics() {
+        runStatistics = []
+        groupedRunStatistics = []
+        loadRunStatistics()
     }
     
     
