@@ -23,6 +23,9 @@ struct StatisticsMap: View {
     
     var editMode = false
     
+    @State private var buttonText: String = "Undo All Edits"
+    @State private var isFetching: Bool = false
+    
     var maxPointsToShow: Int {
         if let workoutType = statisticsData.workoutType {
             switch workoutType {
@@ -171,6 +174,9 @@ struct StatisticsMap: View {
                     HStack {
                         Spacer()
                         Button(action: {
+                            isFetching = true
+                            buttonText = "Loading Data..."
+                            
                             downwindManager.revertChangesForRoute(for: statisticsData) { ogStatistic in
                                 if let ogStatistic = ogStatistic {
                                     statisticsData = ogStatistic
@@ -179,13 +185,17 @@ struct StatisticsMap: View {
                                         polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
                                     }
                                 }
+                                
+                                isFetching = false
+                                buttonText = "Undo All Edits"
                             }
                             
                         }, label: {
-                            Label("Undo All Edits", systemImage: "arrow.counterclockwise")
+                            Label(buttonText, systemImage: "arrow.counterclockwise")
                         })
                         .buttonStyle(.borderedProminent)
                         .tint(.purple)
+                        .disabled(isFetching)
                     }
                     .padding(.trailing, 10)
                     .padding(.bottom, 10)
