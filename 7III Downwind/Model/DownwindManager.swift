@@ -242,7 +242,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         // Reload both statistic arrays
                         DispatchQueue.main.async {
-                            self.reloadRunStatistics()
+                            self.loadRunStatistics()
                         }
                     }
                 })
@@ -493,12 +493,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    func reloadRunStatistics() {
-        runStatistics = []
-        groupedRunStatistics = []
-        loadRunStatistics()
-    }
-    
     
     /// Load runStatistics from disk
     func loadRunStatistics() {
@@ -566,11 +560,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.runStatistics.append(statistic)
                             }
                         }
-                        
                     }
-                    // sort the array, update the grouped array
+                    
+                    // sort the array, find matching statistics update the grouped array
                     DispatchQueue.main.async {
                         self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast > $1.startDate ?? $1.locationData.first?.timestamp ?? Date.distantPast})
+                        
+                        self.findMatchingStatisticsAndMerge()
+                        
                         self.updateGroupedRunArray()
                     }
                 }
@@ -580,8 +577,63 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 DispatchQueue.main.async {
                     self.tags = tags
                 }
+                
             }
         }
+    }
+    
+    private func doTimeRangesOverlap(start1: Date?, end1: Date?, start2: Date?, end2: Date?) -> Bool {
+        guard let start1 = start1, let start2 = start2, let end1 = end1, let end2 = end2 else { return false }
+        return start1 <= end2 && start2 <= end1
+    }
+    
+    private func isWithinFiveMinutes(_ date1: Date?, _ date2: Date?) -> Bool {
+        guard let date1 = date1, let date2 = date2 else { return false }
+        return abs(date1.timeIntervalSince(date2)) <= 300 // 300 seconds = 5 minutes
+    }
+    
+    private func findMatchingStatisticsAndMerge() {
+        var idsToRemove = [UUID]()
+        for i in 0..<runStatistics.count {
+            for j in i+1..<runStatistics.count {
+                let stat1 = runStatistics[i]
+                let stat2 = runStatistics[j]
+                
+                if doTimeRangesOverlap(start1: stat1.startDate, end1: stat2.endDate, start2: stat2.startDate, end2: stat2.endDate) {
+                    // Do your stuff here if both startDate and endDate are within ±5 minutes
+                    idsToRemove.append(mergeStatistics(stat1Index: i, stat2Index: j))
+                }
+            }
+        }
+        
+        runStatistics.removeAll { statistic in
+            idsToRemove.contains(statistic.id)
+        }
+    }
+    
+    private func mergeStatistics(stat1Index: Int, stat2Index: Int) -> UUID {
+        var originalIndex = stat1Index
+        var extraIndex = stat2Index
+        
+        // fixing the naming if not correct
+        if runStatistics[originalIndex].workoutType == .not7IIISurfingSport {
+            extraIndex = stat1Index
+            originalIndex = stat2Index
+        }
+        let originalStatistic = runStatistics[originalIndex]
+        let extraStatistic = runStatistics[extraIndex]
+        
+        // attach the calories to the original stat
+        if (originalStatistic.kCalories ?? 0) == 0 {
+            if let newCalories = extraStatistic.kCalories {
+                if newCalories != 0 {
+                    runStatistics[originalIndex].kCalories = newCalories
+                }
+            }
+        }
+        
+        // index to remove
+        return extraStatistic.id
     }
     
     private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double) {
@@ -589,7 +641,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let tagsString = workout.metadata?[customMetadataKeyTags] as? String ?? ""
         let tags = tagsString.split(separator: " ").map { String($0) }
         
-        let workoutType = WorkoutType(rawValue: rawWorkoutType) ?? .surfingSport
+        let workoutType = WorkoutType(rawValue: rawWorkoutType) ?? .not7IIISurfingSport
         
         let topSpeed: Double
         if let maxSpeedQuantity = workout.metadata?[HKMetadataKeyMaximumSpeed] as? HKQuantity {

@@ -30,10 +30,12 @@ struct StatisticsControlCenter: View {
                     .padding(.trailing)
                     Menu {
                         ForEach(WorkoutType.allCases, id: \.self) { type in
-                            Button(action: {
-                                downwindManager.workoutType = type
-                            }) {
-                                Text(type.prettyString)
+                            if type != .not7IIIPaddleSport && type != .not7IIISurfingSport {
+                                Button(action: {
+                                    downwindManager.workoutType = type
+                                }) {
+                                    Text(type.prettyString)
+                                }
                             }
                         }
                     } label: {

@@ -28,6 +28,8 @@ enum WorkoutType: String, Codable, CaseIterable {
     case kayak = "Kayak"
     case canoe = "Canoe"
     case supSurf = "SUPSurf"
+    case not7IIISurfingSport = "Not7IIISurfingSport"
+    case not7IIIPaddleSport = "Not7IIIPaddleSport"
     
     var prettyString: String {
         switch self {
@@ -58,7 +60,7 @@ enum WorkoutType: String, Codable, CaseIterable {
         case .wakeFoil:
             return "Wake Foil"
         case .surfingSport:
-            return "Surfing"
+            return "Surf"
         case .paddleSport:
             return "Paddling"
         case .sup:
@@ -69,13 +71,17 @@ enum WorkoutType: String, Codable, CaseIterable {
             return "Canoe"
         case .supSurf:
             return "SUP Surf"
+        case .not7IIISurfingSport:
+            return "Surf"
+        case .not7IIIPaddleSport:
+            return "Paddle"
         }
     }
     var activityType: HKWorkoutActivityType {
             switch self {
-            case .foilSurf, .supFoil, .downwindSUPFoil, .downwindSUP, .wingFoil, .windFoil, .kiteFoil, .kite, .surf, .windsurf, .pumpFoil, .wakeThief, .wakeFoil, .surfingSport, .supSurf:
+            case .foilSurf, .supFoil, .downwindSUPFoil, .downwindSUP, .wingFoil, .windFoil, .kiteFoil, .kite, .surf, .windsurf, .pumpFoil, .wakeThief, .wakeFoil, .surfingSport, .supSurf, .not7IIISurfingSport:
                 return .surfingSports
-            case .paddleSport, .sup, .kayak, .canoe:
+            case .paddleSport, .sup, .kayak, .canoe, .not7IIIPaddleSport:
                 return .paddleSports
             }
         }

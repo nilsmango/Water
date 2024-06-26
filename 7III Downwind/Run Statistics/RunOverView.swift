@@ -31,29 +31,29 @@ struct RunOverView: View {
             if distance != "0 m" {
             HStack {
                     Text(distance)
+                
                     Text(time)
+                
                     if averageSpeed != "0.0 km/h" {
                         Text("∅ " + averageSpeed)
                     }
                     
+                    if kCal != "0 kcal" && averageSpeed == "0.0 km/h" {
+                        Text(kCal)
+                    }
+                
                     Spacer()
                 }
-                if kCal != "0 kcal" {
-                    HStack {
-                        Text(kCal)
-                        Spacer()
-                    }
-                }
+                
                 
             } else {
                 HStack {
                     Text(time)
-                    if averageSpeed != "0.0 km/h" {
-                        Text("∅ " + averageSpeed)
-                    }
+                    
                     if kCal != "0 kcal" {
                         Text(kCal)
                     }
+                    
                     Spacer()
                 }
             }
