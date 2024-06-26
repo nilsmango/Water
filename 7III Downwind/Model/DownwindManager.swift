@@ -82,13 +82,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // make the first data entry if there is a location
             var newStatistic: RunStatistic
             if user.latitude != nil && user.longitude != nil {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)], tags: tags)
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: (user.speed ?? 0.0) * 3.6, locationData: [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)], tags: tags)
             } else {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: user.speed ?? 0.0, locationData: [], tags: tags)
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: (user.speed ?? 0.0) * 3.6, locationData: [], tags: tags)
             }
             
             newStatistic.workoutType = workoutType
-            newStatistic.startDate = Date()
+            newStatistic.startDate = Date.now
             runStatistics.append(newStatistic)
             currentRunStatisticIndex = runStatistics.endIndex - 1
             
@@ -98,7 +98,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     configuration.locationType = .outdoor
                     
                     workoutBuilder = HKWorkoutBuilder(healthStore: healthStore, configuration: configuration, device: .local())
-                    workoutBuilder?.beginCollection(withStart: Date(), completion: { _, _ in
+                    workoutBuilder?.beginCollection(withStart: Date.now, completion: { _, _ in
                         // starting
                     })
                     
@@ -109,14 +109,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 // find current statistic and set runTime and run distance and run speed to now and zero
                 runStatistics[currentRunStatisticIndex].runTime = 0.0
                 runStatistics[currentRunStatisticIndex].runDistance = 0.0
-                runStatistics[currentRunStatisticIndex].topSpeed = user.speed ?? 0.0
+                runStatistics[currentRunStatisticIndex].topSpeed = (user.speed ?? 0.0) * 3.6
                 if user.latitude != nil && user.longitude != nil {
                     runStatistics[currentRunStatisticIndex].locationData = [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)]
                 } else {
                     runStatistics[currentRunStatisticIndex].locationData = []
                 }
                 runStatistics[currentRunStatisticIndex].tags = tags
-                runStatistics[currentRunStatisticIndex].startDate = Date()
+            runStatistics[currentRunStatisticIndex].startDate = Date.now
                 runStatistics[currentRunStatisticIndex].workoutType = workoutType
                 
                 // start health kit workout and route builders
@@ -126,7 +126,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     configuration.locationType = .outdoor
                     
                     workoutBuilder = HKWorkoutBuilder(healthStore: healthStore, configuration: configuration, device: .local())
-                    workoutBuilder?.beginCollection(withStart: Date(), completion: { _, _ in
+                    workoutBuilder?.beginCollection(withStart: Date.now, completion: { _, _ in
                         // starting
                     })
                     
@@ -144,7 +144,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // deactivate statistic recording
             activeStatistics = false
             // save endDate
-            runStatistics[currentRunStatisticIndex].endDate = Date()
+            runStatistics[currentRunStatisticIndex].endDate = Date.now
             
             // saving the workout
             if HKHealthStore.isHealthDataAvailable() {
@@ -199,7 +199,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             
-            self.workoutBuilder?.endCollection(withEnd: Date(), completion: { success, error in
+            self.workoutBuilder?.endCollection(withEnd: Date.now, completion: { success, error in
                 if let error = error {
                     print("Error ending collection: \(error.localizedDescription)")
                     return
@@ -282,8 +282,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     
                     // updating the top speed
-                    if user.speed ?? 0.0 > currentStatistic.topSpeed {
-                        runStatistics[currentRunStatisticIndex].topSpeed = user.speed!
+                    if (user.speed ?? 0.0) * 3.6 > currentStatistic.topSpeed {
+                        runStatistics[currentRunStatisticIndex].topSpeed = user.speed! * 3.6
                     }
                     
                     // updating the data
@@ -356,7 +356,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 for (index, run) in runs.enumerated() {
                     // if startDate is in between start and endDate of last run, don't count the run as a own session
                     if index > 0 {
-                        if runs[index-1].startDate! < run.endDate! {
+                        if runs[index-1].startDate! < run.endDate ?? .distantPast {
                             // don't count
                         } else {
                             totalSessions += 1
@@ -1144,7 +1144,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let secondsAgoStarted = 24 * 60 * 60 * 2
         
         for location in statistics.locationData {
-            let locationString = "LocationData(timestamp: Date().addingTimeInterval(-\(secondsAgoStarted - secondsToAddToDate)), latitude: \(location.latitude), longitude: \(location.longitude), speed: \(location.speed ?? 0.0)), "
+            let locationString = "LocationData(timestamp: \(Date.now.addingTimeInterval(TimeInterval(secondsAgoStarted - secondsToAddToDate))), latitude: \(location.latitude), longitude: \(location.longitude), speed: \(location.speed ?? 0.0)), "
             string.append(locationString)
             
             secondsToAddToDate += 1
@@ -1442,9 +1442,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             totalDistance += addedDistance
         }
+        
         if topSpeed == -1.0 {
             topSpeed = 0.0
         }
+        
+        // top speed calculation to km/h from m/s
+        topSpeed *= 3.6
         
         return (totalDistance, topSpeed)
     }
@@ -1609,7 +1613,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - Run
     
     @Published var activeRun: Run = Run(name: "", members: [], active: false)
-    
     
     @Published var locationError = false
     
@@ -2166,7 +2169,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 DispatchQueue.main.async {
                     self.user.latitude = newLocation.coordinate.latitude
                     self.user.longitude = newLocation.coordinate.longitude
-                    var speed = newLocation.speed * 60 * 60 / 1000
+                    var speed = newLocation.speed
                     if speed < 0.0 {
                         speed = 0.0
                     }
@@ -2188,16 +2191,27 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     // initializing the kalman filter
                     self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
                     
-                    routeBuilder?.insertRouteData(locations) { (success, error) in
-                        if !success {
-                            // Handle any errors here.
+                    let startLocation = CLLocation(
+                        coordinate: newLocation.coordinate,
+                        altitude: newLocation.altitude,
+                        horizontalAccuracy: newLocation.horizontalAccuracy,
+                        verticalAccuracy: newLocation.verticalAccuracy,
+                        course: newLocation.course,
+                        speed: newLocation.speed,
+                        timestamp: newLocation.timestamp
+                    )
+                    if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                        routeBuilder?.insertRouteData([startLocation]) { (success, error) in
+                            if !success {
+                                // Handle any errors here.
+                            }
                         }
                     }
                     
                     DispatchQueue.main.async {
                         self.user.latitude = newLocation.coordinate.latitude
                         self.user.longitude = newLocation.coordinate.longitude
-                        var speed = newLocation.speed * 60 * 60 / 1000
+                        var speed = newLocation.speed
                         if speed < 0.0 {
                             speed = 0.0
                         }
@@ -2247,7 +2261,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             DispatchQueue.main.async {
                                 self.user.latitude = kalmanLocation.coordinate.latitude
                                 self.user.longitude = kalmanLocation.coordinate.longitude
-                                var speed = newLocation.speed * 60 * 60 / 1000
+                                var speed = newLocation.speed
                                 if speed < 0.0 {
                                     speed = 0.0
                                 }

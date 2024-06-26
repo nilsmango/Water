@@ -12,6 +12,6 @@ struct LocationData: Codable, Equatable {
     var latitude: Double
     var longitude: Double
     
-    // speed in km/h from CoreLocation
+    // speed in m/s from CoreLocation
     var speed: Double?
 }
