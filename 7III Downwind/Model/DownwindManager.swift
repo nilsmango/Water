@@ -46,6 +46,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// showing if gps statistic tracking is on
     @Published var activeStatistics: Bool = false
     @Published var runStatistics: [RunStatistic] = []
+    @Published var loadingRunStatistics = false
     var runEdits: [RunEdit] = []
     @Published var groupedRunStatistics: [[[RunStatistic]]] = []
     // TODO: make this non published?
@@ -353,20 +354,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         var totalSessions = 0
         if groupedRunStatistics.count > index {
             for runs in groupedRunStatistics[index] {
-                for (index, run) in runs.enumerated() {
-                    // if startDate is in between start and endDate of last run, don't count the run as a own session
-                    if index > 0 {
-                        if runs[index-1].startDate! < run.endDate ?? .distantPast {
-                            // don't count
-                        } else {
-                            totalSessions += 1
-                        }
-                    } else {
-                        totalSessions += 1
-                    }
-                }
-                //                totalSessions += runs.count
-                
+                totalSessions += runs.count
             }
         }
         return totalSessions
@@ -496,6 +484,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// Load runStatistics from disk
     func loadRunStatistics() {
+        loadingRunStatistics = true
         DispatchQueue.global(qos: .background).async {
             do {
                 // getting the runStatistics (if no health or for older files)
@@ -576,6 +565,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 
                 DispatchQueue.main.async {
                     self.tags = tags
+                    self.loadingRunStatistics = false
                 }
                 
             }

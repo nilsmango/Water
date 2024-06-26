@@ -11,52 +11,59 @@ struct StatisticsView: View {
     @ObservedObject var downwindManager: DownwindManager
     
     var body: some View {
-        List {
-            ForEach(0..<downwindManager.groupedRunStatistics.count, id: \.self) { yearIndex in
-                ForEach(0..<downwindManager.groupedRunStatistics[yearIndex].count, id: \.self) { monthIndex in
+        
+            List {
+                if downwindManager.runStatistics.isEmpty && downwindManager.loadingRunStatistics {
+                    WaitingForListView()
                     
-                    if monthIndex == 0 {
-                        Section {
-                            YearlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex)
-                        } header: {
-                            VStack(alignment: .leading) {
-                                Text(yearSectionHeader(yearIndex: yearIndex))
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                            }
-                            .foregroundStyle(.primary)
-                            .textCase(nil)
-                        }
-                    }
-                    
-                    Section {
-                        ForEach(downwindManager.groupedRunStatistics[yearIndex][monthIndex]) { statistic in
+                } else {
+                    ForEach(0..<downwindManager.groupedRunStatistics.count, id: \.self) { yearIndex in
+                        ForEach(0..<downwindManager.groupedRunStatistics[yearIndex].count, id: \.self) { monthIndex in
                             
-                            let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
-                            let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
+                            if monthIndex == 0 {
+                                Section {
+                                    YearlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex)
+                                } header: {
+                                    VStack(alignment: .leading) {
+                                        Text(yearSectionHeader(yearIndex: yearIndex))
+                                            .font(.title)
+                                            .fontWeight(.bold)
+                                    }
+                                    .foregroundStyle(.primary)
+                                    .textCase(nil)
+                                }
+                            }
                             
-                            NavigationLink {
-                                StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
-                            } label: {
-                                RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil")
+                            Section {
+                                ForEach(downwindManager.groupedRunStatistics[yearIndex][monthIndex]) { statistic in
+                                    
+                                    let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
+                                    let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
+                                    
+                                    NavigationLink {
+                                        StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
+                                    } label: {
+                                        RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil")
+                                    }
+                                }
+                            } header: {
+                                VStack(alignment: .leading) {
+                                    Text(monthSectionHeader(yearIndex: yearIndex, monthIndex: monthIndex))
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                }
+                                .foregroundStyle(.primary)
+                                .textCase(nil)
                             }
                         }
-                    } header: {
-                        VStack(alignment: .leading) {
-                            Text(monthSectionHeader(yearIndex: yearIndex, monthIndex: monthIndex))
-                                .font(.title2)
-                                .fontWeight(.bold)
-                        }
-                        .foregroundStyle(.primary)
-                        .textCase(nil)
                     }
                 }
             }
-        }
-        .refreshable {
-            // Reload both statistic arrays
-            downwindManager.loadRunStatistics()
-        }
+            .refreshable {
+                // Reload both statistic arrays
+                downwindManager.loadRunStatistics()
+            }
+        
         .navigationTitle("Run Statistics")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
