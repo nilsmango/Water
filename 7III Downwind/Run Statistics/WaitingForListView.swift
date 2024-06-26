@@ -9,9 +9,16 @@ import SwiftUI
 
 struct WaitingForListView: View {
     var body: some View {
-            Text("\nLoading Statistics...\n")
+        Section {
+            Text("Loading Statistics...")
+        } header: {
+            Text("Hang loose!")
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                .textCase(nil)
+        }
     }
-    
 }
 
 #Preview {

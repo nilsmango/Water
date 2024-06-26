@@ -11,12 +11,12 @@ struct StatisticsView: View {
     @ObservedObject var downwindManager: DownwindManager
     
     var body: some View {
-        
-            List {
-                if downwindManager.runStatistics.isEmpty && downwindManager.loadingRunStatistics {
+        List {
+                if downwindManager.groupedRunStatistics.isEmpty && downwindManager.loadingRunStatistics {
                     WaitingForListView()
                     
                 } else {
+                    
                     ForEach(0..<downwindManager.groupedRunStatistics.count, id: \.self) { yearIndex in
                         ForEach(0..<downwindManager.groupedRunStatistics[yearIndex].count, id: \.self) { monthIndex in
                             
@@ -63,7 +63,6 @@ struct StatisticsView: View {
                 // Reload both statistic arrays
                 downwindManager.loadRunStatistics()
             }
-        
         .navigationTitle("Run Statistics")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
