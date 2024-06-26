@@ -40,7 +40,7 @@ struct MemberListView: View {
                 
                 Group {
                     if let speed = member.speed {
-                        Text(makePrettySpeed(speed: speed, system: measurementSystem))
+                        Text(makePrettySpeed(speed: speed * 3.6, system: measurementSystem))
                     } else {
                         Text(measurementSystem == .imperial ? "- mph" : "- km/h")
                     }
