@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import KeychainSwift
 import CoreLocation
 import _MapKit_SwiftUI
 import HealthKit
@@ -2136,18 +2135,30 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var user: Member = Member(id: nil, name: "Your Name", status: "All good.")
     @Published var trueHeading: Double = 0.0
     
+    let userFileName = "userData"
+    
     func saveUser() {
-        let keychain = KeychainSwift()
-        if let data = try? JSONEncoder().encode(user) {
-            keychain.set(data, forKey: Constants.keychainKey)
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try JSONEncoder().encode(self.user)
+                let url = try self.getDocumentsDirectory().appendingPathComponent(self.userFileName)
+                try data.write(to: url)
+            } catch {
+                print("Error saving runStatistics: \(error)")
+            }
         }
     }
     
     func loadUser() {
-        let keychain = KeychainSwift()
-        if let data = keychain.getData(Constants.keychainKey),
-           let loadedUser = try? JSONDecoder().decode(Member.self, from: data) {
-            user = loadedUser
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let url = try self.getDocumentsDirectory().appendingPathComponent(self.userFileName)
+                let data = try Data(contentsOf: url)
+                let decodedUser = try JSONDecoder().decode(Member.self, from: data)
+                self.user = decodedUser
+            } catch {
+                print("Error loading runStatistics: \(error)")
+            }
         }
     }
     
