@@ -367,10 +367,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     /// Save runStatistics to disk
-    func saveRunStatistics() {
+    func saveRunStatistics(array: [RunStatistic]? = nil) {
         DispatchQueue.global(qos: .background).async {
             do {
-                let data = try JSONEncoder().encode(self.runStatistics)
+                let data = try JSONEncoder().encode(array ?? self.runStatistics)
                 let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
                 try data.write(to: url)
             } catch {
@@ -415,7 +415,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                         
                         if success {
-                            
                             // also remove it from the arrays
                             if let editIndex = self.runEdits.firstIndex(where: { $0.id == id }) {
                                 DispatchQueue.main.async {
@@ -443,13 +442,37 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     
                 } else {
-                    print("No workout found with the specified UUID. Saving the array to disk")
+                    print("No workout found with the specified UUID. Saving the original array to disk")
                     // if can't find in health
-                    self.saveRunStatistics()
+                    if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                        DispatchQueue.main.async {
+                            self.runStatistics.remove(at: runIndex)
+                        }
+                        
+                    forOuter: for i in 0..<self.groupedRunStatistics.count {
+                        for j in 0..<self.groupedRunStatistics[i].count {
+                            if let index = self.groupedRunStatistics[i][j].firstIndex(where: { $0.id == id }) {
+                                DispatchQueue.main.async {
+                                    self.groupedRunStatistics[i][j].remove(at: index)
+                                }
+                                break forOuter
+                            }
+                        }
+                    }
+                }
+                    // load old statistics from disk
+                    var oldStatistics = self.getRunStatisticsFromDisk()
+                    
+                    // find the to deleted statistic
+                    if let indexToRemove = oldStatistics.firstIndex(where: { $0.id == id }) {
+                        oldStatistics.remove(at: indexToRemove)
+                        self.saveRunStatistics(array: oldStatistics)
+                    }
                 }
             }
             
             healthStore.execute(workoutQuery)
+            
         } else {
             // only remove it from the arrays
             if let editIndex = runEdits.firstIndex(where: { $0.id == id }) {
@@ -463,7 +486,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if let runIndex = runStatistics.firstIndex(where: { $0.id == id }) {
                 DispatchQueue.main.async {
                     self.runStatistics.remove(at: runIndex)
-                    self.saveRunStatistics()
+                    
+                    // load old statistics from disk
+                    var oldStatistics = self.getRunStatisticsFromDisk()
+                    
+                    // find the to deleted statistic
+                    if let indexToRemove = oldStatistics.firstIndex(where: { $0.id == id }) {
+                        oldStatistics.remove(at: indexToRemove)
+                        self.saveRunStatistics(array: oldStatistics)
+                    }
                 }
                 
                 
@@ -481,16 +512,26 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    private func getRunStatisticsFromDisk() -> [RunStatistic] {
+        do {
+            let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
+            let data = try Data(contentsOf: url)
+            let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+            return decodedStatistics
+        } catch {
+            print("Error loading runStatistics: \(error)")
+            return []
+        }
+            
+    }
+    
     
     /// Load runStatistics from disk
     func loadRunStatistics() {
         loadingRunStatistics = true
         DispatchQueue.global(qos: .background).async {
-            do {
                 // getting the runStatistics (if no health or for older files)
-                let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
-                let data = try Data(contentsOf: url)
-                var decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+                var decodedStatistics = self.getRunStatisticsFromDisk()
                 // some cleaning up for old data
                 for (index, statistic) in decodedStatistics.enumerated() {
                     if statistic.startDate == nil {
@@ -502,9 +543,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     // Update UI on the main thread
                     self.runStatistics = decodedStatistics
                 }
-            } catch {
-                print("Error loading runStatistics: \(error)")
-            }
             
             do {
                 // getting the runEdits
