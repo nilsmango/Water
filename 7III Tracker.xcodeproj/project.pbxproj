@@ -70,6 +70,22 @@
 		7877E1492BC52C9600776890 /* View+readSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1482BC52C9600776890 /* View+readSize.swift */; };
 		7877E14B2BC5850C00776890 /* TagsFlexiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E14A2BC5850C00776890 /* TagsFlexiView.swift */; };
 		787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
+		78844E2A2C2E9D6900B703F5 /* Tracker_WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */; };
+		78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E2B2C2E9D6900B703F5 /* StartView.swift */; };
+		78844E2E2C2E9D6A00B703F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78844E2D2C2E9D6A00B703F5 /* Assets.xcassets */; };
+		78844E312C2E9D6A00B703F5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78844E302C2E9D6A00B703F5 /* Preview Assets.xcassets */; };
+		78844E342C2E9D6A00B703F5 /* Tracker Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		78844E382C2EA2E500B703F5 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E32C18C93F00C75A60 /* WorkoutType.swift */; };
+		78844E3A2C2EA37F00B703F5 /* WorkoutTypeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E392C2EA37F00B703F5 /* WorkoutTypeListView.swift */; };
+		78844E3B2C2EA6CB00B703F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
+		78844E3D2C2EA87E00B703F5 /* SessionPagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E3C2C2EA87E00B703F5 /* SessionPagingView.swift */; };
+		78844E3F2C2EA99F00B703F5 /* MetricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E3E2C2EA99F00B703F5 /* MetricsView.swift */; };
+		78844E412C2EAAD100B703F5 /* ElapsedTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E402C2EAAD100B703F5 /* ElapsedTimeView.swift */; };
+		78844E432C2EAB7000B703F5 /* ElapsedTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E422C2EAB7000B703F5 /* ElapsedTimeFormatter.swift */; };
+		78844E452C2EAD0A00B703F5 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E442C2EAD0A00B703F5 /* ControlsView.swift */; };
+		78844E482C2EB1A700B703F5 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E472C2EB1A700B703F5 /* SummaryView.swift */; };
+		78844E4A2C2EB40900B703F5 /* ActivityRingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E492C2EB40900B703F5 /* ActivityRingsView.swift */; };
+		78844E4E2C2EB65500B703F5 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E4D2C2EB65500B703F5 /* WorkoutManager.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
 		7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898D40C2BBEB490007820DB /* StatisticsRounds.swift */; };
@@ -87,6 +103,16 @@
 		78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		78844E322C2E9D6A00B703F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 785C4A8D2B358F7B00EB07F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78844E262C2E9D6900B703F5;
+			remoteInfo = "Tracker Watch Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		78FBCC192C2DB23B0091F9EA /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -94,6 +120,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
+				78844E342C2E9D6A00B703F5 /* Tracker Watch Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -165,6 +192,22 @@
 		7877E1482BC52C9600776890 /* View+readSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+readSize.swift"; sourceTree = "<group>"; };
 		7877E14A2BC5850C00776890 /* TagsFlexiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsFlexiView.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
+		78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tracker Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker_WatchApp.swift; sourceTree = "<group>"; };
+		78844E2B2C2E9D6900B703F5 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
+		78844E2D2C2E9D6A00B703F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		78844E302C2E9D6A00B703F5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		78844E392C2EA37F00B703F5 /* WorkoutTypeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTypeListView.swift; sourceTree = "<group>"; };
+		78844E3C2C2EA87E00B703F5 /* SessionPagingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPagingView.swift; sourceTree = "<group>"; };
+		78844E3E2C2EA99F00B703F5 /* MetricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsView.swift; sourceTree = "<group>"; };
+		78844E402C2EAAD100B703F5 /* ElapsedTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElapsedTimeView.swift; sourceTree = "<group>"; };
+		78844E422C2EAB7000B703F5 /* ElapsedTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElapsedTimeFormatter.swift; sourceTree = "<group>"; };
+		78844E442C2EAD0A00B703F5 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
+		78844E472C2EB1A700B703F5 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		78844E492C2EB40900B703F5 /* ActivityRingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRingsView.swift; sourceTree = "<group>"; };
+		78844E4D2C2EB65500B703F5 /* WorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
+		78844E4F2C2EBFF100B703F5 /* Tracker Watch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Tracker Watch Watch App.entitlements"; sourceTree = "<group>"; };
+		78844E502C2EC00D00B703F5 /* Tracker-Watch-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Tracker-Watch-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		7898D40C2BBEB490007820DB /* StatisticsRounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRounds.swift; sourceTree = "<group>"; };
@@ -189,6 +232,13 @@
 			files = (
 				785C4AC12B40B62E00EB07F8 /* KeychainSwift in Frameworks */,
 				78320BC02BB1C28400D6A772 /* Surge in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78844E242C2E9D6900B703F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				785C4A972B358F7B00EB07F8 /* 7III Downwind */,
+				78844E282C2E9D6900B703F5 /* Tracker Watch Watch App */,
 				785C4A962B358F7B00EB07F8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -264,6 +315,7 @@
 			isa = PBXGroup;
 			children = (
 				785C4A952B358F7B00EB07F8 /* 7III Tracker.app */,
+				78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -329,6 +381,7 @@
 				785C4AD02B4313EF00EB07F8 /* LocationThings.swift */,
 				785C4AD92B45EAD000EB07F8 /* Extensions.swift */,
 				785C4AAF2B359F8E00EB07F8 /* Constants.swift */,
+				78844E422C2EAB7000B703F5 /* ElapsedTimeFormatter.swift */,
 				7877E11F2BBFF14C00776890 /* locationData.json */,
 				785C4AD72B45B04800EB07F8 /* RunListSorting.swift */,
 				783A53CE2B5FBF5000701D7F /* RunType.swift */,
@@ -393,6 +446,59 @@
 			path = FlexibleView;
 			sourceTree = "<group>";
 		};
+		78844E282C2E9D6900B703F5 /* Tracker Watch Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				78844E502C2EC00D00B703F5 /* Tracker-Watch-Watch-App-Info.plist */,
+				78844E4F2C2EBFF100B703F5 /* Tracker Watch Watch App.entitlements */,
+				78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */,
+				78844E2B2C2E9D6900B703F5 /* StartView.swift */,
+				78844E392C2EA37F00B703F5 /* WorkoutTypeListView.swift */,
+				78844E4B2C2EB41100B703F5 /* Summary View */,
+				78844E462C2EB0D900B703F5 /* Session View */,
+				78844E4C2C2EB64200B703F5 /* Model */,
+				78844E2D2C2E9D6A00B703F5 /* Assets.xcassets */,
+				78844E2F2C2E9D6A00B703F5 /* Preview Content */,
+			);
+			path = "Tracker Watch Watch App";
+			sourceTree = "<group>";
+		};
+		78844E2F2C2E9D6A00B703F5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				78844E302C2E9D6A00B703F5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		78844E462C2EB0D900B703F5 /* Session View */ = {
+			isa = PBXGroup;
+			children = (
+				78844E3C2C2EA87E00B703F5 /* SessionPagingView.swift */,
+				78844E3E2C2EA99F00B703F5 /* MetricsView.swift */,
+				78844E442C2EAD0A00B703F5 /* ControlsView.swift */,
+				78844E402C2EAAD100B703F5 /* ElapsedTimeView.swift */,
+			);
+			path = "Session View";
+			sourceTree = "<group>";
+		};
+		78844E4B2C2EB41100B703F5 /* Summary View */ = {
+			isa = PBXGroup;
+			children = (
+				78844E472C2EB1A700B703F5 /* SummaryView.swift */,
+				78844E492C2EB40900B703F5 /* ActivityRingsView.swift */,
+			);
+			path = "Summary View";
+			sourceTree = "<group>";
+		};
+		78844E4C2C2EB64200B703F5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				78844E4D2C2EB65500B703F5 /* WorkoutManager.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		78A9EB062B56C01B0054E9F9 /* Alerts */ = {
 			isa = PBXGroup;
 			children = (
@@ -431,6 +537,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				78844E332C2E9D6A00B703F5 /* PBXTargetDependency */,
 			);
 			name = "7III Tracker";
 			packageProductDependencies = (
@@ -439,6 +546,23 @@
 			);
 			productName = "7III Downwind";
 			productReference = 785C4A952B358F7B00EB07F8 /* 7III Tracker.app */;
+			productType = "com.apple.product-type.application";
+		};
+		78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78844E352C2E9D6A00B703F5 /* Build configuration list for PBXNativeTarget "Tracker Watch Watch App" */;
+			buildPhases = (
+				78844E232C2E9D6900B703F5 /* Sources */,
+				78844E242C2E9D6900B703F5 /* Frameworks */,
+				78844E252C2E9D6900B703F5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Tracker Watch Watch App";
+			productName = "Tracker Watch Watch App";
+			productReference = 78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -453,6 +577,9 @@
 				TargetAttributes = {
 					785C4A942B358F7B00EB07F8 = {
 						CreatedOnToolsVersion = 15.1;
+					};
+					78844E262C2E9D6900B703F5 = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -474,6 +601,7 @@
 			projectRoot = "";
 			targets = (
 				785C4A942B358F7B00EB07F8 /* 7III Tracker */,
+				78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -486,6 +614,16 @@
 				785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */,
 				785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */,
 				7877E1202BBFF14C00776890 /* locationData.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78844E252C2E9D6900B703F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78844E312C2E9D6A00B703F5 /* Preview Assets.xcassets in Resources */,
+				78844E3B2C2EA6CB00B703F5 /* Assets.xcassets in Resources */,
+				78844E2E2C2E9D6A00B703F5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,7 +710,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		78844E232C2E9D6900B703F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78844E3A2C2EA37F00B703F5 /* WorkoutTypeListView.swift in Sources */,
+				78844E452C2EAD0A00B703F5 /* ControlsView.swift in Sources */,
+				78844E412C2EAAD100B703F5 /* ElapsedTimeView.swift in Sources */,
+				78844E4A2C2EB40900B703F5 /* ActivityRingsView.swift in Sources */,
+				78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */,
+				78844E4E2C2EB65500B703F5 /* WorkoutManager.swift in Sources */,
+				78844E3D2C2EA87E00B703F5 /* SessionPagingView.swift in Sources */,
+				78844E382C2EA2E500B703F5 /* WorkoutType.swift in Sources */,
+				78844E3F2C2EA99F00B703F5 /* MetricsView.swift in Sources */,
+				78844E482C2EB1A700B703F5 /* SummaryView.swift in Sources */,
+				78844E432C2EAB7000B703F5 /* ElapsedTimeFormatter.swift in Sources */,
+				78844E2A2C2E9D6900B703F5 /* Tracker_WatchApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		78844E332C2E9D6A00B703F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */;
+			targetProxy = 78844E322C2E9D6A00B703F5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		785C4AA22B358F7D00EB07F8 /* Debug */ = {
@@ -710,8 +875,8 @@
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to health so we can save and load your sessions.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to health so we can save and load your sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can display your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can save your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to work as intended (showing you how far everybody else is and showing your crew where you are).";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -757,8 +922,8 @@
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to health so we can save and load your sessions.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to health so we can save and load your sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can display your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can save your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to work as intended (showing you how far everybody else is and showing your crew where you are).";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -785,6 +950,77 @@
 			};
 			name = Release;
 		};
+		78844E362C2E9D6A00B703F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = A9H57996U3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Tracker-Watch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Tracker Watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can save your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can display your sessions.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.project7III.tracker;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.4;
+			};
+			name = Debug;
+		};
+		78844E372C2E9D6A00B703F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = A9H57996U3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Tracker-Watch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Tracker Watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can save your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can display your sessions.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.project7III.tracker;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.4;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -802,6 +1038,15 @@
 			buildConfigurations = (
 				785C4AA52B358F7D00EB07F8 /* Debug */,
 				785C4AA62B358F7D00EB07F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78844E352C2E9D6A00B703F5 /* Build configuration list for PBXNativeTarget "Tracker Watch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78844E362C2E9D6A00B703F5 /* Debug */,
+				78844E372C2E9D6A00B703F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

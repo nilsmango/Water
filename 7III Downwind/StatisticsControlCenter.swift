@@ -24,10 +24,12 @@ struct StatisticsControlCenter: View {
                         downwindManager.startStatistic(tags: tags)
 
                     } label: {
-                        Label("Start Tracking", systemImage: "play.fill")
+                        Label("Start Tracking", systemImage: "play")
                     }
                     .buttonStyle(.bordered)
+                    .tint(.green)
                     .padding(.trailing)
+                    
                     Menu {
                         ForEach(WorkoutType.allCases, id: \.self) { type in
                             if type != .not7IIIPaddleSport && type != .not7IIISurfingSport {
@@ -59,7 +61,7 @@ struct StatisticsControlCenter: View {
                 Button(role: .destructive) {
                     downwindManager.stopStatistic()
                 } label: {
-                    Label("Stop Tracking", systemImage: "stop.fill")
+                    Label("End Tracking", systemImage: "xmark")
                 }
                 .buttonStyle(.bordered)
                 .padding()

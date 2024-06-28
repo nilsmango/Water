@@ -1670,8 +1670,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func requestHealthAuthorization() {
         let typesToShare: Set = [
             HKQuantityType.workoutType(),
-            HKQuantityType(.heartRate),
-            HKQuantityType(.activeEnergyBurned),
+//            HKQuantityType(.heartRate),
+//            HKQuantityType(.activeEnergyBurned),
             HKSeriesType.workoutRoute()
         ]
         
