@@ -8,63 +8,89 @@
 import SwiftUI
 
 struct MetricsView: View {
+    @ObservedObject var workoutManager: WorkoutManager
+    
     var body: some View {
-        VStack(alignment: .leading) {
-            ElapsedTimeView(
-                elapsedTime: 120 * 60 + 15.24,
-                showSubseconds: true
-            )
+        TimelineView(
+            MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date(), isPaused: workoutManager.session?.state == .paused)) { context in
+            VStack(alignment: .leading) {
+                ElapsedTimeView(
+                    elapsedTime: workoutManager.builder?.elapsedTime ?? 0,
+                    showSubseconds: context.cadence == .live
+                )
                 .foregroundColor(.yellow)
                 .fontWeight(.semibold)
-            
-            Text(
-                Measurement(
-                    value: 2.3,
-                    unit: UnitLength.kilometers
-                ).formatted(
-                    .measurement(
-                        width: .abbreviated,
-                        usage: .road,
-                        numberFormatStyle: .number.precision(.fractionLength(1))
-                    )
-                )
-            )
-            HStack {
+                
                 Text(
-                    153.formatted(
-                        .number.precision(.fractionLength(0))
+                    Measurement(
+                        value: workoutManager.distance,
+                        unit: UnitLength.kilometers
+                    ).formatted(
+                        .measurement(
+                            width: .abbreviated,
+                            usage: .road,
+                            numberFormatStyle: .number.precision(.fractionLength(1))
+                        )
                     )
                 )
-                Image(systemName: "heart.fill")
-                    .font(.title2)
-                .foregroundColor(.red)
+                
+                HStack {
+                    Text(
+                        workoutManager.heartRate.formatted(
+                            .number.precision(.fractionLength(0))
+                        )
+                    )
+                    Image(systemName: "heart.fill")
+                        .font(.title2)
+                        .foregroundColor(.red)
+                }
+                
+                Text(
+                    Measurement(
+                        value: workoutManager.activeEnergy,
+                        unit: UnitEnergy.kilocalories
+                    ).formatted(
+                        .measurement(
+                            width: .abbreviated,
+                            usage: .workout,
+                            numberFormatStyle: .number.precision(.fractionLength(0))
+                        )
+                    )
+                )
             }
-            
-            
-            Text(
-                Measurement(
-                    value: 47,
-                    unit: UnitEnergy.kilocalories
-                ).formatted(
-                    .measurement(
-                        width: .abbreviated,
-                        usage: .workout,
-                        numberFormatStyle: .number.precision(.fractionLength(0))
-                    )
-                )
-            )
-        }
-        .font(.system(.title, design: .rounded)
+            .font(.system(.title, design: .rounded)
                 .monospacedDigit()
                 .lowercaseSmallCaps()
-        )
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .ignoresSafeArea(edges: .bottom)
-        .scenePadding()
-        .padding(.top)
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .ignoresSafeArea(edges: .bottom)
+            .scenePadding()
+            .padding(.top)
+        }
     }
 }
 
 #Preview {
-    MetricsView()
+    MetricsView(workoutManager: WorkoutManager())
+}
+
+private struct MetricsTimelineSchedule: TimelineSchedule {
+    var startDate: Date
+    var isPaused: Bool
+
+    init(from startDate: Date, isPaused: Bool) {
+        self.startDate = startDate
+        self.isPaused = isPaused
+    }
+
+    func entries(from startDate: Date, mode: TimelineScheduleMode) -> AnyIterator<Date> {
+        var baseSchedule = PeriodicTimelineSchedule(from: self.startDate,
+                                                    by: (mode == .lowFrequency ? 1.0 : 1.0 / 30.0))
+            .entries(from: startDate, mode: mode)
+        
+        return AnyIterator<Date> {
+            guard !isPaused else { return nil }
+            return baseSchedule.next()
+        }
+    }
 }

@@ -16,7 +16,7 @@ class WorkoutManager: NSObject, ObservableObject {
         didSet {
             // Sheet dismissed
             if showingSummaryView == false {
-                //selectedWorkout = nil
+                resetWorkout()
             }
         }
     }
@@ -31,7 +31,7 @@ class WorkoutManager: NSObject, ObservableObject {
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = workoutType.activityType
         configuration.locationType = .outdoor
-
+        
         do {
             session = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
             builder = session?.associatedWorkoutBuilder()
@@ -39,14 +39,15 @@ class WorkoutManager: NSObject, ObservableObject {
             // Handle any exceptions.
             return
         }
-
+        
         builder?.dataSource = HKLiveWorkoutDataSource(
             healthStore: healthStore,
             workoutConfiguration: configuration
         )
         
         session?.delegate = self
-
+        builder?.delegate = self
+        
         // Start the workout session and begin data collection.
         let startDate = Date()
         session?.startActivity(with: startDate)
@@ -63,7 +64,7 @@ class WorkoutManager: NSObject, ObservableObject {
             HKQuantityType.workoutType(),
             HKSeriesType.workoutRoute()
         ]
-
+        
         // The quantity types to read from the health store.
         let typesToRead: Set = [
             HKQuantityType.workoutType(),
@@ -74,7 +75,7 @@ class WorkoutManager: NSObject, ObservableObject {
             HKSeriesType.workoutRoute(),
             HKObjectType.activitySummaryType()
         ]
-
+        
         // Request authorization for those quantity types.
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
             // Handle error.
@@ -82,18 +83,18 @@ class WorkoutManager: NSObject, ObservableObject {
     }
     
     // MARK: - State Control
-
+    
     // The workout session state.
     @Published var running = false
-
+    
     func pause() {
         session?.pause()
     }
-
+    
     func resume() {
         session?.resume()
     }
-
+    
     func togglePause() {
         if running == true {
             pause()
@@ -101,12 +102,53 @@ class WorkoutManager: NSObject, ObservableObject {
             resume()
         }
     }
-
+    
     func endWorkout() {
         session?.end()
         showingSummaryView = true
         path = NavigationPath()
     }
+    
+    // MARK: - Workout Metrics
+    @Published var averageHeartRate: Double = 0
+    @Published var heartRate: Double = 0
+    @Published var activeEnergy: Double = 0
+    @Published var distance: Double = 0
+    @Published var workout: HKWorkout?
+    
+    func updateForStatistics(_ statistics: HKStatistics?) {
+        guard let statistics = statistics else { return }
+
+        DispatchQueue.main.async {
+            switch statistics.quantityType {
+            case HKQuantityType.quantityType(forIdentifier: .heartRate):
+                let heartRateUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
+                self.heartRate = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit) ?? 0
+                self.averageHeartRate = statistics.averageQuantity()?.doubleValue(for: heartRateUnit) ?? 0
+            case HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned):
+                let energyUnit = HKUnit.kilocalorie()
+                self.activeEnergy = statistics.sumQuantity()?.doubleValue(for: energyUnit) ?? 0
+                
+            // TODO: remove this and add my own total distance from my locations update function each time it updates the location
+            case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning), HKQuantityType.quantityType(forIdentifier: .distanceCycling):
+                let meterUnit = HKUnit.meter()
+                self.distance = statistics.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
+            default:
+                return
+            }
+        }
+    }
+    
+    func resetWorkout() {
+        builder = nil
+        session = nil
+        workout = nil
+        activeEnergy = 0
+        averageHeartRate = 0
+        heartRate = 0
+        distance = 0
+    }
+
 }
 
 // MARK: - HKWorkoutSessionDelegate
@@ -118,17 +160,37 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
         DispatchQueue.main.async {
             self.running = toState == .running
         }
-
+        
         // Wait for the session to transition states before ending the builder.
         if toState == .ended {
             builder?.endCollection(withEnd: date) { (success, error) in
                 self.builder?.finishWorkout { (workout, error) in
+                    DispatchQueue.main.async {
+                        self.workout = workout
+                    }
                 }
             }
         }
     }
-
+    
     func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
+        
+    }
+}
 
+// MARK: - HKLiveWorkoutBuilderDelegate
+extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
+    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
+    }
+
+    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
+        for type in collectedTypes {
+            guard let quantityType = type as? HKQuantityType else { return }
+
+            let statistics = workoutBuilder.statistics(for: quantityType)
+
+            // Update the published values.
+            updateForStatistics(statistics)
+        }
     }
 }

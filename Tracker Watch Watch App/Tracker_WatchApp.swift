@@ -20,7 +20,7 @@ struct Tracker_Watch_Watch_AppApp: App {
                     }
             }
             .sheet(isPresented: $workoutManager.showingSummaryView) {
-                SummaryView()
+                SummaryView(workoutManager: workoutManager)
             }
         }
     }
