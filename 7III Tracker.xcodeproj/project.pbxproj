@@ -84,30 +84,21 @@
 		78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
 		78C4D2452BAC8B8A00639E65 /* CrewStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */; };
 		78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCBD82C2C48E80091F9EA /* WaitingForListView.swift */; };
-		78FBCBE12C2DA5E50091F9EA /* Tracker_WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCBE02C2DA5E50091F9EA /* Tracker_WatchApp.swift */; };
-		78FBCBE32C2DA5E50091F9EA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCBE22C2DA5E50091F9EA /* ContentView.swift */; };
-		78FBCBE52C2DA5E70091F9EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78FBCBE42C2DA5E70091F9EA /* Assets.xcassets */; };
-		78FBCBE92C2DA5E70091F9EA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78FBCBE82C2DA5E70091F9EA /* Preview Assets.xcassets */; };
-		78FBCBED2C2DA6570091F9EA /* RunStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */; };
-		78FBCBEE2C2DA6570091F9EA /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB92B40AF7400EB07F8 /* Member.swift */; };
-		78FBCBEF2C2DA6570091F9EA /* Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABB2B40B04000EB07F8 /* Run.swift */; };
-		78FBCBF02C2DA6570091F9EA /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E32C18C93F00C75A60 /* WorkoutType.swift */; };
-		78FBCBF12C2DA6570091F9EA /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* LocationData.swift */; };
-		78FBCBF22C2DA6570091F9EA /* DownwindManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */; };
-		78FBCBF32C2DA6930091F9EA /* RunListSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD72B45B04800EB07F8 /* RunListSorting.swift */; };
-		78FBCBF42C2DA6AB0091F9EA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
-		78FBCBF52C2DA6BE0091F9EA /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
-		78FBCBF62C2DA6C80091F9EA /* RunEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083632C21FB54004C0857 /* RunEdit.swift */; };
-		78FBCBF72C2DA6D80091F9EA /* LocationThings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD02B4313EF00EB07F8 /* LocationThings.swift */; };
-		78FBCBF92C2DA75E0091F9EA /* CrewStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */; };
-		78FBCBFA2C2DA76A0091F9EA /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
-		78FBCBFB2C2DA7730091F9EA /* DBRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACC2B41D28400EB07F8 /* DBRun.swift */; };
-		78FBCBFC2C2DA7750091F9EA /* MemberRunData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD22B433D4000EB07F8 /* MemberRunData.swift */; };
-		78FBCBFD2C2DA7A80091F9EA /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
-		78FBCBFE2C2DA7AF0091F9EA /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */; };
 		78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */; };
-		78FBCC032C2DA7F60091F9EA /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		78FBCC192C2DB23B0091F9EA /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsEditViewStatisticCapture.swift; sourceTree = "<group>"; };
@@ -188,12 +179,6 @@
 		78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMap.swift; sourceTree = "<group>"; };
 		78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStatistic.swift; sourceTree = "<group>"; };
 		78FBCBD82C2C48E80091F9EA /* WaitingForListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingForListView.swift; sourceTree = "<group>"; };
-		78FBCBDE2C2DA5E50091F9EA /* Tracker Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tracker Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		78FBCBE02C2DA5E50091F9EA /* Tracker_WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker_WatchApp.swift; sourceTree = "<group>"; };
-		78FBCBE22C2DA5E50091F9EA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		78FBCBE42C2DA5E70091F9EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		78FBCBE62C2DA5E70091F9EA /* Tracker_Watch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tracker_Watch.entitlements; sourceTree = "<group>"; };
-		78FBCBE82C2DA5E70091F9EA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateQRCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -204,13 +189,6 @@
 			files = (
 				785C4AC12B40B62E00EB07F8 /* KeychainSwift in Frameworks */,
 				78320BC02BB1C28400D6A772 /* Surge in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		78FBCBDB2C2DA5E50091F9EA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,7 +256,6 @@
 			isa = PBXGroup;
 			children = (
 				785C4A972B358F7B00EB07F8 /* 7III Downwind */,
-				78FBCBDF2C2DA5E50091F9EA /* Tracker Watch */,
 				785C4A962B358F7B00EB07F8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -287,7 +264,6 @@
 			isa = PBXGroup;
 			children = (
 				785C4A952B358F7B00EB07F8 /* 7III Tracker.app */,
-				78FBCBDE2C2DA5E50091F9EA /* Tracker Watch.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -440,26 +416,6 @@
 			path = "Run Statistics";
 			sourceTree = "<group>";
 		};
-		78FBCBDF2C2DA5E50091F9EA /* Tracker Watch */ = {
-			isa = PBXGroup;
-			children = (
-				78FBCBE02C2DA5E50091F9EA /* Tracker_WatchApp.swift */,
-				78FBCBE22C2DA5E50091F9EA /* ContentView.swift */,
-				78FBCBE42C2DA5E70091F9EA /* Assets.xcassets */,
-				78FBCBE62C2DA5E70091F9EA /* Tracker_Watch.entitlements */,
-				78FBCBE72C2DA5E70091F9EA /* Preview Content */,
-			);
-			path = "Tracker Watch";
-			sourceTree = "<group>";
-		};
-		78FBCBE72C2DA5E70091F9EA /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				78FBCBE82C2DA5E70091F9EA /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -470,6 +426,7 @@
 				785C4A912B358F7B00EB07F8 /* Sources */,
 				785C4A922B358F7B00EB07F8 /* Frameworks */,
 				785C4A932B358F7B00EB07F8 /* Resources */,
+				78FBCC192C2DB23B0091F9EA /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
@@ -484,23 +441,6 @@
 			productReference = 785C4A952B358F7B00EB07F8 /* 7III Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
-		78FBCBDD2C2DA5E50091F9EA /* Tracker Watch */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 78FBCBEA2C2DA5E70091F9EA /* Build configuration list for PBXNativeTarget "Tracker Watch" */;
-			buildPhases = (
-				78FBCBDA2C2DA5E50091F9EA /* Sources */,
-				78FBCBDB2C2DA5E50091F9EA /* Frameworks */,
-				78FBCBDC2C2DA5E50091F9EA /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Tracker Watch";
-			productName = "Tracker Watch";
-			productReference = 78FBCBDE2C2DA5E50091F9EA /* Tracker Watch.app */;
-			productType = "com.apple.product-type.application";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -513,9 +453,6 @@
 				TargetAttributes = {
 					785C4A942B358F7B00EB07F8 = {
 						CreatedOnToolsVersion = 15.1;
-					};
-					78FBCBDD2C2DA5E50091F9EA = {
-						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -537,7 +474,6 @@
 			projectRoot = "";
 			targets = (
 				785C4A942B358F7B00EB07F8 /* 7III Tracker */,
-				78FBCBDD2C2DA5E50091F9EA /* Tracker Watch */,
 			);
 		};
 /* End PBXProject section */
@@ -550,15 +486,6 @@
 				785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */,
 				785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */,
 				7877E1202BBFF14C00776890 /* locationData.json in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		78FBCBDC2C2DA5E50091F9EA /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				78FBCBE92C2DA5E70091F9EA /* Preview Assets.xcassets in Resources */,
-				78FBCBE52C2DA5E70091F9EA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,33 +569,6 @@
 				788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */,
 				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,
 				78B388E62C1A136800C75A60 /* YearlyStatisticView.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		78FBCBDA2C2DA5E50091F9EA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				78FBCBED2C2DA6570091F9EA /* RunStatistic.swift in Sources */,
-				78FBCBFB2C2DA7730091F9EA /* DBRun.swift in Sources */,
-				78FBCBEE2C2DA6570091F9EA /* Member.swift in Sources */,
-				78FBCBEF2C2DA6570091F9EA /* Run.swift in Sources */,
-				78FBCBF32C2DA6930091F9EA /* RunListSorting.swift in Sources */,
-				78FBCBF72C2DA6D80091F9EA /* LocationThings.swift in Sources */,
-				78FBCBF02C2DA6570091F9EA /* WorkoutType.swift in Sources */,
-				78FBCBF42C2DA6AB0091F9EA /* Constants.swift in Sources */,
-				78FBCBF12C2DA6570091F9EA /* LocationData.swift in Sources */,
-				78FBCBF62C2DA6C80091F9EA /* RunEdit.swift in Sources */,
-				78FBCBF22C2DA6570091F9EA /* DownwindManager.swift in Sources */,
-				78FBCBE32C2DA5E50091F9EA /* ContentView.swift in Sources */,
-				78FBCBE12C2DA5E50091F9EA /* Tracker_WatchApp.swift in Sources */,
-				78FBCC032C2DA7F60091F9EA /* HelperFunctions.swift in Sources */,
-				78FBCBF52C2DA6BE0091F9EA /* MeasurementSystem.swift in Sources */,
-				78FBCBFD2C2DA7A80091F9EA /* HCKalmanAlgorithm.swift in Sources */,
-				78FBCBFC2C2DA7750091F9EA /* MemberRunData.swift in Sources */,
-				78FBCBF92C2DA75E0091F9EA /* CrewStatistic.swift in Sources */,
-				78FBCBFE2C2DA7AF0091F9EA /* HTTPClient.swift in Sources */,
-				78FBCBFA2C2DA76A0091F9EA /* PolylineData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,6 +694,7 @@
 		785C4AA52B358F7D00EB07F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
@@ -840,6 +741,7 @@
 		785C4AA62B358F7D00EB07F8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
@@ -883,82 +785,6 @@
 			};
 			name = Release;
 		};
-		78FBCBEB2C2DA5E70091F9EA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Tracker Watch/Tracker_Watch.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch/Preview Content\"";
-				DEVELOPMENT_TEAM = A9H57996U3;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Tracker-Watch";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		78FBCBEC2C2DA5E70091F9EA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Tracker Watch/Tracker_Watch.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch/Preview Content\"";
-				DEVELOPMENT_TEAM = A9H57996U3;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Tracker-Watch";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -976,15 +802,6 @@
 			buildConfigurations = (
 				785C4AA52B358F7D00EB07F8 /* Debug */,
 				785C4AA62B358F7D00EB07F8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		78FBCBEA2C2DA5E70091F9EA /* Build configuration list for PBXNativeTarget "Tracker Watch" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				78FBCBEB2C2DA5E70091F9EA /* Debug */,
-				78FBCBEC2C2DA5E70091F9EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
