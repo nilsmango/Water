@@ -11,8 +11,8 @@ import SwiftUI
     var string: String
     
     @Binding var chosenStrings: [String]
-
-    var allStrings: [String]
+     
+    var watch = false
     
     var body: some View {
         let active = chosenStrings.contains(string)
@@ -26,18 +26,18 @@ import SwiftUI
                 .padding(8)
             
             Text(string)
-                .foregroundColor(active ? .white : .primary)
+                .foregroundColor(active ? .white : watch ? .black : .primary)
                 .fontWeight(active ? .semibold : .regular)
                 .fontDesign(active ? .rounded : .default)
         }
         .background(
             Capsule()
-                .fill(active ? .accent : .uiGray)
+                .fill(active ? .accent : watch ? .secondary : .uiGray)
         )
         
     }
 }
 
 #Preview {
-    SelectionButtonLabel(string: "Mücke", chosenStrings: .constant(["Taube", "Karotten"]), allStrings: ["Taube", "Mücke", "Karotten"])
+    SelectionButtonLabel(string: "#Mücke", chosenStrings: .constant(["Taube", "Karotten"]))
 }

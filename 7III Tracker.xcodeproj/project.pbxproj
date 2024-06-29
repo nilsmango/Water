@@ -86,6 +86,8 @@
 		78844E482C2EB1A700B703F5 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E472C2EB1A700B703F5 /* SummaryView.swift */; };
 		78844E4A2C2EB40900B703F5 /* ActivityRingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E492C2EB40900B703F5 /* ActivityRingsView.swift */; };
 		78844E4E2C2EB65500B703F5 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E4D2C2EB65500B703F5 /* WorkoutManager.swift */; };
+		78844E522C303C0E00B703F5 /* TagsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E512C303C0E00B703F5 /* TagsSheetView.swift */; };
+		78844E552C303C6300B703F5 /* SelectionButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
 		7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898D40C2BBEB490007820DB /* StatisticsRounds.swift */; };
@@ -208,6 +210,7 @@
 		78844E4D2C2EB65500B703F5 /* WorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 		78844E4F2C2EBFF100B703F5 /* Tracker Watch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Tracker Watch Watch App.entitlements"; sourceTree = "<group>"; };
 		78844E502C2EC00D00B703F5 /* Tracker-Watch-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Tracker-Watch-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		78844E512C303C0E00B703F5 /* TagsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsSheetView.swift; sourceTree = "<group>"; };
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		7898D40C2BBEB490007820DB /* StatisticsRounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRounds.swift; sourceTree = "<group>"; };
@@ -453,6 +456,7 @@
 				78844E4F2C2EBFF100B703F5 /* Tracker Watch Watch App.entitlements */,
 				78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */,
 				78844E2B2C2E9D6900B703F5 /* StartView.swift */,
+				78844E512C303C0E00B703F5 /* TagsSheetView.swift */,
 				78844E392C2EA37F00B703F5 /* WorkoutTypeListView.swift */,
 				78844E4B2C2EB41100B703F5 /* Summary View */,
 				78844E462C2EB0D900B703F5 /* Session View */,
@@ -721,6 +725,8 @@
 				78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */,
 				78844E4E2C2EB65500B703F5 /* WorkoutManager.swift in Sources */,
 				78844E3D2C2EA87E00B703F5 /* SessionPagingView.swift in Sources */,
+				78844E552C303C6300B703F5 /* SelectionButtonLabel.swift in Sources */,
+				78844E522C303C0E00B703F5 /* TagsSheetView.swift in Sources */,
 				78844E382C2EA2E500B703F5 /* WorkoutType.swift in Sources */,
 				78844E3F2C2EA99F00B703F5 /* MetricsView.swift in Sources */,
 				78844E482C2EB1A700B703F5 /* SummaryView.swift in Sources */,

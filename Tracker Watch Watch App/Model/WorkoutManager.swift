@@ -12,6 +12,25 @@ import SwiftUI
 class WorkoutManager: NSObject, ObservableObject {
     @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUPFoil
     
+    @Published var withGPS = true
+    
+    @AppStorage("statisticTags") private var tagsData: Data = Data()
+        
+        var tags: [String] {
+            get {
+                if let decodedTags = try? JSONDecoder().decode([String].self, from: tagsData) {
+                    return decodedTags
+                } else {
+                    return []
+                }
+            }
+            set {
+                if let encodedTags = try? JSONEncoder().encode(newValue) {
+                    tagsData = encodedTags
+                }
+            }
+        }
+    
     @Published var showingSummaryView: Bool = false {
         didSet {
             // Sheet dismissed
@@ -27,7 +46,7 @@ class WorkoutManager: NSObject, ObservableObject {
     var session: HKWorkoutSession?
     var builder: HKLiveWorkoutBuilder?
     
-    func startWorkout() {
+    func startWorkout(tags: [String]) {
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = workoutType.activityType
         configuration.locationType = .outdoor

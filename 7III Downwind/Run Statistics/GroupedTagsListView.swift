@@ -24,7 +24,7 @@ struct GroupedTagsListView: View {
                 alignment: .leading
             ) { string in
                 
-                SelectionButtonLabel(string: string, chosenStrings: $chosenTags, allStrings: downwindManager.tags)
+                SelectionButtonLabel(string: string, chosenStrings: $chosenTags)
                     .onTapGesture {
                         if chosenTags.contains(string) {
                             chosenTags.removeAll(where: { $0 == string})

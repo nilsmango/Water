@@ -10,39 +10,55 @@ import SwiftUI
 struct StartView: View {
     @ObservedObject var workoutManager: WorkoutManager
     
+    @State private var tags = [String]()
+    @State private var showTagsSheet = false
     @State private var showWorkoutList = false
     
     var body: some View {
             VStack {
                 Button(action: {
                     workoutManager.path.append("session")
-                    workoutManager.startWorkout()
+                    workoutManager.startWorkout(tags: tags)
                 }, label: {
                     Label("Start", systemImage: "play")
                 })
                 .font(.title3)
+                .fontWeight(.semibold)
                 .tint(.green)
                 .padding(.bottom)
                 
                 VStack {
-                    // TODO: make it real
                     Button(action: {
                         showWorkoutList = true
                     }, label: {
                         Text(workoutManager.workoutType.prettyString)
                     })
                     .tint(.orange)
+                    .fontWeight(.semibold)
                     
-                    // TODO: tags
-                    Button(action: {
-                        // showTagsList = true
-                    }, label: {
-                        // Text("Tags: \(tags.count")
-                        Text("Tags: 3")
-                    })
-                    .tint(.accent)
+                    HStack {
+                        // TODO: tags
+                        Button(action: {
+                            showTagsSheet = true
+                        }, label: {
+                            // Text("\(tags.count) #")
+                            Text("10 #")
+                        })
+                        .tint(.accent)
+                        .fontWeight(.semibold)
+                        .padding(.trailing, 3)
+                        
+                        Button(action: {
+                            workoutManager.withGPS.toggle()
+                        }, label: {
+                            Image(systemName: workoutManager.withGPS ? "location.fill" : "location.slash.fill")
+                        })
+                        .tint(workoutManager.withGPS ? .green : .red)
+                        .padding(.leading, 3)
+                    }
+                    
                 }
-                .padding(.horizontal, 22)
+                .padding(.horizontal, 20)
                 
             }
 //                    .navigationTitle("7III Tracker")
@@ -51,11 +67,12 @@ struct StartView: View {
             .onAppear {
                 workoutManager.requestAuthorization()
             }
-        
             .sheet(isPresented: $showWorkoutList, content: {
                 WorkoutTypeListView(workoutManager: workoutManager, showList: $showWorkoutList)
             })
-            
+            .sheet(isPresented: $showTagsSheet, content: {
+                TagsSheetView(workoutManager: workoutManager, tags: $tags)
+            })
         
 
     }

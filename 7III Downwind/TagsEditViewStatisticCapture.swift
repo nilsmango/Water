@@ -49,7 +49,7 @@ struct TagsEditViewStatisticCapture: View {
             spacing: 5,
             alignment: .leading
         ) { tag in
-            SelectionButtonLabel(string: tag, chosenStrings: $tags, allStrings: trackerTags)
+            SelectionButtonLabel(string: tag, chosenStrings: $tags)
                 .onTapGesture {
                     if tags.contains(tag) {
                         tags.removeAll(where: { $0 == tag })
