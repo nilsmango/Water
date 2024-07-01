@@ -148,14 +148,6 @@ struct StartView: View {
                 .onAppear {
                     if downwindManager.user.id == nil {
                         showFirstTimeUserName = true
-                    } else {
-                        Task {
-                            do {
-                                try await downwindManager.checkAndUpdateUserInDB()
-                            } catch {
-                                print("error checking updating user: \(error)")
-                            }
-                        }
                     }
                 }
             }
