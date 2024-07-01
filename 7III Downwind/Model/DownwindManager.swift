@@ -187,6 +187,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             HKMetadataKeyAverageSpeed: averageSpeed
         ]
         
+        workoutBuilder?.addMetadata(allMetadata, completion: { success, error in
+            if let error = error {
+                print("Error adding metadata: \(error.localizedDescription)")
+            }
             
             self.workoutBuilder?.endCollection(withEnd: Date.now, completion: { success, error in
                 
@@ -201,7 +205,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     
                     // TODO: add crew statistic as own metada here?
-                    self.routeBuilder?.finishRoute(with: myWorkout, metadata: allMetadata) { newRoute, error in
+                    self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
                         if let error = error {
                             print("Error finishing route: \(error.localizedDescription)")
                         }
@@ -212,7 +216,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         // Optional: Do something with the route here
                         print("Successfully saved workout and route to HealthKit.")
-                                                
+                        
                         // Discard the routeBuilder and workoutBuilder
                         self.routeBuilder = nil
                         self.workoutBuilder = nil
@@ -224,6 +228,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                 })
             })
+        })
     }
     
     /// Updates the run statistic
@@ -401,17 +406,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
                                 DispatchQueue.main.async {
                                     self.runStatistics.remove(at: runIndex)
+                                    self.updateGroupedRunArray()
                                 }
-                            forOuter: for i in 0..<self.groupedRunStatistics.count {
-                                for j in 0..<self.groupedRunStatistics[i].count {
-                                    if let index = self.groupedRunStatistics[i][j].firstIndex(where: { $0.id == id }) {
-                                        DispatchQueue.main.async {
-                                            self.groupedRunStatistics[i][j].remove(at: index)
-                                        }
-                                        break forOuter
-                                    }
-                                }
-                            }
                             }
                         }
                     }
@@ -422,18 +418,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
                         DispatchQueue.main.async {
                             self.runStatistics.remove(at: runIndex)
+                            self.updateGroupedRunArray()
                         }
-                        
-                    forOuter: for i in 0..<self.groupedRunStatistics.count {
-                        for j in 0..<self.groupedRunStatistics[i].count {
-                            if let index = self.groupedRunStatistics[i][j].firstIndex(where: { $0.id == id }) {
-                                DispatchQueue.main.async {
-                                    self.groupedRunStatistics[i][j].remove(at: index)
-                                }
-                                break forOuter
-                            }
-                        }
-                    }
                 }
                     // load old statistics from disk
                     var oldStatistics = self.getRunStatisticsFromDisk()
@@ -470,19 +456,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         oldStatistics.remove(at: indexToRemove)
                         self.saveRunStatistics(array: oldStatistics)
                     }
+                    
+                    self.updateGroupedRunArray()
                 }
-                
-                
-            forOuter: for i in 0..<groupedRunStatistics.count {
-                for j in 0..<groupedRunStatistics[i].count {
-                    if let index = groupedRunStatistics[i][j].firstIndex(where: { $0.id == id }) {
-                        DispatchQueue.main.async {
-                            self.groupedRunStatistics[i][j].remove(at: index)
-                        }
-                        break forOuter
-                    }
-                }
-            }
             }
         }
     }
@@ -693,7 +669,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             grouped[grouped.count - 1][grouped.last!.count - 1].append(statistic)
         }
         
-        groupedRunStatistics = grouped
+        DispatchQueue.main.async {
+            self.groupedRunStatistics = grouped
+        }
     }
     
     private func loadWorkoutsFromHealthKit(completion: @escaping ([HKWorkout]) -> Void) {
@@ -891,7 +869,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let query = HKStatisticsQuery(quantityType: heartRateType, quantitySamplePredicate: predicate, options: .discreteAverage) { query, statistics, error in
             DispatchQueue.main.async {
                 guard let statistics = statistics, error == nil else {
-                    print("Error: \(error!.localizedDescription)")
+                    print("Error for heart rate: \(error!.localizedDescription)")
                     completion(nil)
                     return
                 }
@@ -976,7 +954,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             if let error = errorOrNil {
                 // Handle any errors here.
-                print("Error: \(error)")
+                print("Error, no locations found: \(error)")
                 return
             }
             
