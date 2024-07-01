@@ -101,6 +101,9 @@
 		78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
 		78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
 		78C4D2452BAC8B8A00639E65 /* CrewStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */; };
+		78E5A85A2C32AB4E00456ABC /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
+		78E5A85D2C32DA4100456ABC /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78E5A85C2C32DA4100456ABC /* Surge */; };
+		78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
 		78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCBD82C2C48E80091F9EA /* WaitingForListView.swift */; };
 		78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */; };
 /* End PBXBuildFile section */
@@ -242,6 +245,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78E5A85D2C32DA4100456ABC /* Surge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,6 +315,7 @@
 				785C4A972B358F7B00EB07F8 /* 7III Downwind */,
 				78844E282C2E9D6900B703F5 /* Tracker Watch Watch App */,
 				785C4A962B358F7B00EB07F8 /* Products */,
+				78E5A85B2C32DA4100456ABC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -526,6 +531,13 @@
 			path = "Run Statistics";
 			sourceTree = "<group>";
 		};
+		78E5A85B2C32DA4100456ABC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -565,6 +577,9 @@
 			dependencies = (
 			);
 			name = "Tracker Watch Watch App";
+			packageProductDependencies = (
+				78E5A85C2C32DA4100456ABC /* Surge */,
+			);
 			productName = "Tracker Watch Watch App";
 			productReference = 78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */;
 			productType = "com.apple.product-type.application";
@@ -725,7 +740,9 @@
 				78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */,
 				78844E4E2C2EB65500B703F5 /* WorkoutManager.swift in Sources */,
 				78844E3D2C2EA87E00B703F5 /* SessionPagingView.swift in Sources */,
+				78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */,
 				78844E552C303C6300B703F5 /* SelectionButtonLabel.swift in Sources */,
+				78E5A85A2C32AB4E00456ABC /* HCKalmanAlgorithm.swift in Sources */,
 				78844E522C303C0E00B703F5 /* TagsSheetView.swift in Sources */,
 				78844E382C2EA2E500B703F5 /* WorkoutType.swift in Sources */,
 				78844E3F2C2EA99F00B703F5 /* MetricsView.swift in Sources */,
@@ -883,7 +900,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can display your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can save your sessions.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to work as intended (showing you how far everybody else is and showing your crew where you are).";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -930,7 +947,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can display your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can save your sessions.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to work as intended (showing you how far everybody else is and showing your crew where you are).";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -972,6 +989,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Tracker Watch";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can save your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can display your sessions.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.project7III.tracker;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
@@ -1007,6 +1025,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Tracker Watch";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can save your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can display your sessions.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.project7III.tracker;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
@@ -1088,6 +1107,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 785C4ABF2B40B62E00EB07F8 /* XCRemoteSwiftPackageReference "keychain-swift" */;
 			productName = KeychainSwift;
+		};
+		78E5A85C2C32DA4100456ABC /* Surge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78320BBE2BB1C28400D6A772 /* XCRemoteSwiftPackageReference "Surge" */;
+			productName = Surge;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
