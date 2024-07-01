@@ -10,7 +10,6 @@ import SwiftUI
 struct StartView: View {
     @ObservedObject var workoutManager: WorkoutManager
     
-    @State private var tags = [String]()
     @State private var showTagsSheet = false
     @State private var showWorkoutList = false
     
@@ -18,7 +17,7 @@ struct StartView: View {
             VStack {
                 Button(action: {
                     workoutManager.path.append("session")
-                    workoutManager.startWorkout(tags: tags)
+                    workoutManager.startWorkout()
                 }, label: {
                     Label("Start", systemImage: "play")
                 })
@@ -37,12 +36,10 @@ struct StartView: View {
                     .fontWeight(.semibold)
                     
                     HStack {
-                        // TODO: tags
                         Button(action: {
                             showTagsSheet = true
                         }, label: {
-                            // Text("\(tags.count) #")
-                            Text("10 #")
+                            Text("\(workoutManager.activeTags.count) #")
                         })
                         .tint(.accent)
                         .fontWeight(.semibold)
@@ -71,7 +68,7 @@ struct StartView: View {
                 WorkoutTypeListView(workoutManager: workoutManager, showList: $showWorkoutList)
             })
             .sheet(isPresented: $showTagsSheet, content: {
-                TagsSheetView(workoutManager: workoutManager, tags: $tags)
+                TagsSheetView(workoutManager: workoutManager, tags: $workoutManager.activeTags)
             })
         
 

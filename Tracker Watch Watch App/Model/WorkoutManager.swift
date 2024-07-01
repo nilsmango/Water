@@ -9,27 +9,29 @@ import Foundation
 import HealthKit
 import SwiftUI
 
-class WorkoutManager: NSObject, ObservableObject {
+class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUPFoil
     
     @Published var withGPS = true
     
     @AppStorage("statisticTags") private var tagsData: Data = Data()
-        
-        var tags: [String] {
-            get {
-                if let decodedTags = try? JSONDecoder().decode([String].self, from: tagsData) {
-                    return decodedTags
-                } else {
-                    return []
-                }
-            }
-            set {
-                if let encodedTags = try? JSONEncoder().encode(newValue) {
-                    tagsData = encodedTags
-                }
+    
+    var statisticTags: [String] {
+        get {
+            if let decodedTags = try? JSONDecoder().decode([String].self, from: tagsData) {
+                return decodedTags
+            } else {
+                return []
             }
         }
+        set {
+            if let encodedTags = try? JSONEncoder().encode(newValue) {
+                tagsData = encodedTags
+            }
+        }
+    }
+    
+    @Published var activeTags = [String]()
     
     @Published var showingSummaryView: Bool = false {
         didSet {
@@ -40,13 +42,15 @@ class WorkoutManager: NSObject, ObservableObject {
         }
     }
     
+    // navigation path
     @Published var path = NavigationPath()
     
     let healthStore = HKHealthStore()
     var session: HKWorkoutSession?
     var builder: HKLiveWorkoutBuilder?
+    var routeBuilder: HKWorkoutRouteBuilder?
     
-    func startWorkout(tags: [String]) {
+    func startWorkout() {
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = workoutType.activityType
         configuration.locationType = .outdoor
@@ -66,6 +70,11 @@ class WorkoutManager: NSObject, ObservableObject {
         
         session?.delegate = self
         builder?.delegate = self
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.allowsBackgroundLocationUpdates = true
+        locationManager?.activityType = .fitness
+        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         
         // Start the workout session and begin data collection.
         let startDate = Date()
@@ -73,10 +82,14 @@ class WorkoutManager: NSObject, ObservableObject {
         builder?.beginCollection(withStart: startDate) { (success, error) in
             // The workout has started.
         }
+        // start rout builder if gps should be active
+        if withGPS {
+            routeBuilder = HKWorkoutRouteBuilder(healthStore: healthStore, device: .local())
+            startLocationService()
+        }
     }
     
-    // TODO: distance walking und cycling weg
-    // Request authorization to access HealthKit.
+    // Request authorization to access HealthKit and to access location
     func requestAuthorization() {
         // The quantity type to write to the health store.
         let typesToShare: Set = [
@@ -89,8 +102,8 @@ class WorkoutManager: NSObject, ObservableObject {
             HKQuantityType.workoutType(),
             HKQuantityType.quantityType(forIdentifier: .heartRate)!,
             HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
-            HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
-            HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
+//            HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+//            HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
             HKSeriesType.workoutRoute(),
             HKObjectType.activitySummaryType()
         ]
@@ -98,6 +111,184 @@ class WorkoutManager: NSObject, ObservableObject {
         // Request authorization for those quantity types.
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
             // Handle error.
+        }
+        // access to location
+        locationManager?.requestWhenInUseAuthorization()
+    }
+    
+    // MARK: - Locations
+    private var locationManager: CLLocationManager?
+    var isUpdatingLocation = false
+    
+    private var ignoreFirstFewLocations = true
+    private let secondsWeIgnoreLocations = 5.0
+    private var locationManagerStartTime = Date.distantPast
+    
+    // Kalman Filter
+    var resetKalmanFilter: Bool = false
+    var kalmanFilter: HCKalmanAlgorithm?
+    @Published var rValue = 1.0
+    @Published var sigma = 0.6
+    
+    
+    // Location Authorization
+    private var locationAuthorization = false
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse {
+            // Permission granted, start location updates
+            locationAuthorization = true
+            startLocationService()
+        } else if status == .notDetermined {
+            // Location access not determined, request permission
+            locationManager?.requestWhenInUseAuthorization()
+        } else {
+            // Handle denied or restricted permission
+            locationAuthorization = false
+            locationManager?.requestWhenInUseAuthorization()
+        }
+    }
+    
+    /// checks and starts location service
+    private func startLocationService() {
+        if self.locationAuthorization {
+            if !isUpdatingLocation {
+                print("Starting location tracking")
+                self.locationManager?.startUpdatingLocation()
+                self.locationManager?.startUpdatingHeading()
+                locationManagerStartTime = Date.now
+                isUpdatingLocation = true
+            }
+        } else {
+            // show location authorization request again
+            self.locationManager?.requestWhenInUseAuthorization()
+        }
+    }
+    
+    /// stops the location service and resets the ignore var
+    private func stopLocationService() {
+        print("Stopping location tracking")
+        self.locationManager?.stopUpdatingLocation()
+        self.locationManager?.stopUpdatingHeading()
+        ignoreFirstFewLocations = true
+        resetKalmanFilter = true
+        isUpdatingLocation = false
+        
+        // reset locations
+        userLocation = nil
+        previousUserLocation = nil
+    }
+    
+    /// the location manager function
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        // ignoring the locations for a few seconds
+        if ignoreFirstFewLocations {
+            
+            if locationManagerStartTime.addingTimeInterval(secondsWeIgnoreLocations) < Date.now || locations.last!.horizontalAccuracy < 5.1 {
+                ignoreFirstFewLocations = false
+            }
+            
+        } else {
+            
+            guard let newLocation = locations.last else {
+                print("Something wrong with locationManager")
+                return }
+                            
+                if kalmanFilter == nil {
+                    // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
+                    self.kalmanFilter?.rValue = rValue
+                    self.kalmanFilter?.sigma = sigma
+                    
+                    // initializing the kalman filter
+                    self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                    
+                    let startLocation = CLLocation(
+                        coordinate: newLocation.coordinate,
+                        altitude: newLocation.altitude,
+                        horizontalAccuracy: newLocation.horizontalAccuracy,
+                        verticalAccuracy: newLocation.verticalAccuracy,
+                        course: newLocation.course,
+                        speed: newLocation.speed,
+                        timestamp: newLocation.timestamp
+                    )
+                    
+                    if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                        routeBuilder?.insertRouteData([startLocation]) { (success, error) in
+                            if !success {
+                                // Handle any errors here.
+                            }
+                        }
+                        
+                        DispatchQueue.main.async {
+                            self.previousUserLocation = self.userLocation
+                            self.userLocation = newLocation
+                            self.updateStatistic()
+                        }
+                    }
+                } else {
+                    if let kalmanFilter = self.kalmanFilter {
+                        if resetKalmanFilter == true {
+                            
+                            // two of these four are not needed, but save is save
+                            self.kalmanFilter?.rValue = rValue
+                            self.kalmanFilter?.sigma = sigma
+                            kalmanFilter.rValue = rValue
+                            kalmanFilter.sigma = sigma
+                            
+                            kalmanFilter.resetKalman(newStartLocation: newLocation)
+                            
+                            resetKalmanFilter = false
+                            
+                        } else {
+                            
+                            var kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
+                            kalmanLocation = CLLocation(
+                                coordinate: kalmanLocation.coordinate,
+                                altitude: kalmanLocation.altitude,
+                                horizontalAccuracy: kalmanLocation.horizontalAccuracy,
+                                verticalAccuracy: kalmanLocation.verticalAccuracy,
+                                course: kalmanLocation.course,
+                                speed: newLocation.speed,
+                                timestamp: kalmanLocation.timestamp
+                            )
+                            
+                            if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                                routeBuilder?.insertRouteData([kalmanLocation]) { (success, error) in
+                                    if !success {
+                                        // Handle any errors here.
+                                    }
+                                }
+                                
+                                DispatchQueue.main.async {
+                                    self.previousUserLocation = self.userLocation
+                                    self.userLocation = kalmanLocation
+                                    self.updateStatistic()
+                                }
+                            }
+                        }
+                }
+            }
+            
+        }
+    }
+    
+    /// Updates the run statistic
+    private func updateStatistic() {
+        // adding up the distance if there is any data
+        if let previousUserLocation = previousUserLocation {
+            let addedDistance = userLocation?.distance(from: previousUserLocation) ?? 0.0
+            distance += addedDistance
+        }
+        // updating the top speed
+        if (userLocation?.speed ?? 0.0) > topSpeed {
+            topSpeed = (userLocation?.speed)!
+        }
+        // updating average speed
+        if let elapsedTime = builder?.elapsedTime, elapsedTime != 0 {
+            averageSpeed = distance / elapsedTime
+        } else {
+            averageSpeed = 0
         }
     }
     
@@ -108,10 +299,16 @@ class WorkoutManager: NSObject, ObservableObject {
     
     func pause() {
         session?.pause()
+        if withGPS {
+            stopLocationService()
+        }
     }
     
     func resume() {
         session?.resume()
+        if withGPS {
+            startLocationService()
+        }
     }
     
     func togglePause() {
@@ -132,7 +329,17 @@ class WorkoutManager: NSObject, ObservableObject {
     @Published var averageHeartRate: Double = 0
     @Published var heartRate: Double = 0
     @Published var activeEnergy: Double = 0
+    /// workout distance in meter
     @Published var distance: Double = 0
+    /// workout top speed in m/s
+    @Published var topSpeed: Double = 0
+    /// workout avarage speed in m/s
+    @Published var averageSpeed: Double = 0
+    /// current location
+    @Published var userLocation: CLLocation?
+    /// previous location
+    var previousUserLocation: CLLocation?
+    
     @Published var workout: HKWorkout?
     
     func updateForStatistics(_ statistics: HKStatistics?) {
@@ -147,11 +354,6 @@ class WorkoutManager: NSObject, ObservableObject {
             case HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned):
                 let energyUnit = HKUnit.kilocalorie()
                 self.activeEnergy = statistics.sumQuantity()?.doubleValue(for: energyUnit) ?? 0
-                
-            // TODO: remove this and add my own total distance from my locations update function each time it updates the location
-            case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning), HKQuantityType.quantityType(forIdentifier: .distanceCycling):
-                let meterUnit = HKUnit.meter()
-                self.distance = statistics.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
             default:
                 return
             }
@@ -166,6 +368,11 @@ class WorkoutManager: NSObject, ObservableObject {
         averageHeartRate = 0
         heartRate = 0
         distance = 0
+        topSpeed = 0
+        averageSpeed = 0
+        userLocation = nil
+        previousUserLocation = nil
+        activeTags = []
     }
 
 }
@@ -182,13 +389,61 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
         
         // Wait for the session to transition states before ending the builder.
         if toState == .ended {
-            builder?.endCollection(withEnd: date) { (success, error) in
-                self.builder?.finishWorkout { (workout, error) in
-                    DispatchQueue.main.async {
-                        self.workout = workout
+            // stop location tracking
+            stopLocationService()
+            
+            let runDistance = HKQuantity(unit: .meter(), doubleValue: distance)
+            let runTopSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: topSpeed)
+            let runAverageSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: averageSpeed)
+            let tags = activeTags.joined(separator: " ")
+            let workoutType = workoutType
+
+            var allMetadata: [String: Any] = [
+                Constants.customMetadataKeyWorkoutType: workoutType.rawValue,
+                Constants.customMetadataKeyTags: tags
+            ]
+            if distance != 0.0 {
+                allMetadata[Constants.customTotalDistanceKey] = runDistance
+            }
+            if topSpeed != 0.0 {
+                allMetadata[HKMetadataKeyMaximumSpeed] = runTopSpeed
+            }
+            if averageSpeed != 0.0 {
+                allMetadata[HKMetadataKeyAverageSpeed] = runAverageSpeed
+            }
+            
+            builder?.addMetadata(allMetadata, completion: { success, error in
+                if let error = error {
+                    print("Error adding metadata: \(error.localizedDescription)")
+                }
+                self.builder?.endCollection(withEnd: date) { (success, error) in
+                    self.builder?.finishWorkout { (workout, error) in
+                        DispatchQueue.main.async {
+                            self.workout = workout
+                        }
+                        if self.withGPS {
+                            if let workout = workout {
+                                self.routeBuilder?.finishRoute(with: workout, metadata: nil) { newRoute, error in
+                                    if let error = error {
+                                        print("Error finishing route: \(error.localizedDescription)")
+                                    }
+                                    
+                                    if newRoute == nil {
+                                        print("Failed to finish route.")
+                                    }
+                                    
+                                    // Optional: Do something with the route here
+                                    print("Successfully saved workout and route to HealthKit.")
+                                    
+                                    // Discard the routeBuilder and workoutBuilder
+                                    self.routeBuilder = nil
+                                    self.builder = nil
+                                }
+                            }
+                        }
                     }
                 }
-            }
+            })
         }
     }
     

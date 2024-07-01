@@ -13,7 +13,7 @@ struct TagsSheetView: View {
     @Binding var tags: [String]
     
     private var trackerTags: [String] {
-        workoutManager.tags
+        workoutManager.statisticTags
     }
     
     @State private var allTags = [String]()
@@ -46,16 +46,32 @@ struct TagsSheetView: View {
     var body: some View {
         ScrollView {
             VStack {
-                Button(action: {
-                    // open keyboard for text
-                }, label: {
-                    Label("Add Tag", systemImage: "plus")
-                        .fontWeight(.semibold)
-                        .font(.title3)
-                        
-                })
-                .tint(.accent)
-                .padding(.vertical)
+                TextField("Enter text", text: $newTag)
+                    .onSubmit {
+                        tags.append(makeWordTag(newTag))
+                        newTag = ""
+                        updateAllTags()
+                    }
+                    .disableAutocorrection(true)
+                    .onChange(of: newTag) {
+                        if canMakeTag(from: newTag) {
+                            tags.append(makeWordTag(newTag))
+                            newTag = ""
+                            updateAllTags()
+                        }
+                    }
+                                    .padding()
+                                    
+//                Button(action: {
+//                    // TODO: open keyboard for text
+//                }, label: {
+//                    Label("Add Tag", systemImage: "plus")
+//                        .fontWeight(.semibold)
+//                        .font(.title3)
+//                        
+//                })
+//                .tint(.accent)
+//                .padding(.vertical)
                 
                 ForEach(allTags, id: \.self) { tag in
                     SelectionButtonLabel(string: tag, chosenStrings: $tags, watch: true)
@@ -91,6 +107,6 @@ struct TagsSheetView: View {
 class PreviewWorkoutManager: WorkoutManager {
     override init() {
         super.init()
-        self.tags = ["#running", "#yoga", "#strength"]
+        self.statisticTags = ["#running", "#yoga", "#strength"]
     }
 }
