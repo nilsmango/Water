@@ -46,7 +46,7 @@ struct TagsSheetView: View {
     var body: some View {
         ScrollView {
             VStack {
-                TextField("Enter text", text: $newTag)
+                TextField("Add New Tag", text: $newTag)
                     .onSubmit {
                         tags.append(makeWordTag(newTag))
                         newTag = ""

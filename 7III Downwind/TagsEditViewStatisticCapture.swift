@@ -63,7 +63,7 @@ struct TagsEditViewStatisticCapture: View {
         
         Group {
             HStack {
-                TextField("Add a new tag ...", text: $newTag)
+                TextField("Add New Tag", text: $newTag)
                     .focused($isFieldFocused)
                     .onSubmit {
                         isFieldFocused = true
