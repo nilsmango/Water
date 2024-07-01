@@ -187,34 +187,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             HKMetadataKeyAverageSpeed: averageSpeed
         ]
         
-        
-        workoutBuilder?.addMetadata(allMetadata, completion: { success, error in
-            if let error = error {
-                print("Error adding metadata: \(error.localizedDescription)")
-                return
-            }
-            
-            guard success else {
-                print("Failed to add metadata.")
-                return
-            }
-            
             
             self.workoutBuilder?.endCollection(withEnd: Date.now, completion: { success, error in
-                if let error = error {
-                    print("Error ending collection: \(error.localizedDescription)")
-                    return
-                }
-                
-                guard success else {
-                    print("Failed to end collection.")
-                    return
-                }
                 
                 self.workoutBuilder?.finishWorkout(completion: { workout, error in
                     if let error = error {
                         print("Error finishing workout: \(error.localizedDescription)")
-                        return
                     }
                     
                     guard let myWorkout = workout else {
@@ -223,15 +201,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     
                     // TODO: add crew statistic as own metada here?
-                    self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
+                    self.routeBuilder?.finishRoute(with: myWorkout, metadata: allMetadata) { newRoute, error in
                         if let error = error {
                             print("Error finishing route: \(error.localizedDescription)")
-                            return
                         }
                         
-                        guard newRoute != nil else {
+                        if newRoute == nil {
                             print("Failed to finish route.")
-                            return
                         }
                         
                         // Optional: Do something with the route here
@@ -248,7 +224,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                 })
             })
-        })
     }
     
     /// Updates the run statistic
@@ -2262,7 +2237,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 
             } else {
                 
-                
                 if kalmanFilter == nil {
                     // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
                     self.kalmanFilter?.rValue = rValue
@@ -2280,6 +2254,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         speed: newLocation.speed,
                         timestamp: newLocation.timestamp
                     )
+                    
                     if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
                         routeBuilder?.insertRouteData([startLocation]) { (success, error) in
                             if !success {
@@ -2301,8 +2276,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         self.updateStatistic()
                     }
-                }
-                else {
+                } else {
                     if let kalmanFilter = self.kalmanFilter {
                         if resetKalmanFilter == true {
                             
@@ -2316,8 +2290,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             
                             resetKalmanFilter = false
                             
-                        }
-                        else {
+                        } else {
                             var kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
                             kalmanLocation = CLLocation(
                                 coordinate: kalmanLocation.coordinate,
