@@ -1303,30 +1303,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let prettyTime = makePrettyMinutesString(timeInSeconds: totalTime)
         return prettyTime
     }
-    
-    private func makePrettyMinutesString(timeInSeconds: Double, paceFormat: Bool = false) -> String {
-        if !timeInSeconds.isNaN && timeInSeconds != .infinity && timeInSeconds != -.infinity {
-            let roundedTime = timeInSeconds.rounded()
-            let minutes = Int(roundedTime / 60.0)
-            let seconds = Int(roundedTime) % 60
-            let timeInMinutesString = String(minutes)
-            let additionToSeconds: String
-            if seconds > 9 {
-                additionToSeconds = ""
-            } else {
-                additionToSeconds = "0"
-            }
-            let dividers = paceFormat ? ("'", "\"") : (":", "")
-            
-            let prettyTime = timeInMinutesString + dividers.0 + additionToSeconds + String(seconds) + dividers.1
-            
-            return prettyTime
-        } else {
-            return ""
-        }
         
-    }
-    
     /// calculates the new poly line number
     func calculatePolylineNumber(context: MapCameraUpdateContext, locations: [LocationData], maxPolylinesToShow: Int) -> Int {
         // count how many coordinates are visible for the camera

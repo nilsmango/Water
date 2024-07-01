@@ -45,6 +45,34 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // navigation path
     @Published var path = NavigationPath()
     
+    /// making average pace string
+    func makeAveragePaceString() -> String {
+        let totalTime = builder?.elapsedTime ?? 0
+        let pace = totalTime / (distance / 1000)
+        let prettyPace = makePrettyMinutesString(timeInSeconds: pace, paceFormat: true)
+        if prettyPace != "" {
+            return prettyPace
+        } else {
+            return "--'--\""
+        }
+    }
+    
+    
+    // MARK: - Locations and Workout
+    
+    override init() {
+        super.init()
+        setupLocationManager()
+    }
+    
+    private func setupLocationManager() {
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.allowsBackgroundLocationUpdates = true
+        locationManager?.activityType = .fitness
+        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
     let healthStore = HKHealthStore()
     var session: HKWorkoutSession?
     var builder: HKLiveWorkoutBuilder?
@@ -70,11 +98,6 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         session?.delegate = self
         builder?.delegate = self
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self
-        locationManager?.allowsBackgroundLocationUpdates = true
-        locationManager?.activityType = .fitness
-        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         
         // Start the workout session and begin data collection.
         let startDate = Date()
@@ -102,8 +125,8 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             HKQuantityType.workoutType(),
             HKQuantityType.quantityType(forIdentifier: .heartRate)!,
             HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
-//            HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
-//            HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
+            //            HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+            //            HKQuantityType.quantityType(forIdentifier: .distanceCycling)!,
             HKSeriesType.workoutRoute(),
             HKObjectType.activitySummaryType()
         ]
@@ -116,7 +139,6 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager?.requestWhenInUseAuthorization()
     }
     
-    // MARK: - Locations
     private var locationManager: CLLocationManager?
     var isUpdatingLocation = false
     
@@ -133,12 +155,15 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // Location Authorization
     private var locationAuthorization = false
+    private var comingFromStartLocation = false
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
             // Permission granted, start location updates
             locationAuthorization = true
-            startLocationService()
+            if comingFromStartLocation {
+                startLocationService()
+            }
         } else if status == .notDetermined {
             // Location access not determined, request permission
             locationManager?.requestWhenInUseAuthorization()
@@ -147,6 +172,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             locationAuthorization = false
             locationManager?.requestWhenInUseAuthorization()
         }
+        comingFromStartLocation = false
     }
     
     /// checks and starts location service
@@ -161,6 +187,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         } else {
             // show location authorization request again
+            comingFromStartLocation = true
             self.locationManager?.requestWhenInUseAuthorization()
         }
     }
@@ -175,8 +202,10 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         isUpdatingLocation = false
         
         // reset locations
-        userLocation = nil
-        previousUserLocation = nil
+        DispatchQueue.main.async {
+            self.userLocation = nil
+            self.previousUserLocation = nil
+        }
     }
     
     /// the location manager function
@@ -194,82 +223,81 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             guard let newLocation = locations.last else {
                 print("Something wrong with locationManager")
                 return }
-                            
-                if kalmanFilter == nil {
-                    // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
-                    self.kalmanFilter?.rValue = rValue
-                    self.kalmanFilter?.sigma = sigma
-                    
-                    // initializing the kalman filter
-                    self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
-                    
-                    let startLocation = CLLocation(
-                        coordinate: newLocation.coordinate,
-                        altitude: newLocation.altitude,
-                        horizontalAccuracy: newLocation.horizontalAccuracy,
-                        verticalAccuracy: newLocation.verticalAccuracy,
-                        course: newLocation.course,
-                        speed: newLocation.speed,
-                        timestamp: newLocation.timestamp
-                    )
-                    
-                    if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
-                        routeBuilder?.insertRouteData([startLocation]) { (success, error) in
-                            if !success {
-                                // Handle any errors here.
-                            }
-                        }
-                        
-                        DispatchQueue.main.async {
-                            self.previousUserLocation = self.userLocation
-                            self.userLocation = newLocation
-                            self.updateStatistic()
+            
+            if kalmanFilter == nil {
+                // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
+                self.kalmanFilter?.rValue = rValue
+                self.kalmanFilter?.sigma = sigma
+                
+                // initializing the kalman filter
+                self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                
+                let startLocation = CLLocation(
+                    coordinate: newLocation.coordinate,
+                    altitude: newLocation.altitude,
+                    horizontalAccuracy: newLocation.horizontalAccuracy,
+                    verticalAccuracy: newLocation.verticalAccuracy,
+                    course: newLocation.course,
+                    speed: newLocation.speed,
+                    timestamp: newLocation.timestamp
+                )
+                
+                if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                    routeBuilder?.insertRouteData([startLocation]) { (success, error) in
+                        if !success {
+                            // Handle any errors here.
                         }
                     }
-                } else {
-                    if let kalmanFilter = self.kalmanFilter {
-                        if resetKalmanFilter == true {
-                            
-                            // two of these four are not needed, but save is save
-                            self.kalmanFilter?.rValue = rValue
-                            self.kalmanFilter?.sigma = sigma
-                            kalmanFilter.rValue = rValue
-                            kalmanFilter.sigma = sigma
-                            
-                            kalmanFilter.resetKalman(newStartLocation: newLocation)
-                            
-                            resetKalmanFilter = false
-                            
-                        } else {
-                            
-                            var kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
-                            kalmanLocation = CLLocation(
-                                coordinate: kalmanLocation.coordinate,
-                                altitude: kalmanLocation.altitude,
-                                horizontalAccuracy: kalmanLocation.horizontalAccuracy,
-                                verticalAccuracy: kalmanLocation.verticalAccuracy,
-                                course: kalmanLocation.course,
-                                speed: newLocation.speed,
-                                timestamp: kalmanLocation.timestamp
-                            )
-                            
-                            if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
-                                routeBuilder?.insertRouteData([kalmanLocation]) { (success, error) in
-                                    if !success {
-                                        // Handle any errors here.
-                                    }
-                                }
-                                
-                                DispatchQueue.main.async {
-                                    self.previousUserLocation = self.userLocation
-                                    self.userLocation = kalmanLocation
-                                    self.updateStatistic()
+                    
+                    DispatchQueue.main.async {
+                        self.previousUserLocation = self.userLocation
+                        self.userLocation = newLocation
+                        self.updateStatistic()
+                    }
+                }
+            } else {
+                if let kalmanFilter = self.kalmanFilter {
+                    if resetKalmanFilter == true {
+                        
+                        // two of these four are not needed, but save is save
+                        self.kalmanFilter?.rValue = rValue
+                        self.kalmanFilter?.sigma = sigma
+                        kalmanFilter.rValue = rValue
+                        kalmanFilter.sigma = sigma
+                        
+                        kalmanFilter.resetKalman(newStartLocation: newLocation)
+                        
+                        resetKalmanFilter = false
+                        
+                    } else {
+                        
+                        var kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
+                        kalmanLocation = CLLocation(
+                            coordinate: kalmanLocation.coordinate,
+                            altitude: kalmanLocation.altitude,
+                            horizontalAccuracy: kalmanLocation.horizontalAccuracy,
+                            verticalAccuracy: kalmanLocation.verticalAccuracy,
+                            course: kalmanLocation.course,
+                            speed: newLocation.speed,
+                            timestamp: kalmanLocation.timestamp
+                        )
+                        
+                        if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                            routeBuilder?.insertRouteData([kalmanLocation]) { (success, error) in
+                                if !success {
+                                    // Handle any errors here.
                                 }
                             }
+                            
+                            DispatchQueue.main.async {
+                                self.previousUserLocation = self.userLocation
+                                self.userLocation = kalmanLocation
+                                self.updateStatistic()
+                            }
                         }
+                    }
                 }
             }
-            
         }
     }
     
@@ -386,11 +414,13 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
         DispatchQueue.main.async {
             self.running = toState == .running
         }
-        
+        print("workoutSession func was triggered. State is now: \(toState)")
         // Wait for the session to transition states before ending the builder.
         if toState == .ended {
-            // stop location tracking
-            stopLocationService()
+            if withGPS {
+                // stop location tracking
+                stopLocationService()
+            }
             
             let runDistance = HKQuantity(unit: .meter(), doubleValue: distance)
             let runTopSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: topSpeed)

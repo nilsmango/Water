@@ -26,6 +26,9 @@
 		783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D42B626BF500701D7F /* HeadingIndicator.swift */; };
 		783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D62B62C53C00701D7F /* RunListMapSheet.swift */; };
 		784046892C32E483009F8733 /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* LocationData.swift */; };
+		7840468A2C33315E009F8733 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */; };
+		7840468B2C3331C2009F8733 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */; };
+		7840468D2C33329F009F8733 /* AverageHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468C2C33329F009F8733 /* AverageHeartView.swift */; };
 		784083582C2170A3004C0857 /* EmptyTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083572C2170A3004C0857 /* EmptyTagsView.swift */; };
 		7840835A2C2188CF004C0857 /* HeartRateChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083592C2188CF004C0857 /* HeartRateChartView.swift */; };
 		7840835C2C218985004C0857 /* ChartStrideBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835B2C218985004C0857 /* ChartStrideBy.swift */; };
@@ -151,6 +154,7 @@
 		783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActiveRunnersView.swift; sourceTree = "<group>"; };
 		783A53D42B626BF500701D7F /* HeadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingIndicator.swift; sourceTree = "<group>"; };
 		783A53D62B62C53C00701D7F /* RunListMapSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListMapSheet.swift; sourceTree = "<group>"; };
+		7840468C2C33329F009F8733 /* AverageHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AverageHeartView.swift; sourceTree = "<group>"; };
 		784083572C2170A3004C0857 /* EmptyTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTagsView.swift; sourceTree = "<group>"; };
 		784083592C2188CF004C0857 /* HeartRateChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateChartView.swift; sourceTree = "<group>"; };
 		7840835B2C218985004C0857 /* ChartStrideBy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartStrideBy.swift; sourceTree = "<group>"; };
@@ -486,6 +490,7 @@
 			children = (
 				78844E3C2C2EA87E00B703F5 /* SessionPagingView.swift */,
 				78844E3E2C2EA99F00B703F5 /* MetricsView.swift */,
+				7840468C2C33329F009F8733 /* AverageHeartView.swift */,
 				78844E442C2EAD0A00B703F5 /* ControlsView.swift */,
 				78844E402C2EAAD100B703F5 /* ElapsedTimeView.swift */,
 			);
@@ -751,6 +756,9 @@
 				78844E482C2EB1A700B703F5 /* SummaryView.swift in Sources */,
 				78844E432C2EAB7000B703F5 /* ElapsedTimeFormatter.swift in Sources */,
 				78844E2A2C2E9D6900B703F5 /* Tracker_WatchApp.swift in Sources */,
+				7840468B2C3331C2009F8733 /* HTTPClient.swift in Sources */,
+				7840468A2C33315E009F8733 /* HelperFunctions.swift in Sources */,
+				7840468D2C33329F009F8733 /* AverageHeartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

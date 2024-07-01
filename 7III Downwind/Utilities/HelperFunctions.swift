@@ -63,3 +63,25 @@ func makeURLToRunName(url: URL) -> String {
     let rawRunName = stringFromURL.replacingOccurrences(of: Constants.deepLinkBase, with: "")
     return rawRunName.replacingOccurrences(of: "%20", with: " ")
 }
+
+func makePrettyMinutesString(timeInSeconds: Double, paceFormat: Bool = false) -> String {
+    if !timeInSeconds.isNaN && timeInSeconds != .infinity && timeInSeconds != -.infinity {
+        let roundedTime = timeInSeconds.rounded()
+        let minutes = Int(roundedTime / 60.0)
+        let seconds = Int(roundedTime) % 60
+        let timeInMinutesString = String(minutes)
+        let additionToSeconds: String
+        if seconds > 9 {
+            additionToSeconds = ""
+        } else {
+            additionToSeconds = "0"
+        }
+        let dividers = paceFormat ? ("'", "\"") : (":", "")
+        
+        let prettyTime = timeInMinutesString + dividers.0 + additionToSeconds + String(seconds) + dividers.1
+        
+        return prettyTime
+    } else {
+        return ""
+    }
+}

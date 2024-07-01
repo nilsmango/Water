@@ -10,6 +10,9 @@ import SwiftUI
 struct MetricsView: View {
     @ObservedObject var workoutManager: WorkoutManager
     
+    @State private var heartScale: CGFloat = 0.9
+    @State private var animationDuration: Double = 0.5
+    
     var body: some View {
         TimelineView(
             MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date(), isPaused: workoutManager.session?.state == .paused)) { context in
@@ -21,18 +24,44 @@ struct MetricsView: View {
                 .foregroundColor(.yellow)
                 .fontWeight(.semibold)
                 
-                Text(
-                    Measurement(
-                        value: workoutManager.distance,
-                        unit: UnitLength.kilometers
-                    ).formatted(
-                        .measurement(
-                            width: .abbreviated,
-                            usage: .road,
-                            numberFormatStyle: .number.precision(.fractionLength(1))
+                if workoutManager.withGPS {
+                    Text(
+                        Measurement(
+                            value: workoutManager.distance,
+                            unit: UnitLength.kilometers
+                        ).formatted(
+                            .measurement(
+                                width: .abbreviated,
+                                usage: .road,
+                                numberFormatStyle: .number.precision(.fractionLength(1))
+                            )
                         )
                     )
-                )
+                    HStack {
+                        Text(workoutManager.makeAveragePaceString())
+                        VStack(alignment: .leading, spacing: 0.0) {
+                            Text("∅")
+                            Text("PACE")
+                        }
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .fontDesign(.rounded)
+                    }
+                    
+//                    Text(
+//                        Measurement(
+//                            value: workoutManager.averageSpeed,
+//                            unit: UnitSpeed.metersPerSecond
+//                        ).formatted(
+//                            .measurement(
+//                                width: .abbreviated,
+//                                usage: .general,
+//                                numberFormatStyle: .number.precision(.fractionLength(1))
+//                            )
+//                        )
+//                    )
+                }
+                
                 
                 HStack {
                     Text(
@@ -43,6 +72,29 @@ struct MetricsView: View {
                     Image(systemName: "heart.fill")
                         .font(.title2)
                         .foregroundColor(.red)
+                        .scaleEffect(heartScale)
+                        .animation(
+                            .easeInOut(duration: animationDuration).repeatForever(autoreverses: true),
+                            value: heartScale
+                        )
+                        .onChange(of: workoutManager.heartRate) { oldValue, newValue in
+                            animationDuration = 60.0 / (newValue * 2)
+                            heartScale = heartScale == 0.9 ? 0.95 : 0.9
+                        }
+                        .onAppear {
+                            heartScale = heartScale == 0.9 ? 0.95 : 0.9
+                        }
+                }
+                
+                if !workoutManager.withGPS {
+                    HStack {
+                        Text(
+                            workoutManager.averageHeartRate.formatted(
+                                .number.precision(.fractionLength(0))
+                            )
+                        )
+                        AverageHeartView()
+                    }
                 }
                 
                 Text(

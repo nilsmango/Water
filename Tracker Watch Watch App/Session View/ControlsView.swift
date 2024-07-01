@@ -20,6 +20,7 @@ struct ControlsView: View {
                 }
                 .tint(Color.red)
                 .font(.title2)
+                .fontWeight(.bold)
                 Text("End")
             }
             VStack {
@@ -30,6 +31,7 @@ struct ControlsView: View {
                 }
                 .tint(Color.yellow)
                 .font(.title2)
+                .fontWeight(.bold)
                 Text(workoutManager.running ? "Pause" : "Resume")
             }
         }
