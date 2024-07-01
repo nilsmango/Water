@@ -25,6 +25,7 @@
 		783A53D32B5FD18000701D7F /* NoActiveRunnersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */; };
 		783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D42B626BF500701D7F /* HeadingIndicator.swift */; };
 		783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D62B62C53C00701D7F /* RunListMapSheet.swift */; };
+		784046892C32E483009F8733 /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* LocationData.swift */; };
 		784083582C2170A3004C0857 /* EmptyTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083572C2170A3004C0857 /* EmptyTagsView.swift */; };
 		7840835A2C2188CF004C0857 /* HeartRateChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083592C2188CF004C0857 /* HeartRateChartView.swift */; };
 		7840835C2C218985004C0857 /* ChartStrideBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835B2C218985004C0857 /* ChartStrideBy.swift */; };
@@ -742,6 +743,7 @@
 				78844E3D2C2EA87E00B703F5 /* SessionPagingView.swift in Sources */,
 				78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */,
 				78844E552C303C6300B703F5 /* SelectionButtonLabel.swift in Sources */,
+				784046892C32E483009F8733 /* LocationData.swift in Sources */,
 				78E5A85A2C32AB4E00456ABC /* HCKalmanAlgorithm.swift in Sources */,
 				78844E522C303C0E00B703F5 /* TagsSheetView.swift in Sources */,
 				78844E382C2EA2E500B703F5 /* WorkoutType.swift in Sources */,
