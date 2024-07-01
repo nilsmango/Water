@@ -31,6 +31,11 @@ enum Constants {
     static let defaultValue = 9999.9
         
     static let locationSampleData = [LocationData(timestamp: Date().addingTimeInterval(-172800), latitude: 46.89195421528713, longitude: 6.778561184189076, speed: 0.0),]
+    
+    // metadata keys for health kit
+    static let customMetadataKeyWorkoutType = "7III Workout Type"
+    static let customMetadataKeyTags = "Tags"
+    static let customTotalDistanceKey = "Total Distance"
 }
 
 enum Endpoints {

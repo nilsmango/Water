@@ -164,11 +164,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // update the run statistics
             
         }
-    }
-    
-    let customMetadataKeyWorkoutType = "7III Workout Type"
-    let customMetadataKeyTags = "Tags"
-    let customTotalDistanceKey = "Total Distance"
+    }    
     
     private func saveHealthWorkout() {
         let activeRunStatistic = runStatistics[currentRunStatisticIndex]
@@ -180,9 +176,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let workoutType = activeRunStatistic.workoutType ?? .surfingSport
         
         let allMetadata: [String: Any] = [
-            customMetadataKeyWorkoutType: workoutType.rawValue,
-            customMetadataKeyTags: tags,
-            customTotalDistanceKey: runDistance,
+            Constants.customMetadataKeyWorkoutType: workoutType.rawValue,
+            Constants.customMetadataKeyTags: tags,
+            Constants.customTotalDistanceKey: runDistance,
             HKMetadataKeyMaximumSpeed: topSpeed,
             HKMetadataKeyAverageSpeed: averageSpeed
         ]
@@ -616,8 +612,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double) {
-        let rawWorkoutType = workout.metadata?[customMetadataKeyWorkoutType] as? String ?? ""
-        let tagsString = workout.metadata?[customMetadataKeyTags] as? String ?? ""
+        let rawWorkoutType = workout.metadata?[Constants.customMetadataKeyWorkoutType] as? String ?? ""
+        let tagsString = workout.metadata?[Constants.customMetadataKeyTags] as? String ?? ""
         let tags = tagsString.split(separator: " ").map { String($0) }
         
         let workoutType = WorkoutType(rawValue: rawWorkoutType) ?? .not7IIISurfingSport
@@ -639,7 +635,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         
         let totalDistance: Double
-        if let distanceQuantity = workout.metadata?[customTotalDistanceKey] as? HKQuantity {
+        if let distanceQuantity = workout.metadata?[Constants.customTotalDistanceKey] as? HKQuantity {
             // Assuming the unit is meters per second (m/s), convert it to kilometers per hour (km/h)
             totalDistance = distanceQuantity.doubleValue(for: .meter())
         } else {
