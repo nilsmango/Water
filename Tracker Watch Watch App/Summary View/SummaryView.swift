@@ -19,8 +19,8 @@ struct SummaryView: View {
     }()
     
     var body: some View {
-        if workoutManager.workout != nil {
-            ProgressView("Saving workout")
+        if workoutManager.workout == nil {
+            ProgressView("Saving Workout")
                 .navigationBarHidden(true)
         } else {
             ScrollView(.vertical) {
