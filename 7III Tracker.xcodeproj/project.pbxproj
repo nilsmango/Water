@@ -29,6 +29,7 @@
 		7840468A2C33315E009F8733 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */; };
 		7840468B2C3331C2009F8733 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */; };
 		7840468D2C33329F009F8733 /* AverageHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468C2C33329F009F8733 /* AverageHeartView.swift */; };
+		7840468F2C3421CF009F8733 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468E2C342160009F8733 /* SummaryView.swift */; };
 		784083582C2170A3004C0857 /* EmptyTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083572C2170A3004C0857 /* EmptyTagsView.swift */; };
 		7840835A2C2188CF004C0857 /* HeartRateChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083592C2188CF004C0857 /* HeartRateChartView.swift */; };
 		7840835C2C218985004C0857 /* ChartStrideBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835B2C218985004C0857 /* ChartStrideBy.swift */; };
@@ -155,6 +156,8 @@
 		783A53D42B626BF500701D7F /* HeadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingIndicator.swift; sourceTree = "<group>"; };
 		783A53D62B62C53C00701D7F /* RunListMapSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunListMapSheet.swift; sourceTree = "<group>"; };
 		7840468C2C33329F009F8733 /* AverageHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AverageHeartView.swift; sourceTree = "<group>"; };
+		7840468E2C342160009F8733 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		784046902C342363009F8733 /* StatisticMetricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticMetricsView.swift; sourceTree = "<group>"; };
 		784083572C2170A3004C0857 /* EmptyTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTagsView.swift; sourceTree = "<group>"; };
 		784083592C2188CF004C0857 /* HeartRateChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateChartView.swift; sourceTree = "<group>"; };
 		7840835B2C218985004C0857 /* ChartStrideBy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartStrideBy.swift; sourceTree = "<group>"; };
@@ -341,6 +344,8 @@
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
+				7840468E2C342160009F8733 /* SummaryView.swift */,
+				784046902C342363009F8733 /* StatisticMetricsView.swift */,
 				785CF9562B4FE85100528B6D /* Options */,
 				78C4D23D2BA750D200639E65 /* Run Statistics */,
 				7877E1342BC52BB300776890 /* FlexibleView */,
@@ -686,6 +691,7 @@
 				7877E12C2BC52A0900776890 /* TagsEditView.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
+				7840468F2C3421CF009F8733 /* SummaryView.swift in Sources */,
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
 				78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,

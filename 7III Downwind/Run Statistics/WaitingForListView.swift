@@ -10,13 +10,15 @@ import SwiftUI
 struct WaitingForListView: View {
     var body: some View {
         Section {
-            Text("Loading Statistics...")
+            
         } header: {
-            Text("Hang loose!")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-                .textCase(nil)
+            
+            HStack {
+                Spacer()
+                ProgressView("Loading Statistics")
+                Spacer()
+            }
+            .padding(.top, 32)
         }
     }
 }

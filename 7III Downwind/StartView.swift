@@ -110,6 +110,10 @@ struct StartView: View {
                         .interactiveDismissDisabled()
                 })
                 
+                .sheet(isPresented: $downwindManager.showingSummarySheet, content: {
+                    SummaryView(downwindManager: downwindManager)
+                })
+                
                 .sheet(isPresented: $showOptionsSheet, content: {
                     NavigationStack {
                         OptionsView(downwindManager: downwindManager, showOptionsSheet: $showOptionsSheet, showFirstTimeUserName: $showFirstTimeUserName)

@@ -12,7 +12,7 @@ struct StatisticsView: View {
     
     var body: some View {
         List {
-                if downwindManager.groupedRunStatistics.isEmpty && downwindManager.loadingRunStatistics {
+                if downwindManager.loadingRunStatistics {
                     WaitingForListView()
                     
                 } else {
@@ -63,7 +63,7 @@ struct StatisticsView: View {
                 // Reload both statistic arrays
                 downwindManager.loadRunStatistics()
             }
-        .navigationTitle("Run Statistics")
+        .navigationTitle("Statistics")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink("Filter by Tags") {

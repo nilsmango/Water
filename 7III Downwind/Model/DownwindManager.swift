@@ -51,6 +51,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var groupedRunStatistics: [[[RunStatistic]]] = []
     // TODO: make this non published?
     @Published var locationAccuracy: Double = 1000.0
+    // summary view
+    @Published var workout: HKWorkout?
+    @Published var showingSummarySheet = false
     var currentRunStatisticIndex = 0
     var routeBuilder: HKWorkoutRouteBuilder? = nil
     var workoutBuilder: HKWorkoutBuilder? = nil
@@ -167,6 +170,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }    
     
     private func saveHealthWorkout() {
+        showingSummarySheet = true
+        
         let activeRunStatistic = runStatistics[currentRunStatisticIndex]
         
         let runDistance = HKQuantity(unit: .meter(), doubleValue: activeRunStatistic.runDistance)
@@ -195,31 +200,32 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         print("Error finishing workout: \(error.localizedDescription)")
                     }
                     
-                    guard let myWorkout = workout else {
-                        print("Failed to finish workout.")
-                        return
-                    }
                     
-                    // TODO: add crew statistic as own metada here?
-                    self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
-                        if let error = error {
-                            print("Error finishing route: \(error.localizedDescription)")
-                        }
-                        
-                        if newRoute == nil {
-                            print("Failed to finish route.")
-                        }
-                        
-                        // Optional: Do something with the route here
-                        print("Successfully saved workout and route to HealthKit.")
-                        
-                        // Discard the routeBuilder and workoutBuilder
-                        self.routeBuilder = nil
-                        self.workoutBuilder = nil
-                        
-                        // Reload both statistic arrays
-                        DispatchQueue.main.async {
-                            self.loadRunStatistics()
+                    if let myWorkout = workout {
+                        self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
+                            
+                            if let error = error {
+                                print("Error finishing route: \(error.localizedDescription)")
+                            }
+                            
+                            if newRoute == nil {
+                                print("Failed to finish route.")
+                            }
+                            
+                            // Optional: Do something with the route here
+                            print("Successfully saved workout and route to HealthKit.")
+                            
+                            // Discard the routeBuilder and workoutBuilder
+                            self.routeBuilder = nil
+                            self.workoutBuilder = nil
+                            
+                            // Reload both statistic arrays
+                            DispatchQueue.main.async {
+                                self.workout = workout
+                                self.loadRunStatistics()
+                                self.showingSummarySheet = false
+                                self.workout = nil
+                            }
                         }
                     }
                 })

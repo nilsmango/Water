@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct SummaryView: View {
+    @ObservedObject var downwindManager: DownwindManager
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        if downwindManager.workout == nil {
+                ProgressView("Saving Workout")
+        } else {
+            Label("Workout Saved", systemImage: "checkmark")
+        }
     }
 }
 
 #Preview {
-    SummaryView()
+    SummaryView(downwindManager: DownwindManager())
 }
