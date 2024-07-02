@@ -35,8 +35,7 @@ struct SummaryView: View {
                         SummaryMetricView(
                             title: "Total Distance",
                             value: Measurement(
-                                value: workoutManager.workout?.totalDistance?
-                                    .doubleValue(for: .meter()) ?? 0,
+                                value: workoutManager.distance,
                                 unit: UnitLength.meters
                             ).formatted(
                                 .measurement(
