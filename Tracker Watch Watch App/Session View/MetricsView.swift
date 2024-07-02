@@ -28,7 +28,7 @@ struct MetricsView: View {
                     Text(
                         Measurement(
                             value: workoutManager.distance,
-                            unit: UnitLength.kilometers
+                            unit: UnitLength.meters
                         ).formatted(
                             .measurement(
                                 width: .abbreviated,
