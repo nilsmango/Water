@@ -19,7 +19,7 @@ struct SummaryView: View {
     }()
     
     var body: some View {
-        if workoutManager.workout == nil {
+        if workoutManager.workout != nil {
             ProgressView("Saving workout")
                 .navigationBarHidden(true)
         } else {
@@ -29,23 +29,41 @@ struct SummaryView: View {
                     SummaryMetricView(
                         title: "Total Time",
                         value: durationFormatter.string(from: workoutManager.workout?.duration ?? 0.0) ?? ""
-                    ).accentColor(Color.yellow)
+                    ).accentColor(.yellow)
                     
-                    SummaryMetricView(
-                        title: "Total Distance",
-                        value: Measurement(
-                            value: workoutManager.workout?.totalDistance?
-                                .doubleValue(for: .meter()) ?? 0,
-                            unit: UnitLength.meters
-                        ).formatted(
-                            .measurement(
-                                width: .abbreviated,
-                                usage: .road
+                    if workoutManager.withGPS {
+                        SummaryMetricView(
+                            title: "Total Distance",
+                            value: Measurement(
+                                value: workoutManager.workout?.totalDistance?
+                                    .doubleValue(for: .meter()) ?? 0,
+                                unit: UnitLength.meters
+                            ).formatted(
+                                .measurement(
+                                    width: .abbreviated,
+                                    usage: .road
+                                )
                             )
-                        )
-                    ).accentColor(Color.green)
-                    
-                    // TODO: add top speed and ∅-Pace
+                        ).accentColor(.green)
+                        
+                        SummaryMetricView(
+                            title: "∅-Pace",
+                            value: workoutManager.makeAveragePaceString()
+                        ).accentColor(.teal)
+                        
+                        SummaryMetricView(
+                            title: "Top Speed",
+                            value: Measurement(
+                                value: workoutManager.topSpeed,
+                                unit: UnitSpeed.metersPerSecond
+                            ).formatted(
+                                .measurement(
+                                    width: .abbreviated,
+                                    usage: .general
+                                )
+                            )
+                        ).accentColor(.teal)
+                    }
                     
                     SummaryMetricView(
                         title: "∅-Heart Rate",
