@@ -58,8 +58,6 @@ struct StartView: View {
                 .padding(.horizontal, 20)
                 
             }
-//                    .navigationTitle("7III Tracker")
-        //            .navigationBarTitleDisplayMode(.inline)
             .padding()
             .onAppear {
                 workoutManager.requestAuthorization()

@@ -16,13 +16,15 @@ struct MetricsView: View {
     var body: some View {
         TimelineView(
             MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date(), isPaused: workoutManager.session?.state == .paused)) { context in
-            VStack(alignment: .leading) {
+                // TODO: try spacing: -10
+                VStack(alignment: .leading) {
                 ElapsedTimeView(
                     elapsedTime: workoutManager.builder?.elapsedTime ?? 0,
                     showSubseconds: context.cadence == .live
                 )
                 .foregroundColor(.yellow)
                 .fontWeight(.semibold)
+                .padding(.top, 2)
                 
                 if workoutManager.withGPS {
                     Text(
@@ -123,7 +125,12 @@ struct MetricsView: View {
 }
 
 #Preview {
-    MetricsView(workoutManager: WorkoutManager())
+    NavigationStack {
+        MetricsView(workoutManager: WorkoutManager())
+            .navigationTitle("SUP DW Foil")
+            .navigationBarTitleDisplayMode(.inline)
+    }
+    
 }
 
 private struct MetricsTimelineSchedule: TimelineSchedule {
