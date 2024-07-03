@@ -1026,7 +1026,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         
-        
         if let index = runStatistics.firstIndex(where: { $0.id == newStatistic.id }) {
             // snapshot the run for later comparison
             let oldRoute = runStatistics[index].locationData

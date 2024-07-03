@@ -50,6 +50,7 @@ struct StatisticsMap: View {
         }
     }
     
+    // TODO: change this one if we get crashes (500-750 might be enough)
     var maxTotalPolyLineNumber: Int {
         if editMode {
             return 1000
@@ -65,6 +66,7 @@ struct StatisticsMap: View {
             return 9.0
         }
     }
+    let fineLineWidth = 6.0
     
     var body: some View {
         ZStack {
@@ -128,7 +130,7 @@ struct StatisticsMap: View {
                         let endCoordinate = [polylineData.last!.coordinates.last!]
                         let combinedArrays = polylineCoordinates + endCoordinate
                         MapPolyline(coordinates: combinedArrays)
-                            .stroke(.purple.opacity(0.3), style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                            .stroke(.purple.opacity(0.3), style: StrokeStyle(lineWidth: fineLineWidth, lineCap: .round))
                     }
                     
                     let startData = statisticsData.locationData.first!
@@ -214,8 +216,6 @@ struct StatisticsMap: View {
                 }
             }
         }
-        
-        
         .onAppear {
             statePolyLineNumber = maxPointsToShow
             Task {
