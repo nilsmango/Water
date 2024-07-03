@@ -1360,23 +1360,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 locationPairs.append((locationData[index], locationData[index2]))
             }
         }
-        
-        // create an array for all the speeds of the location pairs
-        func calculateSpeedsOfLocationPairs(locationPair: (LocationData, LocationData)) -> Double {
-            let distance = calculateDirectDistance(from: Member(name: "from", latitude: locationPair.0.latitude, longitude: locationPair.0.longitude), to: Member(name: "to", latitude: locationPair.1.latitude, longitude: locationPair.1.longitude)) ?? 0.0
-            let time = locationPair.1.timestamp.timeIntervalSince(locationPair.0.timestamp)
-            let speed = distance / time
-            return speed
-        }
-        
+                
         let locationSpeeds = locationPairs.map { calculateSpeedsOfLocationPairs(locationPair: $0) }
         let maxSpeed = locationSpeeds.max() ?? 1.0
         let quantizedSpeeds = locationSpeeds.map { $0 / maxSpeed }
-        
-        func createColorFromQuantizedSpeed(speed: Double) -> Color {
-            let hue = 0.33 * speed
-            return Color(hue: hue, saturation: 1.0, brightness: 1.0)
-        }
         
         let lineColors = quantizedSpeeds.map { createColorFromQuantizedSpeed(speed: $0)}
         
@@ -1388,6 +1375,45 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             polylineData.append(polyline)
         }
         return polylineData
+    }
+    
+    /// create an array for all the speeds of the location pairs
+    private func calculateSpeedsOfLocationPairs(locationPair: (LocationData, LocationData)) -> Double {
+        let distance = calculateDirectDistance(from: Member(name: "from", latitude: locationPair.0.latitude, longitude: locationPair.0.longitude), to: Member(name: "to", latitude: locationPair.1.latitude, longitude: locationPair.1.longitude)) ?? 0.0
+        let time = locationPair.1.timestamp.timeIntervalSince(locationPair.0.timestamp)
+        let speed = distance / time
+        return speed
+    }
+    
+    private func createColorFromQuantizedSpeed(speed: Double) -> Color {
+        let hue = 0.33 * speed
+        return Color(hue: hue, saturation: 1.0, brightness: 1.0)
+    }
+    
+    
+    /// create an array with colors for the gradient of a polyline
+    func createGradientArray(for locations: [LocationData], numberOfElementsToKeep: Int) -> [Color] {
+        let locationsCount = locations.count
+        // create an array of all the location pairs
+        var locationPairs = [(LocationData, LocationData)]()
+        
+        let stepSize = Double(locationsCount) / Double(numberOfElementsToKeep)
+        
+        for i in 0..<numberOfElementsToKeep - 1 {
+            let index = Int(round(Double(i) * stepSize))
+            let index2 = Int(round(Double(i + 1) * stepSize))
+            // Ensure the index is within bounds of the array
+            if index != index2 && index2 < locationsCount {
+                locationPairs.append((locations[index], locations[index2]))
+            }
+        }
+        
+        let locationSpeeds = locationPairs.map { calculateSpeedsOfLocationPairs(locationPair: $0) }
+        let maxSpeed = locationSpeeds.max() ?? 1.0
+        let quantizedSpeeds = locationSpeeds.map { $0 / maxSpeed }
+        let lineColors = quantizedSpeeds.map { createColorFromQuantizedSpeed(speed: $0)}
+        
+        return lineColors
     }
     
     /// tries to get a location name from coordinates

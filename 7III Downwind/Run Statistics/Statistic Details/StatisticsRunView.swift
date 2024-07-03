@@ -173,7 +173,13 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showMapSheet, content: {
             NavigationStack {
-                    StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
+                Group {
+                    if let dW = statisticsData.workoutType?.isDWSport, dW == true {
+                        StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
+                    } else {
+                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
+                    }
+                }
                         .navigationTitle(locationName)
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
@@ -221,6 +227,7 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showRunEditView, content: {
             NavigationStack {
+                // TODO: add new edit mode map
                     StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit, editMode: true)
                     .navigationTitle("Edit Run Data")
                     .navigationBarTitleDisplayMode(.inline)

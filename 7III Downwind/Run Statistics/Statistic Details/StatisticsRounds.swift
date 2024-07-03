@@ -30,6 +30,7 @@ struct StatisticsRounds: View {
                 Spacer()
                 Text("")
             }
+        
         ForEach(rounds.map { RoundData(first: $0.0, second: $0.1, third: $0.2) }, id: \.self) { round in
             if !overViewLayout || round.third != "" {
                 HStack {

@@ -50,10 +50,17 @@ struct MapSectionView: View {
             Button {
                 showMapSheet = true
             } label: {
-                StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
-                    .frame(height: 300)
-                    .cornerRadius(8.0)
-                    .disabled(true)
+                if let dW = statisticsData.workoutType?.isDWSport, dW == true {
+                    StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
+                        .frame(height: 300)
+                        .cornerRadius(8.0)
+                        .disabled(true)
+                } else {
+                    WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
+                        .frame(height: 300)
+                        .cornerRadius(8.0)
+                        .disabled(true)
+                }
             }
             
         } header: {

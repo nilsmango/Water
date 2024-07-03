@@ -84,5 +84,14 @@ enum WorkoutType: String, Codable, CaseIterable {
             case .paddleSport, .sup, .kayak, .canoe, .not7IIIPaddleSport:
                 return .paddleSports
             }
+    }
+    
+    var isDWSport: Bool {
+        switch self {
+        case .downwindSUP, .downwindSUPFoil:
+            return true
+        default:
+            return false
         }
+    }
 }

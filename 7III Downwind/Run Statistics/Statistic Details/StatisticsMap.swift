@@ -28,18 +28,17 @@ struct StatisticsMap: View {
     
     var maxPointsToShow: Int {
         if let workoutType = statisticsData.workoutType {
-            switch workoutType {
-            case .foilSurf, .supFoil, .wingFoil, .windsurf, .windFoil, .pumpFoil, .surfingSport, .surf, .kite, .supSurf:
-                if editMode {
-                    return 45
-                } else {
-                    return 300
-                }
-            default:
+            if workoutType.isDWSport {
                 if editMode {
                     return 45
                 } else {
                     return 70
+                }
+            } else {
+                if editMode {
+                    return 45
+                } else {
+                    return 140
                 }
             }
         } else {
