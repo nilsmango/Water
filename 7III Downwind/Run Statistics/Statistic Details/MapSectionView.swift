@@ -22,7 +22,9 @@ struct MapSectionView: View {
         if statisticsData.runDistance > 1999 {
             Section {
                 StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
-                
+                    .onTapGesture {
+                        showRounds = true
+                    }
             } header: {
                 HStack {
                     Text("Rounds")
