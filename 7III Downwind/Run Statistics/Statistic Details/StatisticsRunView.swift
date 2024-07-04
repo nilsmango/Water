@@ -115,7 +115,11 @@ struct StatisticsRunView: View {
                                 downwindManager.getNameOfLocation(location: lastDataPoint) { name in
                                     if let name = name {
                                         if locationName.contains("→") == false && locationName != name {
-                                            locationName += " → " + name
+                                            if locationName == "" {
+                                                locationName = name
+                                            } else {
+                                                locationName += " → " + name
+                                            }
                                         }
                                     }
                                 }
