@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WorkoutTypeListView: View {
     @ObservedObject var workoutManager: WorkoutManager
-
+    
     @Binding var showList: Bool
     
     var body: some View {
@@ -19,15 +19,7 @@ struct WorkoutTypeListView: View {
                     workoutManager.workoutType = type
                     showList = false
                 }) {
-                    HStack {
-                        Spacer()
-                        
-                        Text(type.prettyString)
-                            .bold(type == workoutManager.workoutType ? true : false)
-                        
-                        Spacer()
-                    }
-                    
+                    Label(type.prettyString, systemImage: type == workoutManager.workoutType ? "checkmark" : "")
                 }
                 .padding()
             }
