@@ -21,9 +21,11 @@ struct StatisticsRunView: View {
     @State private var showTagsEditView = false
     @State private var showRunEditView = false
     @State private var showAlert = false
+    @State private var showEditData = false
     
     @State private var tags = [String]()
     @State private var editTags = [String]()
+    @State private var editType: WorkoutType = .not7IIISurfingSport
     
     @State private var statisticsDataEdit = RunStatistic.empty()
     
@@ -133,13 +135,28 @@ struct StatisticsRunView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    // update the edit data
-                    statisticsDataEdit = statisticsData
-                    showRunEditView = true
-                }, label: {
-                    Text("Edit Data")
-                })
+                Menu {
+                    Button(action: {
+                        // update the edit data
+                        statisticsDataEdit = statisticsData
+                        showRunEditView = true
+                    }, label: {
+                        Text("Edit Route")
+                    })
+                    
+                    Button(action: {
+                        // update the edit data
+                        editTags = tags
+                        editType = statisticsData.workoutType ?? .surf
+                        showEditData = true
+                    }, label: {
+                        Text("Edit Data")
+                    })
+                } label: {
+                    Text("Edit")
+                }
+
+                
             }
         }
         
@@ -203,7 +220,7 @@ struct StatisticsRunView: View {
         .sheet(isPresented: $showTagsEditView, content: {
             NavigationStack {
                 List {
-                    TagsEditView(tags: $editTags, downwindManager: downwindManager)
+                    TagsEditView(tags: $editTags, downwindManager: downwindManager, type: .constant(.windsurf))
                 }
                 .navigationTitle("Edit Tags")
                 .toolbar {
@@ -218,7 +235,7 @@ struct StatisticsRunView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             tags = editTags
-                            downwindManager.saveStatisticWithNewTags(tags: tags, statisticsData: statisticsData)
+                            downwindManager.saveStatisticWithNewTags(tags: tags, type: editType, saveType: false, statisticsData: statisticsData)
                             showTagsEditView = false
                         }, label: {
                             Text("Save")
@@ -227,13 +244,40 @@ struct StatisticsRunView: View {
                     }
                 }
             }
-            
         })
+        .sheet(isPresented: $showEditData, content: {
+            NavigationStack {
+                List {
+                    TagsEditView(tags: $editTags, downwindManager: downwindManager, type: $editType, withTypeEdit: true)
+                }
+                .navigationTitle("Edit Data")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(role: .destructive, action: {
+                            showEditData = false
+                        }, label: {
+                            Text("Cancel")
+                        })
+                        .tint(.red)
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            tags = editTags
+                            downwindManager.saveStatisticWithNewTags(tags: tags, type: editType, saveType: true, statisticsData: statisticsData)
+                            showEditData = false
+                        }, label: {
+                            Text("Save")
+                        })
+                        .disabled(tags == editTags && statisticsData.workoutType == editType)
+                    }
+                }
+            }
+        })
+        
         .sheet(isPresented: $showRunEditView, content: {
             NavigationStack {
-                // TODO: add new edit mode map
                     StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit, editMode: true)
-                    .navigationTitle("Edit Run Data")
+                    .navigationTitle("Edit Route")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {

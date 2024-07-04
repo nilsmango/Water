@@ -43,6 +43,10 @@ struct TagsEditView: View {
         allTags = Array(Set(trackerTags + tags)).sorted()
     }
     
+    @Binding var type: WorkoutType
+    
+    var withTypeEdit = false
+    
     var body: some View {
         Section {
             if allTags.isEmpty {
@@ -66,13 +70,54 @@ struct TagsEditView: View {
                 }
             }
             
-        }
+        } header: {
+            if withTypeEdit {
+                VStack(alignment: .leading) {
+                    Text("Edit Sport")
+                        .textCase(nil)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                    
+                            Menu {
+                                ForEach(WorkoutType.allCases, id: \.self) { workoutType in
+                                    if workoutType != .not7IIIPaddleSport && workoutType != .not7IIISurfingSport {
+                                        Button(action: {
+                                            type = workoutType
+                                        }) {
+                                            if type == workoutType {
+                                                Label(workoutType.prettyString, systemImage: "checkmark")
+                                            } else {
+                                                Text(workoutType.prettyString)
+                                            }
+                                        }
+                                    }
+                                }
+                            } label: {
+                                Text(type.prettyString)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(.orange)
+                            .textCase(nil)
+                            .padding(.bottom)
+                            .padding(.top, -6.0)
+                            
+                    Text("Edit Tags")
+                        .textCase(nil)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                    }
+                }
+                
+            }
+            
         .onAppear {
             allTags = Array(Set(trackerTags + tags)).sorted()
         }
         Section {
             HStack {
-                TextField("Add a new tag ...", text: $newTag)
+                TextField("Add New Tag", text: $newTag)
                     .focused($isFieldFocused)
                     .onSubmit {
                         isFieldFocused = true
@@ -109,14 +154,13 @@ struct TagsEditView: View {
             }
             
         }
-        
     }
 }
 
 #Preview {
     List {
         
-        TagsEditView(tags: .constant(createArray()), downwindManager: DownwindManager())
+        TagsEditView(tags: .constant(createArray()), downwindManager: DownwindManager(), type: .constant(.canoe), withTypeEdit: true)
     }
 }
 

@@ -36,7 +36,11 @@ struct StatisticsControlCenter: View {
                                 Button(action: {
                                     downwindManager.workoutType = type
                                 }) {
-                                    Text(type.prettyString)
+                                    if downwindManager.workoutType == type {
+                                        Label(type.prettyString, systemImage: "checkmark")
+                                    } else {
+                                        Text(type.prettyString)
+                                    }
                                 }
                             }
                         }

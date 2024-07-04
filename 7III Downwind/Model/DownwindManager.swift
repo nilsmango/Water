@@ -985,17 +985,26 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     /// save statistic to disk with new tags
-    func saveStatisticWithNewTags(tags: [String], statisticsData: RunStatistic) {
+    func saveStatisticWithNewTags(tags: [String], type: WorkoutType, saveType: Bool = false, statisticsData: RunStatistic) {
         if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsData.id }) {
             runEdits[editIndex].newTags = tags
+            if saveType {
+                runEdits[editIndex].newWorkoutType = type
+            }
         } else {
-            let runEdit = RunEdit(id: statisticsData.id, newTags: tags)
+            var runEdit = RunEdit(id: statisticsData.id, newTags: tags)
+            if saveType {
+                runEdit.newWorkoutType = type
+            }
             runEdits.append(runEdit)
         }
         saveRunEdits()
         
         if let index = runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
             runStatistics[index].tags = tags
+            if saveType {
+                runStatistics[index].workoutType = type
+            }
         }
         
         updateGroupedRunArray()
