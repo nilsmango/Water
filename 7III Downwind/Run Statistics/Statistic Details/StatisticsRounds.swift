@@ -26,7 +26,7 @@ struct StatisticsRounds: View {
             HStack {
                 Text("Round (km)")
                  .frame(width: width, alignment: .leading)
-                Text("Pace (min)")
+                Text("Time (min)")
                 Spacer()
                 Text("")
             }
