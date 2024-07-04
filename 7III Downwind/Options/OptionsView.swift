@@ -142,9 +142,9 @@ struct OptionsView: View {
                     }
                 }
                 
-                Toggle(isOn: $downwindManager.showListDetail, label: {
-                    Text("Show List Details")
-                })
+//                Toggle(isOn: $downwindManager.showListDetail, label: {
+//                    Text("Show List Details")
+//                })
             } header: {
                 Text("Other options")
             } footer: {

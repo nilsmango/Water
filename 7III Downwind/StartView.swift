@@ -34,14 +34,14 @@ struct StartView: View {
                                 RunListView(downwindManager: downwindManager)
                             }
                         } else {
-                            Button(action: {
-                                showRunPicker = true
-                            }, label: {
-                                Label("Online Locations", systemImage: "wifi")
-                            })
-                            .buttonStyle(.bordered)
-                            .tint(.accentColor)
-                            .padding(.top, 8)
+//                            Button(action: {
+//                                showRunPicker = true
+//                            }, label: {
+//                                Label("Online Locations", systemImage: "wifi")
+//                            })
+//                            .buttonStyle(.bordered)
+//                            .tint(.accentColor)
+//                            .padding(.top, 8)
                         }
                         
                         if downwindManager.developerMode {
