@@ -66,7 +66,7 @@ struct StatisticsMap: View {
             return 9.0
         }
     }
-    let fineLineWidth = 6.0
+    let fineLineWidth = 4.0
     
     var body: some View {
         ZStack {
@@ -235,5 +235,5 @@ struct StatisticsMap: View {
 
 #Preview {
     
-    StatisticsMap(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData)), editMode: true)
+    StatisticsMap(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData)), editMode: false)
 }
