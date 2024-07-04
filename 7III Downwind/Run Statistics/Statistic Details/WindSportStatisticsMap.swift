@@ -14,8 +14,8 @@ struct WindSportStatisticsMap: View {
     
     @Binding var statisticsData: RunStatistic
 
-    var lineWidth = 3.0
-
+    var lineWidth = 2.0
+    
     var body: some View {
             Map {
                 // start and end annotations + edit polyline
