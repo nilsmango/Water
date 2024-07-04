@@ -100,12 +100,6 @@ struct StatisticsRunView: View {
             
             downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
                 
-                downwindManager.fetchHeartRatesOverTime(startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
-                    if let heartRateData = heartRateData {
-                        heartRates = heartRateData
-                    }
-                }
-                
                 // create location start and end names after loading route
                     if let firstDataPoint = statisticsData.locationData.first {
                         downwindManager.getNameOfLocation(location: firstDataPoint) { name in
@@ -129,32 +123,59 @@ struct StatisticsRunView: View {
                             
                         }
                     }
+                
+                // update some things if we have location data
+                if !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 {
+                    DispatchQueue.main.async {
+                        downwindManager.saveEditedRoute(newStatistic: statisticsData, updatingExternal: true)
+                    }
+                }
+                
+                downwindManager.fetchHeartRatesOverTime(startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
+                    if let heartRateData = heartRateData {
+                        heartRates = heartRateData
+                    }
+                }
+                
+                
             }
         }
         .navigationTitle(statisticsData.runName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Button(action: {
-                        // update the edit data
-                        statisticsDataEdit = statisticsData
-                        showRunEditView = true
-                    }, label: {
-                        Text("Edit Route")
-                    })
-                    
+                if statisticsData.locationData.count > 2 {
+                    Menu {
+                        Button(action: {
+                            // update the edit data
+                            statisticsDataEdit = statisticsData
+                            showRunEditView = true
+                        }, label: {
+                            Text("Edit Route")
+                        })
+                        
+                        Button(action: {
+                            // update the edit data
+                            editTags = tags
+                            editType = statisticsData.workoutType ?? .surf
+                            showEditData = true
+                        }, label: {
+                            Text("Edit Data")
+                        })
+                    } label: {
+                        Text("Edit")
+                    }
+                } else {
                     Button(action: {
                         // update the edit data
                         editTags = tags
                         editType = statisticsData.workoutType ?? .surf
                         showEditData = true
                     }, label: {
-                        Text("Edit Data")
+                        Text("Edit")
                     })
-                } label: {
-                    Text("Edit")
                 }
+                
 
                 
             }

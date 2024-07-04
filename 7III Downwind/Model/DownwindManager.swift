@@ -717,6 +717,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     DispatchQueue.main.async {
                                         self.runStatistics[runIndex].locationData = newLocationData
                                     }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        self.runStatistics[runIndex].locationData = locationData
+                                    }
                                 }
                             } else {
                                 DispatchQueue.main.async {
@@ -1019,7 +1023,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
     }
     
-    func saveEditedRoute(newStatistic: RunStatistic) {
+    func saveEditedRoute(newStatistic: RunStatistic, updatingExternal: Bool = false) {
         
         if newStatistic.locationData.isEmpty {
             return
@@ -1039,9 +1043,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // snapshot the run for later comparison
             let oldRoute = runStatistics[index].locationData
             
-            guard oldRoute != newStatistic.locationData else {
-                return
+            if !updatingExternal {
+                guard oldRoute != newStatistic.locationData else {
+                    return
+                }
             }
+            
             // update the locationData of the run
             runStatistics[index].locationData = newStatistic.locationData
             
