@@ -332,14 +332,67 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    func calculateSessions(for index: Int) -> Int {
+    func calculateSessions(for yearIndex: Int, month: Int? = nil) -> Int {
         var totalSessions = 0
-        if groupedRunStatistics.count > index {
-            for runs in groupedRunStatistics[index] {
-                totalSessions += runs.count
+        if groupedRunStatistics.count > yearIndex {
+            if month == nil {
+                for runs in groupedRunStatistics[yearIndex] {
+                    totalSessions += runs.count
+                }
+            } else {
+                totalSessions = groupedRunStatistics[yearIndex][month!].count
             }
         }
         return totalSessions
+    }
+    
+    func calculateDownwindDistance(for yearIndex: Int, month: Int? = nil) -> String {
+        // total distance in meter
+        var totalDistance = 0.0
+        if groupedRunStatistics.count > yearIndex {
+            if month == nil {
+                for runs in groupedRunStatistics[yearIndex] {
+                    for run in runs {
+                        if run.workoutType == .downwindSUPFoil || run.workoutType == .downwindProneFoil {
+                            totalDistance += run.runDistance
+                        }
+                    }
+                }
+            } else {
+                for run in groupedRunStatistics[yearIndex][month!] {
+                    if run.workoutType == .downwindSUPFoil || run.workoutType == .downwindProneFoil {
+                        totalDistance += run.runDistance
+                    }
+                }
+            }
+        }
+        if totalDistance == 0 {
+            return ""
+        } else {
+            return makePrettyDistance(meters: totalDistance, system: measurementSystem)
+        }
+    }
+    
+    func calculateTimeOnWater(for yearIndex: Int, month: Int? = nil) -> String {
+        var totalTime = 0.0
+        if groupedRunStatistics.count > yearIndex {
+            if month == nil {
+                for runs in groupedRunStatistics[yearIndex] {
+                    for run in runs {
+                            totalTime += run.runTime
+                    }
+                }
+            } else {
+                for run in groupedRunStatistics[yearIndex][month!] {
+                    totalTime += run.runTime
+                }
+            }
+        }
+        if totalTime == 0 {
+            return ""
+        } else {
+            return makePrettyTime(timeInMinutes: totalTime)
+        }
     }
     
     

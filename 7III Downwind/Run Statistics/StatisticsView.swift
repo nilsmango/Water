@@ -22,7 +22,7 @@ struct StatisticsView: View {
                             
                             if monthIndex == 0 {
                                 Section {
-                                    YearlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex)
+                                    YearlyMonthlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex)
                                 } header: {
                                     VStack(alignment: .leading) {
                                         Text(yearSectionHeader(yearIndex: yearIndex))
@@ -32,6 +32,18 @@ struct StatisticsView: View {
                                     .foregroundStyle(.primary)
                                     .textCase(nil)
                                 }
+                            }
+                            
+                            Section {
+                                YearlyMonthlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex, monthIndex: monthIndex)
+                            } header: {
+                                VStack(alignment: .leading) {
+                                    Text(monthSectionHeader(yearIndex: yearIndex, monthIndex: monthIndex))
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                }
+                                .foregroundStyle(.primary)
+                                .textCase(nil)
                             }
                             
                             Section {
@@ -46,14 +58,6 @@ struct StatisticsView: View {
                                         RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil")
                                     }
                                 }
-                            } header: {
-                                VStack(alignment: .leading) {
-                                    Text(monthSectionHeader(yearIndex: yearIndex, monthIndex: monthIndex))
-                                        .font(.title2)
-                                        .fontWeight(.bold)
-                                }
-                                .foregroundStyle(.primary)
-                                .textCase(nil)
                             }
                         }
                     }
