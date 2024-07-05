@@ -11,8 +11,27 @@ import SwiftUI
 
 class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUPFoil
+            
+    @Published var showingSummaryView: Bool = false {
+        didSet {
+            // Sheet dismissed
+            if showingSummaryView == false {
+                resetWorkout()
+            }
+        }
+    }
     
-    @Published var withGPS = true
+    // navigation path
+    @Published var path = NavigationPath()
+    
+    // init
+    override init() {
+        super.init()
+        setupLocationManager()
+        loadTagsFromWorkouts()
+    }
+    
+    // MARK: - Tags
     
     @AppStorage("statisticTags") private var tagsData: Data = Data()
     
@@ -33,37 +52,55 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @Published var activeTags = [String]()
     
-    @Published var showingSummaryView: Bool = false {
-        didSet {
-            // Sheet dismissed
-            if showingSummaryView == false {
-                resetWorkout()
+    private func loadTagsFromWorkouts() {
+        self.loadWorkoutsFromHealthKit { workouts in
+            
+            var tags = [String]()
+            
+            for workout in workouts {
+                let tagsString = workout.metadata?[Constants.customMetadataKeyTags] as? String ?? ""
+                let newTags = tagsString.split(separator: " ").map { String($0) }
+                
+                for tag in newTags {
+                    if !tag.isEmpty {
+                        if !tags.contains(where: { $0.lowercased() == tag.lowercased() }) {
+                            tags.append(tag)
+                        }
+                    }
+                }
+            }
+            
+            tags = tags.sorted()
+            
+            DispatchQueue.main.async {
+                self.statisticTags = tags
             }
         }
     }
-    
-    // navigation path
-    @Published var path = NavigationPath()
-    
-    /// making average pace string
-    func makeAveragePaceString() -> String {
-        let totalTime = builder?.elapsedTime ?? 0
-        let pace = totalTime / (distance / 1000)
-        let prettyPace = makePrettyMinutesString(timeInSeconds: pace, paceFormat: true)
-        if prettyPace != "" {
-            return prettyPace
-        } else {
-            return "--'--\""
+
+    private func loadWorkoutsFromHealthKit(completion: @escaping ([HKWorkout]) -> Void) {
+        let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+            HKQuery.predicateForWorkouts(with: .paddleSports),
+            HKQuery.predicateForWorkouts(with: .surfingSports)
+        ])
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let query = HKSampleQuery(sampleType: HKQuantityType.workoutType(),
+                                  predicate: predicate,
+                                  limit: HKObjectQueryNoLimit,
+                                  sortDescriptors: [sortDescriptor]) { (query, samples, error) in
+            guard let workouts = samples as? [HKWorkout] else {
+                print("Error fetching workouts: \(String(describing: error))")
+                completion([])
+                return
+            }
+            completion(workouts)
         }
+        
+        healthStore.execute(query)
     }
-    
-    
+
     // MARK: - Locations and Workout
-    
-    override init() {
-        super.init()
-        setupLocationManager()
-    }
+    @Published var withGPS = true
     
     private func setupLocationManager() {
         locationManager = CLLocationManager()
@@ -369,6 +406,18 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var previousUserLocation: CLLocation?
     
     @Published var workout: HKWorkout?
+    
+    /// making average pace string
+    func makeAveragePaceString() -> String {
+        let totalTime = builder?.elapsedTime ?? 0
+        let pace = totalTime / (distance / 1000)
+        let prettyPace = makePrettyMinutesString(timeInSeconds: pace, paceFormat: true)
+        if prettyPace != "" {
+            return prettyPace
+        } else {
+            return "--'--\""
+        }
+    }
     
     func updateForStatistics(_ statistics: HKStatistics?) {
         guard let statistics = statistics else { return }
