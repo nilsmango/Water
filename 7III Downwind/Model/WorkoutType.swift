@@ -30,6 +30,10 @@ enum WorkoutType: String, Codable, CaseIterable {
     case supSurf = "SUPSurf"
     case not7IIISurfingSport = "Not7IIISurfingSport"
     case not7IIIPaddleSport = "Not7IIIPaddleSport"
+    case windSkate = "WindSkate"
+    case wingSkate = "WingSkate"
+    case surfSkate = "SurfSkate"
+    case pumpSkate = "PumpSkate"
     
     var prettyString: String {
         switch self {
@@ -75,6 +79,14 @@ enum WorkoutType: String, Codable, CaseIterable {
             return "Surf"
         case .not7IIIPaddleSport:
             return "Paddle"
+        case .windSkate:
+            return "Wind Skate"
+        case .wingSkate:
+            return "Wing Skate"
+        case .surfSkate:
+            return "Surf Skate"
+        case .pumpSkate:
+            return "Pump Skate"
         }
     }
     var activityType: HKWorkoutActivityType {
@@ -83,6 +95,8 @@ enum WorkoutType: String, Codable, CaseIterable {
                 return .surfingSports
             case .paddleSport, .sup, .kayak, .canoe, .not7IIIPaddleSport:
                 return .paddleSports
+            case .windSkate, .wingSkate, .surfSkate, .pumpSkate:
+                return .skatingSports
             }
     }
     
