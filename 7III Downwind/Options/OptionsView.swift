@@ -42,13 +42,13 @@ struct OptionsView: View {
                                 downwindManager.user.id = UUID()
                             }
                             downwindManager.saveUser()
-                            Task {
-                                do {
-                                    try await downwindManager.checkAndUpdateUserInDB()
-                                } catch {
-                                    print("Error updating user in user to db: \(error)")
-                                }
-                            }
+//                            Task {
+//                                do {
+//                                    try await downwindManager.checkAndUpdateUserInDB()
+//                                } catch {
+//                                    print("Error updating user in user to db: \(error)")
+//                                }
+//                            }
                             
                         }, label: {
                             Label("Save", systemImage: "checkmark.circle")
@@ -97,13 +97,13 @@ struct OptionsView: View {
                                 downwindManager.user.id = UUID()
                             }
                             downwindManager.saveUser()
-                            Task {
-                                do {
-                                    try await downwindManager.checkAndUpdateUserInDB()
-                                } catch {
-                                    print("Error updating user in user to db: \(error)")
-                                }
-                            }
+//                            Task {
+//                                do {
+//                                    try await downwindManager.checkAndUpdateUserInDB()
+//                                } catch {
+//                                    print("Error updating user in user to db: \(error)")
+//                                }
+//                            }
                             
                         }, label: {
                             Label("Save", systemImage: "checkmark.circle")
@@ -177,13 +177,13 @@ struct OptionsView: View {
                     showOptionsSheet = false
                     
                     downwindManager.deleteStatistics()
-                    Task {
-                        do {
-                            try await downwindManager.deleteUserFromDB()
-                        } catch {
-                            print("Error deleting user in db: \(error)")
-                        }
-                    }
+//                    Task {
+//                        do {
+//                            try await downwindManager.deleteUserFromDB()
+//                        } catch {
+//                            print("Error deleting user in db: \(error)")
+//                        }
+//                    }
                 },
                 secondaryButton: .default(Text("Cancel"))
             )

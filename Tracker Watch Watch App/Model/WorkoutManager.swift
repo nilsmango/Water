@@ -145,8 +145,8 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // start rout builder if gps should be active
         if withGPS {
             routeBuilder = HKWorkoutRouteBuilder(healthStore: healthStore, device: .local())
-            startLocationService()
         }
+        startLocationService()
     }
     
     // Request authorization to access HealthKit and to access location
@@ -229,6 +229,8 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    private var startLocation: CLLocation?
+    
     /// stops the location service and resets the ignore var
     private func stopLocationService() {
         print("Stopping location tracking")
@@ -256,6 +258,11 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
         } else {
+            
+            if !withGPS {
+                startLocation = locations.last
+                stopLocationService()
+            }
             
             guard let newLocation = locations.last else {
                 print("Something wrong with locationManager")
@@ -489,6 +496,11 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
             }
             if averageSpeed != 0.0 {
                 allMetadata[HKMetadataKeyAverageSpeed] = runAverageSpeed
+            }
+            if !withGPS {
+                if let startLocation = startLocation {
+                    allMetadata[Constants.customLocationKey] = startLocation
+                }
             }
             
             builder?.addMetadata(allMetadata, completion: { success, error in

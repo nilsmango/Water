@@ -532,9 +532,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.runStatistics[runIndex].workoutType = runEdit?.newWorkoutType ?? metaData.workoutType
                                 self.runStatistics[runIndex].startDate = runEdit?.startLocation?.timestamp ?? workout.startDate
                                 self.runStatistics[runIndex].endDate = runEdit?.finishLocation?.timestamp ?? workout.endDate
+                                self.runStatistics[runIndex].startLocation = metaData.startLocation
                             }
                         } else {
-                            let statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate)
+                            var statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate)
+                            statistic.startLocation = metaData.startLocation
                             
                             DispatchQueue.main.async {
                                 self.runStatistics.append(statistic)
@@ -617,7 +619,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return extraStatistic.id
     }
     
-    private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double) {
+    private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double, startLocation: LocationData?) {
         let rawWorkoutType = workout.metadata?[Constants.customMetadataKeyWorkoutType] as? String ?? ""
         let tagsString = workout.metadata?[Constants.customMetadataKeyTags] as? String ?? ""
         let tags = tagsString.split(separator: " ").map { String($0) }
@@ -648,7 +650,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             totalDistance = 0
         }
         
-        return (tags: tags, workoutType: workoutType, averageSpeed: averageSpeed, topSpeed: topSpeed, totalDistance: totalDistance)
+        let startCLLocation = workout.metadata?[Constants.customLocationKey] as? CLLocation ?? nil
+        var startLocation: LocationData? = nil
+        if startCLLocation != nil {
+            startLocation = LocationData(timestamp: Date.now, latitude: startCLLocation!.coordinate.latitude, longitude: startCLLocation!.coordinate.longitude)
+        }
+        
+        return (tags: tags, workoutType: workoutType, averageSpeed: averageSpeed, topSpeed: topSpeed, totalDistance: totalDistance, startLocation: startLocation)
     }
     
     private func updateGroupedRunArray() {
@@ -2106,7 +2114,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // MARK: - User
     
-    @Published var user: Member = Member(id: nil, name: "Your Name", status: "All good.")
+    @Published var user: Member = Member(id: nil, name: "", status: "All good.")
     @Published var trueHeading: Double = 0.0
     
     func saveUser() {

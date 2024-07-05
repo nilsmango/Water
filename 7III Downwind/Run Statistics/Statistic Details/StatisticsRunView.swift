@@ -122,6 +122,12 @@ struct StatisticsRunView: View {
                             }
                             
                         }
+                    } else if let startLocation = statisticsData.startLocation {
+                        downwindManager.getNameOfLocation(location: startLocation) { name in
+                            if let name = name {
+                                locationName = name
+                            }
+                        }
                     }
                 
                 // update some things if we have location data
@@ -175,9 +181,6 @@ struct StatisticsRunView: View {
                         Text("Edit")
                     })
                 }
-                
-
-                
             }
         }
         

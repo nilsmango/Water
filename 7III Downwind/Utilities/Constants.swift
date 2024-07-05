@@ -36,6 +36,7 @@ enum Constants {
     static let customMetadataKeyWorkoutType = "7III Workout Type"
     static let customMetadataKeyTags = "Tags"
     static let customTotalDistanceKey = "Total Distance"
+    static let customLocationKey = "Location"
 }
 
 enum Endpoints {

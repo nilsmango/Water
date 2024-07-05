@@ -57,7 +57,7 @@ struct StartView: View {
                         Spacer()
                         
                     }
-                    .navigationTitle("Aloha \(downwindManager.user.name)!")
+                    .navigationTitle(downwindManager.user.name.isEmpty ? "Aloha!" : "Aloha \(downwindManager.user.name)!")
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             NavigationLink(destination: StatisticsView(downwindManager: downwindManager)) {
@@ -149,11 +149,12 @@ struct StartView: View {
                         .ignoresSafeArea()
                         .foregroundStyle(.listBackground)
                 } 
-                .onAppear {
-                    if downwindManager.user.id == nil {
-                        showFirstTimeUserName = true
-                    }
-                }
+            
+//                .onAppear {
+//                    if downwindManager.user.id == nil {
+//                        showFirstTimeUserName = true
+//                    }
+//                }
             }
         
     }
