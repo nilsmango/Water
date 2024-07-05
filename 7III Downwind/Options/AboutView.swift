@@ -15,34 +15,43 @@ struct AboutView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text("What can you do with this app?")
                     .font(.headline)
+                Text("Track your water sports sessions from your iPhone or your Apple Watch. All the data will get stored in Health Kit so you will never loose the data.\nTracker also imports all the water sport sessions you did save to Health Kit in the past. And you can edit any session you had. The edits will only get saved in Tracker.")
                 
-                Text("Track yourself and your friends during your outdoor activities. You can also save all the location data collected and analyze it later.\nOriginally, this app was made for downwind runs, but you can track the location of any person or group doing any kind of activity.\nPlease note that the GPS data processing has been optimized for outdoor activities and may not perform well indoors.")
+//                Text("Track yourself and your friends during your outdoor activities. You can also save all the location data collected and analyze it later.\nOriginally, this app was made for downwind runs, but you can track the location of any person or group doing any kind of activity.\nPlease note that the GPS data processing has been optimized for outdoor activities and may not perform well indoors.")
                     .font(.body)
                     .padding(.bottom)
                 
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Disclaimer:")
-                        .font(.headline)
-                        .padding(.top, 10)
-                    
-                    Text("This app is designed for recreational use and should not be considered a substitute for emergency beacons or other rescue devices. Safety is our top priority, and you should always exercise caution and adhere to maritime safety guidelines while using this app. Please be advised that prolonged usage of this application may result in substantial battery consumption. Therefore, you should be mindful and periodically check the battery level to ensure safety during tracking.")
-                        .font(.body)
-                        .onTapGesture(count: 3, perform: {
-                            downwindManager.developerMode.toggle()
-                        })
-                }
-                .padding([.horizontal, .bottom])
-                .padding(.top, 8)
-                .background {
-                    RoundedRectangle(cornerRadius: 20)
-                        .foregroundStyle(.yellow.opacity(0.8))
-                }
+//                VStack(alignment: .leading, spacing: 10) {
+//                    Text("Disclaimer:")
+//                        .font(.headline)
+//                        .padding(.top, 10)
+//                    
+//                    Text("This app is designed for recreational use and should not be considered a substitute for emergency beacons or other rescue devices. Safety is our top priority, and you should always exercise caution and adhere to maritime safety guidelines while using this app. Please be advised that prolonged usage of this application may result in substantial battery consumption. Therefore, you should be mindful and periodically check the battery level to ensure safety during tracking.")
+//                        .font(.body)
+//                        .onTapGesture(count: 3, perform: {
+//                            downwindManager.developerMode.toggle()
+//                        })
+//                }
+//                .padding([.horizontal, .bottom])
+//                .padding(.top, 8)
+//                .background {
+//                    RoundedRectangle(cornerRadius: 20)
+//                        .foregroundStyle(.yellow.opacity(0.8))
+//                }
                 
                 Text("What data do we collect?")
                     .font(.headline)
                     .padding(.top)
+                Text("We will save your sessions in Health Kit and your Edits in Tracker. No other data of yours ever gets collected by us or anybody else.\nWe don't collect any data of you.")
                 
-                Text("We don't collect any data about you for longer than needed. This is the duration of the run. Then only thing persisting in the database is your username, location and speed, with no other data associated with it other than a random ID. Whenever you exit a run we will delete your location data from the database and remove you from the run. If you are only watching a run we don't collect any location data. When the last person exits a run we remove the run from the database.\n\nWe save your tracked runs on your device only.\n\nIf you want to even remove your username and ID from the database, and delete all your locally saved data, simply navigate to the options menu and tap the button saying: \"Delete All My Data\".")
+//                Text("We don't collect any data about you for longer than needed. This is the duration of the run. Then only thing persisting in the database is your username, location and speed, with no other data associated with it other than a random ID. Whenever you exit a run we will delete your location data from the database and remove you from the run. If you are only watching a run we don't collect any location data. When the last person exits a run we remove the run from the database.\n\nWe save your tracked runs on your device only.\n\nIf you want to even remove your username and ID from the database, and delete all your locally saved data, simply navigate to the options menu and tap the button saying: \"Delete All My Data\".")
+                    .font(.body)
+                    .padding(.bottom)
+                
+                Text("What else?")
+                    .font(.headline)
+                
+                Text("project7III makes useful things.\nFind us: [project7iii.com](https://project7iii.com)\nSend us suggestions and bugs: hi@project7iii.com")
                     .font(.body)
                     .padding(.bottom)
                 
@@ -57,12 +66,7 @@ struct AboutView: View {
                     .font(.body)
                     .padding(.bottom)
                 
-                Text("What else?")
-                    .font(.headline)
                 
-                Text("project7III makes useful things.\nFind us: [project7iii.com](https://project7iii.com)\nWrite to us: hi@project7iii.com")
-                    .font(.body)
-                    .padding(.bottom)
                 
                 Spacer(minLength: 0.0)
             }
