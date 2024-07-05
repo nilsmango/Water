@@ -13,29 +13,30 @@ enum WorkoutType: String, Codable, CaseIterable {
     case supFoil = "SUPFoil"
     case downwindSUPFoil = "DownwindSUPFoil"
     case downwindSUP = "DownwindSUP"
+    case downwindProneFoil = "DWProneFoil"
     case wingFoil = "WingFoil"
     case windFoil = "WindFoil"
     case kiteFoil = "KiteFoil"
     case kite = "Kite"
-    case surf = "Surf"
     case windsurf = "Windsurf"
     case pumpFoil = "PumpFoil"
     case wakeThief = "WakeThief"
     case wakeFoil = "WakeFoil"
+    case wakeSurf = "WakeSurf"
     case surfingSport = "SurfingSport"
     case paddleSport = "PaddleSport"
     case sup = "SUP"
+    case supSurf = "SUPSurf"
     case kayak = "Kayak"
     case canoe = "Canoe"
-    case supSurf = "SUPSurf"
     case not7IIISurfingSport = "Not7IIISurfingSport"
     case not7IIIPaddleSport = "Not7IIIPaddleSport"
+    case surf = "Surf"
     case windSkate = "WindSkate"
     case wingSkate = "WingSkate"
     case surfSkate = "SurfSkate"
     case pumpSkate = "PumpSkate"
-    case wakeSurf = "WakeSurf"
-    case downwindProneFoil = "DWProneFoil"
+    
     
     var prettyString: String {
         switch self {
@@ -102,7 +103,7 @@ enum WorkoutType: String, Codable, CaseIterable {
             case .paddleSport, .sup, .kayak, .canoe, .not7IIIPaddleSport:
                 return .paddleSports
             case .windSkate, .wingSkate, .surfSkate, .pumpSkate:
-                return .skatingSports
+                return .surfingSports
             }
     }
     

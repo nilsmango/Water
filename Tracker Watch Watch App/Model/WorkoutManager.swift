@@ -499,7 +499,8 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
             }
             if !withGPS {
                 if let startLocation = startLocation {
-                    allMetadata[Constants.customLocationKey] = startLocation
+                    let locationString = "\(startLocation.coordinate.latitude), \(startLocation.coordinate.longitude)"
+                    allMetadata[Constants.customLocationKey] = locationString
                 }
             }
             

@@ -703,10 +703,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             totalDistance = 0
         }
         
-        let startCLLocation = workout.metadata?[Constants.customLocationKey] as? CLLocation ?? nil
+        let startCLLocation = workout.metadata?[Constants.customLocationKey] as? String ?? nil
         var startLocation: LocationData? = nil
-        if startCLLocation != nil {
-            startLocation = LocationData(timestamp: Date.now, latitude: startCLLocation!.coordinate.latitude, longitude: startCLLocation!.coordinate.longitude)
+        if let startCLLocation = startCLLocation {
+            let components = startCLLocation.split(separator: ",")
+            if components.count == 2,
+               let latitude = Double(components[0].trimmingCharacters(in: .whitespaces)),
+               let longitude = Double(components[1].trimmingCharacters(in: .whitespaces)) {
+                startLocation = LocationData(timestamp: Date(), latitude: latitude, longitude: longitude)
+            }
         }
         
         return (tags: tags, workoutType: workoutType, averageSpeed: averageSpeed, topSpeed: topSpeed, totalDistance: totalDistance, startLocation: startLocation)
