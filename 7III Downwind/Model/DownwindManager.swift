@@ -40,6 +40,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     override init() {
         super.init()
         setupLocationManager()
+        loadTrackerSessionsCount()
     }
     
     // MARK: - Statistics
@@ -164,8 +165,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 stopLocationService()
             }
             
-            // update the run statistics
-            
+            // update and save the tracker sessions count
+            trackerSessionsCount += 1
+            saveTrackerSessionsCount()
         }
     }    
     
@@ -2493,5 +2495,24 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     let sigmas = [0.01, 0.03, 0.0625, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9]
     let rValues = [42, 35, 29.0, 24.0, 15, 9, 1]
     
+    // MARK: - In App Purchases
     
+    let freeTrackerSessionsNumber = 7
+    
+    @Published var trackerSessionsCount = 0
+    
+    func saveTrackerSessionsCount() {
+        let keychain = KeychainSwift()
+        if let data = try? JSONEncoder().encode(trackerSessionsCount) {
+            keychain.set(data, forKey: Constants.keychainSessionsCount)
+        }
+    }
+    
+    func loadTrackerSessionsCount() {
+        let keychain = KeychainSwift()
+        if let data = keychain.getData(Constants.keychainSessionsCount),
+           let loadedCount = try? JSONDecoder().decode(Int.self, from: data) {
+            trackerSessionsCount = loadedCount
+        }
+    }
 }

@@ -9,6 +9,7 @@ import Foundation
 
 enum Constants {
     static let keychainKey = "DWUserData"
+    static let keychainSessionsCount = "SessionsCount"
     static let baseURL = "https://7iii-dw-api-damp-lake-8537.fly.dev"
     
     /// height of the run map in meter

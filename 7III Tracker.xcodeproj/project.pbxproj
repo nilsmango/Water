@@ -11,6 +11,10 @@
 		781562A32B94D92900E081FC /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
 		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
 		781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
+		782B67592C3A7A2B00B90578 /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B67582C3A7A2B00B90578 /* UpgradeView.swift */; };
+		782B675B2C3A8E6D00B90578 /* LevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675A2C3A8E6D00B90578 /* LevelView.swift */; };
+		782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
+		782B675F2C3AC21C00B90578 /* UpgradeShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */; };
 		78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
 		78320BC02BB1C28400D6A772 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
 		78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
@@ -143,6 +147,10 @@
 		781562A22B94D92900E081FC /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
 		781562A62B94DD7500E081FC /* ShareDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDialog.swift; sourceTree = "<group>"; };
+		782B67582C3A7A2B00B90578 /* UpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeView.swift; sourceTree = "<group>"; };
+		782B675A2C3A8E6D00B90578 /* LevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelView.swift; sourceTree = "<group>"; };
+		782B675C2C3ABBA700B90578 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
+		782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeShowcase.swift; sourceTree = "<group>"; };
 		78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCKalmanAlgorithm.swift; sourceTree = "<group>"; };
 		78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTestsView.swift; sourceTree = "<group>"; };
 		78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsModelings.swift; sourceTree = "<group>"; };
@@ -262,6 +270,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		782B67572C3A78E600B90578 /* In App Purchases */ = {
+			isa = PBXGroup;
+			children = (
+				782B67582C3A7A2B00B90578 /* UpgradeView.swift */,
+				782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */,
+				782B675C2C3ABBA700B90578 /* CircleImage.swift */,
+			);
+			path = "In App Purchases";
+			sourceTree = "<group>";
+		};
 		78320BC52BB1D95D00D6A772 /* FilterTesting */ = {
 			isa = PBXGroup;
 			children = (
@@ -348,6 +366,8 @@
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				7840468E2C342160009F8733 /* SummaryView.swift */,
+				782B675A2C3A8E6D00B90578 /* LevelView.swift */,
+				782B67572C3A78E600B90578 /* In App Purchases */,
 				784046902C342363009F8733 /* StatisticMetricsView.swift */,
 				785CF9562B4FE85100528B6D /* Options */,
 				78C4D23D2BA750D200639E65 /* Run Statistics */,
@@ -696,12 +716,14 @@
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				7840468F2C3421CF009F8733 /* SummaryView.swift in Sources */,
+				782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */,
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
 				78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
 				78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */,
 				781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */,
 				7877E1262BC3F7A800776890 /* StatisticsDetails.swift in Sources */,
+				782B675F2C3AC21C00B90578 /* UpgradeShowcase.swift in Sources */,
 				78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */,
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
 				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,
@@ -716,6 +738,7 @@
 				7877E1392BC52BB400776890 /* _FlexibleView.swift in Sources */,
 				783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */,
 				78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */,
+				782B675B2C3A8E6D00B90578 /* LevelView.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
 				78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */,
@@ -734,6 +757,7 @@
 				78C4D23A2BA6DADB00639E65 /* LocationData.swift in Sources */,
 				7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
+				782B67592C3A7A2B00B90578 /* UpgradeView.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,
