@@ -9,13 +9,12 @@ import SwiftUI
 
 struct ControlsView: View {
     @ObservedObject var workoutManager: WorkoutManager
-    let currentWatch = WKInterfaceDevice.current()
 
     var body: some View {
         VStack {
                 Button {
                     workoutManager.endWorkout()
-                    currentWatch.play(.stop)
+                    
                 } label: {
                     Label("End", systemImage: "xmark")
                 }

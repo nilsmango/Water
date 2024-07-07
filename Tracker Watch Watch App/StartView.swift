@@ -17,11 +17,7 @@ struct StartView: View {
             VStack {
                 Button(action: {
                     workoutManager.path.append("session")
-                    workoutManager.startWorkout()
-                    let currentWatch = WKInterfaceDevice.current()
-                    currentWatch.enableWaterLock()
-                    currentWatch.play(.start)
-                    
+                    workoutManager.startWorkout()                    
                 }, label: {
                     Label("Start", systemImage: "play")
                 })

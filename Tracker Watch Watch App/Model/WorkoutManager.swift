@@ -115,6 +115,8 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var builder: HKLiveWorkoutBuilder?
     var routeBuilder: HKWorkoutRouteBuilder?
     
+    let currentWatch = WKInterfaceDevice.current()
+    
     func startWorkout() {
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = workoutType.activityType
@@ -147,6 +149,9 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             routeBuilder = HKWorkoutRouteBuilder(healthStore: healthStore, device: .local())
         }
         startLocationService()
+        
+        currentWatch.enableWaterLock()
+        currentWatch.play(.start)
     }
     
     // Request authorization to access HealthKit and to access location
@@ -395,6 +400,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         session?.end()
         showingSummaryView = true
         path = NavigationPath()
+        currentWatch.play(.stop)
     }
     
     // MARK: - Workout Metrics
