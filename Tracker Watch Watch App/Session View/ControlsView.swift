@@ -12,37 +12,35 @@ struct ControlsView: View {
     let currentWatch = WKInterfaceDevice.current()
 
     var body: some View {
-        HStack {
-            VStack {
+        VStack {
                 Button {
                     workoutManager.endWorkout()
                     currentWatch.play(.stop)
                 } label: {
-                    Image(systemName: "xmark")
+                    Label("End", systemImage: "xmark")
                 }
                 .tint(Color.red)
-                .font(.title2)
-                .fontWeight(.bold)
-                Text("End")
-            }
-            VStack {
-                Button {
-                    workoutManager.togglePause()
-                    if workoutManager.running {
-                        currentWatch.play(.stop)
-                    } else {
-                        currentWatch.enableWaterLock()
-                        currentWatch.play(.start)
-                    }
-                } label: {
-                    Image(systemName: workoutManager.running ? "pause" : "arrow.clockwise")
-                }
-                .tint(Color.yellow)
-                .font(.title2)
-                .fontWeight(.bold)
-                Text(workoutManager.running ? "Pause" : "Resume")
-            }
+                .font(.title3)
+                .fontWeight(.semibold)
+//            VStack {
+//                Button {
+//                    workoutManager.togglePause()
+//                    if workoutManager.running {
+//                        currentWatch.play(.stop)
+//                    } else {
+//                        currentWatch.enableWaterLock()
+//                        currentWatch.play(.start)
+//                    }
+//                } label: {
+//                    Image(systemName: workoutManager.running ? "pause" : "arrow.clockwise")
+//                }
+//                .tint(Color.yellow)
+//                .font(.title2)
+//                .fontWeight(.bold)
+//                Text(workoutManager.running ? "Pause" : "Resume")
+//            }
         }
+        .padding()
     }
 }
 
