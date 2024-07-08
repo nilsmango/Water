@@ -51,7 +51,7 @@ struct AboutView: View {
                 Text("What else?")
                     .font(.headline)
                 
-                Text("project7III makes useful things.\nFind us: [project7iii.com](https://project7iii.com)\nSend us suggestions and bugs: hi@project7iii.com")
+                Text("project7III makes useful things.\nFind us: [project7iii.com](https://project7iii.com)\nSend us suggestions and bugs: tracker@project7iii.com")
                     .font(.body)
                     .padding(.bottom)
                 
@@ -72,11 +72,8 @@ struct AboutView: View {
             }
             .padding()
         }
-        .background {
-            Rectangle()
-                .ignoresSafeArea()
-                .foregroundStyle(.listBackground)
-        }
+        .background(.listBackground)
+            
     }
 }
 

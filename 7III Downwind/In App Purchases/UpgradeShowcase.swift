@@ -11,9 +11,11 @@ struct UpgradeShowcase: View {
     var image: Image
     var title: String
     var subTitle: String
-    var price: String
-    var color: Color
-    
+    var priceButton: String
+    var backgroundColor: Color
+    var buttonColor: Color
+    var buttonTextColor: Color = .primary
+    var fontColor: Color = .primary
     
     var body: some View {
         VStack {
@@ -22,28 +24,42 @@ struct UpgradeShowcase: View {
                 .padding()
             
             Text(title)
+                .foregroundStyle(fontColor)
                 .font(.title)
                 .fontWeight(.bold)
+                .padding(.bottom, 6)
             
             Text(subTitle)
+                .foregroundStyle(fontColor)
             
-            Text(price)
-                .padding(.vertical, 4)
-                .padding(.horizontal, 6)
-                .background(
-                    Capsule()
-                        .fill(color.blendMode(.multiply))
-                )
+            Button {
+                // get the in app purchase
+            } label: {
+                Text(priceButton)
+                    .font(.title3)
+                    .fontWeight(.bold)
+//                    .fontDesign(.rounded)
+                    .foregroundStyle(buttonTextColor)
+                    .padding(.vertical, 16)
+                    .padding(.horizontal, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10.0)
+                            .fill(buttonColor)
+                    )
+            }
+            .padding()
+
+            
         }
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 25.0)
-                .fill(color)
+                .fill(backgroundColor)
         )
     }
 }
 
 #Preview {
-    UpgradeShowcase(image: Image("poseidonGoat"), title: "Poseidon Goat", subTitle: "Be ready for the seven seas. Includes Future Features as: Crew Live Location Sharing.", price: "$ 5.99", color: .trackerGold)
+    UpgradeShowcase(image: Image("poseidonGoat"), title: "Poseidon Goat", subTitle: "Be ready for the seven seas. Includes Future Features as: Crew Live Location Sharing.", priceButton: "$5.99 / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .black, fontColor: .white)
         .padding()
 }

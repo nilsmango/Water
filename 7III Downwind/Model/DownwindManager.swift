@@ -2500,11 +2500,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     let freeTrackerSessionsNumber = 7
     
     @Published var trackerSessionsCount = 0
+    @Published var showUpgradeSheet = false
     
     func saveTrackerSessionsCount() {
         let keychain = KeychainSwift()
         if let data = try? JSONEncoder().encode(trackerSessionsCount) {
             keychain.set(data, forKey: Constants.keychainSessionsCount)
+        }
+        if freeTrackerSessionsNumber - trackerSessionsCount == 2 {
+            showUpgradeSheet = true
         }
     }
     

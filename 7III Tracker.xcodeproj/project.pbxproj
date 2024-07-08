@@ -42,6 +42,7 @@
 		784083622C21C2AD004C0857 /* StatisticsMainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */; };
 		784083642C21FB54004C0857 /* RunEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083632C21FB54004C0857 /* RunEdit.swift */; };
 		784083672C258112004C0857 /* GroupedTagsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083662C258112004C0857 /* GroupedTagsListView.swift */; };
+		785C0C292C3BDF47005CCE87 /* SessionLeft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C282C3BDF47005CCE87 /* SessionLeft.swift */; };
 		785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
 		785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
 		785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
@@ -175,6 +176,7 @@
 		784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMainHeader.swift; sourceTree = "<group>"; };
 		784083632C21FB54004C0857 /* RunEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunEdit.swift; sourceTree = "<group>"; };
 		784083662C258112004C0857 /* GroupedTagsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedTagsListView.swift; sourceTree = "<group>"; };
+		785C0C282C3BDF47005CCE87 /* SessionLeft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLeft.swift; sourceTree = "<group>"; };
 		785C4A952B358F7B00EB07F8 /* 7III Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
+				785C0C282C3BDF47005CCE87 /* SessionLeft.swift */,
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				7840468E2C342160009F8733 /* SummaryView.swift */,
 				782B675A2C3A8E6D00B90578 /* LevelView.swift */,
@@ -714,6 +717,7 @@
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				7877E12C2BC52A0900776890 /* TagsEditView.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
+				785C0C292C3BDF47005CCE87 /* SessionLeft.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				7840468F2C3421CF009F8733 /* SummaryView.swift in Sources */,
 				782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */,

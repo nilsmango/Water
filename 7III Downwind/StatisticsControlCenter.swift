@@ -138,10 +138,11 @@ struct StatisticsControlCenter: View {
                     ListBackground()
                 }
             }
-            Label("Sessions left: \(downwindManager.freeTrackerSessionsNumber - downwindManager.trackerSessionsCount) of \(downwindManager.freeTrackerSessionsNumber)", systemImage: "info.circle")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+            SessionLeft(freeSessions: downwindManager.freeTrackerSessionsNumber, doneSession: downwindManager.trackerSessionsCount)
                 .padding(.top, 2)
+                .onTapGesture {
+                    downwindManager.showUpgradeSheet = true
+                }
         }
         
     }
