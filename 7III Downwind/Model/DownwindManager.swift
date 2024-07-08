@@ -10,7 +10,7 @@ import CoreLocation
 import _MapKit_SwiftUI
 import KeychainSwift
 import HealthKit
-
+import StoreKit
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
@@ -61,6 +61,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// Activates the run statistic tracking (only tracking)
     func startStatistic(tags: [String] = []) {
+        // TODO: if have active plan don't check this
+        if freeTrackerSessionsNumber - trackerSessionsCount < 1 {
+            if SKPaymentQueue.canMakePayments() {
+                showUpgradeSheet = true
+            }
+            return
+        }
+        
         // Safety first
         if !activeStatistics {
             activeStatistics = true
@@ -164,10 +172,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 // Stop location update
                 stopLocationService()
             }
-            
-            // update and save the tracker sessions count
-            trackerSessionsCount += 1
-            saveTrackerSessionsCount()
         }
     }    
     
@@ -227,6 +231,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.loadRunStatistics()
                                 self.showingSummarySheet = false
                                 self.workout = nil
+                                
+                                // update and save the tracker sessions count
+                                self.trackerSessionsCount += 1
+                                self.saveTrackerSessionsCount()
+                                let sessionsLeft = self.freeTrackerSessionsNumber - self.trackerSessionsCount
+                                if sessionsLeft < 1 || sessionsLeft == 2 {
+                                    if SKPaymentQueue.canMakePayments() {
+                                        self.showUpgradeSheet = true
+                                    }
+                                }
                             }
                         }
                     }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct StatisticsControlCenter: View {
     @ObservedObject var downwindManager: DownwindManager
@@ -138,10 +139,13 @@ struct StatisticsControlCenter: View {
                     ListBackground()
                 }
             }
+            // TODO: if have active plan don't show this
             SessionLeft(freeSessions: downwindManager.freeTrackerSessionsNumber, doneSession: downwindManager.trackerSessionsCount)
                 .padding(.top, 2)
                 .onTapGesture {
-                    downwindManager.showUpgradeSheet = true
+                    if SKPaymentQueue.canMakePayments() {
+                        downwindManager.showUpgradeSheet = true
+                    }
                 }
         }
         
