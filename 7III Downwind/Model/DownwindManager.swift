@@ -2407,8 +2407,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                 }
             }
-            
-            
         }
     }
     

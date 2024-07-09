@@ -19,7 +19,7 @@ struct TagsSheetView: View {
     @State private var allTags = [String]()
     
     @State private var newTag = ""
-    
+    @State private var showUpgradeSheet = false
     @FocusState private var isFieldFocused: Bool
     
     private func makeWordTag(_ word: String) -> String {
@@ -46,21 +46,32 @@ struct TagsSheetView: View {
     var body: some View {
         ScrollView {
             VStack {
-                TextField("Add New Tag", text: $newTag)
-                    .onSubmit {
-                        tags.append(makeWordTag(newTag))
-                        newTag = ""
-                        updateAllTags()
+                if allTags.count > 0 && !workoutManager.hasPurchasedPremium {
+                    Button {
+                        showUpgradeSheet = true
+                    } label: {
+                        Label("Unlimited Tags", systemImage: "lock.fill")
                     }
-                    .disableAutocorrection(true)
-                    .onChange(of: newTag) {
-                        if canMakeTag(from: newTag) {
+                    .buttonStyle(.borderedProminent)
+                    
+                } else {
+                    TextField("Add New Tag", text: $newTag)
+                        .padding()
+                        .onSubmit {
                             tags.append(makeWordTag(newTag))
                             newTag = ""
                             updateAllTags()
                         }
-                    }
-                                    .padding()
+                        .disableAutocorrection(true)
+                        .onChange(of: newTag) {
+                            if canMakeTag(from: newTag) {
+                                tags.append(makeWordTag(newTag))
+                                newTag = ""
+                                updateAllTags()
+                            }
+                        }
+                }
+                    
                                     
 //                Button(action: {
 //                    // TODO: open keyboard for text
@@ -93,6 +104,11 @@ struct TagsSheetView: View {
             allTags = Array(Set(trackerTags + tags)).sorted()
         }
         .navigationTitle("Select Tags")
+        .sheet(isPresented: $showUpgradeSheet, content: {
+            NavigationStack {
+                UpgradeView(workoutManager: workoutManager)
+            }
+        })
     }
 }
 

@@ -464,7 +464,10 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         previousUserLocation = nil
         activeTags = []
     }
-
+    
+    // MARK: - In App Purchase
+    
+    @AppStorage("Premium") var hasPurchasedPremium = false
 }
 
 // MARK: - HKWorkoutSessionDelegate
