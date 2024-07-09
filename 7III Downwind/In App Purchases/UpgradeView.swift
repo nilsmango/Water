@@ -94,6 +94,7 @@ struct UpgradeView: View {
                                 .fill(selection.color)
                                 .animation(.default, value: selection.color)
                         )
+                        
                 }
                 .tint(.primary)
 //                .padding(.top)
@@ -107,8 +108,7 @@ struct UpgradeView: View {
                     }
                         .font(.caption)
 //                        .padding([.bottom, .horizontal])
-                        .padding(.top, 8)
-                        .tint(.red)
+                        .padding(.top, 32)
                 }
                 
                 
@@ -118,13 +118,12 @@ struct UpgradeView: View {
                     .font(.caption)
                     .padding([.bottom, .horizontal])
                     .padding(.top, 8)
-                    .tint(.red)
             }
             .padding(.horizontal)
         }
-        .background(
-            .gray.opacity(0.4)
-        )
+//        .background(
+//            .gray.opacity(0.4)
+//        )
         .navigationTitle("Early Adopter Offer")
     }
 }
