@@ -66,7 +66,7 @@ struct TagsEditViewStatisticCapture: View {
                 Button {
                     downwindManager.showUpgradeSheet = true
                 } label: {
-                    Text("Upgrade for unlimited Tags")
+                    Label("Unlimited Tags", systemImage: "lock.fill")
                 }
                 .buttonStyle(.borderedProminent)
                 
