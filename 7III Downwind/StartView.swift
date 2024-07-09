@@ -65,7 +65,7 @@ struct StartView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    StartOptionsMenu(showOptionsSheet: $showOptionsSheet, showAboutSheet: $showAboutSheet)
+                    StartOptionsMenu(downwindManager: downwindManager, showOptionsSheet: $showOptionsSheet, showAboutSheet: $showAboutSheet)
                 }
             }
             .overlay {
@@ -150,24 +150,6 @@ struct StartView: View {
                         }
                 }
                 
-            })
-            
-            .sheet(isPresented: $showAboutSheet, content: {
-                NavigationStack {
-                    AboutView(downwindManager: downwindManager)
-                        .navigationTitle("About")
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button {
-                                    showAboutSheet = false
-                                } label: {
-                                    Label("Close", systemImage: "xmark.circle.fill")
-                                        .symbolRenderingMode(.palette)
-                                        .foregroundStyle(.black, .gray)
-                                }
-                            }
-                        }
-                }
             })
             
             .background(.listBackground)

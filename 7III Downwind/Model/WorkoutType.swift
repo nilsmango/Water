@@ -23,6 +23,7 @@ enum WorkoutType: String, Codable, CaseIterable {
     case wakeThief = "WakeThief"
     case wakeFoil = "WakeFoil"
     case wakeSurf = "WakeSurf"
+    case sailing = "Sailing"
     case surfingSport = "SurfingSport"
     case paddleSport = "PaddleSport"
     case sup = "SUP"
@@ -94,6 +95,8 @@ enum WorkoutType: String, Codable, CaseIterable {
             return "Wake Surf"
         case .downwindProneFoil:
             return "DW Prone Foil"
+        case .sailing:
+            return "Sailing"
         }
     }
     var activityType: HKWorkoutActivityType {
@@ -104,12 +107,14 @@ enum WorkoutType: String, Codable, CaseIterable {
                 return .paddleSports
             case .windSkate, .wingSkate, .surfSkate, .pumpSkate:
                 return .surfingSports
+            case .sailing:
+                return .sailing
             }
     }
     
     var isDWSport: Bool {
         switch self {
-        case .downwindSUP, .downwindSUPFoil, .downwindProneFoil:
+        case .downwindSUP, .downwindSUPFoil, .downwindProneFoil, .sailing:
             return true
         default:
             return false

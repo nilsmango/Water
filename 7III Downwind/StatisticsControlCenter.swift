@@ -139,16 +139,7 @@ struct StatisticsControlCenter: View {
                     ListBackground()
                 }
             }
-            // TODO: if have active plan don't show this
-            SessionLeft(freeSessions: downwindManager.freeTrackerSessionsNumber, doneSession: downwindManager.trackerSessionsCount)
-                .padding(.top, 2)
-                .onTapGesture {
-                    if SKPaymentQueue.canMakePayments() {
-                        downwindManager.showUpgradeSheet = true
-                    }
-                }
         }
-        
     }
 }
 
@@ -161,7 +152,6 @@ struct ListBackground: View {
 
 #Preview {
     VStack {
-        
         StatisticsControlCenter(downwindManager: DownwindManager())
             .padding()
         Spacer()

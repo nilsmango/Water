@@ -40,7 +40,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     override init() {
         super.init()
         setupLocationManager()
-        loadTrackerSessionsCount()
     }
     
     // MARK: - Statistics
@@ -61,14 +60,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// Activates the run statistic tracking (only tracking)
     func startStatistic(tags: [String] = []) {
-        // TODO: if have active plan don't check this
-        if freeTrackerSessionsNumber - trackerSessionsCount < 1 {
-            if SKPaymentQueue.canMakePayments() {
-                showUpgradeSheet = true
-            }
-            return
-        }
-        
         // Safety first
         if !activeStatistics {
             activeStatistics = true
@@ -234,10 +225,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 
                                 // update and save the tracker sessions count
                                 self.trackerSessionsCount += 1
-                                self.saveTrackerSessionsCount()
                                 let sessionsLeft = self.freeTrackerSessionsNumber - self.trackerSessionsCount
-                                if sessionsLeft < 1 || sessionsLeft == 2 {
-                                    if SKPaymentQueue.canMakePayments() {
+                                if sessionsLeft == -5 || sessionsLeft == 2 {
+                                    if SKPaymentQueue.canMakePayments() && !self.hasPurchasedPremium {
                                         self.showUpgradeSheet = true
                                     }
                                 }
@@ -761,6 +751,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func loadWorkoutsFromHealthKit(completion: @escaping ([HKWorkout]) -> Void) {
         let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
             HKQuery.predicateForWorkouts(with: .paddleSports),
+            HKQuery.predicateForWorkouts(with: .sailing),
             HKQuery.predicateForWorkouts(with: .surfingSports)
         ])
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
@@ -2511,26 +2502,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // MARK: - In App Purchases
     
-    let freeTrackerSessionsNumber = 7
+    let freeTrackerSessionsNumber = 8
     
-    @Published var trackerSessionsCount = 0
+    @AppStorage("sessionCounter") var trackerSessionsCount = 0
+    @AppStorage("Premium") var hasPurchasedPremium = false
     @Published var showUpgradeSheet = false
-    
-    func saveTrackerSessionsCount() {
-        let keychain = KeychainSwift()
-        if let data = try? JSONEncoder().encode(trackerSessionsCount) {
-            keychain.set(data, forKey: Constants.keychainSessionsCount)
-        }
-        if freeTrackerSessionsNumber - trackerSessionsCount == 2 {
-            showUpgradeSheet = true
-        }
-    }
-    
-    func loadTrackerSessionsCount() {
-        let keychain = KeychainSwift()
-        if let data = keychain.getData(Constants.keychainSessionsCount),
-           let loadedCount = try? JSONDecoder().decode(Int.self, from: data) {
-            trackerSessionsCount = loadedCount
-        }
-    }
+
 }

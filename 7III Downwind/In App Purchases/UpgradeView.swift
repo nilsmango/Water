@@ -53,7 +53,9 @@ struct UpgradeView: View {
                 .tint(.primary)
 //                .padding(.top)
                 
-                Text("Note: If you can't or don't want to spare the change, send us an [email](mailto:tracker@project7iii.com) and we will send you a coupon code.")
+                Group {
+                    Text("Note: If you can't or don't want to spare the change, send us an [email](mailto:tracker@project7iii.com) and we will send you a coupon code.\n\n[Terms & Conditions](https://project7iii.com/tracker/terms-and-conditions/) and [Privacy Policy](https://project7iii.com/tracker/privacy-policy/)")
+                }
                     .font(.caption)
                     .padding([.bottom, .horizontal])
                     .padding(.top, 8)

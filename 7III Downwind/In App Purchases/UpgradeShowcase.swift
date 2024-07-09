@@ -41,7 +41,7 @@ struct UpgradeShowcase: View {
 //                    .fontDesign(.rounded)
                     .foregroundStyle(buttonTextColor)
                     .padding(.vertical, 16)
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 18)
                     .background(
                         RoundedRectangle(cornerRadius: 10.0)
                             .fill(buttonColor)

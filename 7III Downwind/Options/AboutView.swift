@@ -19,7 +19,7 @@ struct AboutView: View {
                 
 //                Text("Track yourself and your friends during your outdoor activities. You can also save all the location data collected and analyze it later.\nOriginally, this app was made for downwind runs, but you can track the location of any person or group doing any kind of activity.\nPlease note that the GPS data processing has been optimized for outdoor activities and may not perform well indoors.")
                     .font(.body)
-                    .padding(.bottom)
+//                    .padding(.bottom)
                 
 //                VStack(alignment: .leading, spacing: 10) {
 //                    Text("Disclaimer:")
@@ -71,6 +71,7 @@ struct AboutView: View {
                 Spacer(minLength: 0.0)
             }
             .padding()
+            .navigationTitle("About")
         }
         .background(.listBackground)
             
@@ -78,5 +79,7 @@ struct AboutView: View {
 }
 
 #Preview {
-    AboutView(downwindManager: DownwindManager())
+    NavigationStack {
+        AboutView(downwindManager: DownwindManager())
+    }
 }

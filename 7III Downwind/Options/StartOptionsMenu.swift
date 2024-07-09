@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct StartOptionsMenu: View {
+    @ObservedObject var downwindManager: DownwindManager
+
     @Binding var showOptionsSheet: Bool
     @Binding var showAboutSheet: Bool
     var body: some View {
@@ -20,12 +22,20 @@ struct StartOptionsMenu: View {
 
             })
             
-            Button(action: {
-                showAboutSheet = true
-            }, label: {
+            NavigationLink(destination: AboutView(downwindManager: downwindManager)) {
                 Label("About", systemImage: "info.circle")
-
-            })
+            }
+            
+            NavigationLink(destination: HelpView()) {
+                Label("Help", systemImage: "questionmark.circle")
+            }
+            
+//            Button(action: {
+//                showAboutSheet = true
+//            }, label: {
+//                Label("About", systemImage: "info.circle")
+//
+//            })
             
         } label: {
             Label("Options", systemImage: "ellipsis.circle")
@@ -39,5 +49,5 @@ struct StartOptionsMenu: View {
 }
 
 #Preview {
-    StartOptionsMenu(showOptionsSheet: .constant(false), showAboutSheet: .constant(false))
+    StartOptionsMenu(downwindManager: DownwindManager(), showOptionsSheet: .constant(false), showAboutSheet: .constant(false))
 }
