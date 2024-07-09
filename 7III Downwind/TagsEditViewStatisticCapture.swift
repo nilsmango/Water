@@ -62,6 +62,15 @@ struct TagsEditViewStatisticCapture: View {
         }
         
         Group {
+            if allTags.count > 0 && !downwindManager.hasPurchasedPremium {
+                Button {
+                    downwindManager.showUpgradeSheet = true
+                } label: {
+                    Text("Upgrade for unlimited Tags")
+                }
+                .buttonStyle(.borderedProminent)
+                
+            } else {
             HStack {
                 TextField("Add New Tag", text: $newTag)
                     .focused($isFieldFocused)
@@ -101,6 +110,7 @@ struct TagsEditViewStatisticCapture: View {
                     .foregroundStyle(.uiGray)
             )
             .frame(width: UIScreen.main.bounds.width / 2)
+        }
         }
         .padding(.top)
         .onAppear {
