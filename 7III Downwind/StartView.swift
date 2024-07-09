@@ -109,7 +109,6 @@ struct StartView: View {
             .sheet(isPresented: $downwindManager.showUpgradeSheet, content: {
                 NavigationStack {
                     UpgradeView(downwindManager: downwindManager)
-                        .navigationTitle("Upgrade")
                         .toolbar {
                             ToolbarItem(placement: .topBarTrailing) {
                                 Button {
