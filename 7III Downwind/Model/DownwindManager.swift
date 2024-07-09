@@ -609,6 +609,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         self.findMatchingStatisticsAndMerge()
                         
+                        // Free user only show 7 runs
+                        if !self.hasPurchasedPremium {
+                            self.statisticsCount = self.runStatistics.count
+                            if self.statisticsCount > 7 {
+                                self.runStatistics = Array(self.runStatistics.prefix(7))
+                            }
+                        }
+                        
                         self.updateGroupedRunArray()
                     }
                 }
@@ -2507,5 +2515,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("sessionCounter") var trackerSessionsCount = 0
     @AppStorage("Premium") var hasPurchasedPremium = false
     @Published var showUpgradeSheet = false
+    @Published var statisticsCount = 0
 
 }

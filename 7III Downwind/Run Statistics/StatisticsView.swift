@@ -10,6 +10,7 @@ import SwiftUI
 struct StatisticsView: View {
     @ObservedObject var downwindManager: DownwindManager
     
+    @State private var showUpgradeSheet = false
     var body: some View {
         List {
                 if downwindManager.loadingRunStatistics {
@@ -58,6 +59,21 @@ struct StatisticsView: View {
                                         RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil")
                                     }
                                 }
+                            } footer: {
+                                if downwindManager.statisticsCount > 7 {
+                                    HStack {
+                                        Spacer()
+                                        Button {
+                                            showUpgradeSheet = true
+                                        } label: {
+                                            Label("Load \(downwindManager.statisticsCount - 7) more Sessions", systemImage: "lock.fill")
+                                        }
+                                        .buttonStyle(.borderedProminent)
+                                        Spacer()
+                                    }
+                                    .padding(.top, 32)
+                                    .padding(.bottom, 32)
+                                }
                             }
                         }
                     }
@@ -67,6 +83,22 @@ struct StatisticsView: View {
                 // Reload both statistic arrays
                 downwindManager.loadRunStatistics()
             }
+            .sheet(isPresented: $showUpgradeSheet, content: {
+                NavigationStack {
+                    UpgradeView(downwindManager: downwindManager)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button {
+                                    showUpgradeSheet = false
+                                } label: {
+                                    Label("Close", systemImage: "xmark.circle.fill")
+                                        .symbolRenderingMode(.palette)
+                                        .foregroundStyle(.black, .gray)
+                                }
+                            }
+                        }
+                }
+            })
         .navigationTitle("Statistics")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

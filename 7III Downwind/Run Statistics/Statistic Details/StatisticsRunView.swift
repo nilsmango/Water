@@ -22,6 +22,7 @@ struct StatisticsRunView: View {
     @State private var showRunEditView = false
     @State private var showAlert = false
     @State private var showEditData = false
+    @State private var showUpgradeSheet = false
     
     @State private var tags = [String]()
     @State private var editTags = [String]()
@@ -72,7 +73,7 @@ struct StatisticsRunView: View {
                                     editTags = tags
                                     showTagsEditView = true
                                 } else {
-                                    downwindManager.showUpgradeSheet = true
+                                    showUpgradeSheet = true
                                 }
                             } label: {
                                 tags.isEmpty ? downwindManager.hasPurchasedPremium ? Label("Add Tags", systemImage: "") : Label("Add Tags", systemImage: "lock.fill") : downwindManager.hasPurchasedPremium ? Label("Edit Tags", systemImage: "") : Label("Edit Tags", systemImage: "lock.fill")
@@ -90,7 +91,7 @@ struct StatisticsRunView: View {
                                 if downwindManager.hasPurchasedPremium {
                                     showAlert = true
                                 } else {
-                                    downwindManager.showUpgradeSheet = true
+                                    showUpgradeSheet = true
                                 }
                             } label: {
                                 Label("Delete Run", systemImage: downwindManager.hasPurchasedPremium ? "trash" : "lock.fill")
@@ -167,7 +168,7 @@ struct StatisticsRunView: View {
                                 statisticsDataEdit = statisticsData
                                 showRunEditView = true
                             } else {
-                                downwindManager.showUpgradeSheet = true
+                                showUpgradeSheet = true
                             }
                             
                         }, label: {
@@ -186,7 +187,7 @@ struct StatisticsRunView: View {
                                 editType = statisticsData.workoutType ?? .surf
                                 showEditData = true
                             } else {
-                                downwindManager.showUpgradeSheet = true
+                                showUpgradeSheet = true
                             }
                         }, label: {
                             if downwindManager.hasPurchasedPremium {
@@ -200,12 +201,24 @@ struct StatisticsRunView: View {
                     }
                 } else {
                     Button(action: {
-                        // update the edit data
-                        editTags = tags
-                        editType = statisticsData.workoutType ?? .surf
-                        showEditData = true
+                        if downwindManager.hasPurchasedPremium {
+                            // update the edit data
+                            editTags = tags
+                            editType = statisticsData.workoutType ?? .surf
+                            showEditData = true
+                        } else {
+                            showUpgradeSheet = true
+                        }
                     }, label: {
-                        Text("Edit")
+                        if downwindManager.hasPurchasedPremium {
+                            Text("Edit")
+                        } else {
+                            HStack {
+                                Image(systemName: "lock.fill")
+                                    .font(.caption)
+                                Text("Edit")
+                            }
+                        }
                     })
                 }
             }
@@ -223,13 +236,13 @@ struct StatisticsRunView: View {
                         )
                     }
         
-        .sheet(isPresented: $downwindManager.showUpgradeSheet, content: {
+        .sheet(isPresented: $showUpgradeSheet, content: {
             NavigationStack {
                 UpgradeView(downwindManager: downwindManager)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button {
-                                downwindManager.showUpgradeSheet = false
+                                showUpgradeSheet = false
                             } label: {
                                 Label("Close", systemImage: "xmark.circle.fill")
                                     .symbolRenderingMode(.palette)
