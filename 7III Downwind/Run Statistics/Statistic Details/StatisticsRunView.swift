@@ -151,9 +151,7 @@ struct StatisticsRunView: View {
                     if let heartRateData = heartRateData {
                         heartRates = heartRateData
                     }
-                }
-                
-                
+                }                
             }
         }
         .navigationTitle(statisticsData.runName)
