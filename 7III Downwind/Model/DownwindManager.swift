@@ -1623,6 +1623,18 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    /// checks if there is an edit for a statistic
+    func hasEdits(for statistic: RunStatistic) -> Bool {
+        if let editsIndex = runEdits.firstIndex(where: { $0.id == statistic.id }) {
+            if let deletedLocations = runEdits[editsIndex].deletedLocations {
+                if !deletedLocations.isEmpty {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
     /// set a new start point for a run statistic
     func setStart(for statistic: RunStatistic, coordinate: CLLocationCoordinate2D) async -> RunStatistic {
         // remove all points before the start

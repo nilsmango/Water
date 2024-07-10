@@ -25,6 +25,7 @@ struct StatisticsMap: View {
     
     @State private var buttonText: String = "Undo All Edits"
     @State private var isFetching: Bool = false
+    @State private var hasEdits = false
     
     var maxPointsToShow: Int {
         if let workoutType = statisticsData.workoutType {
@@ -81,6 +82,8 @@ struct StatisticsMap: View {
                                         
                                         // coordinates pairs lines
                                         polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
+                                        
+                                        hasEdits = true
                                     }
                                 } label: {
                                     Label("Remove Point", systemImage: "trash")
@@ -92,6 +95,8 @@ struct StatisticsMap: View {
                                         
                                         // coordinates pairs lines
                                         polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
+                                        
+                                        hasEdits = true
                                     }
                                 } label: {
                                     Label("Set Finish here", systemImage: "flag.checkered")
@@ -103,6 +108,8 @@ struct StatisticsMap: View {
                                         
                                         // coordinates pairs lines
                                         polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
+                                        
+                                        hasEdits = true
                                     }
                                     
                                 } label: {
@@ -172,34 +179,42 @@ struct StatisticsMap: View {
             if editMode {
                 VStack {
                     Spacer()
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            isFetching = true
-                            buttonText = "Loading Data..."
-                            
-                            downwindManager.revertChangesForRoute(for: statisticsData) { ogStatistic in
-                                if let ogStatistic = ogStatistic {
-                                    statisticsData = ogStatistic
-                                    
-                                    Task {
-                                        polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
+                    
+                    if hasEdits {
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                isFetching = true
+                                buttonText = "Loading Data..."
+                                
+                                downwindManager.revertChangesForRoute(for: statisticsData) { ogStatistic in
+                                    if let ogStatistic = ogStatistic {
+                                        statisticsData = ogStatistic
+                                        
+                                        Task {
+                                            polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
+                                            
+                                            isFetching = false
+                                            hasEdits = false
+                                            buttonText = "Undo All Edits"
+                                        }
+                                    } else {
+                                        isFetching = false
+                                        hasEdits = downwindManager.hasEdits(for: statisticsData)
+                                        buttonText = "Undo All Edits"
                                     }
                                 }
                                 
-                                isFetching = false
-                                buttonText = "Undo All Edits"
-                            }
-                            
-                        }, label: {
-                            Label(buttonText, systemImage: "arrow.counterclockwise")
-                        })
-                        .buttonStyle(.borderedProminent)
-                        .tint(.purple)
-                        .disabled(isFetching)
+                            }, label: {
+                                Label(buttonText, systemImage: "arrow.counterclockwise")
+                            })
+                            .buttonStyle(.borderedProminent)
+                            .tint(.purple)
+                            .disabled(isFetching)
+                        }
+                        .padding(.trailing, 10)
+                        .padding(.bottom, 10)
                     }
-                    .padding(.trailing, 10)
-                    .padding(.bottom, 10)
                     
                     HStack {
                         Spacer()
@@ -213,6 +228,7 @@ struct StatisticsMap: View {
                             }
                     }
                     .padding(.trailing, 10)
+                    .padding(.bottom, 5)
                 }
             }
         }
@@ -222,7 +238,7 @@ struct StatisticsMap: View {
                 // coordinates pairs lines
                 polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
             }
-            
+            hasEdits = downwindManager.hasEdits(for: statisticsData)
         }
         .onChange(of: refreshPolyLines) { _, _ in
             Task {
@@ -235,5 +251,5 @@ struct StatisticsMap: View {
 
 #Preview {
     
-    StatisticsMap(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData)), editMode: false)
+    StatisticsMap(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData)), editMode: true)
 }
