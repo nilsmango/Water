@@ -236,7 +236,7 @@ struct StatisticsRunView: View {
         
         .sheet(isPresented: $showUpgradeSheet, content: {
             NavigationStack {
-                UpgradeView(downwindManager: downwindManager)
+                UpgradeView(downwindManager: downwindManager, showUpgradeView: $showUpgradeSheet)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button {

@@ -41,13 +41,13 @@ struct UpgradeView: View {
                 
                 Text("")
                 
-                WatchUpgradShowcase(image: Image("poseidonGoatW"), title: "GOAT", subTitle: "Pay once, conquer the seven seas.", priceButton: "$9.99 / Lifetime", buttonColor: .darkBlue)
+                WatchUpgradeShowcase(image: Image("poseidonGoatW"), title: "GOAT", subTitle: "Pay once, conquer the seven seas.", priceButton: "$9.99 / Lifetime", buttonColor: .darkBlue)
                     .padding(.bottom, 16)
                 
-                WatchUpgradShowcase(image: Image("weekendWarriorW"), title: "Weekend Warrior", subTitle: "A year of fun for a modest price.", priceButton: "$6.99 / Year", buttonColor: .warriorWatch)
+                WatchUpgradeShowcase(image: Image("weekendWarriorW"), title: "Weekend Warrior", subTitle: "A year of fun for a modest price.", priceButton: "$6.99 / Year", buttonColor: .warriorWatch)
                     .padding(.bottom, 16)
 
-                WatchUpgradShowcase(image: Image("watchKook"), title: "Kook", subTitle: "Hang loose. Pay once a month", priceButton: "$0.99 / Month", buttonColor: .kookSea)
+                WatchUpgradeShowcase(image: Image("watchKook"), title: "Kook", subTitle: "Hang loose. Pay once a month", priceButton: "$0.99 / Month", buttonColor: .kookSea)
                     .padding(.bottom, 16)
                 
                 Button {

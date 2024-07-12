@@ -12,6 +12,10 @@ import KeychainSwift
 import HealthKit
 import StoreKit
 
+public enum StoreError: Error {
+    case failedVerification
+}
+
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // MARK: - App Storage and Init
@@ -39,6 +43,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     override init() {
         super.init()
+        // Start a transaction listener as close to app launch as possible so you don't miss any transactions.
+        updateListenerTask = listenForTransactions()
+        Task {
+            // During store initialization, request products from the App Store.
+            await loadProductIdentifiersAndRequestProducts()
+            // Deliver products that the customer purchases.
+            await updateCustomerProductStatus()
+        }
+        
         setupLocationManager()
     }
     
@@ -2524,13 +2537,18 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @AppStorage("sessionCounter") var trackerSessionsCount = 0
     @AppStorage("Premium") var hasPurchasedPremium = false
+    @Published var purchasedProducts = [Product]()
+    @Published var premiumProducts: [Product] = []
+    
     @Published var showUpgradeSheet = false
     @Published var statisticsCount = 0
     @Published var unableToLoadProducts = false
     
-    @Published var premiumProducts: [Product] = []
+    var updateListenerTask: Task<Void, Error>? = nil
     
-    func loadProductIdentifiers() async {
+    
+    
+    func loadProductIdentifiersAndRequestProducts() async {
             guard let url = Bundle.main.url(forResource: "product_ids", withExtension: "plist") else {
                 fatalError("Unable to resolve url for in the bundle.")
             }
@@ -2546,7 +2564,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
     
-    func requestProducts(productIdentifiers: [String]) async {
+    private func requestProducts(productIdentifiers: [String]) async {
         do {
             // Request products from the App Store using the identifiers that the `product_ids.plist` file defines.
             premiumProducts = try await Product.products(for: productIdentifiers)
@@ -2555,6 +2573,84 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             print("Failed product request from the App Store server. \(error)")
             unableToLoadProducts = true
         }
+    }
+    
+    func listenForTransactions() -> Task<Void, Error> {
+        return Task.detached {
+            // Iterate through any transactions that don't come from a direct call to `purchase()`.
+            for await result in StoreKit.Transaction.updates {
+                do {
+                    let transaction = try self.checkVerified(result)
+
+                    // Deliver products to the user.
+                    await self.updateCustomerProductStatus()
+
+                    // Always finish a transaction.
+                    await transaction.finish()
+                } catch {
+                    // StoreKit has a transaction that fails verification. Don't deliver content to the user.
+                    print("Transaction failed verification.")
+                }
+            }
+        }
+    }
+    
+    func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
+        // Check whether the JWS passes StoreKit verification.
+        switch result {
+        case .unverified:
+            // StoreKit parses the JWS, but it fails verification.
+            throw StoreError.failedVerification
+        case .verified(let safe):
+            // The result is verified. Return the unwrapped value.
+            return safe
+        }
+    }
+    
+    
+    func updateCustomerProductStatus() async {
+        var currentEntitledPurchases: [Product] = []
+
+        // Iterate through all of the user's purchased products.
+        for await result in StoreKit.Transaction.currentEntitlements {
+            do {
+                // Check whether the transaction is verified. If it isn’t, catch `failedVerification` error.
+                let transaction = try checkVerified(result)
+
+                // Check the `productType` of the transaction and get the corresponding product from the store.
+                switch transaction.productType {
+                case .nonConsumable:
+                    if let goat = premiumProducts.first(where: { $0.id == transaction.productID }) {
+                        currentEntitledPurchases.append(goat)
+                    }
+                case .nonRenewable:
+                    // we don't have this in our purchases
+                    break
+                case .autoRenewable:
+                    if let subscription = premiumProducts.first(where: { $0.id == transaction.productID }) {
+                        currentEntitledPurchases.append(subscription)
+                    }
+                default:
+                    break
+                }
+            } catch {
+                print()
+            }
+        }
+        
+        // update has purchased premium
+        if currentEntitledPurchases.isEmpty {
+            hasPurchasedPremium = false
+        } else {
+            hasPurchasedPremium = true
+        }
+
+        // Update the store information with the purchased products.
+        self.purchasedProducts = currentEntitledPurchases
+    }
+    
+    func purchase(product: Product) {
+        // TODO: if the purchase worked, then show a overlay with a thank you ❤️, then `showUpgrade = false` machen.
     }
     
 }

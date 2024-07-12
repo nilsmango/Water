@@ -17,6 +17,8 @@ struct UpgradeShowcase: View {
     var buttonTextColor: Color = .primary
     var fontColor: Color = .primary
     
+    let buttonAction: () -> Void
+    
     var body: some View {
         VStack {
             
@@ -33,7 +35,7 @@ struct UpgradeShowcase: View {
                 .foregroundStyle(fontColor)
             
             Button {
-                // get the in app purchase
+                buttonAction()
             } label: {
                 Text(priceButton)
                     .font(.title3)
@@ -60,6 +62,6 @@ struct UpgradeShowcase: View {
 }
 
 #Preview {
-    UpgradeShowcase(image: Image("poseidonGoat"), title: "Poseidon Goat", subTitle: "Be ready for the seven seas. Includes Future Features as: Crew Live Location Sharing.", priceButton: "$5.99 / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .black, fontColor: .white)
+    UpgradeShowcase(image: Image("poseidonGoat"), title: "Poseidon Goat", subTitle: "Be ready for the seven seas. Includes Future Features as: Crew Live Location Sharing.", priceButton: "$5.99 / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .black, fontColor: .white, buttonAction: { print("Button Pressed") })
         .padding()
 }

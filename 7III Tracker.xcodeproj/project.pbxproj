@@ -45,7 +45,7 @@
 		785C0C2B2C3C171A005CCE87 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C2A2C3C171A005CCE87 /* HelpView.swift */; };
 		785C0C2D2C3D740C005CCE87 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
 		785C0C2F2C3D7496005CCE87 /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C2E2C3D7496005CCE87 /* UpgradeView.swift */; };
-		785C0C322C3D7956005CCE87 /* WatchUpgradShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C312C3D7956005CCE87 /* WatchUpgradShowcase.swift */; };
+		785C0C322C3D7956005CCE87 /* WatchUpgradeShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C312C3D7956005CCE87 /* WatchUpgradeShowcase.swift */; };
 		785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
 		785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
 		785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
@@ -185,7 +185,7 @@
 		784083662C258112004C0857 /* GroupedTagsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedTagsListView.swift; sourceTree = "<group>"; };
 		785C0C2A2C3C171A005CCE87 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		785C0C2E2C3D7496005CCE87 /* UpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeView.swift; sourceTree = "<group>"; };
-		785C0C312C3D7956005CCE87 /* WatchUpgradShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchUpgradShowcase.swift; sourceTree = "<group>"; };
+		785C0C312C3D7956005CCE87 /* WatchUpgradeShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchUpgradeShowcase.swift; sourceTree = "<group>"; };
 		785C4A952B358F7B00EB07F8 /* 7III Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _III_DownwindApp.swift; sourceTree = "<group>"; };
 		785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -359,7 +359,7 @@
 			isa = PBXGroup;
 			children = (
 				785C0C2E2C3D7496005CCE87 /* UpgradeView.swift */,
-				785C0C312C3D7956005CCE87 /* WatchUpgradShowcase.swift */,
+				785C0C312C3D7956005CCE87 /* WatchUpgradeShowcase.swift */,
 			);
 			path = Upgrades;
 			sourceTree = "<group>";
@@ -811,7 +811,7 @@
 				78844E3A2C2EA37F00B703F5 /* WorkoutTypeListView.swift in Sources */,
 				785C0C2F2C3D7496005CCE87 /* UpgradeView.swift in Sources */,
 				78844E452C2EAD0A00B703F5 /* ControlsView.swift in Sources */,
-				785C0C322C3D7956005CCE87 /* WatchUpgradShowcase.swift in Sources */,
+				785C0C322C3D7956005CCE87 /* WatchUpgradeShowcase.swift in Sources */,
 				78844E412C2EAAD100B703F5 /* ElapsedTimeView.swift in Sources */,
 				78844E4A2C2EB40900B703F5 /* ActivityRingsView.swift in Sources */,
 				78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */,

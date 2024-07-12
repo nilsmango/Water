@@ -9,6 +9,8 @@ import SwiftUI
 
 struct UpgradeView: View {
     @ObservedObject var downwindManager: DownwindManager
+    
+    @Binding var showUpgradeView: Bool
 
     @State private var selection: Tab = .poseidon
     
@@ -47,7 +49,7 @@ struct UpgradeView: View {
                 Text("If you are offline, try again when online.")
                 Button("Try Again") {
                     Task {
-                        await downwindManager.loadProductIdentifiers()
+                        await downwindManager.loadProductIdentifiersAndRequestProducts()
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -90,19 +92,19 @@ struct UpgradeView: View {
                             
                             if let goatProduct = downwindManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.goat"}) {
                                 UpgradeShowcase(image: Image("poseidonGoat"), title: goatProduct.displayName, subTitle: goatProduct.description,
-                                                priceButton: "\(goatProduct.displayPrice) / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .primary)
+                                                priceButton: "\(goatProduct.displayPrice) / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .primary) { downwindManager.purchase(product: goatProduct) }
                                     .padding()
                                     .tag(Tab.poseidon)
                             }
                             
                             if let weekendWarriorProduct = downwindManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.weekend_warrior"}) {
-                                UpgradeShowcase(image: Image("weekendWarrior"), title: weekendWarriorProduct.displayName, subTitle: weekendWarriorProduct.description, priceButton: "\(weekendWarriorProduct.displayPrice) / Year", backgroundColor: .warriorSky, buttonColor: .kookSea, buttonTextColor: .primary)
+                                UpgradeShowcase(image: Image("weekendWarrior"), title: weekendWarriorProduct.displayName, subTitle: weekendWarriorProduct.description, priceButton: "\(weekendWarriorProduct.displayPrice) / Year", backgroundColor: .warriorSky, buttonColor: .kookSea, buttonTextColor: .primary) { downwindManager.purchase(product: weekendWarriorProduct) }
                                     .padding()
                                     .tag(Tab.weekend)
                             }
                             
                             if let kookProduct = downwindManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.kook"}) {
-                                UpgradeShowcase(image: Image("kook"), title: kookProduct.displayName, subTitle: kookProduct.description, priceButton: "\(kookProduct.displayPrice) / Month", backgroundColor: .kookSea, buttonColor: .warriorSky, buttonTextColor: .primary)
+                                UpgradeShowcase(image: Image("kook"), title: kookProduct.displayName, subTitle: kookProduct.description, priceButton: "\(kookProduct.displayPrice) / Month", backgroundColor: .kookSea, buttonColor: .warriorSky, buttonTextColor: .primary) { downwindManager.purchase(product: kookProduct) }
                                     .padding()
                                     .tag(Tab.kook)
                             }
@@ -151,11 +153,6 @@ struct UpgradeView: View {
                 }
                 .padding(.horizontal)
             }
-            .onAppear {
-                Task {
-                    await downwindManager.loadProductIdentifiers()
-                }
-            }
 //        .background(
 //            .gray.opacity(0.4)
 //        )
@@ -166,6 +163,6 @@ struct UpgradeView: View {
 
 #Preview {
     NavigationStack {
-        UpgradeView(downwindManager: DownwindManager())
+        UpgradeView(downwindManager: DownwindManager(), showUpgradeView: .constant(true))
     }
 }
