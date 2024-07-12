@@ -2526,5 +2526,35 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("Premium") var hasPurchasedPremium = false
     @Published var showUpgradeSheet = false
     @Published var statisticsCount = 0
+    @Published var unableToLoadProducts = false
+    
+    @Published var premiumProducts: [Product] = []
+    
+    func loadProductIdentifiers() async {
+            guard let url = Bundle.main.url(forResource: "product_ids", withExtension: "plist") else {
+                fatalError("Unable to resolve url for in the bundle.")
+            }
+            do {
+                unableToLoadProducts = false
+                let data = try Data(contentsOf: url)
+                if let productIdentifiers = try PropertyListSerialization.propertyList(from: data, options: .mutableContainersAndLeaves, format: nil) as? [String] {
+                    await requestProducts(productIdentifiers: productIdentifiers)
+                }
+            } catch {
+                unableToLoadProducts = true
+                print("\(error.localizedDescription)")
+            }
+        }
+    
+    func requestProducts(productIdentifiers: [String]) async {
+        do {
+            // Request products from the App Store using the identifiers that the `product_ids.plist` file defines.
+            premiumProducts = try await Product.products(for: productIdentifiers)
 
+        } catch {
+            print("Failed product request from the App Store server. \(error)")
+            unableToLoadProducts = true
+        }
+    }
+    
 }

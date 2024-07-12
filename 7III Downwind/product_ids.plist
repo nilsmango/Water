@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   product_ids.plist
+   7III Tracker
+
+   Created by Simon Lang on 11.07.2024.
+   Copyright (c) 2024 ___ORGANIZATIONNAME___. All rights reserved.
+-->
+<plist version="1.0">
+<array>
+    <string>com.project7iii.tracker.goat</string>
+    <string>com.project7iii.tracker.weekend_warrior</string>
+    <string>com.project7iii.tracker.kook</string>
+</array></plist>

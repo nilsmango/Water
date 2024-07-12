@@ -1,0 +1,146 @@
+{
+  "identifier" : "A0EAF3D7",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "6529535680",
+      "localizations" : [
+        {
+          "description" : "Pay once, conquer the seven seas.",
+          "displayName" : "GOAT",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.project7iii.tracker.goat",
+      "referenceName" : "GOAT",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6495238780",
+    "_developerTeamID" : "A9H57996U3",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 742463299.84492505,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : {
+          "index" : 2,
+          "type" : "generic"
+        },
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21509760",
+      "localizations" : [
+
+      ],
+      "name" : "Premium Features",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6529536147",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly access to all premium features.",
+              "displayName" : "Kook",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.project7iii.tracker.kook",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Kook",
+          "subscriptionGroupID" : "21509760",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "6.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6529535967",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly access to all premium features.",
+              "displayName" : "Weekend Warrior",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.project7iii.tracker.weekend_warrior",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Weekend Warrior",
+          "subscriptionGroupID" : "21509760",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
