@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct UpgradeView: View {
     @ObservedObject var downwindManager: DownwindManager
@@ -13,6 +14,9 @@ struct UpgradeView: View {
     @Binding var showUpgradeView: Bool
 
     @State private var selection: Tab = .poseidon
+    @State private var isShowingError = false
+    @State private var errorTitle = ""
+    @State private var wasPurchased = false
     
     enum Tab {
         case poseidon, weekend, kook
@@ -35,12 +39,12 @@ struct UpgradeView: View {
         let symbol: String
     }
 
-        let features = [
-            FeatureItem(text: "Unlimited statistics", symbol: "chart.xyaxis.line"),
-            FeatureItem(text: "Unlimited tags", symbol: "tag"),
-            FeatureItem(text: "Editing of sessions", symbol: "pencil"),
-            FeatureItem(text: "Access to future features like Location Sharing", symbol: "location.fill")
-        ]
+    let features = [
+        FeatureItem(text: "Unlimited statistics", symbol: "chart.xyaxis.line"),
+        FeatureItem(text: "Unlimited tags", symbol: "tag"),
+        FeatureItem(text: "Editing of sessions", symbol: "pencil"),
+        FeatureItem(text: "Access to future features like Location Sharing", symbol: "location.fill")
+    ]
         
     var body: some View {
         if downwindManager.unableToLoadProducts {
@@ -92,19 +96,25 @@ struct UpgradeView: View {
                             
                             if let goatProduct = downwindManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.goat"}) {
                                 UpgradeShowcase(image: Image("poseidonGoat"), title: goatProduct.displayName, subTitle: goatProduct.description,
-                                                priceButton: "\(goatProduct.displayPrice) / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .primary) { downwindManager.purchase(product: goatProduct) }
+                                                priceButton: "\(goatProduct.displayPrice) / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .primary, makeLabel: wasPurchased) { Task {
+                                    await buy(product: goatProduct)
+                                }}
                                     .padding()
                                     .tag(Tab.poseidon)
                             }
                             
                             if let weekendWarriorProduct = downwindManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.weekend_warrior"}) {
-                                UpgradeShowcase(image: Image("weekendWarrior"), title: weekendWarriorProduct.displayName, subTitle: weekendWarriorProduct.description, priceButton: "\(weekendWarriorProduct.displayPrice) / Year", backgroundColor: .warriorSky, buttonColor: .kookSea, buttonTextColor: .primary) { downwindManager.purchase(product: weekendWarriorProduct) }
+                                UpgradeShowcase(image: Image("weekendWarrior"), title: weekendWarriorProduct.displayName, subTitle: weekendWarriorProduct.description, priceButton: "\(weekendWarriorProduct.displayPrice) / Year", backgroundColor: .warriorSky, buttonColor: .kookSea, buttonTextColor: .primary, makeLabel: wasPurchased) { Task {
+                                    await buy(product: weekendWarriorProduct)
+                                }}
                                     .padding()
                                     .tag(Tab.weekend)
                             }
                             
                             if let kookProduct = downwindManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.kook"}) {
-                                UpgradeShowcase(image: Image("kook"), title: kookProduct.displayName, subTitle: kookProduct.description, priceButton: "\(kookProduct.displayPrice) / Month", backgroundColor: .kookSea, buttonColor: .warriorSky, buttonTextColor: .primary) { downwindManager.purchase(product: kookProduct) }
+                                UpgradeShowcase(image: Image("kook"), title: kookProduct.displayName, subTitle: kookProduct.description, priceButton: "\(kookProduct.displayPrice) / Month", backgroundColor: .kookSea, buttonColor: .warriorSky, buttonTextColor: .primary, makeLabel: wasPurchased) { Task {
+                                    await buy(product: kookProduct)
+                                }}
                                     .padding()
                                     .tag(Tab.kook)
                             }
@@ -157,6 +167,28 @@ struct UpgradeView: View {
 //            .gray.opacity(0.4)
 //        )
         .navigationTitle("Early Adopter Offer")
+        .alert(isPresented: $isShowingError, content: {
+            Alert(title: Text(errorTitle), message: nil, dismissButton: .default(Text("Okay")))
+        })
+        }
+            
+    }
+    
+    func buy(product: Product) async {
+        do {
+            if try await downwindManager.purchase(product: product) != nil {
+                withAnimation {
+                    wasPurchased = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    showUpgradeView = false
+                }
+            }
+        } catch StoreError.failedVerification {
+            errorTitle = "Your purchase could not be verified by the App Store."
+            isShowingError = true
+        } catch {
+            print("Failed purchase for \(product.id). \(error)")
         }
     }
 }

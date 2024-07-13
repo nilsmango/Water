@@ -2545,9 +2545,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var unableToLoadProducts = false
     
     var updateListenerTask: Task<Void, Error>? = nil
-    
-    
-    
+        
     func loadProductIdentifiersAndRequestProducts() async {
             guard let url = Bundle.main.url(forResource: "product_ids", withExtension: "plist") else {
                 fatalError("Unable to resolve url for in the bundle.")
@@ -2567,11 +2565,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func requestProducts(productIdentifiers: [String]) async {
         do {
             // Request products from the App Store using the identifiers that the `product_ids.plist` file defines.
-            premiumProducts = try await Product.products(for: productIdentifiers)
+            let products = try await Product.products(for: productIdentifiers)
+            DispatchQueue.main.async {
+                self.premiumProducts = products
+            }
 
         } catch {
             print("Failed product request from the App Store server. \(error)")
-            unableToLoadProducts = true
+            DispatchQueue.main.async {
+                self.unableToLoadProducts = true
+            }
         }
     }
     
@@ -2638,19 +2641,40 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         
-        // update has purchased premium
-        if currentEntitledPurchases.isEmpty {
-            hasPurchasedPremium = false
-        } else {
-            hasPurchasedPremium = true
+        DispatchQueue.main.async {
+            // update has purchased premium
+            if currentEntitledPurchases.isEmpty {
+                self.hasPurchasedPremium = false
+            } else {
+                self.hasPurchasedPremium = true
+            }
+            
+            // Update the store information with the purchased products.
+            self.purchasedProducts = currentEntitledPurchases
         }
+    }
+    
+    func purchase(product: Product) async throws -> StoreKit.Transaction? {
+        // Begin purchasing the `Product` the user selects.
+        let result = try await product.purchase()
 
-        // Update the store information with the purchased products.
-        self.purchasedProducts = currentEntitledPurchases
+        switch result {
+        case .success(let verification):
+            // Check whether the transaction is verified. If it isn't,
+            // this function rethrows the verification error.
+            let transaction = try checkVerified(verification)
+
+            // The transaction is verified. Deliver content to the user.
+            await updateCustomerProductStatus()
+
+            // Always finish a transaction.
+            await transaction.finish()
+
+            return transaction
+        case .userCancelled, .pending:
+            return nil
+        default:
+            return nil
+        }
     }
-    
-    func purchase(product: Product) {
-        // TODO: if the purchase worked, then show a overlay with a thank you ❤️, then `showUpgrade = false` machen.
-    }
-    
 }

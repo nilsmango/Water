@@ -16,6 +16,7 @@ struct UpgradeShowcase: View {
     var buttonColor: Color
     var buttonTextColor: Color = .primary
     var fontColor: Color = .primary
+    var makeLabel: Bool = false
     
     let buttonAction: () -> Void
     
@@ -37,7 +38,13 @@ struct UpgradeShowcase: View {
             Button {
                 buttonAction()
             } label: {
-                Text(priceButton)
+                Group {
+                    if makeLabel {
+                        Label("Thank You!", systemImage: "checkmark")
+                    } else {
+                        Text(priceButton)
+                    }
+                }
                     .font(.title3)
                     .fontWeight(.bold)
 //                    .fontDesign(.rounded)
@@ -62,6 +69,6 @@ struct UpgradeShowcase: View {
 }
 
 #Preview {
-    UpgradeShowcase(image: Image("poseidonGoat"), title: "Poseidon Goat", subTitle: "Be ready for the seven seas. Includes Future Features as: Crew Live Location Sharing.", priceButton: "$5.99 / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .black, fontColor: .white, buttonAction: { print("Button Pressed") })
+    UpgradeShowcase(image: Image("poseidonGoat"), title: "Poseidon Goat", subTitle: "Be ready for the seven seas.", priceButton: "$5.99 / Lifetime", backgroundColor: .darkBlue, buttonColor: .trackerGold, buttonTextColor: .black, fontColor: .white, buttonAction: { print("Button Pressed") })
         .padding()
 }
