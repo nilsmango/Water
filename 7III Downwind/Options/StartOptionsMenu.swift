@@ -14,6 +14,9 @@ struct StartOptionsMenu: View {
     @Binding var showAboutSheet: Bool
     var body: some View {
         Menu {
+            NavigationLink(destination: AboutView(downwindManager: downwindManager)) {
+                Label("About", systemImage: "info.circle")
+            }
             
             Button(action: {
                 showOptionsSheet = true
@@ -21,12 +24,8 @@ struct StartOptionsMenu: View {
                 Label("Options", systemImage: "gear")
 
             })
-            
-            NavigationLink(destination: AboutView(downwindManager: downwindManager)) {
-                Label("About", systemImage: "info.circle")
-            }
-            
-            NavigationLink(destination: HelpView()) {
+                        
+            NavigationLink(destination: HelpView(downwindManager: downwindManager)) {
                 Label("Help", systemImage: "questionmark.circle")
             }
             

@@ -16,7 +16,7 @@ struct OptionsView: View {
     @State private var userName = ""
     @State private var status = ""
     @State private var isShowingAlert = false
-    
+    @State private var showUpgradeView = false
     var body: some View {
         List {
             Section {
@@ -145,6 +145,22 @@ struct OptionsView: View {
 //                Toggle(isOn: $downwindManager.showListDetail, label: {
 //                    Text("Show List Details")
 //                })
+                
+                if downwindManager.hasPurchasedPremium {
+                    Text("Your Premium Status: \(downwindManager.purchasedProducts.first?.displayName ?? "unknown")")
+                } else {
+                    Button("Get Premium") {
+                        showUpgradeView = true
+                    }
+                    
+                    Button("Restore Purchase") {
+                        Task {
+                            await downwindManager.updateCustomerProductStatus()
+                        }
+                    }
+                }
+                
+                
             } header: {
                 Text("Other options")
             } footer: {
@@ -188,6 +204,22 @@ struct OptionsView: View {
                 secondaryButton: .default(Text("Cancel"))
             )
         }
+        .sheet(isPresented: $showUpgradeView, content: {
+            NavigationStack {
+                UpgradeView(downwindManager: downwindManager, showUpgradeView: $showUpgradeView)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                showUpgradeView = false
+                            } label: {
+                                Label("Close", systemImage: "xmark.circle.fill")
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.black, .gray)
+                            }
+                        }
+                    }
+            }
+        })
     }
 }
 

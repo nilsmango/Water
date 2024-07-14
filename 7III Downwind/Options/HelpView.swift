@@ -9,8 +9,11 @@ import SwiftUI
 import StoreKit
 
 struct HelpView: View {
+    @ObservedObject var downwindManager: DownwindManager
+
     @State private var isRefundRequestPresented = false
     @State private var transactionID: UInt64? = nil
+    @State private var showUpgradeView = false
     
     var body: some View {
         List {
@@ -32,6 +35,21 @@ struct HelpView: View {
                 Link("Privacy Policy", destination: URL(string: "https://project7iii.com/tracker/privacy-policy/")!)
                 Link("Terms and Conditions", destination: URL(string: "https://project7iii.com/tracker/terms-and-conditions/")!)
                 Link("Contact Us", destination: URL(string: "mailto:tracker@project7iii.com")!)
+                if downwindManager.hasPurchasedPremium {
+                    Text("Your Premium Status: \(downwindManager.purchasedProducts.first?.displayName ?? "unknown")")
+                } else {
+                    Button("Get Premium") {
+                        showUpgradeView = true
+                    }
+                    
+                    Button("Restore Purchase") {
+                        Task {
+                            await downwindManager.updateCustomerProductStatus()
+                        }
+                    }
+                }
+                
+                
                 
             } header: {
                 Text("How can we help?")
@@ -41,6 +59,22 @@ struct HelpView: View {
         .onAppear {
             fetchTransactionID()
         }
+        .sheet(isPresented: $showUpgradeView, content: {
+            NavigationStack {
+                UpgradeView(downwindManager: downwindManager, showUpgradeView: $showUpgradeView)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                showUpgradeView = false
+                            } label: {
+                                Label("Close", systemImage: "xmark.circle.fill")
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.black, .gray)
+                            }
+                        }
+                    }
+            }
+        })
     }
     
     func fetchTransactionID() {
@@ -52,7 +86,7 @@ struct HelpView: View {
         }
     }
     
-    func fetchLastTransaction() -> Transaction? {
+    func fetchLastTransaction() -> SpecialTransaction? {
         // Implement this function to return the last transaction.
         // You should fetch the actual transaction from your app's transaction storage mechanism.
         // For demonstration, we're returning nil.
@@ -60,7 +94,7 @@ struct HelpView: View {
     }
 }
 
-struct Transaction {
+struct SpecialTransaction {
     var id: UInt64
     // Add other properties as needed
 }
@@ -68,6 +102,6 @@ struct Transaction {
 
 #Preview {
     NavigationStack {
-        HelpView()
+        HelpView(downwindManager: DownwindManager())
     }
 }

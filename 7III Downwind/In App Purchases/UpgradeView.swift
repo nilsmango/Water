@@ -90,6 +90,12 @@ struct UpgradeView: View {
                             Spacer()
                         }
                         .frame(height: 250)
+//                        .onAppear {
+//                            Task {
+//                                await downwindManager.loadProductIdentifiersAndRequestProducts()
+//                            }
+//                            
+//                        }
                         
                     } else {
                         TabView(selection: $selection) {
@@ -171,7 +177,6 @@ struct UpgradeView: View {
             Alert(title: Text(errorTitle), message: nil, dismissButton: .default(Text("Okay")))
         })
         }
-            
     }
     
     func buy(product: Product) async {
