@@ -10,14 +10,13 @@ import SwiftUI
 struct TagsEditViewStatisticCapture: View {
     @Binding var tags: [String]
     
-    var downwindManager: DownwindManager
+    @ObservedObject var downwindManager: DownwindManager
     
     private var trackerTags: [String] {
         downwindManager.tags
     }
     
     @State private var allTags = [String]()
-    
     @State private var newTag = ""
     
     @FocusState private var isFieldFocused: Bool
@@ -75,10 +74,10 @@ struct TagsEditViewStatisticCapture: View {
                 TextField("Add New Tag", text: $newTag)
                     .focused($isFieldFocused)
                     .onSubmit {
-                        isFieldFocused = true
-                        tags.append(makeWordTag(newTag))
-                        newTag = ""
-                        updateAllTags()
+                            isFieldFocused = true
+                            tags.append(makeWordTag(newTag))
+                            newTag = ""
+                            updateAllTags()
                     }
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
@@ -101,7 +100,6 @@ struct TagsEditViewStatisticCapture: View {
                         
                     }
                 }
-                
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)

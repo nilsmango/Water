@@ -12,7 +12,6 @@
 		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
 		781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
 		782B67592C3A7A2B00B90578 /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B67582C3A7A2B00B90578 /* UpgradeView.swift */; };
-		782B675B2C3A8E6D00B90578 /* LevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675A2C3A8E6D00B90578 /* LevelView.swift */; };
 		782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
 		782B675F2C3AC21C00B90578 /* UpgradeShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */; };
 		78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
@@ -108,6 +107,9 @@
 		78A283742C3FC2610052AA52 /* product_ids.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78A283732C3FC2610052AA52 /* product_ids.plist */; };
 		78A283752C3FC2610052AA52 /* product_ids.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78A283732C3FC2610052AA52 /* product_ids.plist */; };
 		78A283782C43D5130052AA52 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC22B40B84300EB07F8 /* StartView.swift */; };
+		78A2837A2C450EA80052AA52 /* UpgradeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A283792C450EA80052AA52 /* UpgradeStatus.swift */; };
+		78A2837C2C4551BD0052AA52 /* PremiumSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837B2C4551BD0052AA52 /* PremiumSection.swift */; };
+		78A2837E2C45578F0052AA52 /* RefundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837D2C45578F0052AA52 /* RefundView.swift */; };
 		78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
 		78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E32C18C93F00C75A60 /* WorkoutType.swift */; };
 		78B388E62C1A136800C75A60 /* YearlyMonthlyStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
@@ -156,7 +158,6 @@
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
 		781562A62B94DD7500E081FC /* ShareDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDialog.swift; sourceTree = "<group>"; };
 		782B67582C3A7A2B00B90578 /* UpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeView.swift; sourceTree = "<group>"; };
-		782B675A2C3A8E6D00B90578 /* LevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelView.swift; sourceTree = "<group>"; };
 		782B675C2C3ABBA700B90578 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeShowcase.swift; sourceTree = "<group>"; };
 		78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCKalmanAlgorithm.swift; sourceTree = "<group>"; };
@@ -249,6 +250,9 @@
 		78A283712C3E8DA00052AA52 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.5.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		78A283732C3FC2610052AA52 /* product_ids.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = product_ids.plist; sourceTree = "<group>"; };
 		78A283762C4115FE0052AA52 /* PremiumProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = PremiumProducts.storekit; sourceTree = "<group>"; };
+		78A283792C450EA80052AA52 /* UpgradeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeStatus.swift; sourceTree = "<group>"; };
+		78A2837B2C4551BD0052AA52 /* PremiumSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumSection.swift; sourceTree = "<group>"; };
+		78A2837D2C45578F0052AA52 /* RefundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefundView.swift; sourceTree = "<group>"; };
 		78A9EB072B57132F0054E9F9 /* RunShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunShareView.swift; sourceTree = "<group>"; };
 		78B388E32C18C93F00C75A60 /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
 		78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearlyMonthlyStatisticView.swift; sourceTree = "<group>"; };
@@ -293,6 +297,7 @@
 				782B67582C3A7A2B00B90578 /* UpgradeView.swift */,
 				782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */,
 				782B675C2C3ABBA700B90578 /* CircleImage.swift */,
+				78A283792C450EA80052AA52 /* UpgradeStatus.swift */,
 			);
 			path = "In App Purchases";
 			sourceTree = "<group>";
@@ -394,7 +399,6 @@
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				7840468E2C342160009F8733 /* SummaryView.swift */,
-				782B675A2C3A8E6D00B90578 /* LevelView.swift */,
 				784046902C342363009F8733 /* StatisticMetricsView.swift */,
 				782B67572C3A78E600B90578 /* In App Purchases */,
 				785CF9562B4FE85100528B6D /* Options */,
@@ -485,9 +489,11 @@
 			children = (
 				788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */,
 				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
-				785CF9542B4FE74E00528B6D /* OptionsView.swift */,
 				788B938F2B63F49D00BA6B28 /* AboutView.swift */,
+				785CF9542B4FE74E00528B6D /* OptionsView.swift */,
 				785C0C2A2C3C171A005CCE87 /* HelpView.swift */,
+				78A2837D2C45578F0052AA52 /* RefundView.swift */,
+				78A2837B2C4551BD0052AA52 /* PremiumSection.swift */,
 			);
 			path = Options;
 			sourceTree = "<group>";
@@ -747,6 +753,7 @@
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				7877E12C2BC52A0900776890 /* TagsEditView.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
+				78A2837A2C450EA80052AA52 /* UpgradeStatus.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				7840468F2C3421CF009F8733 /* SummaryView.swift in Sources */,
 				782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */,
@@ -766,12 +773,12 @@
 				784083622C21C2AD004C0857 /* StatisticsMainHeader.swift in Sources */,
 				785C4ABE2B40B14000EB07F8 /* DownwindManager.swift in Sources */,
 				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
+				78A2837E2C45578F0052AA52 /* RefundView.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
 				783A53CD2B5E6C9A00701D7F /* ListInfoLabel.swift in Sources */,
 				7877E1392BC52BB400776890 /* _FlexibleView.swift in Sources */,
 				783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */,
 				78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */,
-				782B675B2C3A8E6D00B90578 /* LevelView.swift in Sources */,
 				78A283782C43D5130052AA52 /* StartView.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
@@ -791,6 +798,7 @@
 				78C4D23A2BA6DADB00639E65 /* LocationData.swift in Sources */,
 				7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
+				78A2837C2C4551BD0052AA52 /* PremiumSection.swift in Sources */,
 				782B67592C3A7A2B00B90578 /* UpgradeView.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */,
@@ -978,7 +986,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "7III Tracker";
+				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can display your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can save your sessions.";
@@ -1025,7 +1033,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "7III Tracker";
+				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can display your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can save your sessions.";
@@ -1068,7 +1076,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tracker-Watch-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Tracker Watch";
+				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can save your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can display your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
@@ -1104,7 +1112,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tracker-Watch-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Tracker Watch";
+				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can save your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can display your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";

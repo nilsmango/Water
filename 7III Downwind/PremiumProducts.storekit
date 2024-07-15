@@ -22,10 +22,15 @@
   ],
   "settings" : {
     "_applicationInternalID" : "6495238780",
+    "_billingIssuesEnabled" : false,
+    "_compatibilityTimeRate" : {
+      "3" : 6
+    },
     "_developerTeamID" : "A9H57996U3",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 742463299.84492505,
+    "_lastSynchronizedDate" : 742654080.37019897,
     "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
     "_storefront" : "USA",
     "_storeKitErrors" : [
       {
@@ -76,7 +81,8 @@
         "enabled" : false,
         "name" : "Offer Code Redeem Sheet"
       }
-    ]
+    ],
+    "_timeRate" : 1003
   },
   "subscriptionGroups" : [
     {
@@ -100,7 +106,7 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Monthly access to all premium features.",
+              "description" : "Test the waters monthly.",
               "displayName" : "Kook",
               "locale" : "en_US"
             }
@@ -125,7 +131,7 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Yearly access to all premium features.",
+              "description" : "Battle the swell all year long.",
               "displayName" : "Weekend Warrior",
               "locale" : "en_US"
             }

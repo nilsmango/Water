@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CircleImage: View {
     var image: Image
+    var shadow: Bool = true
     
     var body: some View {
         image
@@ -19,7 +20,7 @@ struct CircleImage: View {
                 Circle()
             )
 //            .overlay(Circle().stroke(Color.white, lineWidth: 4))
-            .shadow(radius: 7)
+            .shadow(radius: shadow ? 7 : 0)
             
     }
 }

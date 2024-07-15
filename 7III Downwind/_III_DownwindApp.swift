@@ -24,6 +24,9 @@ struct _III_DownwindApp: App {
                     downwindManager.loadUser()
                     downwindManager.requestHealthAuthorization()
                     downwindManager.loadRunStatistics()
+                    Task {
+                        await downwindManager.updateCustomerProductStatus()
+                    }
                 }
                 .overlay {
                     OverlayAlertView(showAlert: $showAlert, text: alertText)

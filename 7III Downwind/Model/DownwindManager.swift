@@ -51,8 +51,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         Task {
             // During store initialization, request products from the App Store.
             await loadProductIdentifiersAndRequestProducts()
-            // Deliver products that the customer purchases.
-            await updateCustomerProductStatus()
+            
         }
         
         setupLocationManager()
@@ -2546,7 +2545,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("Premium") var hasPurchasedPremium = false
     @Published var purchasedProducts = [Product]()
     @Published var premiumProducts: [Product] = []
-    
+    @Published var subscriptionRenewalDate: Date? = nil
+    // TODO: setting this status not seem to work as expected.
+    @Published var nextBillingText = ""
     @Published var showUpgradeSheet = false
     @Published var statisticsCount = 0
     @Published var unableToLoadProducts = false
@@ -2633,6 +2634,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 case .nonConsumable:
                     if let goat = premiumProducts.first(where: { $0.id == transaction.productID }) {
                         currentEntitledPurchases.append(goat)
+                        nextBillingText = await createNextBillingText(product: goat)
                     }
                 case .nonRenewable:
                     // we don't have this in our purchases
@@ -2640,6 +2642,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 case .autoRenewable:
                     if let subscription = premiumProducts.first(where: { $0.id == transaction.productID }) {
                         currentEntitledPurchases.append(subscription)
+                        if let renewalDate = transaction.expirationDate {
+                                subscriptionRenewalDate = renewalDate
+                        }
+                        nextBillingText = await createNextBillingText(product: subscription)
                     }
                 default:
                     break
@@ -2649,17 +2655,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         
-        DispatchQueue.main.async {
-            // update has purchased premium
-            if currentEntitledPurchases.isEmpty {
-                self.hasPurchasedPremium = false
-            } else {
-                self.hasPurchasedPremium = true
-            }
-            
-            // Update the store information with the purchased products.
-            self.purchasedProducts = currentEntitledPurchases
-        }
+        // Update the store information with the purchased products.
+        purchasedProducts = currentEntitledPurchases
+        hasPurchasedPremium = !currentEntitledPurchases.isEmpty
+        print("has Purchased Premium changed to: \(hasPurchasedPremium)")
     }
     
     func purchase(product: Product) async throws -> Transaction? {
@@ -2684,5 +2683,52 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         default:
             return nil
         }
+    }
+    
+    func createImageForPurchasedProduct(product: Product? = nil) -> Image {
+        let id = product?.id ?? purchasedProducts.first?.id
+        if let id = id {
+            if id == "com.project7iii.tracker.goat" {
+                return Image("poseidonGoat")
+            } else if id == "com.project7iii.tracker.weekend_warrior" {
+                return Image("weekendWarrior")
+            }
+        }
+        return Image("kook")
+    }
+    
+    
+    private func createNextBillingText(product: Product) async -> String {
+            if product.id == "com.project7iii.tracker.goat" {
+                return "Lifetime"
+            } else {
+                if let date = subscriptionRenewalDate {
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateStyle = .medium
+                    dateFormatter.timeStyle = .none
+                    let renewalDateString = dateFormatter.string(from: date)
+                    
+                    if let willRenew = await isWillRenew(product: product), willRenew == false {
+                        return "Expires: \(renewalDateString)"
+                    } else {
+                        return "Next billing date: \(renewalDateString)"
+                    }                    
+                }
+                return ""
+            }
+        
+    }
+    
+    func isWillRenew(product: Product) async -> Bool? {
+        guard let SubscriptionGroupStatus = try? await product.subscription?.status.first else {
+            print("There is no AutoRenewable Group")
+            return nil
+        }
+        
+        guard case .verified(let renewalInfo) = SubscriptionGroupStatus.renewalInfo else {
+            print("The App Store could not verify your subscription status.")
+            return nil
+        }
+        return renewalInfo.willAutoRenew
     }
 }

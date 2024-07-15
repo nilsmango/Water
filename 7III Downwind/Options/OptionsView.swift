@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct OptionsView: View {
     @ObservedObject var downwindManager: DownwindManager
@@ -17,6 +18,8 @@ struct OptionsView: View {
     @State private var status = ""
     @State private var isShowingAlert = false
     @State private var showUpgradeView = false
+    @State private var showManage = false
+    
     var body: some View {
         List {
             Section {
@@ -129,6 +132,8 @@ struct OptionsView: View {
                 
             }
             
+            PremiumSection(downwindManager: downwindManager, showUpgradeView: $showUpgradeView, showManage: $showManage)
+            
             Section {
 //                Picker("Run List Sorting", selection: $downwindManager.runListSorting) {
 //                    ForEach(RunListSorting.allCases) { sortCase in
@@ -145,20 +150,6 @@ struct OptionsView: View {
 //                Toggle(isOn: $downwindManager.showListDetail, label: {
 //                    Text("Show List Details")
 //                })
-                
-                if downwindManager.hasPurchasedPremium {
-                    Text("Your Premium Status: \(downwindManager.purchasedProducts.first?.displayName ?? "unknown")")
-                } else {
-                    Button("Get Premium") {
-                        showUpgradeView = true
-                    }
-                    
-                    Button("Restore Purchase") {
-                        Task {
-                            await downwindManager.updateCustomerProductStatus()
-                        }
-                    }
-                }
                 
                 
             } header: {
@@ -220,6 +211,19 @@ struct OptionsView: View {
                     }
             }
         })
+        .manageSubscriptionsSheet(isPresented: $showManage)
+        .onAppear {
+            Task {
+                await downwindManager.updateCustomerProductStatus()
+            }
+        }
+        .onChange(of: showManage) {
+            if showManage == false {
+                Task {
+                    await downwindManager.updateCustomerProductStatus()
+                }
+            }
+        }
     }
 }
 
