@@ -152,7 +152,7 @@ struct UpgradeView: View {
                                                 
                         HStack {
                             Spacer()
-                            Text("[Terms & Conditions](https://project7iii.com/tracker/terms-and-conditions/) and [Privacy Policy](https://project7iii.com/tracker/privacy-policy/)")
+                            Text("[Terms & Conditions](https://project7iii.com/water/terms-and-conditions/) and [Privacy Policy](https://project7iii.com/water/privacy-policy/)")
                             Spacer()
                         }
                         .font(.caption)
@@ -162,7 +162,7 @@ struct UpgradeView: View {
                     
                     
                     
-                    Text("Note: If you are unable to afford an upgrade, please email us at tracker@project7iii.com for a coupon code.")
+                    Text("Note: If you are unable to afford an upgrade, please email us at hi@project7iii.com for a coupon code.")
                     
                         .font(.caption)
                         .padding([.bottom, .horizontal])
