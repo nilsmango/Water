@@ -2622,6 +2622,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @MainActor
     func updateCustomerProductStatus() async {
         var currentEntitledPurchases: [Product] = []
+        subscriptionRenewalDate = nil
 
         // Iterate through all of the user's purchased products.
         for await result in Transaction.currentEntitlements {

@@ -77,7 +77,10 @@
         "name" : "Refund Request Sheet"
       },
       {
-        "current" : null,
+        "current" : {
+          "index" : 4,
+          "type" : "generic"
+        },
         "enabled" : false,
         "name" : "Offer Code Redeem Sheet"
       }

@@ -17,6 +17,7 @@ struct UpgradeView: View {
     @State private var isShowingError = false
     @State private var errorTitle = ""
     @State private var wasPurchased = false
+    @State private var showCodeSheet = false
     
     enum Tab {
         case poseidon, weekend, kook
@@ -133,7 +134,7 @@ struct UpgradeView: View {
                     
                     VStack {
                         Button {
-                            // TODO: redeem code
+                            showCodeSheet = true
                         } label: {
                             Text("Redeem Code")
                                 .fontWeight(.bold)
@@ -176,24 +177,37 @@ struct UpgradeView: View {
         .alert(isPresented: $isShowingError, content: {
             Alert(title: Text(errorTitle), message: nil, dismissButton: .default(Text("Okay")))
         })
+            
+        .offerCodeRedemption(isPresented: $showCodeSheet, onCompletion: { result in
+            switch result {
+            case .success:
+                successClosingOfSheet()
+            case .failure(let error):
+                print("Code redemption failed: \(error.localizedDescription)")
+            }
+        })
         }
     }
     
     func buy(product: Product) async {
         do {
             if try await downwindManager.purchase(product: product) != nil {
-                withAnimation {
-                    wasPurchased = true
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                    showUpgradeView = false
-                }
+                successClosingOfSheet()
             }
         } catch StoreError.failedVerification {
             errorTitle = "Your purchase could not be verified by the App Store."
             isShowingError = true
         } catch {
             print("Failed purchase for \(product.id). \(error)")
+        }
+    }
+    
+    func successClosingOfSheet() {
+        withAnimation {
+            wasPurchased = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            showUpgradeView = false
         }
     }
 }
