@@ -245,9 +245,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 // update and save the tracker sessions count
                                 self.trackerSessionsCount += 1
                                 let sessionsLeft = self.freeTrackerSessionsNumber - self.trackerSessionsCount
-                                if sessionsLeft == -5 || sessionsLeft == 2 {
+                                if sessionsLeft == -5 {
                                     if SKPaymentQueue.canMakePayments() && !self.hasPurchasedPremium {
                                         self.showUpgradeSheet = true
+                                    }
+                                }
+                                // if not yet asked ask every 10th session for a review.
+                                if sessionsLeft == 0 || (sessionsLeft < 0 && sessionsLeft % 10 == 0) {
+                                    if self.currentAppVersion != self.lastVersionPromptedForReview {
+                                        self.showPromptForReview = true
+                                        // The app already displayed the rating and review request view. Store this current version.
+                                        self.lastVersionPromptedForReview = self.currentAppVersion
                                     }
                                 }
                             }
@@ -2731,4 +2739,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         return renewalInfo.willAutoRenew
     }
+    
+    // MARK: - Review
+    
+    /// The most recent app version that prompts for a review.
+    @AppStorage("lastVersionPromptedForReview") var lastVersionPromptedForReview = ""
+    @Published var showPromptForReview = false
+    private let currentAppVersion: String = {
+        guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return "Unknown"
+        }
+        return version
+    }()
 }
