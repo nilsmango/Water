@@ -2659,7 +2659,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // Update the store information with the purchased products.
         purchasedProducts = currentEntitledPurchases
         hasPurchasedPremium = !currentEntitledPurchases.isEmpty
-        print("has Purchased Premium changed to: \(hasPurchasedPremium)")
     }
     
     func purchase(product: Product) async throws -> Transaction? {

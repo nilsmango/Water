@@ -181,7 +181,9 @@ struct UpgradeView: View {
         .offerCodeRedemption(isPresented: $showCodeSheet, onCompletion: { result in
             switch result {
             case .success:
-                successClosingOfSheet()
+                if downwindManager.hasPurchasedPremium {
+                    successClosingOfSheet()
+                }
             case .failure(let error):
                 print("Code redemption failed: \(error.localizedDescription)")
             }
