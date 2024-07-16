@@ -93,7 +93,11 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             tags = tags.sorted()
             
             DispatchQueue.main.async {
-                self.statisticTags = tags
+                for tag in tags {
+                    if !self.statisticTags.contains(where: { $0.lowercased() == tag.lowercased() }) {
+                        self.statisticTags.append(tag)
+                    }
+                }
             }
         }
     }
@@ -172,6 +176,13 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         currentWatch.enableWaterLock()
         currentWatch.play(.start)
+        
+        // add tags to saved tags
+        for tag in activeTags {
+            if !statisticTags.contains(where: { $0.lowercased() == tag.lowercased() }) {
+                statisticTags.append(tag)
+            }
+        }
     }
     
     // Request authorization to access HealthKit and to access location
