@@ -6,9 +6,15 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct UpgradeView: View {
     @ObservedObject var workoutManager: WorkoutManager
+    @Binding var showUpgradeView: Bool
+
+    @State private var wasPurchased = false
+    @State private var isShowingError = false
+    @State private var errorTitle = ""
 
     struct FeatureItem: Identifiable {
         let id = UUID()
@@ -24,56 +30,108 @@ struct UpgradeView: View {
         ]
         
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                Text("Enhance your water sports tracking experience with our premium features.\nYour support helps us continually improve 7III Water and develop exciting new capabilities.\n\nAll early adopter offers come with:")
-                Text("")
-                
-                ForEach(features) { feature in
-                    HStack {
-                        Image(systemName: feature.symbol)
-                            .foregroundColor(.primary)
-                        Text(feature.text)
+        if workoutManager.unableToLoadProducts {
+            VStack {
+                Text("Unable to load products.")
+                Text("If you are offline, try again when online.")
+                Button("Try Again") {
+                    Task {
+                        await workoutManager.loadProductIdentifiersAndRequestProducts()
                     }
-                    .padding(.vertical, 5)
-                    
                 }
-                
-                Text("")
-                
-                WatchUpgradeShowcase(image: Image("poseidonGoatW"), title: "GOAT", subTitle: "Pay once, conquer the seven seas.", priceButton: "$9.99 / Lifetime", buttonColor: .darkBlue)
-                    .padding(.bottom, 16)
-                
-                WatchUpgradeShowcase(image: Image("weekendWarriorW"), title: "Weekend Warrior", subTitle: "A year of fun for a modest price.", priceButton: "$6.99 / Year", buttonColor: .warriorWatch)
-                    .padding(.bottom, 16)
-
-                WatchUpgradeShowcase(image: Image("watchKook"), title: "Kook", subTitle: "Hang loose. Pay once a month", priceButton: "$0.99 / Month", buttonColor: .kookSea)
-                    .padding(.bottom, 16)
-                
-                Button {
-                    // TODO: redeem code
-                } label: {
-                    Text("Redeem Code")
-                    
-                }
-                .tint(.primary)
-                
-                
-                Text("[Terms & Conditions](https://project7iii.com/water/terms-and-conditions/) and [Privacy Policy](https://project7iii.com/water/privacy-policy/)")
-                    .font(.caption)
-                    .padding(.top, 16)
-                
-                Text("Note: If you are unable to afford an upgrade, please email us at hi@project7iii.com for a coupon code.")
-                    .font(.caption)
-                    .padding(.bottom)
-                    .padding(.top, 8)
+                .buttonStyle(.borderedProminent)
             }
-            .padding(.horizontal)
+            .navigationTitle("Upgrade")
+            
+        } else {
+            ScrollView {
+                VStack(alignment: .leading) {
+                    Text("Enhance your water sports tracking experience with our premium features.\nYour support helps us continually improve 7III Water and develop exciting new capabilities.\n\nAll early adopter offers come with:")
+                    Text("")
+                    
+                    ForEach(features) { feature in
+                        HStack {
+                            Image(systemName: feature.symbol)
+                                .foregroundColor(.primary)
+                            Text(feature.text)
+                        }
+                        .padding(.vertical, 5)
+                        
+                    }
+                    
+                    Text("")
+                    
+                    if workoutManager.premiumProducts.isEmpty {
+                        HStack {
+                            Spacer()
+                            ProgressView("Loading Products")
+                            Spacer()
+                        }
+                        .frame(minHeight: 40)
+                    } else {
+                        if let goatProduct = workoutManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.goat"}) {
+                            WatchUpgradeShowcase(image: Image("poseidonGoatW"), title: goatProduct.displayName, subTitle: goatProduct.description, priceButton: "\(goatProduct.displayPrice) / Lifetime", buttonColor: .darkBlue, makeLabel: wasPurchased) { Task {
+                                await buy(product: goatProduct)
+                            }}
+                            .padding(.bottom, 16)
+                        }
+                        
+                        if let weekendWarriorProduct = workoutManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.weekend_warrior"}) {
+                            WatchUpgradeShowcase(image: Image("weekendWarriorW"), title: weekendWarriorProduct.displayName, subTitle: weekendWarriorProduct.description, priceButton: "\(weekendWarriorProduct.displayPrice) / Year", buttonColor: .warriorWatch, makeLabel: wasPurchased) { Task {
+                                await buy(product: weekendWarriorProduct)
+                            }}
+                            .padding(.bottom, 16)
+                        }
+                        
+                        if let kookProduct = workoutManager.premiumProducts.first(where: { $0.id == "com.project7iii.tracker.kook"}) {
+                            WatchUpgradeShowcase(image: Image("watchKook"), title: kookProduct.displayName, subTitle: kookProduct.description, priceButton: "\(kookProduct.displayPrice) / Month", buttonColor: .kookSea, makeLabel: wasPurchased) { Task {
+                                await buy(product: kookProduct)
+                            }}
+                            .padding(.bottom, 16)
+                        }
+                    }
+                                        
+                    Text("[Terms & Conditions](https://project7iii.com/water/terms-and-conditions/) and [Privacy Policy](https://project7iii.com/water/privacy-policy/)")
+                        .font(.caption)
+                        .padding(.top, 16)
+                    
+                    Text("Note: If you are unable to afford an upgrade, please email us at hi@project7iii.com for a coupon code.")
+                        .font(.caption)
+                        .padding(.bottom)
+                        .padding(.top, 8)
+                }
+                .padding(.horizontal)
+            }
+            .navigationTitle("Upgrade")
+            .alert(isPresented: $isShowingError, content: {
+                Alert(title: Text(errorTitle), message: nil, dismissButton: .default(Text("Okay")))
+            })
         }
-        .navigationTitle("Upgrade")
+    }
+    
+    func buy(product: Product) async {
+        do {
+            if try await workoutManager.purchase(product: product) != nil {
+                successClosingOfSheet()
+            }
+        } catch StoreError.failedVerification {
+            errorTitle = "Your purchase could not be verified by the App Store."
+            isShowingError = true
+        } catch {
+            print("Failed purchase for \(product.id). \(error)")
+        }
+    }
+    
+    func successClosingOfSheet() {
+        withAnimation {
+            wasPurchased = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            showUpgradeView = false
+        }
     }
 }
 
 #Preview {
-    UpgradeView(workoutManager: WorkoutManager())
+    UpgradeView(workoutManager: WorkoutManager(), showUpgradeView: .constant(true))
 }

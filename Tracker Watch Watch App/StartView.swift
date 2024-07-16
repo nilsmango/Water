@@ -55,7 +55,7 @@ struct StartView: View {
                     }
                     
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 15)
                 
             }
             .padding()

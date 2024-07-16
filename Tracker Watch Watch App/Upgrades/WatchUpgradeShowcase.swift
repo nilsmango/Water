@@ -13,7 +13,8 @@ struct WatchUpgradeShowcase: View {
     var subTitle: String
     var priceButton: String
     var buttonColor: Color
-    
+    var makeLabel: Bool = false
+    let buttonAction: () -> Void
     
     var body: some View {
         CircleImage(image: image)
@@ -33,7 +34,11 @@ struct WatchUpgradeShowcase: View {
         Button {
             // get the in app purchase
         } label: {
-            Text(priceButton)
+            if makeLabel {
+                Label("Thank You!", systemImage: "checkmark")
+            } else {
+                Text(priceButton)
+            }
         }
         .buttonStyle(.borderedProminent)
         .tint(buttonColor)
@@ -41,5 +46,5 @@ struct WatchUpgradeShowcase: View {
 }
 
 #Preview {
-    WatchUpgradeShowcase(image: Image("kook"), title: "GOAT", subTitle: "Be ready for the seven seas.", priceButton: "$5.99 / Lifetime", buttonColor: .trackerGold)
+    WatchUpgradeShowcase(image: Image("kook"), title: "GOAT", subTitle: "Be ready for the seven seas.", priceButton: "$5.99 / Lifetime", buttonColor: .trackerGold, buttonAction: { print("Button Pressed") })
 }

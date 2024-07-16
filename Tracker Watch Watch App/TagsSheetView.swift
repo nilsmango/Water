@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct TagsSheetView: View {
-    var workoutManager: WorkoutManager
-    
+    @ObservedObject var workoutManager: WorkoutManager
+
     @Binding var tags: [String]
     
     private var trackerTags: [String] {
@@ -106,7 +106,7 @@ struct TagsSheetView: View {
         .navigationTitle("Select Tags")
         .sheet(isPresented: $showUpgradeSheet, content: {
             NavigationStack {
-                UpgradeView(workoutManager: workoutManager)
+                UpgradeView(workoutManager: workoutManager, showUpgradeView: $showUpgradeSheet)
             }
         })
     }
