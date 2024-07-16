@@ -51,7 +51,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         Task {
             // During store initialization, request products from the App Store.
             await loadProductIdentifiersAndRequestProducts()
-            
         }
         
         setupLocationManager()
@@ -2554,7 +2553,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var purchasedProducts = [Product]()
     @Published var premiumProducts: [Product] = []
     @Published var subscriptionRenewalDate: Date? = nil
-    // TODO: setting this status not seem to work as expected.
     @Published var nextBillingText = ""
     @Published var showUpgradeSheet = false
     @Published var statisticsCount = 0
