@@ -1,0 +1,50 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "grid-size" : "regular"
+  },
+  "stickers" : [
+    {
+      "filename" : "7III.sticker"
+    },
+    {
+      "filename" : "Water Love.sticker"
+    },
+    {
+      "filename" : "Offshore.sticker"
+    },
+    {
+      "filename" : "Bumps.sticker"
+    },
+    {
+      "filename" : "DW Splash.sticker"
+    },
+    {
+      "filename" : "Goat Surf.sticker"
+    },
+    {
+      "filename" : "Cute Dolphin.sticker"
+    },
+    {
+      "filename" : "Goat Riding.sticker"
+    },
+    {
+      "filename" : "Poseidon Goat.sticker"
+    },
+    {
+      "filename" : "SUP Riding.sticker"
+    },
+    {
+      "filename" : "Water Warrior.sticker"
+    },
+    {
+      "filename" : "Dodo.sticker"
+    },
+    {
+      "filename" : "Dodo Kook.sticker"
+    }
+  ]
+}

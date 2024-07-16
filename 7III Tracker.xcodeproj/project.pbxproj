@@ -110,6 +110,8 @@
 		78A2837A2C450EA80052AA52 /* UpgradeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A283792C450EA80052AA52 /* UpgradeStatus.swift */; };
 		78A2837C2C4551BD0052AA52 /* PremiumSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837B2C4551BD0052AA52 /* PremiumSection.swift */; };
 		78A2837E2C45578F0052AA52 /* RefundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837D2C45578F0052AA52 /* RefundView.swift */; };
+		78A283892C4671420052AA52 /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78A283882C4671420052AA52 /* Stickers.xcassets */; };
+		78A2838D2C4671420052AA52 /* 7III Water.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 78A283862C4671400052AA52 /* 7III Water.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
 		78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E32C18C93F00C75A60 /* WorkoutType.swift */; };
 		78B388E62C1A136800C75A60 /* YearlyMonthlyStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
@@ -136,9 +138,27 @@
 			remoteGlobalIDString = 78844E262C2E9D6900B703F5;
 			remoteInfo = "Tracker Watch Watch App";
 		};
+		78A2838B2C4671420052AA52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 785C4A8D2B358F7B00EB07F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78A283852C4671400052AA52;
+			remoteInfo = "7III Water Stickers";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		78A283912C4671420052AA52 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				78A2838D2C4671420052AA52 /* 7III Water.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		78FBCC192C2DB23B0091F9EA /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -253,6 +273,9 @@
 		78A283792C450EA80052AA52 /* UpgradeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeStatus.swift; sourceTree = "<group>"; };
 		78A2837B2C4551BD0052AA52 /* PremiumSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumSection.swift; sourceTree = "<group>"; };
 		78A2837D2C45578F0052AA52 /* RefundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefundView.swift; sourceTree = "<group>"; };
+		78A283862C4671400052AA52 /* 7III Water.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "7III Water.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78A283882C4671420052AA52 /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = "<group>"; };
+		78A2838A2C4671420052AA52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78A9EB072B57132F0054E9F9 /* RunShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunShareView.swift; sourceTree = "<group>"; };
 		78B388E32C18C93F00C75A60 /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
 		78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearlyMonthlyStatisticView.swift; sourceTree = "<group>"; };
@@ -374,6 +397,7 @@
 			children = (
 				785C4A972B358F7B00EB07F8 /* 7III Downwind */,
 				78844E282C2E9D6900B703F5 /* Tracker Watch Watch App */,
+				78A283872C4671400052AA52 /* 7III Water Stickers */,
 				785C4A962B358F7B00EB07F8 /* Products */,
 				78E5A85B2C32DA4100456ABC /* Frameworks */,
 			);
@@ -384,6 +408,7 @@
 			children = (
 				785C4A952B358F7B00EB07F8 /* 7III Tracker.app */,
 				78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */,
+				78A283862C4671400052AA52 /* 7III Water.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -578,6 +603,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		78A283872C4671400052AA52 /* 7III Water Stickers */ = {
+			isa = PBXGroup;
+			children = (
+				78A283882C4671420052AA52 /* Stickers.xcassets */,
+				78A2838A2C4671420052AA52 /* Info.plist */,
+			);
+			path = "7III Water Stickers";
+			sourceTree = "<group>";
+		};
 		78A9EB062B56C01B0054E9F9 /* Alerts */ = {
 			isa = PBXGroup;
 			children = (
@@ -621,11 +655,13 @@
 				785C4A922B358F7B00EB07F8 /* Frameworks */,
 				785C4A932B358F7B00EB07F8 /* Resources */,
 				78FBCC192C2DB23B0091F9EA /* Embed Watch Content */,
+				78A283912C4671420052AA52 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				78844E332C2E9D6A00B703F5 /* PBXTargetDependency */,
+				78A2838C2C4671420052AA52 /* PBXTargetDependency */,
 			);
 			name = "7III Tracker";
 			packageProductDependencies = (
@@ -656,6 +692,21 @@
 			productReference = 78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
+		78A283852C4671400052AA52 /* 7III Water */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78A2838E2C4671420052AA52 /* Build configuration list for PBXNativeTarget "7III Water" */;
+			buildPhases = (
+				78A283842C4671400052AA52 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "7III Water";
+			productName = "7III Water Stickers";
+			productReference = 78A283862C4671400052AA52 /* 7III Water.appex */;
+			productType = "com.apple.product-type.app-extension.messages-sticker-pack";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -670,6 +721,9 @@
 						CreatedOnToolsVersion = 15.1;
 					};
 					78844E262C2E9D6900B703F5 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					78A283852C4671400052AA52 = {
 						CreatedOnToolsVersion = 15.4;
 					};
 				};
@@ -693,6 +747,7 @@
 			targets = (
 				785C4A942B358F7B00EB07F8 /* 7III Tracker */,
 				78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */,
+				78A283852C4671400052AA52 /* 7III Water */,
 			);
 		};
 /* End PBXProject section */
@@ -717,6 +772,14 @@
 				78844E3B2C2EA6CB00B703F5 /* Assets.xcassets in Resources */,
 				78844E2E2C2E9D6A00B703F5 /* Assets.xcassets in Resources */,
 				78A283752C3FC2610052AA52 /* product_ids.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78A283842C4671400052AA52 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78A283892C4671420052AA52 /* Stickers.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,6 +912,11 @@
 			isa = PBXTargetDependency;
 			target = 78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */;
 			targetProxy = 78844E322C2E9D6A00B703F5 /* PBXContainerItemProxy */;
+		};
+		78A2838C2C4671420052AA52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78A283852C4671400052AA52 /* 7III Water */;
+			targetProxy = 78A2838B2C4671420052AA52 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1136,6 +1204,49 @@
 			};
 			name = Release;
 		};
+		78A2838F2C4671420052AA52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = A9H57996U3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
+				INFOPLIST_KEY_NSStickerSharingLevel = OS;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 0.2.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.tracker.-III-Water-Stickers";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		78A283902C4671420052AA52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 11;
+				DEVELOPMENT_TEAM = A9H57996U3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
+				INFOPLIST_KEY_NSStickerSharingLevel = OS;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 0.2.3;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.tracker.-III-Water-Stickers";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1162,6 +1273,15 @@
 			buildConfigurations = (
 				78844E362C2E9D6A00B703F5 /* Debug */,
 				78844E372C2E9D6A00B703F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78A2838E2C4671420052AA52 /* Build configuration list for PBXNativeTarget "7III Water" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78A2838F2C4671420052AA52 /* Debug */,
+				78A283902C4671420052AA52 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
