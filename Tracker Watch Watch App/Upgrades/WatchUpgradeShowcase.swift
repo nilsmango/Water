@@ -32,7 +32,7 @@ struct WatchUpgradeShowcase: View {
             .padding(.bottom, 8)
         
         Button {
-            // get the in app purchase
+            buttonAction()
         } label: {
             if makeLabel {
                 Label("Thank You!", systemImage: "checkmark")

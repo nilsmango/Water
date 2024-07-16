@@ -69,7 +69,7 @@
 		<key>Tracker Watch Watch App.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<key>Tracker Watch.xcscheme_^#shared#^_</key>
 		<dict>
@@ -80,6 +80,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>785C4A942B358F7B00EB07F8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>78844E262C2E9D6900B703F5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
