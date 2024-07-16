@@ -16,8 +16,8 @@ struct MetricsView: View {
     var body: some View {
         TimelineView(
             MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date(), isPaused: workoutManager.session?.state == .paused)) { context in
-                // TODO: try spacing: -10
                 VStack(alignment: .leading) {
+                Spacer(minLength: 0.0)
                 ElapsedTimeView(
                     elapsedTime: workoutManager.builder?.elapsedTime ?? 0,
                     showSubseconds: context.cadence == .live
