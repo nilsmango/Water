@@ -60,7 +60,7 @@ struct StatisticsView: View {
                                     }
                                 }
                             } footer: {
-                                if downwindManager.statisticsCount > 7 {
+                                if downwindManager.statisticsCount > 7, downwindManager.hasPurchasedPremium == false {
                                     HStack {
                                         Spacer()
                                         Button {
