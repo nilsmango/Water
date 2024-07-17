@@ -1,36 +1,43 @@
 {
   "images" : [
     {
+      "filename" : "58x58.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
+      "filename" : "87x87.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
+      "filename" : "Water Sticker 120x90.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x45"
     },
     {
+      "filename" : "Water Sticker 180x135.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x45"
     },
     {
+      "filename" : "58x58 1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
+      "filename" : "Water Sticker 134x100.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "67x50"
     },
     {
+      "filename" : "Water Sticker 148x110.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "74x55"
@@ -42,6 +49,7 @@
       "size" : "1024x1024"
     },
     {
+      "filename" : "Water Sticker 54x40.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "2x",
@@ -55,6 +63,7 @@
       "size" : "27x20"
     },
     {
+      "filename" : "Water Sticker 64x48.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "2x",
