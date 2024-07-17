@@ -61,6 +61,10 @@ struct UpgradeView: View {
             }
             .navigationTitle("Early Adopter Offer")
             
+        } else if !SKPaymentQueue.canMakePayments() {
+            VStack {
+                Text("Your device can't make purchases, either because another person has parental controls, or the device has a mobile device management (MDM) profile that blocks purchases.")
+            }
         } else {
             ScrollView {
                 VStack(alignment: .leading) {
