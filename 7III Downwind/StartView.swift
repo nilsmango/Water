@@ -20,8 +20,6 @@ struct StartView: View {
     
     @State private var showFirstTimeUserName = false
     
-    @Environment(\.requestReview) private var requestReview
-
     var body: some View {
         NavigationStack {
             VStack {
@@ -149,15 +147,6 @@ struct StartView: View {
                                 }
                             }
                         }
-                }
-            })
-            
-            .onChange(of: downwindManager.showPromptForReview, { oldValue, newValue in
-                if newValue {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
-                        requestReview()
-                        downwindManager.showPromptForReview = false
-                    }
                 }
             })
             

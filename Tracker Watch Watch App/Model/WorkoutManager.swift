@@ -694,7 +694,7 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
         DispatchQueue.main.async {
             self.running = toState == .running
         }
-        print("workoutSession func was triggered. State is now: \(toState)")
+        
         // Wait for the session to transition states before ending the builder.
         if toState == .ended {
             if withGPS {

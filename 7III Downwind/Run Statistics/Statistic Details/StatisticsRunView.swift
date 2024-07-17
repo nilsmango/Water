@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct StatisticsRunView: View {
     @ObservedObject var downwindManager: DownwindManager
@@ -31,6 +32,7 @@ struct StatisticsRunView: View {
     @State private var statisticsDataEdit = RunStatistic.empty()
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.requestReview) private var requestReview
 
     @State private var heartRates: [Date: (Double, Double)] = [:]
     
@@ -152,6 +154,16 @@ struct StatisticsRunView: View {
                         heartRates = heartRateData
                     }
                 }                
+            }
+            
+        if downwindManager.showPromptForReview {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.73) {
+                        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                                    SKStoreReviewController.requestReview(in: scene)
+                                }
+                        downwindManager.showPromptForReview = false
+                    
+                }
             }
         }
         .navigationTitle(statisticsData.runName)

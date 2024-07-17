@@ -48,9 +48,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // Start a transaction listener as close to app launch as possible so you don't miss any transactions.
         updateListenerTask = listenForTransactions()
         
+        appOpened += 1
+        
         Task {
             // During store initialization, request products from the App Store.
             await loadProductIdentifiersAndRequestProducts()
+            
+            await updateCustomerProductStatus()
         }
         
         setupLocationManager()
@@ -2627,6 +2631,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @MainActor
     func updateCustomerProductStatus() async {
+        if appOpened > 0 && appOpened % 10 == 0 && self.currentAppVersion != self.lastVersionPromptedForReview  {
+            self.showPromptForReview = true
+            // The app already displayed the rating and review request view. Store this current version.
+            self.lastVersionPromptedForReview = self.currentAppVersion
+        }
+        
+        
         var currentEntitledPurchases: [Product] = []
         subscriptionRenewalDate = nil
 
@@ -2742,6 +2753,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// The most recent app version that prompts for a review.
     @AppStorage("lastVersionPromptedForReview") var lastVersionPromptedForReview = ""
+    @AppStorage("timesOpened") var appOpened = 0
     @Published var showPromptForReview = false
     private let currentAppVersion: String = {
         guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
