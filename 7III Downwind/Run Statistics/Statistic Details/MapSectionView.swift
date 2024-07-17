@@ -22,6 +22,7 @@ struct MapSectionView: View {
         if statisticsData.runDistance > 1999 {
             Section {
                 StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
+                    .contentShape(Rectangle())
                     .onTapGesture {
                         showRounds = true
                     }
