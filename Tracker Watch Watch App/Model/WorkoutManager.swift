@@ -174,7 +174,6 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         startLocationService()
         
-        currentWatch.enableWaterLock()
         currentWatch.play(.start)
         
         // add tags to saved tags

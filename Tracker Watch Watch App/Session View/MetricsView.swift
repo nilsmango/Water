@@ -24,7 +24,7 @@ struct MetricsView: View {
                 )
                 .foregroundColor(.yellow)
                 .fontWeight(.semibold)
-                .padding(.top, 2)
+                .padding(.top, 4)
                 
                 if workoutManager.withGPS {
                     Text(
