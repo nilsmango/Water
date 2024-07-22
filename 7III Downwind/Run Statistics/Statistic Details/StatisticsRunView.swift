@@ -24,6 +24,7 @@ struct StatisticsRunView: View {
     @State private var showAlert = false
     @State private var showEditData = false
     @State private var showUpgradeSheet = false
+    @State private var showShareSheet = false
     
     @State private var tags = [String]()
     @State private var editTags = [String]()
@@ -169,7 +170,16 @@ struct StatisticsRunView: View {
         .navigationTitle(statisticsData.runName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showShareSheet = true
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
+            }
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                
                 if statisticsData.locationData.count > 2 {
                     Menu {
                         Button(action: {
@@ -364,7 +374,6 @@ struct StatisticsRunView: View {
                 }
             }
         })
-        
         .sheet(isPresented: $showRunEditView, content: {
             NavigationStack {
                     StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit, editMode: true)
@@ -390,6 +399,24 @@ struct StatisticsRunView: View {
                                 
                             }, label: {
                                 Text("Save")
+                            })
+                        }
+                    }
+            }
+        })
+        .sheet(isPresented: $showShareSheet, content: {
+            NavigationStack {
+                ShareStatisticsView(downwindManager: downwindManager, statisticsData: statisticsData)
+                    .navigationTitle("Share")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(action: {
+                                showShareSheet = false
+                            }, label: {
+                                Label("Close", systemImage: "xmark.circle.fill")
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.black, .gray)
                             })
                         }
                     }

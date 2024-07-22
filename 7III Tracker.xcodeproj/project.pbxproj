@@ -11,6 +11,13 @@
 		781562A32B94D92900E081FC /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
 		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
 		781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
+		781A4B9F2C4E45340046AE0E /* ShareOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4B9E2C4E45340046AE0E /* ShareOverlay.swift */; };
+		781A4BA12C4E46F80046AE0E /* ShareStatStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA02C4E46F80046AE0E /* ShareStatStack.swift */; };
+		781A4BA52C4E77B10046AE0E /* ShareStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA42C4E77B10046AE0E /* ShareStatisticsView.swift */; };
+		781A4BA92C4E874E0046AE0E /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA82C4E874E0046AE0E /* Snapshot.swift */; };
+		781A4BAB2C4E912F0046AE0E /* ShareImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAA2C4E912F0046AE0E /* ShareImagePreview.swift */; };
+		781A4BAD2C4E9F310046AE0E /* SharePreviewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAC2C4E9F310046AE0E /* SharePreviewWrapper.swift */; };
+		781A4BAF2C4EE64B0046AE0E /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAE2C4EE64B0046AE0E /* ActivityViewController.swift */; };
 		782B67592C3A7A2B00B90578 /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B67582C3A7A2B00B90578 /* UpgradeView.swift */; };
 		782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
 		782B675F2C3AC21C00B90578 /* UpgradeShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */; };
@@ -177,6 +184,13 @@
 		781562A22B94D92900E081FC /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
 		781562A62B94DD7500E081FC /* ShareDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDialog.swift; sourceTree = "<group>"; };
+		781A4B9E2C4E45340046AE0E /* ShareOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareOverlay.swift; sourceTree = "<group>"; };
+		781A4BA02C4E46F80046AE0E /* ShareStatStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareStatStack.swift; sourceTree = "<group>"; };
+		781A4BA42C4E77B10046AE0E /* ShareStatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareStatisticsView.swift; sourceTree = "<group>"; };
+		781A4BA82C4E874E0046AE0E /* Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
+		781A4BAA2C4E912F0046AE0E /* ShareImagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareImagePreview.swift; sourceTree = "<group>"; };
+		781A4BAC2C4E9F310046AE0E /* SharePreviewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePreviewWrapper.swift; sourceTree = "<group>"; };
+		781A4BAE2C4EE64B0046AE0E /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		782B67582C3A7A2B00B90578 /* UpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeView.swift; sourceTree = "<group>"; };
 		782B675C2C3ABBA700B90578 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeShowcase.swift; sourceTree = "<group>"; };
@@ -314,6 +328,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		781A4B9D2C4E45040046AE0E /* SocialSharing */ = {
+			isa = PBXGroup;
+			children = (
+				781A4BA42C4E77B10046AE0E /* ShareStatisticsView.swift */,
+				781A4BAE2C4EE64B0046AE0E /* ActivityViewController.swift */,
+				781A4BAA2C4E912F0046AE0E /* ShareImagePreview.swift */,
+				781A4B9E2C4E45340046AE0E /* ShareOverlay.swift */,
+				781A4BA02C4E46F80046AE0E /* ShareStatStack.swift */,
+				781A4BAC2C4E9F310046AE0E /* SharePreviewWrapper.swift */,
+			);
+			path = SocialSharing;
+			sourceTree = "<group>";
+		};
 		782B67572C3A78E600B90578 /* In App Purchases */ = {
 			isa = PBXGroup;
 			children = (
@@ -379,6 +406,7 @@
 				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
 				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
 				78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */,
+				781A4B9D2C4E45040046AE0E /* SocialSharing */,
 			);
 			path = "Statistic Details";
 			sourceTree = "<group>";
@@ -475,6 +503,7 @@
 				78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */,
 				785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */,
 				785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */,
+				781A4BA82C4E874E0046AE0E /* Snapshot.swift */,
 				78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */,
 				785C4AD02B4313EF00EB07F8 /* LocationThings.swift */,
 				785C4AD92B45EAD000EB07F8 /* Extensions.swift */,
@@ -790,6 +819,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				781A4BAB2C4E912F0046AE0E /* ShareImagePreview.swift in Sources */,
 				7840835A2C2188CF004C0857 /* HeartRateChartView.swift in Sources */,
 				7840835E2C21B279004C0857 /* MapSectionView.swift in Sources */,
 				785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */,
@@ -823,9 +853,12 @@
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
 				78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
+				781A4BA52C4E77B10046AE0E /* ShareStatisticsView.swift in Sources */,
 				78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */,
+				781A4BA92C4E874E0046AE0E /* Snapshot.swift in Sources */,
 				781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */,
 				7877E1262BC3F7A800776890 /* StatisticsDetails.swift in Sources */,
+				781A4BA12C4E46F80046AE0E /* ShareStatStack.swift in Sources */,
 				782B675F2C3AC21C00B90578 /* UpgradeShowcase.swift in Sources */,
 				78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */,
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
@@ -852,6 +885,7 @@
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
 				78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
+				781A4BAD2C4E9F310046AE0E /* SharePreviewWrapper.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
 				781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */,
@@ -865,12 +899,14 @@
 				782B67592C3A7A2B00B90578 /* UpgradeView.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */,
+				781A4B9F2C4E45340046AE0E /* ShareOverlay.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,
 				784083642C21FB54004C0857 /* RunEdit.swift in Sources */,
 				785C0C2B2C3C171A005CCE87 /* HelpView.swift in Sources */,
 				7840835C2C218985004C0857 /* ChartStrideBy.swift in Sources */,
 				788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */,
 				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,
+				781A4BAF2C4EE64B0046AE0E /* ActivityViewController.swift in Sources */,
 				78B388E62C1A136800C75A60 /* YearlyMonthlyStatisticView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
