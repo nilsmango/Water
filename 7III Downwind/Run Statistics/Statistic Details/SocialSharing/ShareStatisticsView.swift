@@ -15,116 +15,164 @@ struct ShareStatisticsView: View {
     
     @State private var useMap = true
     @State private var showAverageSpeed = true
+    
+    private enum SpeedOption: String, CaseIterable {
+        case speed = "∅-Speed"
+        case pace = "∅-Pace"
+    }
+    @State private var speedSelection: SpeedOption = .speed
+    
+    @State private var showTopSpeed = false
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     @State private var showCamera = false
     @State private var previewUIView = UIView()
     @State private var shareImage: UIImage?
     @State private var showImageShareSheet = false
+    @State private var showingSaveAlert = false
+    let imageSaver = ImageSaver()
     
     var body: some View {
-            ScrollView {
-                SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showAverageSpeed: showAverageSpeed) { view in
-                                self.previewUIView = view
-                            }
-                .frame(width: UIScreen.main.bounds.width - 32, height: UIScreen.main.bounds.width - 32)
-                .shadow(radius: 5)
-                .padding(.vertical, 16)
-                
-                if useMap {
-                    Label("You can modify the map window", systemImage: "info.circle")
-                        .foregroundStyle(.secondary)
+        ScrollView {
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed) { view in
+                self.previewUIView = view
+            }
+            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+            
+            if useMap {
+                Label("You can adjust the map window", systemImage: "info.circle")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 6)
+            }
+            
+            Group {
+                //                    Toggle("Use Map", isOn: $useMap)
+                Toggle("Show Average", isOn: $showAverageSpeed)
+                if showAverageSpeed {
+                    Picker("∅-Speed Format", selection: $speedSelection) {
+                        ForEach(SpeedOption.allCases, id: \.self) { option in
+                            Text(option.rawValue).tag(option)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                 }
-                    
                 
-                Group {
-                    Toggle("Use Map", isOn: $useMap)
-                    // TODO: make this a picker
-                    Toggle("Show Average Speed (or Pace)", isOn: $showAverageSpeed)
-                    
-                    if !useMap {
-                        HStack {
-                            Button("Choose Photo") {
-                                showImagePicker = true
-                            }
-                            Spacer()
-                            Button("Take Photo") {
-                                showCamera = true
-                            }
+                Toggle("Show Top Speed", isOn: $showTopSpeed)
+                
+                if !useMap {
+                    HStack {
+                        Button("Choose Photo") {
+                            showImagePicker = true
+                        }
+                        Spacer()
+                        Button("Take Photo") {
+                            showCamera = true
                         }
                     }
                 }
-                .padding(.horizontal, 16)
-                
-                Button("Capture Image") {
+            }
+            .padding(.horizontal, 32)
+            .padding(.top, 8)
+            
+            HStack {
+                Button {
                     shareImage = captureImage()
                     showImageShareSheet = true
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
                 }
-//               
-//                if let image = shareImage {
-//                    ShareLink(item: captureImage(), preview: SharePreview("Share", image: captureImage()))
-//                    {
-//                        Label("Share", systemImage: "square.and.arrow.up")
-//                    }
-//                        .buttonStyle(.borderedProminent)
-//                        .padding()
-//                }
                 
+                Button {
+                    saveImageToPhotoLibrary()
+                } label: {
+                    Label("Save", systemImage: "square.and.arrow.down")
+                }
             }
-            .sheet(isPresented: $showImagePicker) {
-                ImagePicker(sourceType: .photoLibrary, selectedImage: $selectedImage)
-            }
-            .sheet(isPresented: $showCamera) {
-                ImagePicker(sourceType: .camera, selectedImage: $selectedImage)
-            }
-            .sheet(isPresented: $showImageShareSheet, content: {
-                        if let image = shareImage {
-                            ActivityViewController(activityItems: [image])
-                        }
-                    })
+            .buttonStyle(.borderedProminent)
+            .padding()
+            
         }
-    
-//    private func generateShareImage() -> UIImage {
-//        let content = previewView
-//        return content.snapshot()
-//    }
-    
-    private func captureImage() -> UIImage {
+        //            .background(.listBackground)
         
-                let renderer = UIGraphicsImageRenderer(size: previewUIView.bounds.size)
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker(sourceType: .photoLibrary, selectedImage: $selectedImage)
+        }
+        .sheet(isPresented: $showCamera) {
+            ImagePicker(sourceType: .camera, selectedImage: $selectedImage)
+        }
+        .sheet(isPresented: $showImageShareSheet, content: {
+            if let image = shareImage {
+                ActivityViewController(activityItems: [image])
+            }
+        })
+        .alert("Image Saved", isPresented: $showingSaveAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("The image has been saved to your photo library.")
+        }
+    }
+    
+    private func captureImage(asJPEG: Bool = false) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: previewUIView.bounds.size)
         let capturedImage = renderer.image { _ in
             previewUIView.drawHierarchy(in: previewUIView.bounds, afterScreenUpdates: true)
-                }
-        return capturedImage
-//            capturedImage = previewUIView.snapshot()
         }
+        if asJPEG {
+            if let jpegData = capturedImage.jpegData(compressionQuality: 0.9) {
+                    return UIImage(data: jpegData) ?? capturedImage
+                }
+        }
+        
+        return capturedImage
+    }
+    
+    private func saveImageToPhotoLibrary() {
+            let image = captureImage()
+            imageSaver.writeToPhotoAlbum(image: image)
+            showingSaveAlert = true
+        }
+}
+
+class ImageSaver: NSObject {
+    func writeToPhotoAlbum(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveCompleted), nil)
+    }
+
+    @objc func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            print("Error saving image: \(error.localizedDescription)")
+        } else {
+            // print("Image saved successfully")
+        }
+    }
 }
 
 struct ImagePicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
     var sourceType: UIImagePickerController.SourceType
     @Binding var selectedImage: UIImage?
-
+    
     func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.sourceType = sourceType
         picker.delegate = context.coordinator
         return picker
     }
-
+    
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {}
-
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-
+    
     class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         let parent: ImagePicker
-
+        
         init(_ parent: ImagePicker) {
             self.parent = parent
         }
-
+        
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let image = info[.originalImage] as? UIImage {
                 parent.selectedImage = image

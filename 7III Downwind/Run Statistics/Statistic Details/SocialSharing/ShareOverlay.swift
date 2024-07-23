@@ -14,6 +14,8 @@ struct ShareOverlay: View {
     var time: String
     var extraTitle: String
     var extraValue: String
+    var topSpeedValue: String?
+    var showAverageSpeed: Bool
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 0.0) {
@@ -41,11 +43,21 @@ struct ShareOverlay: View {
                     
                     ShareStatStack(title: "Time", value: time)
                     
-                    Divider()
-                        .frame(height: 35)
-                        .background(.white)
+                    if showAverageSpeed {
+                        Divider()
+                            .frame(height: 35)
+                            .background(.white)
+                        
+                        ShareStatStack(title: extraTitle, value: extraValue)
+                    }
                     
-                    ShareStatStack(title: extraTitle, value: extraValue)
+                    if let topSpeed = topSpeedValue {
+                        Divider()
+                            .frame(height: 35)
+                            .background(.white)
+                        
+                        ShareStatStack(title: "Top Speed", value: topSpeed)
+                    }
                         
                 }
                 .padding(8)
@@ -65,7 +77,7 @@ struct ShareOverlay: View {
     ZStack {
         Map()
         
-            ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km")
+        ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h", showAverageSpeed: true)
         
     }
     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)

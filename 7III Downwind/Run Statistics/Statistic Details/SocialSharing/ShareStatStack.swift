@@ -16,6 +16,7 @@ struct ShareStatStack: View {
             Text(title)
                 .font(.footnote)
             Text(value)
+                .font(.subheadline)
                 .fontWeight(.bold)
         }
         .fontDesign(.rounded)
