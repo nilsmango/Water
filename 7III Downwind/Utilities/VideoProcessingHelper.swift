@@ -55,7 +55,8 @@ struct VideoProcessingHelper {
         
         // Create overlay layer
         let overlaySize = CGSize(width: displaySize.width * 0.9, height: displaySize.width * 0.9 * Constants.previewContainerHeightMultiple)
-        let overlayOrigin = CGPoint(x: displaySize.width * 0.05, y: displaySize.width * 0.05)
+        
+        let overlayOrigin = CGPoint(x: displaySize.width * 0.05, y: 6)
         
         let overlayView = ShareVideoOverlay(
             sport: sport,
