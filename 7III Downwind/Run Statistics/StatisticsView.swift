@@ -15,6 +15,7 @@ struct StatisticsView: View {
         List {
                 if downwindManager.loadingRunStatistics {
                     WaitingForListView()
+                        .textCase(nil)
                     
                 } else {
                     
