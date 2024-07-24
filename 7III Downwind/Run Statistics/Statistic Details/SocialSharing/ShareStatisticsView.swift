@@ -26,7 +26,7 @@ struct ShareStatisticsView: View {
     @State private var showImageShareSheet = false
     @State private var showingSaveAlert = false
     let imageSaver = ImageSaver()
-    @State private var scale: Double = 0.8
+    @State private var scale: Double = 1.0
     
     var body: some View {
         ScrollView {
@@ -45,17 +45,23 @@ struct ShareStatisticsView: View {
             Group {
                 //                    Toggle("Use Map", isOn: $useMap)
                 Stepper(value: $scale, in: 0.5...1.0, step: 0.1) {
-                                Text("Overlay Scale: \(scale, specifier: "%.1f")")
-                            }
-                Toggle("Show Average", isOn: $showAverageSpeed)
-                if showAverageSpeed {
-                    Picker("∅-Speed Format", selection: $speedSelection) {
-                        ForEach(SpeedOption.allCases, id: \.self) { option in
-                            Text(option.rawValue).tag(option)
-                        }
+                    HStack {
+                        Text("Overlay Scale")
+                        Spacer()
+                        Text("\(scale, specifier: "%.1f")")
+                            .monospacedDigit()
                     }
-                    .pickerStyle(SegmentedPickerStyle())
                 }
+                
+                Picker("∅-Speed Format", selection: $speedSelection) {
+                    ForEach(SpeedOption.allCases, id: \.self) { option in
+                        Text(option.rawValue).tag(option)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .disabled(!showAverageSpeed)
+                
+                Toggle("Show \(speedSelection.rawValue)", isOn: $showAverageSpeed)
                 
                 Toggle("Show Top Speed", isOn: $showTopSpeed)
                 
@@ -92,7 +98,6 @@ struct ShareStatisticsView: View {
             .padding()
             
         }
-        //            .background(.listBackground)
         
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(sourceType: .photoLibrary, selectedImage: $selectedImage)
@@ -105,7 +110,7 @@ struct ShareStatisticsView: View {
                 ActivityViewController(activityItems: [image])
             }
         })
-        .alert("Image Saved", isPresented: $showingSaveAlert) {
+        .alert("Saved", isPresented: $showingSaveAlert) {
             Button("OK", role: .cancel) { }
         } message: {
             Text("The image has been saved to your photo library.")
