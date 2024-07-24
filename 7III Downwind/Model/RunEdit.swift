@@ -28,4 +28,5 @@ struct RunEdit: Identifiable, Codable {
     var newTags: [String]?
     
     var newWorkoutType: WorkoutType?
+    var locationString: String?
 }

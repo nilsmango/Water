@@ -622,10 +622,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.runStatistics[runIndex].startDate = runEdit?.startLocation?.timestamp ?? workout.startDate
                                 self.runStatistics[runIndex].endDate = runEdit?.finishLocation?.timestamp ?? workout.endDate
                                 self.runStatistics[runIndex].startLocation = metaData.startLocation
+                                self.runStatistics[runIndex].locationString = runEdit?.locationString
                             }
                         } else {
                             var statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate)
                             statistic.startLocation = metaData.startLocation
+                            statistic.locationString = runEdit?.locationString
                             
                             DispatchQueue.main.async {
                                 self.runStatistics.append(statistic)
@@ -810,7 +812,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func loadRouteAndHeartFromHealth(statistic: RunStatistic, completion: @escaping (Bool) -> Void) {
         let id = statistic.id
-        
+        let dispatchGroup = DispatchGroup()
+
         // only do this part when we have health
         if HKHealthStore.isHealthDataAvailable() {
             
@@ -825,48 +828,64 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 // filtering out the deleted locations
                                 if let deletedLocations = runEdit.deletedLocations {
                                     let newLocationData = locationData.filter { !deletedLocations.contains($0)}
+                                    dispatchGroup.enter()
                                     DispatchQueue.main.async {
                                         self.runStatistics[runIndex].locationData = newLocationData
+                                        dispatchGroup.leave()
                                     }
                                 } else {
+                                    dispatchGroup.enter()
                                     DispatchQueue.main.async {
                                         self.runStatistics[runIndex].locationData = locationData
+                                        dispatchGroup.leave()
                                     }
                                 }
                             } else {
+                                dispatchGroup.enter()
                                 DispatchQueue.main.async {
                                     self.runStatistics[runIndex].locationData = locationData
+                                    dispatchGroup.leave()
                                 }
                             }
                         } else {
                             // we should never have to do that
                             let run = RunStatistic(id: id, runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
+                            dispatchGroup.enter()
                             DispatchQueue.main.async {
                                 self.runStatistics.append(run)
+                                dispatchGroup.leave()
                             }
                         }
                         
                         if let averageHeartRate = averageHeartRate {
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                                dispatchGroup.enter()
                                 DispatchQueue.main.async {
                                     self.runStatistics[runIndex].averageHeartRate = averageHeartRate
+                                    dispatchGroup.leave()
                                 }
                             }
                         }
                         
-                        completion(true)
+                        dispatchGroup.notify(queue: .main) {
+                            completion(true)
+                        }
                     }
                     
                 } else {
                     if let averageHeartRate = averageHeartRate {
                         if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                            dispatchGroup.enter()
                             DispatchQueue.main.async {
                                 self.runStatistics[runIndex].averageHeartRate = averageHeartRate
+                                dispatchGroup.leave()
                             }
                         }
                     }
                     
-                    completion(true)
+                    dispatchGroup.notify(queue: .main) {
+                        completion(true)
+                    }
                 }
             }
         } else {
@@ -876,15 +895,19 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     if let runIndex = runStatistics.firstIndex(where: { $0.id == id }) {
                         let locationData = runStatistics[runIndex].locationData
                         let newLocationData = locationData.filter { !deletedLocations.contains($0)}
+                        dispatchGroup.enter()
                         DispatchQueue.main.async {
                             self.runStatistics[runIndex].locationData = newLocationData
+                            dispatchGroup.leave()
                         }
                     }
                 } else {
                     print("no deleted locations found")
                 }
             }
-            completion(false)
+            dispatchGroup.notify(queue: .main) {
+                completion(false)
+            }
         }
     }
     
@@ -1098,6 +1121,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         healthStore.execute(query)
     }
     
+    /// save location string to run edits
+    func saveLocationString(string: String, statisticsID: UUID) {
+        if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsID }) {
+            runEdits[editIndex].locationString = string
+        } else {
+            let runEdit = RunEdit(id: statisticsID, locationString: string)
+            runEdits.append(runEdit)
+        }
+        saveRunEdits()
+    }
     
     /// save statistic to disk with new tags
     func saveStatisticWithNewTags(tags: [String], type: WorkoutType, saveType: Bool = false, statisticsData: RunStatistic) {
@@ -1132,6 +1165,41 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         self.tags = self.tags.sorted()
         
+    }
+    
+    func createLocationNames(statisticsData: RunStatistic, completion: @escaping (String) -> Void) {
+        var locationName = ""
+
+        func processEndLocation() {
+            if let lastDataPoint = statisticsData.locationData.last {
+                getNameOfLocation(location: lastDataPoint) { endName in
+                    if let endName = endName, !locationName.contains("→"), locationName != endName {
+                        locationName = locationName.isEmpty ? endName : "\(locationName) → \(endName)"
+                    }
+                    completion(locationName)
+                }
+            } else {
+                completion(locationName)
+            }
+        }
+
+        if let firstDataPoint = statisticsData.locationData.first {
+            getNameOfLocation(location: firstDataPoint) { startName in
+                if let startName = startName {
+                    locationName = startName
+                }
+                processEndLocation()
+            }
+        } else if let startLocation = statisticsData.startLocation {
+            getNameOfLocation(location: startLocation) { startName in
+                if let startName = startName {
+                    locationName = startName
+                }
+                completion(locationName)
+            }
+        } else {
+            completion(locationName)
+        }
     }
     
     func saveEditedRoute(newStatistic: RunStatistic, updatingExternal: Bool = false) {

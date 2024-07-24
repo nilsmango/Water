@@ -49,7 +49,7 @@ struct StatisticsRunView: View {
             Section {
                 StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm")
             } header: {
-                StatisticsMainHeader(cutDate: cutDate, locationName: locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
+                StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
             }
             
             if !statisticsData.locationData.isEmpty {
@@ -107,6 +107,7 @@ struct StatisticsRunView: View {
                     }
                 
         }
+
         .onAppear {
             if statisticsData.tags != nil {
                 tags = statisticsData.tags!
@@ -114,36 +115,17 @@ struct StatisticsRunView: View {
             
             downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
                 
-                // create location start and end names after loading route
-                    if let firstDataPoint = statisticsData.locationData.first {
-                        downwindManager.getNameOfLocation(location: firstDataPoint) { name in
-                            if let name = name {
-                                locationName = name
-                            }
-                            
-                            if let lastDataPoint = statisticsData.locationData.last {
-                                downwindManager.getNameOfLocation(location: lastDataPoint) { name in
-                                    if let name = name {
-                                        if locationName.contains("→") == false && locationName != name {
-                                            if locationName == "" {
-                                                locationName = name
-                                            } else {
-                                                locationName += " → " + name
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            
-                        }
-                    } else if let startLocation = statisticsData.startLocation {
-                        downwindManager.getNameOfLocation(location: startLocation) { name in
-                            if let name = name {
-                                locationName = name
-                            }
+                if statisticsData.locationString == nil || statisticsData.locationString == "" {
+                    // create location start and end names after loading route
+                    downwindManager.createLocationNames(statisticsData: statisticsData) { location in
+                        locationName = location
+                        DispatchQueue.main.async {
+                            downwindManager.saveLocationString(string: locationName, statisticsID: statisticsData.id)
+                            statisticsData.locationString = locationName
                         }
                     }
-                
+                }
+
                 // update some things if we have location data
                 if !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 {
                     DispatchQueue.main.async {
@@ -315,7 +297,7 @@ struct StatisticsRunView: View {
                         WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                     }
                 }
-                        .navigationTitle(locationName)
+                        .navigationTitle(statisticsData.locationString ?? locationName)
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarTrailing) {

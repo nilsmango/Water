@@ -32,6 +32,8 @@ struct RunStatistic: Identifiable, Codable {
     var endDate: Date?
     /// start location for workouts where you don't collect gps data
     var startLocation: LocationData?
+    var locationString: String?
+    
     
     // Parameterless initializer for empty()
         init() {
