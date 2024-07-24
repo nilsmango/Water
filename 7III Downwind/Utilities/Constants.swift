@@ -38,6 +38,9 @@ enum Constants {
     static let customMetadataKeyTags = "Tags"
     static let customTotalDistanceKey = "Total Distance"
     static let customLocationKey = "Location"
+    
+    static let previewContainerWidth: Double = 400.0
+    static let previewContainerHeightMultiple: Double = 0.25
 }
 
 enum Endpoints {

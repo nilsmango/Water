@@ -25,6 +25,7 @@ struct StatisticsRunView: View {
     @State private var showEditData = false
     @State private var showUpgradeSheet = false
     @State private var showShareSheet = false
+    @State private var videoSharing = false
     
     @State private var tags = [String]()
     @State private var editTags = [String]()
@@ -171,8 +172,20 @@ struct StatisticsRunView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showShareSheet = true
+                
+                Menu {
+                    Button {
+                        videoSharing = true
+                        showShareSheet = true
+                    } label: {
+                        Label("Video", systemImage: "video")
+                    }
+                    Button {
+                        videoSharing = false
+                        showShareSheet = true
+                    } label: {
+                        Label("Photo", systemImage: "photo")
+                    }
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
@@ -406,8 +419,14 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showShareSheet, content: {
             NavigationStack {
-                ShareStatisticsView(downwindManager: downwindManager, statisticsData: statisticsData)
-                    .navigationTitle("Share")
+                Group {
+                    if videoSharing {
+                        VideoOverlayView()
+                    } else {
+                        ShareStatisticsView(downwindManager: downwindManager, statisticsData: statisticsData)
+                    }
+                }
+                .navigationTitle(videoSharing ? "Share Video" : "Share Photo")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
