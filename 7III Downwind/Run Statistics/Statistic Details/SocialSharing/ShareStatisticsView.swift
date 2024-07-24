@@ -15,11 +15,6 @@ struct ShareStatisticsView: View {
     
     @State private var useMap = true
     @State private var showAverageSpeed = true
-    
-    private enum SpeedOption: String, CaseIterable {
-        case speed = "∅-Speed"
-        case pace = "∅-Pace"
-    }
     @State private var speedSelection: SpeedOption = .speed
     
     @State private var showTopSpeed = false
@@ -31,10 +26,11 @@ struct ShareStatisticsView: View {
     @State private var showImageShareSheet = false
     @State private var showingSaveAlert = false
     let imageSaver = ImageSaver()
+    @State private var scale: Double = 0.8
     
     var body: some View {
         ScrollView {
-            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed) { view in
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale) { view in
                 self.previewUIView = view
             }
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
@@ -48,6 +44,9 @@ struct ShareStatisticsView: View {
             
             Group {
                 //                    Toggle("Use Map", isOn: $useMap)
+                Stepper(value: $scale, in: 0.5...1.0, step: 0.1) {
+                                Text("Overlay Scale: \(scale, specifier: "%.1f")")
+                            }
                 Toggle("Show Average", isOn: $showAverageSpeed)
                 if showAverageSpeed {
                     Picker("∅-Speed Format", selection: $speedSelection) {

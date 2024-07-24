@@ -18,20 +18,20 @@ struct ShareOverlay: View {
     var showAverageSpeed: Bool
     
     var body: some View {
+        Group {
+            
+        }
         VStack(alignment: .trailing, spacing: 0.0) {
 
-            Spacer()
             
             Text("7III Water")
                 .foregroundStyle(.white)
                 .font(.title2)
                 .fontWeight(.bold)
                 .shadow(color: .black.opacity(0.4),radius: 5)
-                .padding(.trailing, 16)
+                .padding(.trailing, 8)
             
             HStack {
-                
-                Spacer()
                 
                 HStack(alignment: .bottom) {
                                         
@@ -66,7 +66,6 @@ struct ShareOverlay: View {
                         .fill(.black)
                         .opacity(0.7)
                 }
-                .padding(8)
                 .foregroundStyle(.white)
             }
         }
@@ -77,7 +76,16 @@ struct ShareOverlay: View {
     ZStack {
         Map()
         
-        ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h", showAverageSpeed: true)
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h", showAverageSpeed: true)
+                    .scaleEffect(0.5, anchor: UnitPoint(x: 1, y: 1))
+            }
+            .padding(8)
+        }
+        
         
     }
     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)

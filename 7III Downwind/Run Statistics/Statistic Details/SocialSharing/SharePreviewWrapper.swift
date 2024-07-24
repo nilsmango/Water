@@ -14,11 +14,12 @@ struct SharePreviewWrapper: UIViewRepresentable {
     var showingSpeedInsteadPace: Bool
     var showTopSpeed: Bool
     var showAverageSpeed: Bool
+    var scale: Double
     
     let onRendered: (UIView) -> Void
     
     func makeUIView(context: Context) -> UIView {
-        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed))
+        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale))
         controller.view.backgroundColor = .clear
         DispatchQueue.main.async {
             self.onRendered(controller.view)
@@ -27,7 +28,7 @@ struct SharePreviewWrapper: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIView, context: Context) {
-        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed))
+        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale))
         controller.view.backgroundColor = .clear
         DispatchQueue.main.async {
             self.onRendered(controller.view)
