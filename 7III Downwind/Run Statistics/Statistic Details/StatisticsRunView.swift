@@ -178,7 +178,7 @@ struct StatisticsRunView: View {
                         videoSharing = true
                         showShareSheet = true
                     } label: {
-                        Label("Video", systemImage: "video")
+                        Label("Video", systemImage: "film")
                     }
                     Button {
                         videoSharing = false
