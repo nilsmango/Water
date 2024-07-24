@@ -421,7 +421,7 @@ struct StatisticsRunView: View {
             NavigationStack {
                 Group {
                     if videoSharing {
-                        VideoOverlayView()
+                        VideoOverlayView(downwindManager: downwindManager, statisticsData: statisticsData)
                     } else {
                         ShareStatisticsView(downwindManager: downwindManager, statisticsData: statisticsData)
                     }
