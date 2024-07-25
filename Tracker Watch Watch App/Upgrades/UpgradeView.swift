@@ -68,7 +68,10 @@ struct UpgradeView: View {
                     if workoutManager.premiumProducts.isEmpty {
                         HStack {
                             Spacer()
-                            ProgressView("Loading Products")
+                            VStack {
+                                ProgressView("Loading Products")
+                                Text("If nothing loads please email us at hi@project7iii.com")
+                            }
                             Spacer()
                         }
                         .frame(minHeight: 40)

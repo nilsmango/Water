@@ -102,6 +102,9 @@ struct TagsSheetView: View {
         }
         .onAppear {
             allTags = Array(Set(trackerTags + tags)).sorted()
+            Task {
+                await workoutManager.updateCustomerProductStatus()
+            }
         }
         .navigationTitle("Select Tags")
         .sheet(isPresented: $showUpgradeSheet, content: {
