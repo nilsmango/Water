@@ -27,10 +27,11 @@ struct ShareStatisticsView: View {
     @State private var showingSaveAlert = false
     let imageSaver = ImageSaver()
     @State private var scale: Double = 1.0
+    @State private var showLocation = true
     
     var body: some View {
         ScrollView {
-            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale) { view in
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation) { view in
                 self.previewUIView = view
             }
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
@@ -52,6 +53,7 @@ struct ShareStatisticsView: View {
                             .monospacedDigit()
                     }
                 }
+                Toggle("Show Location", isOn: $showLocation)
                 
                 Picker("∅-Speed Format", selection: $speedSelection) {
                     ForEach(SpeedOption.allCases, id: \.self) { option in

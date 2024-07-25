@@ -16,6 +16,8 @@ struct ShareOverlay: View {
     var extraValue: String
     var topSpeedValue: String?
     var showAverageSpeed: Bool
+    var locationName: String?
+    var showLocation: Bool
     
     var body: some View {
         Group {
@@ -23,13 +25,27 @@ struct ShareOverlay: View {
         }
         VStack(alignment: .trailing, spacing: 0.0) {
 
+                Text("7III Water")
+                    .foregroundStyle(.white)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .shadow(color: .black.opacity(0.4),radius: 5)
+                    .padding(.trailing, 8)
+                
+                if locationName != nil && locationName != "" && showLocation {
+                    HStack {
+                        Image(systemName: "location.fill")
+                        Text(locationName!)
+                    }
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .fontDesign(.rounded)
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.4),radius: 5)
+                    .padding(.trailing, 8)
+                    .padding(.bottom, 8)
+                }
             
-            Text("7III Water")
-                .foregroundStyle(.white)
-                .font(.title2)
-                .fontWeight(.bold)
-                .shadow(color: .black.opacity(0.4),radius: 5)
-                .padding(.trailing, 8)
             
             HStack {
                 
@@ -80,8 +96,8 @@ struct ShareOverlay: View {
             Spacer()
             HStack {
                 Spacer()
-                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h", showAverageSpeed: true)
-                    .scaleEffect(0.5, anchor: UnitPoint(x: 1, y: 1))
+                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true)
+                    .scaleEffect(1, anchor: UnitPoint(x: 1, y: 1))
             }
             .padding(8)
         }

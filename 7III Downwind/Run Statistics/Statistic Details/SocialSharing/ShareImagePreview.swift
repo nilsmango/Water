@@ -16,6 +16,8 @@ struct ShareImagePreview: View {
     var selectedImage: UIImage?
     var showAverageSpeed: Bool
     var scale: Double
+    var locationName: String?
+    var showLocation: Bool
     
     var body: some View {
         ZStack {
@@ -54,7 +56,9 @@ struct ShareImagePreview: View {
                             makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) :
                             downwindManager.calculateAveragePace(statistic: statisticsData),
                         topSpeedValue: showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil,
-                        showAverageSpeed: showAverageSpeed
+                        showAverageSpeed: showAverageSpeed, 
+                        locationName: locationName,
+                        showLocation: showLocation
                     )
                     .scaleEffect(scale, anchor: UnitPoint(x: 1, y: 1))
                 }
@@ -68,5 +72,5 @@ struct ShareImagePreview: View {
 }
 
 #Preview {
-    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, showAverageSpeed: true, scale: 1)
+    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, showAverageSpeed: true, scale: 1, locationName: "Ipsach", showLocation: true)
 }
