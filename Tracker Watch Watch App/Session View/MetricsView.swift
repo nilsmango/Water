@@ -16,8 +16,8 @@ struct MetricsView: View {
     var body: some View {
         TimelineView(
             MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date(), isPaused: workoutManager.session?.state == .paused)) { context in
-                VStack(alignment: .leading) {
-                Spacer(minLength: 0.0)
+                VStack(alignment: .leading, spacing: WKInterfaceDevice.current().screenBounds.width > 184 ? -12 : -13) {
+                Spacer()
                 ElapsedTimeView(
                     elapsedTime: workoutManager.builder?.elapsedTime ?? 0,
                     showSubseconds: context.cadence == .live
@@ -118,7 +118,7 @@ struct MetricsView: View {
             )
             .frame(maxWidth: .infinity, alignment: .leading)
             .ignoresSafeArea(edges: .bottom)
-            .scenePadding()
+            .scenePadding(.horizontal)
             .padding(.top)
         }
     }

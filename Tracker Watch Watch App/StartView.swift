@@ -55,7 +55,7 @@ struct StartView: View {
                     }
                     
                 }
-                .padding(.horizontal, 15)
+                .padding(.horizontal, WKInterfaceDevice.current().screenBounds.width > 184 ? 15 : 6)
                 
             }
             .padding()
