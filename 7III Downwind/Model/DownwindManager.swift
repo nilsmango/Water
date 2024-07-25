@@ -1238,12 +1238,24 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if oldRoute.first! != newStatistic.locationData.first! {
                 newRunEdit.startLocation = newStatistic.locationData.first!
                 runStatistics[index].startDate = newRunEdit.startLocation?.timestamp
+                
+                // updating location string
+                createLocationNames(statisticsData: newStatistic) { location in
+                        self.saveLocationString(string: location, statisticsID: newStatistic.id)
+                        self.runStatistics[index].locationString = location
+                }
             }
             
             // update finish if changed
             if oldRoute.last! != newStatistic.locationData.last! {
                 newRunEdit.finishLocation = newStatistic.locationData.last!
                 runStatistics[index].endDate = newRunEdit.finishLocation?.timestamp
+                
+                // updating location string
+                createLocationNames(statisticsData: newStatistic) { location in
+                        self.saveLocationString(string: location, statisticsID: newStatistic.id)
+                        self.runStatistics[index].locationString = location
+                }
             }
             
             // update run time, speeds etc.
