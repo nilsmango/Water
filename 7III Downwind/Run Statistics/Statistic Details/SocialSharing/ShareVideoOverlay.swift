@@ -59,6 +59,7 @@ struct VideoOverlayContainer: View {
                     ShareStatStack(title: "Time", value: time)
                     
                     if showAverageSpeed {
+                        
                         Divider()
                             .frame(height: 35)
                             .background(.white)
@@ -67,6 +68,7 @@ struct VideoOverlayContainer: View {
                     }
                     
                     if let topSpeed = topSpeedValue {
+                        
                         Divider()
                             .frame(height: 35)
                             .background(.white)

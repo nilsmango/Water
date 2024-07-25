@@ -8,6 +8,11 @@
 import SwiftUI
 import PhotosUI
 
+struct IdentifiableImage: Identifiable {
+    let id = UUID()
+    let image: UIImage
+}
+
 struct ShareStatisticsView: View {
     @ObservedObject var downwindManager: DownwindManager
     
@@ -23,7 +28,7 @@ struct ShareStatisticsView: View {
     @State private var showCamera = false
     @State private var previewUIView = UIView()
     @State private var shareImage: UIImage?
-    @State private var showImageShareSheet = false
+    @State private var showImageShareSheet: IdentifiableImage?
     @State private var showingSaveAlert = false
     let imageSaver = ImageSaver()
     @State private var scale: Double = 1.0
@@ -84,8 +89,7 @@ struct ShareStatisticsView: View {
             
             HStack {
                 Button {
-                    shareImage = captureImage()
-                    showImageShareSheet = true
+                    showImageShareSheet = IdentifiableImage(image: captureImage())
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
@@ -107,10 +111,8 @@ struct ShareStatisticsView: View {
         .sheet(isPresented: $showCamera) {
             ImagePicker(sourceType: .camera, selectedImage: $selectedImage)
         }
-        .sheet(isPresented: $showImageShareSheet, content: {
-            if let image = shareImage {
-                ActivityViewController(activityItems: [image])
-            }
+        .sheet(item: $showImageShareSheet, content: { item in
+            ActivityViewController(activityItems: [item.image])
         })
         .alert("Saved", isPresented: $showingSaveAlert) {
             Button("OK", role: .cancel) { }
