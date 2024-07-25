@@ -80,6 +80,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var routeBuilder: HKWorkoutRouteBuilder? = nil
     var workoutBuilder: HKWorkoutBuilder? = nil
     
+    /// backup to health
+    var backupWorkoutData = [RunStatistic]()
+    
     /// Activates the run statistic tracking (only tracking)
     func startStatistic(tags: [String] = []) {
         // Safety first
@@ -114,7 +117,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             newStatistic.workoutType = workoutType
-            newStatistic.startDate = Date.now
+            let startDate = Date.now
+            newStatistic.startDate = startDate
             runStatistics.append(newStatistic)
             currentRunStatisticIndex = runStatistics.endIndex - 1
             
@@ -124,10 +128,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     configuration.locationType = .outdoor
                     
                     workoutBuilder = HKWorkoutBuilder(healthStore: healthStore, configuration: configuration, device: .local())
-                    workoutBuilder?.beginCollection(withStart: Date.now, completion: { _, _ in
+                    workoutBuilder?.beginCollection(withStart: startDate, completion: { _, _ in
                         // starting
                     })
-                    
                     routeBuilder = HKWorkoutRouteBuilder(healthStore: healthStore, device: .local())
                 }
             
@@ -142,7 +145,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     runStatistics[currentRunStatisticIndex].locationData = []
                 }
                 runStatistics[currentRunStatisticIndex].tags = tags
-            runStatistics[currentRunStatisticIndex].startDate = Date.now
+            let startDate = Date.now
+            runStatistics[currentRunStatisticIndex].startDate = startDate
                 runStatistics[currentRunStatisticIndex].workoutType = workoutType
                 
                 // start health kit workout and route builders
@@ -152,7 +156,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     configuration.locationType = .outdoor
                     
                     workoutBuilder = HKWorkoutBuilder(healthStore: healthStore, configuration: configuration, device: .local())
-                    workoutBuilder?.beginCollection(withStart: Date.now, completion: { _, _ in
+                    workoutBuilder?.beginCollection(withStart: startDate, completion: { _, _ in
                         // starting
                     })
                     
@@ -174,6 +178,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // saving the workout
             if HKHealthStore.isHealthDataAvailable() {
+                saveWorkoutToHealthBackup()
                 saveHealthWorkout()
             } else {
                 // save the statistics to disk if we don't have health available
@@ -187,6 +192,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
     }    
+    
+    private func saveWorkoutToHealthBackup() {
+        let activeRunStatistic = runStatistics[currentRunStatisticIndex]
+        backupWorkoutData.append(activeRunStatistic)
+        saveBackupWorkoutDataToDisk()
+    }
     
     private func saveHealthWorkout() {
         showingSummarySheet = true
@@ -435,6 +446,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // File name of the statistics data
     private let fileName = "locationStatistics.data"
     private let editFileName = "runEdits.data"
+    private let backupWorkoutDataFileName = "backupWorkout.data"
     
     
     /// Save runStatistics to disk
@@ -567,6 +579,29 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
     }
     
+    private func loadBackupWorkoutDataFromDisk() {
+        do {
+            let url = try self.getDocumentsDirectory().appendingPathComponent(self.backupWorkoutDataFileName)
+            let data = try Data(contentsOf: url)
+            let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+            backupWorkoutData = decodedStatistics
+        } catch {
+            print("Error loading runStatistics: \(error)")
+        }
+    }
+    
+    func saveBackupWorkoutDataToDisk() {
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try JSONEncoder().encode(self.backupWorkoutData)
+                let url = try self.getDocumentsDirectory().appendingPathComponent(self.backupWorkoutDataFileName)
+                try data.write(to: url)
+            } catch {
+                print("Error saving runStatistics: \(error)")
+            }
+        }
+    }
+    
     
     /// Load runStatistics from disk
     func loadRunStatistics() {
@@ -585,6 +620,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     // Update UI on the main thread
                     self.runStatistics = decodedStatistics
                 }
+            
+                // getting the backup health from disk
+                self.loadBackupWorkoutDataFromDisk()
             
             do {
                 // getting the runEdits
@@ -608,8 +646,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         if let runEditIndex = self.runEdits.firstIndex(where: { $0.id == workout.uuid }) {
                             runEdit = self.runEdits[runEditIndex]
                         }
-                        
-                        let metaData = self.getWorkoutMetadata(workout: workout)
+                        // check if there is a backup
+                        let backup = self.backupWorkoutData.first(where: { $0.startDate == workout.startDate })
+                        // get meta data
+                        let metaData = self.getWorkoutMetadata(workout: workout, backup: backup)
+                        // create the statistic
                         if let runIndex = self.runStatistics.firstIndex(where: { $0.id == workout.uuid }) {
                             DispatchQueue.main.async {
                                 self.runStatistics[runIndex].runTime = runEdit?.newTotalTime ?? workout.duration / 60
@@ -718,7 +759,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return extraStatistic.id
     }
     
-    private func getWorkoutMetadata(workout: HKWorkout) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double, startLocation: LocationData?) {
+    private func getWorkoutMetadata(workout: HKWorkout, backup: RunStatistic?) -> (tags: [String], workoutType: WorkoutType, averageSpeed: Double, topSpeed: Double, totalDistance: Double, startLocation: LocationData?) {
         let rawWorkoutType = workout.metadata?[Constants.customMetadataKeyWorkoutType] as? String ?? ""
         let tagsString = workout.metadata?[Constants.customMetadataKeyTags] as? String ?? ""
         let tags = tagsString.split(separator: " ").map { String($0) }
@@ -730,7 +771,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // Assuming the unit is meters per second (m/s), convert it to kilometers per hour (km/h)
             topSpeed = maxSpeedQuantity.doubleValue(for: .meter().unitDivided(by: .second())) * 3.6
         } else {
-            topSpeed = 0
+            topSpeed = backup?.topSpeed ?? 0
         }
         
         let averageSpeed: Double
@@ -738,15 +779,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // Assuming the unit is meters per second (m/s), convert it to kilometers per hour (km/h)
             averageSpeed = averageSpeedQuantity.doubleValue(for: .meter().unitDivided(by: .second())) * 3.6
         } else {
-            averageSpeed = 0
+            averageSpeed = backup?.averageSpeed ?? 0
         }
+        
         
         let totalDistance: Double
         if let distanceQuantity = workout.metadata?[Constants.customTotalDistanceKey] as? HKQuantity {
             // Assuming the unit is meters per second (m/s), convert it to kilometers per hour (km/h)
             totalDistance = distanceQuantity.doubleValue(for: .meter())
         } else {
-            totalDistance = 0
+            totalDistance = backup?.runDistance ?? 0
         }
         
         let startCLLocation = workout.metadata?[Constants.customLocationKey] as? String ?? nil
@@ -758,6 +800,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                let longitude = Double(components[1].trimmingCharacters(in: .whitespaces)) {
                 startLocation = LocationData(timestamp: Date(), latitude: latitude, longitude: longitude)
             }
+        } else {
+            startLocation = backup?.startLocation
         }
         
         return (tags: tags, workoutType: workoutType, averageSpeed: averageSpeed, topSpeed: topSpeed, totalDistance: totalDistance, startLocation: startLocation)
@@ -822,6 +866,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 if let route = route {
                     self.locationDataFromWorkoutRoute(route: route) { locationData in
                         if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                            var locationData = locationData
+                            // find backup
+                            if let backupIndex = self.backupWorkoutData.firstIndex(where: { $0.startDate == statistic.startDate }) {
+                                if locationData.isEmpty {
+                                    locationData = self.backupWorkoutData[backupIndex].locationData
+                                } else {
+                                    self.backupWorkoutData.remove(at: backupIndex)
+                                    self.saveBackupWorkoutDataToDisk()
+                                }
+                            }
                             
                             // we only need to edit if we have a run edit
                             if let runEdit = self.runEdits.first(where: { $0.id == id }) {
@@ -1281,20 +1335,27 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 
                 // find locations missing in the newStatistic, in relation to the original locations
                 loadWorkoutRouteFromID(id: newStatistic.id) { route in
+                    
+                    func createEdits(locationData: [LocationData]) {
+                        let deletedLocations = self.findMissingLocationData(original: locationData, new: newStatistic.locationData)
+                        newRunEdit.deletedLocations = deletedLocations
+                        
+                        // save newRunEdit to the runEdit array if or replace if it exists.
+                        if let index = self.runEdits.firstIndex(where: { $0.id == newRunEdit.id }) {
+                            self.runEdits[index] = newRunEdit
+                        } else {
+                            self.runEdits.append(newRunEdit)
+                        }
+                        self.saveRunEdits()
+                    }
+                    
                     if let route = route {
                         self.locationDataFromWorkoutRoute(route: route) { locationData in
-                            let originalLocationData = locationData
-                            let deletedLocations = self.findMissingLocationData(original: originalLocationData, new: newStatistic.locationData)
-                            newRunEdit.deletedLocations = deletedLocations
-                            
-                            // save newRunEdit to the runEdit array if or replace if it exists.
-                            if let index = self.runEdits.firstIndex(where: { $0.id == newRunEdit.id }) {
-                                self.runEdits[index] = newRunEdit
-                            } else {
-                                self.runEdits.append(newRunEdit)
-                            }
-                            self.saveRunEdits()
+                            createEdits(locationData: locationData)
                         }
+                        // check if we find a backup
+                    } else if let backupLocationData = self.backupWorkoutData.first(where: { $0.startDate == self.runStatistics[index].startDate })?.locationData {
+                        createEdits(locationData: backupLocationData)
                     }
                 }
                 
@@ -1707,7 +1768,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         revertedRunStatistic.locationData = locationData
                         completion(revertedRunStatistic)
                     }
-                } else {
+                } else if let backup = self.backupWorkoutData.first(where: { $0.startDate == statistic.startDate }) {
+                    completion(backup)
+            } else {
                     completion(nil) // Return nil if the route is not found
                 }
             }
