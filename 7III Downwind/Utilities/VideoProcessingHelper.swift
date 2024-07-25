@@ -17,7 +17,9 @@ struct VideoProcessingHelper {
         extraTitle: String,
         extraValue: String,
         topSpeedValue: String?,
-        showAverageSpeed: Bool
+        showAverageSpeed: Bool,
+        showLocation: Bool,
+        locationName: String?
     ) async throws -> URL {
         let composition = AVMutableComposition()
         
@@ -54,7 +56,7 @@ struct VideoProcessingHelper {
         let displaySize = videoIsPortrait ? CGSize(width: videoSize.height, height: videoSize.width) : videoSize
         
         // Create overlay layer
-        let overlaySize = CGSize(width: displaySize.width * 0.9, height: displaySize.width * 0.9 * Constants.previewContainerHeightMultiple)
+        let overlaySize = CGSize(width: displaySize.width * 0.9, height: displaySize.width * 0.9 * (showLocation && locationName != nil ? Constants.previewContainerHeightMultipleLocation : Constants.previewContainerHeightMultiple))
         
         let overlayOrigin = CGPoint(x: displaySize.width * 0.05, y: 6)
         
@@ -66,7 +68,9 @@ struct VideoProcessingHelper {
             extraValue: extraValue,
             topSpeedValue: topSpeedValue,
             showAverageSpeed: showAverageSpeed,
-            scale: overlaySize.width / Constants.previewContainerWidth
+            scale: overlaySize.width / Constants.previewContainerWidth,
+            showLocation: showLocation,
+            locationName: locationName
         )
         
         let overlayImage = try await renderOverlay(overlayView, size: overlaySize)

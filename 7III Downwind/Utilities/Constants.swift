@@ -41,6 +41,7 @@ enum Constants {
     
     static let previewContainerWidth: Double = 400.0
     static let previewContainerHeightMultiple: Double = 0.25
+    static let previewContainerHeightMultipleLocation: Double = 0.3
 }
 
 enum Endpoints {

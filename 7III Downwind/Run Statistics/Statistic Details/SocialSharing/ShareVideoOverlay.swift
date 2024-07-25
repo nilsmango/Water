@@ -16,6 +16,8 @@ struct VideoOverlayContainer: View {
     var extraValue: String
     var topSpeedValue: String?
     var showAverageSpeed: Bool
+    var showLocation: Bool
+    var locationName: String?
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 0.0) {
@@ -27,6 +29,20 @@ struct VideoOverlayContainer: View {
                 .fontWeight(.bold)
                 .shadow(color: .black.opacity(0.4),radius: 5)
                 .padding(.trailing, 16)
+            
+            if locationName != nil && locationName != "" && showLocation {
+                HStack {
+                    Image(systemName: "location.fill")
+                    Text(locationName!)
+                }
+                .font(.subheadline)
+                .fontWeight(.bold)
+                .fontDesign(.rounded)
+                .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.4),radius: 5)
+                .padding(.trailing, 16)
+//                .padding(.bottom, 4)
+            }
             
             HStack {
                 
@@ -69,7 +85,7 @@ struct VideoOverlayContainer: View {
                 .foregroundStyle(.white)
             }
         }
-        .frame(width: Constants.previewContainerWidth, height: Constants.previewContainerWidth * Constants.previewContainerHeightMultiple)
+        .frame(width: Constants.previewContainerWidth, height: Constants.previewContainerWidth * (showLocation && locationName != nil ? Constants.previewContainerHeightMultipleLocation : Constants.previewContainerHeightMultiple))
 //        .frame(width: UIScreen.main.bounds.width)
     }
 }
@@ -83,6 +99,8 @@ struct ShareVideoOverlay: View {
     var topSpeedValue: String?
     var showAverageSpeed: Bool
     var scale: Double
+    var showLocation: Bool
+    var locationName: String?
     
     var body: some View {
         
@@ -93,11 +111,12 @@ struct ShareVideoOverlay: View {
                 extraTitle: extraTitle,
                 extraValue: extraValue,
                 topSpeedValue: topSpeedValue,
-                showAverageSpeed: showAverageSpeed
+                showAverageSpeed: showAverageSpeed,
+                showLocation: showLocation,
+                locationName: locationName
             )
             .scaleEffect(scale)
          
-        
     }
 }
 
@@ -110,9 +129,12 @@ struct ShareVideoOverlay: View {
         extraValue: "3:00 /km",
         topSpeedValue: "23 km/h",
         showAverageSpeed: true,
-        scale: 1
+        scale: 1,
+        showLocation: true,
+        locationName: "Ipsach"
     )
+    .background(.blue)
     
 //    .frame(width: 100)
-//    .frame(width: 100, height: 540) // Example container size
+//    .frame(width: 1000, height: 1080) // Example container size
 }

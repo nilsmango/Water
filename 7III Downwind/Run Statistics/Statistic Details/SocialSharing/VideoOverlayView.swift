@@ -15,11 +15,10 @@ struct VideoOverlayView: View {
     @ObservedObject var downwindManager: DownwindManager
     var statisticsData: RunStatistic
     
+    @State private var showLocation = true
     @State private var showTopSpeed = true
     @State private var showAverageSpeed = true
-    
     @State private var speedSelection: SpeedOption = .speed
-    
     
     @State private var selectedVideo: URL?
     @State private var showVideoPicker = false
@@ -31,13 +30,11 @@ struct VideoOverlayView: View {
     var body: some View {
 //        ScrollView {
             VStack {
-                
                 HStack {
                     Text("Overlay")
                         .font(.headline)
                     Spacer()
                 }
-                
                 
                 ShareVideoOverlay(
                     sport: statisticsData.workoutType?.prettyString ?? "Surfing",
@@ -49,7 +46,9 @@ struct VideoOverlayView: View {
                         downwindManager.calculateAveragePace(statistic: statisticsData),
                     topSpeedValue: showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil,
                     showAverageSpeed: showAverageSpeed,
-                    scale: 1.0
+                    scale: 0.9,
+                    showLocation: showLocation,
+                    locationName: statisticsData.locationString
                 )
                 .frame(width: UIScreen.main.bounds.width - 32)
                 .padding(.vertical, 8)
@@ -59,6 +58,9 @@ struct VideoOverlayView: View {
                 }
                 
                 Group {
+                    if statisticsData.locationString != nil {
+                        Toggle("Show Location", isOn: $showLocation)
+                    }
                     Toggle("Show Average", isOn: $showAverageSpeed)
                     if showAverageSpeed {
                         Picker("∅-Speed Format", selection: $speedSelection) {
@@ -182,7 +184,9 @@ struct VideoOverlayView: View {
                 makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) :
                 downwindManager.calculateAveragePace(statistic: statisticsData),
                 topSpeedValue: showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil,
-                showAverageSpeed: showAverageSpeed
+                showAverageSpeed: showAverageSpeed,
+                showLocation: showLocation, 
+                locationName: statisticsData.locationString
             )
         } catch {
             self.error = error
