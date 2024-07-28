@@ -17,7 +17,7 @@ struct MetricsView: View {
         TimelineView(
             MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date(), isPaused: workoutManager.session?.state == .paused)) { context in
                 VStack(alignment: .leading, spacing: WKInterfaceDevice.current().screenBounds.width > 184 ? -4 : -6) {
-                Spacer()
+                    Spacer(minLength: 0.0)
                 ElapsedTimeView(
                     elapsedTime: workoutManager.builder?.elapsedTime ?? 0,
                     showSubseconds: context.cadence == .live
