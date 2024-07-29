@@ -52,6 +52,7 @@
 		784083622C21C2AD004C0857 /* StatisticsMainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */; };
 		784083642C21FB54004C0857 /* RunEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083632C21FB54004C0857 /* RunEdit.swift */; };
 		784083672C258112004C0857 /* GroupedTagsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083662C258112004C0857 /* GroupedTagsListView.swift */; };
+		7857BF342C57C16600AD7F4F /* VideoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7857BF332C57C16600AD7F4F /* VideoPicker.swift */; };
 		785C0C2B2C3C171A005CCE87 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C2A2C3C171A005CCE87 /* HelpView.swift */; };
 		785C0C2D2C3D740C005CCE87 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
 		785C0C2F2C3D7496005CCE87 /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C2E2C3D7496005CCE87 /* UpgradeView.swift */; };
@@ -226,6 +227,7 @@
 		784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMainHeader.swift; sourceTree = "<group>"; };
 		784083632C21FB54004C0857 /* RunEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunEdit.swift; sourceTree = "<group>"; };
 		784083662C258112004C0857 /* GroupedTagsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedTagsListView.swift; sourceTree = "<group>"; };
+		7857BF332C57C16600AD7F4F /* VideoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPicker.swift; sourceTree = "<group>"; };
 		785C0C2A2C3C171A005CCE87 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		785C0C2E2C3D7496005CCE87 /* UpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeView.swift; sourceTree = "<group>"; };
 		785C0C312C3D7956005CCE87 /* WatchUpgradeShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchUpgradeShowcase.swift; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 				781A4BA02C4E46F80046AE0E /* ShareStatStack.swift */,
 				781A4BAC2C4E9F310046AE0E /* SharePreviewWrapper.swift */,
 				781A4BB02C4FAD5E0046AE0E /* VideoOverlayView.swift */,
+				7857BF332C57C16600AD7F4F /* VideoPicker.swift */,
 				781A4BB42C4FDFE70046AE0E /* ShareVideoOverlay.swift */,
 			);
 			path = SocialSharing;
@@ -858,6 +861,7 @@
 				783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				781A4BB12C4FAD5E0046AE0E /* VideoOverlayView.swift in Sources */,
+				7857BF342C57C16600AD7F4F /* VideoPicker.swift in Sources */,
 				7877E12C2BC52A0900776890 /* TagsEditView.swift in Sources */,
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				78A2837A2C450EA80052AA52 /* UpgradeStatus.swift in Sources */,

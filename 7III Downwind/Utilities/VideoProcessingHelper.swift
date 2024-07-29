@@ -19,7 +19,8 @@ struct VideoProcessingHelper {
         topSpeedValue: String?,
         showAverageSpeed: Bool,
         showLocation: Bool,
-        locationName: String?
+        locationName: String?,
+        instagramReel: Bool
     ) async throws -> URL {
         let composition = AVMutableComposition()
         
@@ -58,7 +59,7 @@ struct VideoProcessingHelper {
         // Create overlay layer
         let overlaySize = CGSize(width: displaySize.width * 0.9, height: displaySize.width * 0.9 * (showLocation && locationName != nil ? Constants.previewContainerHeightMultipleLocation : Constants.previewContainerHeightMultiple))
         
-        let overlayOrigin = CGPoint(x: displaySize.width * 0.05, y: 6)
+        let overlayOrigin = CGPoint(x: displaySize.width * 0.05, y: instagramReel ? displaySize.height - (overlaySize.height * 1.7) : 6)
         
         let overlayView = ShareVideoOverlay(
             sport: sport,
@@ -70,7 +71,8 @@ struct VideoProcessingHelper {
             showAverageSpeed: showAverageSpeed,
             scale: overlaySize.width / Constants.previewContainerWidth,
             showLocation: showLocation,
-            locationName: locationName
+            locationName: locationName,
+            instagramReel: instagramReel
         )
         
         let overlayImage = try await renderOverlay(overlayView, size: overlaySize)

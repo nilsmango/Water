@@ -17,6 +17,7 @@ struct VideoOverlayView: View {
     @State private var showTopSpeed = true
     @State private var showAverageSpeed = true
     @State private var speedSelection: SpeedOption = .speed
+    @State private var instagramReel = false
     
     @State private var selectedVideo: URL?
     @State private var showVideoPicker = false
@@ -48,10 +49,13 @@ struct VideoOverlayView: View {
                     showAverageSpeed: hasDistance ? showAverageSpeed : true,
                     scale: 0.9,
                     showLocation: showLocation,
-                    locationName: statisticsData.locationString
+                    locationName: statisticsData.locationString,
+                    instagramReel: instagramReel
                 )
                 .frame(width: UIScreen.main.bounds.width - 32)
                 .padding(.vertical, 8)
+                .padding(.top, instagramReel ? 0 : 40)
+                .padding(.bottom, instagramReel ? 40 : 0)
                 .background {
                     RoundedRectangle(cornerRadius: 10.0)
                         .fill(Gradient(colors: [.blue, .accent]))
@@ -74,6 +78,8 @@ struct VideoOverlayView: View {
                         Toggle("Show Top Speed", isOn: $showTopSpeed)
                     }
                     
+                    Toggle("Top Placement (Instagram Reels)", isOn: $instagramReel)
+                    
                 }
                 .padding(.top, 8)
                 
@@ -85,60 +91,72 @@ struct VideoOverlayView: View {
                 .padding(.top)
                 
                 Group {
+                    
                     if let videoURL = selectedVideo {
-                        VideoPlayer(player: AVPlayer(url: videoURL))
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 100)
-                            .clipped()
-                            .clipShape(Circle())
-                            .disabled(true)
-                            .overlay {
-                                Image(systemName: isProcessing ? "gearshape.arrow.triangle.2.circlepath" : "checkmark")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(width: 50, height: 50)
-                                                    .foregroundColor(.white)
-                                                    .shadow(color: .black.opacity(0.5), radius: 5)
-                            }
-                            
-                        if isProcessing {
-                            ProgressView("Processing Video\nPlease let me work, this might take some time!")
-                            
-                        } else if processedVideo != nil {
-                            Button {
-                                processedVideo = nil
-                                selectedVideo = nil
-                                showVideoPicker = true
-                            } label: {
-                                Label("New Video", systemImage: "arrow.counterclockwise")
-                            }
-                            .buttonStyle(.bordered)
-                            
-                            Button {
-                                showShareSheet = true
-                            } label: {
-                                Label("Share Video", systemImage: "square.and.arrow.up")
-                            }
-                            .buttonStyle(.borderedProminent)
-                        } else {
-                            Button {
-                                selectedVideo = nil
-                                showVideoPicker = true
-                            } label: {
-                                Label("Select other Video", systemImage: "arrow.counterclockwise")
-                            }
-                            .buttonStyle(.bordered)
-                            
-                            Button {
-                                Task {
-                                    await processVideo()
-                                    showShareSheet = true
+                        HStack {
+                            VideoPlayer(player: AVPlayer(url: videoURL))
+                                .aspectRatio(contentMode: .fill)
+                                .frame(height: 100)
+                                .clipped()
+                                .clipShape(Circle())
+                                .disabled(true)
+                                .overlay {
+                                    Image(systemName: isProcessing ? "gearshape.arrow.triangle.2.circlepath" : "checkmark")
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 50, height: 50)
+                                                        .foregroundColor(.white)
+                                                        .shadow(color: .black.opacity(0.5), radius: 5)
                                 }
-                            } label: {
-                                Label("Add Overlay and Process", systemImage: "film.stack")
+                            
+                            Spacer(minLength: 0.0)
+                            
+                            VStack(alignment: .leading) {
+                                if isProcessing {
+                                    ProgressView("Processing Video")
+                                    Text("This might take some time, please be patient!")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    
+                                } else if processedVideo != nil {
+                                    Button {
+                                        processedVideo = nil
+                                        selectedVideo = nil
+                                        showVideoPicker = true
+                                    } label: {
+                                        Label("New Video", systemImage: "arrow.counterclockwise")
+                                    }
+                                    .buttonStyle(.bordered)
+                                    
+                                    Button {
+                                        showShareSheet = true
+                                    } label: {
+                                        Label("Share Video", systemImage: "square.and.arrow.up")
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                } else {
+                                    Button {
+                                        selectedVideo = nil
+                                        showVideoPicker = true
+                                    } label: {
+                                        Label("Other Video", systemImage: "arrow.counterclockwise")
+                                    }
+                                    .buttonStyle(.bordered)
+                                    
+                                    Button {
+                                        Task {
+                                            await processVideo()
+                                            showShareSheet = true
+                                        }
+                                    } label: {
+                                        Label("Add Overlay", systemImage: "film.stack")
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                }
                             }
-                            .buttonStyle(.borderedProminent)
                         }
+                            
+                        
                     } else {
                         Button {
                             showVideoPicker = true
@@ -189,7 +207,8 @@ struct VideoOverlayView: View {
                 topSpeedValue: hasDistance ? showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil : nil,
                 showAverageSpeed: hasDistance ? showAverageSpeed : true,
                 showLocation: showLocation,
-                locationName: statisticsData.locationString
+                locationName: statisticsData.locationString, 
+                instagramReel: instagramReel
             )
         } catch {
             self.error = error

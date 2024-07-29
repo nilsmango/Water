@@ -39,8 +39,9 @@ enum Constants {
     static let customTotalDistanceKey = "Total Distance"
     static let customLocationKey = "Location"
     
+    // video overlay and preview
     static let previewContainerWidth: Double = 400.0
-    static let previewContainerHeightMultiple: Double = 0.25
+    static let previewContainerHeightMultiple: Double = 0.2775
     static let previewContainerHeightMultipleLocation: Double = 0.3
 }
 
