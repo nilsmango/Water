@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-
-import SwiftUI
 import AVFoundation
 import AVKit
 
@@ -104,7 +102,7 @@ struct VideoOverlayView: View {
                             }
                             
                         if isProcessing {
-                            ProgressView("Processing Video")
+                            ProgressView("Processing Video\nPlease let me work, this might take some time!")
                             
                         } else if processedVideo != nil {
                             Button {
@@ -197,41 +195,6 @@ struct VideoOverlayView: View {
             self.error = error
         }
         isProcessing = false
-    }
-}
-
-struct VideoPicker: UIViewControllerRepresentable {
-    @Binding var selectedVideo: URL?
-    @Environment(\.presentationMode) var presentationMode
-    
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.delegate = context.coordinator
-        picker.mediaTypes = ["public.movie"]
-        picker.videoQuality = .typeHigh
-        picker.sourceType = .photoLibrary
-        return picker
-    }
-    
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        let parent: VideoPicker
-        
-        init(_ parent: VideoPicker) {
-            self.parent = parent
-        }
-        
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let videoURL = info[.mediaURL] as? URL {
-                parent.selectedVideo = videoURL
-            }
-            parent.presentationMode.wrappedValue.dismiss()
-        }
     }
 }
 
