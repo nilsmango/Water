@@ -27,6 +27,8 @@ struct VideoOverlayView: View {
     @State private var showShareSheet = false
     @State private var error: Error?
     
+    private var hasDistance: Bool { statisticsData.runDistance > 0 }
+    
     var body: some View {
 //        ScrollView {
             VStack {
@@ -38,14 +40,14 @@ struct VideoOverlayView: View {
                 
                 ShareVideoOverlay(
                     sport: statisticsData.workoutType?.prettyString ?? "Surfing",
-                    distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true),
+                    distance: hasDistance ? makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true) : String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal",
                     time: makePrettyTime(timeInMinutes: statisticsData.runTime),
-                    extraTitle: speedSelection.rawValue,
-                    extraValue: speedSelection == .speed ?
+                    extraTitle: hasDistance ? speedSelection.rawValue : "∅-Heart Rate",
+                    extraValue: hasDistance ? speedSelection == .speed ?
                     makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) :
-                        downwindManager.calculateAveragePace(statistic: statisticsData),
-                    topSpeedValue: showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil,
-                    showAverageSpeed: showAverageSpeed,
+                        downwindManager.calculateAveragePace(statistic: statisticsData) : String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm",
+                    topSpeedValue: hasDistance ? showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil : nil,
+                    showAverageSpeed: hasDistance ? showAverageSpeed : true,
                     scale: 0.9,
                     showLocation: showLocation,
                     locationName: statisticsData.locationString
@@ -61,16 +63,19 @@ struct VideoOverlayView: View {
                     if statisticsData.locationString != nil {
                         Toggle("Show Location", isOn: $showLocation)
                     }
-                    Toggle("Show Average", isOn: $showAverageSpeed)
-                    if showAverageSpeed {
-                        Picker("∅-Speed Format", selection: $speedSelection) {
-                            ForEach(SpeedOption.allCases, id: \.self) { option in
-                                Text(option.rawValue).tag(option)
+                    if hasDistance {
+                        Toggle("Show Average", isOn: $showAverageSpeed)
+                        if showAverageSpeed {
+                            Picker("∅-Speed Format", selection: $speedSelection) {
+                                ForEach(SpeedOption.allCases, id: \.self) { option in
+                                    Text(option.rawValue).tag(option)
+                                }
                             }
+                            .pickerStyle(SegmentedPickerStyle())
                         }
-                        .pickerStyle(SegmentedPickerStyle())
+                        Toggle("Show Top Speed", isOn: $showTopSpeed)
                     }
-                    Toggle("Show Top Speed", isOn: $showTopSpeed)
+                    
                 }
                 .padding(.top, 8)
                 
@@ -177,15 +182,15 @@ struct VideoOverlayView: View {
             processedVideo = try await VideoProcessingHelper.processVideoWithOverlay(
                 videoURL: videoURL,
                 sport: statisticsData.workoutType?.prettyString ?? "Surfing",
-                distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true),
+                distance: hasDistance ? makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true) : String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal",
                 time: makePrettyTime(timeInMinutes: statisticsData.runTime),
-                extraTitle: speedSelection.rawValue,
-                extraValue: speedSelection == .speed ?
+                extraTitle: hasDistance ? speedSelection.rawValue : "∅-Heart Rate",
+                extraValue: hasDistance ? speedSelection == .speed ?
                 makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) :
-                downwindManager.calculateAveragePace(statistic: statisticsData),
-                topSpeedValue: showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil,
-                showAverageSpeed: showAverageSpeed,
-                showLocation: showLocation, 
+                    downwindManager.calculateAveragePace(statistic: statisticsData) : String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm",
+                topSpeedValue: hasDistance ? showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil : nil,
+                showAverageSpeed: hasDistance ? showAverageSpeed : true,
+                showLocation: showLocation,
                 locationName: statisticsData.locationString
             )
         } catch {
@@ -231,5 +236,5 @@ struct VideoPicker: UIViewControllerRepresentable {
 }
 
 #Preview {
-    VideoOverlayView(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []))
+    VideoOverlayView(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 0, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []))
 }

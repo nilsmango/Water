@@ -12,6 +12,7 @@ struct VideoOverlayContainer: View {
     var sport: String
     var distance: String
     var time: String
+    var timeTitle: String
     var extraTitle: String
     var extraValue: String
     var topSpeedValue: String?
@@ -56,7 +57,7 @@ struct VideoOverlayContainer: View {
                         .frame(height: 35)
                         .background(.white)
                     
-                    ShareStatStack(title: "Time", value: time)
+                    ShareStatStack(title: timeTitle, value: time)
                     
                     if showAverageSpeed {
                         
@@ -96,6 +97,7 @@ struct ShareVideoOverlay: View {
     var sport: String
     var distance: String
     var time: String
+    var timeTitle: String = "Time"
     var extraTitle: String
     var extraValue: String
     var topSpeedValue: String?
@@ -110,6 +112,7 @@ struct ShareVideoOverlay: View {
                 sport: sport,
                 distance: distance,
                 time: time,
+                timeTitle: timeTitle,
                 extraTitle: extraTitle,
                 extraValue: extraValue,
                 topSpeedValue: topSpeedValue,
