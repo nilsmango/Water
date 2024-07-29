@@ -18,11 +18,12 @@ struct ShareOverlay: View {
     var showAverageSpeed: Bool
     var locationName: String?
     var showLocation: Bool
-    
+    var caloriesTitle: String?
+    var caloriesText: String
+    var heartTitle: String?
+    var heartText: String
+        
     var body: some View {
-        Group {
-            
-        }
         VStack(alignment: .trailing, spacing: 0.0) {
 
                 Text("7III Water")
@@ -45,8 +46,6 @@ struct ShareOverlay: View {
                     .padding(.trailing, 8)
                     .padding(.bottom, 8)
                 }
-            
-            
             HStack {
                 
                 HStack(alignment: .bottom) {
@@ -74,7 +73,22 @@ struct ShareOverlay: View {
                         
                         ShareStatStack(title: "Top Speed", value: topSpeed)
                     }
+                    
+                    if let caloriesTitle = caloriesTitle {
+                        Divider()
+                            .frame(height: 35)
+                            .background(.white)
                         
+                        ShareStatStack(title: caloriesTitle, value: caloriesText)
+                    }
+                    
+                    if let heartTitle = heartTitle {
+                        Divider()
+                            .frame(height: 35)
+                            .background(.white)
+                        
+                        ShareStatStack(title: heartTitle, value: heartText)
+                    }
                 }
                 .padding(8)
                 .background {
@@ -92,16 +106,15 @@ struct ShareOverlay: View {
     ZStack {
         Map()
         
-        VStack {
+        VStack(alignment: .trailing) {
             Spacer()
             HStack {
-                Spacer()
-                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true)
+                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true, caloriesTitle: "Calories", caloriesText: "23 kcal", heartTitle: "long her", heartText: "")
                     .scaleEffect(1, anchor: UnitPoint(x: 1, y: 1))
             }
-            .padding(8)
+            
         }
-        
+        .padding(8)
         
     }
     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)

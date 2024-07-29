@@ -20,6 +20,8 @@ struct ShareStatStack: View {
                 .fontWeight(.bold)
         }
         .fontDesign(.rounded)
+        .lineLimit(1)
+        .fixedSize(horizontal: true, vertical: false)
     }
 }
 

@@ -18,6 +18,10 @@ struct ShareImagePreview: View {
     var scale: Double
     var locationName: String?
     var showLocation: Bool
+    var showCalories: Bool
+    var showHeart: Bool
+    
+    @Binding var offset: Double
     
     var body: some View {
         ZStack {
@@ -46,31 +50,55 @@ struct ShareImagePreview: View {
             VStack {
                 Spacer()
                 HStack {
-                    Spacer()
-                    ShareOverlay(
-                        sport: statisticsData.workoutType?.prettyString ?? "Surfing",
-                        distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true),
-                        time: makePrettyTime(timeInMinutes: statisticsData.runTime),
-                        extraTitle: showingSpeedInsteadPace ? "∅-Speed" : "∅-Pace",
-                        extraValue: showingSpeedInsteadPace ?
-                            makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) :
-                            downwindManager.calculateAveragePace(statistic: statisticsData),
-                        topSpeedValue: showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil,
-                        showAverageSpeed: showAverageSpeed, 
-                        locationName: locationName,
-                        showLocation: showLocation
-                    )
-                    .scaleEffect(scale, anchor: UnitPoint(x: 1, y: 1))
+                    Spacer(minLength: 0.0)
+                    Group {
+                        let hasDistance = statisticsData.runDistance > 0
+                        
+                        ShareOverlay(
+                            sport: statisticsData.workoutType?.prettyString ?? "Surfing",
+                            distance: hasDistance ? makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true) : String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal",
+                            time: makePrettyTime(timeInMinutes: statisticsData.runTime),
+                            extraTitle: hasDistance ? showingSpeedInsteadPace ? "∅-Speed" : "∅-Pace" : "∅-Heart Rate",
+                            extraValue: hasDistance ? showingSpeedInsteadPace ?
+                                makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) :
+                                downwindManager.calculateAveragePace(statistic: statisticsData) : String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm",
+                            topSpeedValue: hasDistance ? showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil : nil,
+                            showAverageSpeed: hasDistance ? showAverageSpeed : true,
+                            locationName: locationName,
+                            showLocation: showLocation,
+                            caloriesTitle: showCalories ? "Calories" : nil,
+                            caloriesText: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal",
+                            heartTitle: showHeart ? "∅-Heart Rate" : nil,
+                            heartText: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm"
+                        )
+                        .scaleEffect(scale, anchor: UnitPoint(x: 1, y: 1))
+//                        .scaleEffect(scale)
+                    }
+                    
                 }
+                .background {
+                    GeometryReader { geo in
+                        Color.clear
+                            .onAppear {
+                                let sizeDifference = (geo.size.width - (UIScreen.main.bounds.width)) / 2
+                                if sizeDifference >= 0 {
+                                    offset = -sizeDifference + -8.0
+                                } else {
+                                    offset = -8.0
+                                }
+                            }
+                    }
+                }
+                .offset(CGSize(width: offset, height: 0))
+                
                 
             }
-            .padding(8)
+            .padding(.bottom, 8)
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
-            
         }
     }
 }
 
 #Preview {
-    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, showAverageSpeed: true, scale: 1, locationName: "Ipsach", showLocation: true)
+    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, offset: .constant(-8.0))
 }

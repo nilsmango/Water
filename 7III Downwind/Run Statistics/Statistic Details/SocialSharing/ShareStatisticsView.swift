@@ -34,12 +34,23 @@ struct ShareStatisticsView: View {
     @State private var scale: Double = 1.0
     @State private var showLocation = true
     
+    @State private var showCalories = false
+    @State private var showHeartRate = false
+    @State private var offset = -8.0
+    
     var body: some View {
         ScrollView {
-            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation) { view in
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, offset: $offset) { view in
                 self.previewUIView = view
             }
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+            .onChange(of: offset) { oldValue, newValue in
+                if oldValue >= -8.0 && newValue < -8.0 {
+                    if scale > 0.7 {
+                        scale = 0.7
+                    }
+                }
+            }
             
             if useMap {
                 Label("You can adjust the map window", systemImage: "info.circle")
@@ -60,17 +71,25 @@ struct ShareStatisticsView: View {
                 }
                 Toggle("Show Location", isOn: $showLocation)
                 
-                Picker("∅-Speed Format", selection: $speedSelection) {
-                    ForEach(SpeedOption.allCases, id: \.self) { option in
-                        Text(option.rawValue).tag(option)
+                let hasDistance = statisticsData.runDistance > 0
+                
+                if hasDistance {
+                    Picker("∅-Speed Format", selection: $speedSelection) {
+                        ForEach(SpeedOption.allCases, id: \.self) { option in
+                            Text(option.rawValue).tag(option)
+                        }
                     }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .disabled(!showAverageSpeed)
+                    
+                    Toggle("Show \(speedSelection.rawValue)", isOn: $showAverageSpeed)
+                    
+                    Toggle("Show Top Speed", isOn: $showTopSpeed)
+                    
+                    Toggle("Show Calories", isOn: $showCalories)
+                    Toggle("Show ∅-Heart Rate", isOn: $showHeartRate)
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .disabled(!showAverageSpeed)
                 
-                Toggle("Show \(speedSelection.rawValue)", isOn: $showAverageSpeed)
-                
-                Toggle("Show Top Speed", isOn: $showTopSpeed)
                 
                 if !useMap {
                     HStack {

@@ -17,11 +17,16 @@ struct SharePreviewWrapper: UIViewRepresentable {
     var scale: Double
     var locationName: String?
     var showLocation: Bool
+    var showCalories: Bool
+    var showHeartRate: Bool
+    @Binding var offset: Double
+
     
     let onRendered: (UIView) -> Void
     
+    
     func makeUIView(context: Context) -> UIView {
-        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation))
+        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, offset: $offset))
         controller.view.backgroundColor = .clear
         DispatchQueue.main.async {
             self.onRendered(controller.view)
@@ -30,7 +35,7 @@ struct SharePreviewWrapper: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIView, context: Context) {
-        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation))
+        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, offset: $offset))
         controller.view.backgroundColor = .clear
         DispatchQueue.main.async {
             self.onRendered(controller.view)
