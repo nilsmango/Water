@@ -72,7 +72,6 @@ struct ShareImagePreview: View {
                             heartText: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm"
                         )
                         .scaleEffect(scale, anchor: UnitPoint(x: 1, y: 1))
-//                        .scaleEffect(scale)
                     }
                     
                 }

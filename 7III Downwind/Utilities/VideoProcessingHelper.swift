@@ -56,6 +56,7 @@ struct VideoProcessingHelper {
         let videoIsPortrait = transform.a == 0 && transform.d == 0
         let displaySize = videoIsPortrait ? CGSize(width: videoSize.height, height: videoSize.width) : videoSize
         
+        // FIXME: These layers should actually for the height get measured with a .background(.clear) geometry reader. But this is good enough for now.
         // Create overlay layer
         let overlaySize = CGSize(width: displaySize.width * 0.9, height: displaySize.width * 0.9 * (showLocation && locationName != nil ? Constants.previewContainerHeightMultipleLocation : Constants.previewContainerHeightMultiple))
         
