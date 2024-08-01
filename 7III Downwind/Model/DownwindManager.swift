@@ -2780,7 +2780,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.lastVersionPromptedForReview = self.currentAppVersion
         }
         
-        
         var currentEntitledPurchases: [Product] = []
         subscriptionRenewalDate = nil
 
