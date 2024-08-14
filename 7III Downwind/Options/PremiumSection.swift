@@ -33,7 +33,7 @@ struct PremiumSection: View {
                 Button {
                     showUpgradeView = true
                 } label: {
-                    Label("Get Premium", systemImage: "party.popper.fill")
+                    Label("Get Premium", systemImage: "sparkles")
                 }
                 
                 Button {
