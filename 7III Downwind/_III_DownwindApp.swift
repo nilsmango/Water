@@ -22,7 +22,7 @@ struct _III_DownwindApp: App {
             StartView(downwindManager: downwindManager)
                 .onAppear {
                     downwindManager.loadUser()
-                    downwindManager.requestHealthAuthorization()
+                    downwindManager.checkHealthKitAuthorizationStatus()
                     downwindManager.loadRunStatistics()
                     Task {
                         await downwindManager.updateCustomerProductStatus()

@@ -1112,8 +1112,8 @@
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can display your sessions.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can save your sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to Health data so we can display your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to Health data so we can save your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need access to your photo library to save images.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -1160,8 +1160,8 @@
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can display your sessions.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can save your sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to Health data so we can display your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to Health data so we can save your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need access to your photo library to save images.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -1203,8 +1203,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tracker-Watch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can save your sessions.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can display your sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to Health data so we can save your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to Health data so we can display your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.project7III.tracker;
@@ -1239,8 +1239,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tracker-Watch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to HealthKit so we can save your sessions.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to HealthKit so we can display your sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to Health data so we can save your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to Health data so we can display your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.project7III.tracker;

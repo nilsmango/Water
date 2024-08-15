@@ -10,9 +10,6 @@ import SwiftUI
 struct MetricsView: View {
     @ObservedObject var workoutManager: WorkoutManager
     
-    @State private var heartScale: CGFloat = 0.9
-    @State private var animationDuration: Double = 0.5
-    
     var body: some View {
         TimelineView(
             MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date(), isPaused: workoutManager.session?.state == .paused)) { context in
@@ -74,18 +71,6 @@ struct MetricsView: View {
                     Image(systemName: "heart.fill")
                         .font(.title2)
                         .foregroundColor(.red)
-                        .scaleEffect(heartScale)
-                        .animation(
-                            .easeInOut(duration: animationDuration).repeatForever(autoreverses: true),
-                            value: heartScale
-                        )
-                        .onChange(of: workoutManager.heartRate) { oldValue, newValue in
-                            animationDuration = 60.0 / (newValue * 2)
-                            heartScale = heartScale == 0.9 ? 0.95 : 0.9
-                        }
-                        .onAppear {
-                            heartScale = heartScale == 0.9 ? 0.95 : 0.9
-                        }
                 }
                 
                 if !workoutManager.withGPS {

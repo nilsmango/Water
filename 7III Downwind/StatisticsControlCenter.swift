@@ -21,42 +21,78 @@ struct StatisticsControlCenter: View {
         VStack {
             if downwindManager.activeStatistics == false {
                 VStack {
-                    HStack {
-                        Button {
-                            downwindManager.startStatistic(tags: tags)
-
-                        } label: {
-                            Label("Start Tracking", systemImage: "play")
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.green)
-                        .padding(.trailing)
-                        
-                        Menu {
-                            ForEach(WorkoutType.allCases, id: \.self) { type in
-                                if type != .not7IIIPaddleSport && type != .not7IIISurfingSport {
-                                    Button(action: {
-                                        downwindManager.workoutType = type
-                                    }) {
-                                        if downwindManager.workoutType == type {
-                                            Label(type.prettyString, systemImage: "checkmark")
-                                        } else {
-                                            Text(type.prettyString)
+                    if downwindManager.hasHealthActivated {
+                        HStack {
+                            Button {
+                                downwindManager.checkHealthKitAuthorizationStatus()
+                                if downwindManager.hasHealthActivated {
+                                    downwindManager.startStatistic(tags: tags)
+                                }
+                            } label: {
+                                Label("Start Tracking", systemImage: "play")
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(.green)
+                            .padding(.trailing)
+                            
+                            Menu {
+                                ForEach(WorkoutType.allCases, id: \.self) { type in
+                                    if type != .not7IIIPaddleSport && type != .not7IIISurfingSport {
+                                        Button(action: {
+                                            downwindManager.workoutType = type
+                                        }) {
+                                            if downwindManager.workoutType == type {
+                                                Label(type.prettyString, systemImage: "checkmark")
+                                            } else {
+                                                Text(type.prettyString)
+                                            }
                                         }
                                     }
                                 }
+                            } label: {
+                                Text(downwindManager.workoutType.prettyString)
                             }
-                        } label: {
-                            Text(downwindManager.workoutType.prettyString)
+                            .buttonStyle(.bordered)
+                            .tint(.orange)
                         }
+                        .padding()
+                        
+                        TagsEditViewStatisticCapture(tags: $tags, downwindManager: downwindManager)
+                            .padding(.horizontal)
+                            .padding(.bottom)
+                    } else {
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Text("To track and save your sessions, please enable Health data access for 7III Water.")
+                                    .padding(.bottom)
+                                
+                                Text("**Instructions**\n1. Open the Settings app\n2. Tap 'Privacy & Security'\n3. Tap 'Health'\n4. Find and tap '7III Water'\n5. Activate all permissions")
+
+                                        .font(.callout)
+                                    .padding()
+                                    .background {
+                                       RoundedRectangle(cornerRadius: 8)
+                                            .fill(.accent.opacity(0.2))
+                                    }
+                            }
+                            Spacer()
+                        }
+                        
+                        .padding()
+                        
+                        Button(action: {
+                            if let settingsUrl = URL(string: UIApplication.openSettingsURLString),
+                                   UIApplication.shared.canOpenURL(settingsUrl) {
+                                    UIApplication.shared.open(settingsUrl)
+                                }
+                        }, label: {
+                            Label("Open Settings", systemImage: "gear")
+                        })
                         .buttonStyle(.bordered)
-                        .tint(.orange)
-                    }
-                    .padding()
-                    
-                    TagsEditViewStatisticCapture(tags: $tags, downwindManager: downwindManager)
-                        .padding(.horizontal)
+//                        .tint(.accent)
                         .padding(.bottom)
+                    }
                 }
                 .background {
                     ListBackground()

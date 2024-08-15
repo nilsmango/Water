@@ -186,12 +186,12 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // Request authorization to access HealthKit and to access location
     func requestAuthorization() {
-        // The quantity type to write to the health store.
-        let typesToShare: Set = [
-            HKQuantityType.workoutType(),
-            HKSeriesType.workoutRoute()
-        ]
-        
+        checkHealthKitAuthorizationStatus()
+        // access to location
+        locationManager?.requestWhenInUseAuthorization()
+    }
+    
+    func requestHealthKitAuthorization() {        
         // The quantity types to read from the health store.
         let typesToRead: Set = [
             HKQuantityType.workoutType(),
@@ -206,9 +206,32 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // Request authorization for those quantity types.
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
             // Handle error.
+            DispatchQueue.main.async {
+                self.checkHealthKitAuthorizationStatus()
+            }
         }
-        // access to location
-        locationManager?.requestWhenInUseAuthorization()
+    }
+    
+    // The health kit quantity type to write to the health store.
+    private let typesToShare: Set = [
+        HKQuantityType.workoutType(),
+        HKSeriesType.workoutRoute()
+    ]
+    
+    @Published var hasHealthActivated = false
+    
+    func checkHealthKitAuthorizationStatus() {
+        var hasNotAuthorized = false
+        
+        for type in typesToShare {
+            let status = healthStore.authorizationStatus(for: type)
+            if status != .sharingAuthorized {
+                hasNotAuthorized = true
+                requestHealthKitAuthorization()
+                break
+            }
+        }
+        hasHealthActivated = !hasNotAuthorized
     }
     
     private var locationManager: CLLocationManager?

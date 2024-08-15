@@ -1906,13 +1906,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     let healthStore = HKHealthStore()
     
+    private let typesToShare: Set = [
+        HKQuantityType.workoutType(),
+        HKSeriesType.workoutRoute()
+    ]
+    
+    @Published var hasHealthActivated = false
+    
     func requestHealthAuthorization() {
-        let typesToShare: Set = [
-            HKQuantityType.workoutType(),
-//            HKQuantityType(.heartRate),
-//            HKQuantityType(.activeEnergyBurned),
-            HKSeriesType.workoutRoute()
-        ]
         
         let typesToRead: Set = [
             HKQuantityType.workoutType(),
@@ -1925,7 +1926,24 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if !success {
                 print("Health Store authorization failed with error: \(String(describing: error))")
             }
+            DispatchQueue.main.async {
+                self.checkHealthKitAuthorizationStatus()
+            }
         }
+    }
+    
+    func checkHealthKitAuthorizationStatus() {
+        var hasNotAuthorized = false
+        
+        for type in typesToShare {
+            let status = healthStore.authorizationStatus(for: type)
+            if status != .sharingAuthorized {
+                hasNotAuthorized = true
+                requestHealthAuthorization()
+                break
+            }
+        }
+        hasHealthActivated = !hasNotAuthorized
     }
     
     
