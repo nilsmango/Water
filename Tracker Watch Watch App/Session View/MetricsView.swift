@@ -61,7 +61,6 @@ struct MetricsView: View {
 //                    )
                 }
                 
-                
                 HStack {
                     Text(
                         workoutManager.heartRate.formatted(
