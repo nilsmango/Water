@@ -28,20 +28,41 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @AppStorage("statisticTags") private var tagsData: Data = Data()
         
-        var tags: [String] {
-            get {
-                if let decodedTags = try? JSONDecoder().decode([String].self, from: tagsData) {
-                    return decodedTags
-                } else {
-                    return []
-                }
-            }
-            set {
-                if let encodedTags = try? JSONEncoder().encode(newValue) {
-                    tagsData = encodedTags
-                }
+    var tags: [String] {
+        get {
+            if let decodedTags = try? JSONDecoder().decode([String].self, from: tagsData) {
+                return decodedTags
+            } else {
+                return []
             }
         }
+        set {
+            if let encodedTags = try? JSONEncoder().encode(newValue) {
+                tagsData = encodedTags
+            }
+        }
+    }
+    
+    @AppStorage("workoutUsageCount") private var workoutUsageCountData: Data = Data()
+    
+    var workoutUsageCount: [WorkoutType: Int] {
+        get {
+            if let decodedCounts = try? JSONDecoder().decode([WorkoutType: Int].self, from: workoutUsageCountData) {
+                return decodedCounts
+            } else {
+                return [:]
+            }
+        }
+        set {
+            if let encodedCounts = try? JSONEncoder().encode(newValue) {
+                workoutUsageCountData = encodedCounts
+            }
+        }
+    }
+    
+    private func incrementWorkoutCount(for type: WorkoutType) {
+        workoutUsageCount[type, default: 0] += 1
+    }
     
     override init() {
         super.init()
@@ -85,6 +106,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// Activates the run statistic tracking (only tracking)
     func startStatistic(tags: [String] = []) {
+        // update the workout usage count
+        incrementWorkoutCount(for: workoutType)
+        
         // Safety first
         if !activeStatistics {
             activeStatistics = true

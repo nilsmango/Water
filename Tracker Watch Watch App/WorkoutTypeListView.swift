@@ -13,7 +13,9 @@ struct WorkoutTypeListView: View {
     @Binding var showList: Bool
     
     var body: some View {
-        List(WorkoutType.allCases, id: \.self) { type in
+        List(WorkoutType.allCases.sorted(by: {
+            (workoutManager.workoutUsageCount[$0] ?? 0) > (workoutManager.workoutUsageCount[$1] ?? 0)
+        }), id: \.self) { type in
             if type != .not7IIIPaddleSport && type != .not7IIISurfingSport {
                 Button(action: {
                     workoutManager.workoutType = type

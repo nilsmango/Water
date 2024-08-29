@@ -36,7 +36,9 @@ struct StatisticsControlCenter: View {
                             .padding(.trailing)
                             
                             Menu {
-                                ForEach(WorkoutType.allCases, id: \.self) { type in
+                                ForEach(WorkoutType.allCases.sorted(by: {
+                                    (downwindManager.workoutUsageCount[$0] ?? 0) > (downwindManager.workoutUsageCount[$1] ?? 0)
+                                }), id: \.self) { type in
                                     if type != .not7IIIPaddleSport && type != .not7IIISurfingSport {
                                         Button(action: {
                                             downwindManager.workoutType = type

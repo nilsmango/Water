@@ -70,6 +70,31 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    func removeTag(_ tag: String) {
+        statisticTags = statisticTags.filter { $0 != tag }
+    }
+    
+    @AppStorage("workoutUsageCount") private var workoutUsageCountData: Data = Data()
+    
+    var workoutUsageCount: [WorkoutType: Int] {
+        get {
+            if let decodedCounts = try? JSONDecoder().decode([WorkoutType: Int].self, from: workoutUsageCountData) {
+                return decodedCounts
+            } else {
+                return [:]
+            }
+        }
+        set {
+            if let encodedCounts = try? JSONEncoder().encode(newValue) {
+                workoutUsageCountData = encodedCounts
+            }
+        }
+    }
+    
+    func incrementWorkoutCount(for type: WorkoutType) {
+        workoutUsageCount[type, default: 0] += 1
+    }
+    
     @Published var activeTags = [String]()
     
     private func loadTagsFromWorkouts() {
@@ -142,6 +167,9 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     let currentWatch = WKInterfaceDevice.current()
     
     func startWorkout() {
+        // update the workout usage count
+        incrementWorkoutCount(for: workoutType)
+        
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = workoutType.activityType
         configuration.locationType = .outdoor

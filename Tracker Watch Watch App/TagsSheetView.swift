@@ -12,12 +12,6 @@ struct TagsSheetView: View {
 
     @Binding var tags: [String]
     
-    private var trackerTags: [String] {
-        workoutManager.statisticTags
-    }
-    
-    @State private var allTags = [String]()
-    
     @State private var newTag = ""
     @State private var showUpgradeSheet = false
     @FocusState private var isFieldFocused: Bool
@@ -39,14 +33,10 @@ struct TagsSheetView: View {
         }
     }
     
-    private func updateAllTags() {
-        allTags = Array(Set(trackerTags + tags)).sorted()
-    }
-    
     var body: some View {
         ScrollView {
             VStack {
-                if allTags.count > 0 && !workoutManager.hasPurchasedPremium {
+                if workoutManager.statisticTags.count > 0 && !workoutManager.hasPurchasedPremium {
                     Button {
                         showUpgradeSheet = true
                     } label: {
@@ -58,16 +48,16 @@ struct TagsSheetView: View {
                     TextField("Add New Tag", text: $newTag)
                         .padding()
                         .onSubmit {
-                            tags.append(makeWordTag(newTag))
+                            let newSafeTag = makeWordTag(newTag)
+                            workoutManager.statisticTags.append(newSafeTag)
                             newTag = ""
-                            updateAllTags()
                         }
                         .disableAutocorrection(true)
                         .onChange(of: newTag) {
                             if canMakeTag(from: newTag) {
-                                tags.append(makeWordTag(newTag))
+                                let newSafeTag = makeWordTag(newTag)
+                                workoutManager.statisticTags.append(newSafeTag)
                                 newTag = ""
-                                updateAllTags()
                             }
                         }
                 }
@@ -84,24 +74,25 @@ struct TagsSheetView: View {
 //                .tint(.accent)
 //                .padding(.vertical)
                 
-                ForEach(allTags, id: \.self) { tag in
+                ForEach(workoutManager.statisticTags.sorted(), id: \.self) { tag in
                     SelectionButtonLabel(string: tag, chosenStrings: $tags, watch: true)
                         .font(.title3)
                         .onTapGesture {
                             if tags.contains(tag) {
                                 tags.removeAll(where: { $0 == tag })
-                                updateAllTags()
                             } else {
                                 tags.append(tag)
-                                updateAllTags()
                             }
+                        }
+                        .onLongPressGesture {
+                            WKInterfaceDevice.current().play(.success)
+                            workoutManager.removeTag(tag)
                         }
                         .padding(.bottom)
                 }
             }
         }
         .onAppear {
-            allTags = Array(Set(trackerTags + tags)).sorted()
             Task {
                 await workoutManager.updateCustomerProductStatus()
             }
