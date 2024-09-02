@@ -159,7 +159,7 @@ struct UpgradeView: View {
                                                 
                         HStack {
                             Spacer()
-                            Text("[Terms & Conditions](https://project7iii.com/water/terms-and-conditions/) and [Privacy Policy](https://project7iii.com/water/privacy-policy/)")
+                            Text("[Terms of Use](https://www.apple.com/legal/internet-services/itunes/dev/stdeula/) and [Privacy Policy](https://project7iii.com/water/privacy-policy/)")
                             Spacer()
                         }
                         .font(.caption)
