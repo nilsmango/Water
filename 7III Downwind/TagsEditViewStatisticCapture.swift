@@ -12,10 +12,6 @@ struct TagsEditViewStatisticCapture: View {
     
     @ObservedObject var downwindManager: DownwindManager
     
-    private var trackerTags: [String] {
-        downwindManager.tags
-    }
-    
     @State private var allTags = [String]()
     @State private var newTag = ""
     
@@ -39,7 +35,7 @@ struct TagsEditViewStatisticCapture: View {
     }
     
     private func updateAllTags() {
-        allTags = Array(Set(trackerTags + tags)).sorted()
+        allTags = Array(Set(downwindManager.tags + tags)).sorted()
     }
     
     var body: some View {
@@ -112,7 +108,7 @@ struct TagsEditViewStatisticCapture: View {
         }
         .padding(.top)
         .onAppear {
-            allTags = Array(Set(trackerTags + tags)).sorted()
+            updateAllTags()
         }
     }
 }

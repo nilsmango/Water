@@ -42,7 +42,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
     }
-    
+        
     @AppStorage("workoutUsageCount") private var workoutUsageCountData: Data = Data()
     
     var workoutUsageCount: [WorkoutType: Int] {

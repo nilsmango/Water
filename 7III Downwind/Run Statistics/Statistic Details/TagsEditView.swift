@@ -12,10 +12,6 @@ struct TagsEditView: View {
     
     var downwindManager: DownwindManager
     
-    private var trackerTags: [String] {
-        downwindManager.tags
-    }
-    
     @State private var allTags = [String]()
     
     @State private var newTag = ""
@@ -40,7 +36,7 @@ struct TagsEditView: View {
     }
     
     private func updateAllTags() {
-        allTags = Array(Set(trackerTags + tags)).sorted()
+        allTags = Array(Set(downwindManager.tags + tags)).sorted()
     }
     
     @Binding var type: WorkoutType
@@ -109,11 +105,10 @@ struct TagsEditView: View {
                         .foregroundColor(.primary)
                     }
                 }
-                
             }
             
         .onAppear {
-            allTags = Array(Set(trackerTags + tags)).sorted()
+            updateAllTags()
         }
         Section {
             HStack {
