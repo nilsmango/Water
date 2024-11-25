@@ -700,8 +700,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                     }
                     
+                    let updatedTags = self.updateMetaData(statistics: self.runStatistics)
+                    
                     // sort the array, find matching statistics update the grouped array
                     DispatchQueue.main.async {
+                        self.tags = updatedTags
+                        
+                        self.saveTags()
+                        
                         self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast > $1.startDate ?? $1.locationData.first?.timestamp ?? Date.distantPast})
                         
                         self.findMatchingStatisticsAndMerge()
@@ -715,14 +721,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                         
                         self.updateGroupedRunArray()
+                        
+                        self.loadingRunStatistics = false
+                        
                     }
-                }
-                
-                let tags = self.updateMetaData(statistics: self.runStatistics)
-                
-                DispatchQueue.main.async {
-                    self.tags = tags
-                    self.loadingRunStatistics = false
                 }
                 
             }
