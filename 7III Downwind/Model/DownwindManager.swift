@@ -1239,7 +1239,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // adding tags to tags
         for tag in tags {
-            if !tags.contains(where: { $0.lowercased() == tag.lowercased() }) {
+            if !self.tags.contains(where: { $0.lowercased() == tag.lowercased() }) {
                 self.tags.append(tag)
             }
         }
