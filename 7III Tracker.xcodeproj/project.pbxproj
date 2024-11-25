@@ -759,7 +759,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					785C4A942B358F7B00EB07F8 = {
 						CreatedOnToolsVersion = 15.1;
@@ -1096,7 +1096,6 @@
 		785C4AA52B358F7D00EB07F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
@@ -1145,7 +1144,6 @@
 		785C4AA62B358F7D00EB07F8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
