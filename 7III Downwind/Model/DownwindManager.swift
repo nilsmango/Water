@@ -25,23 +25,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
     @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUPFoil
-    
-    @AppStorage("statisticTags") private var tagsData: Data = Data()
-        
-    var tags: [String] {
-        get {
-            if let decodedTags = try? JSONDecoder().decode([String].self, from: tagsData) {
-                return decodedTags
-            } else {
-                return []
-            }
-        }
-        set {
-            if let encodedTags = try? JSONEncoder().encode(newValue) {
-                tagsData = encodedTags
-            }
-        }
-    }
         
     @AppStorage("workoutUsageCount") private var workoutUsageCountData: Data = Data()
     
@@ -78,12 +61,33 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             await updateCustomerProductStatus()
         }
         
+        loadTags()
+        
         setupLocationManager()
     }
     
     deinit {
         updateListenerTask?.cancel()
     }
+    
+    // MARK: - Tags
+    
+    @AppStorage("statisticTags") private var tagsData: Data = Data()
+    
+    private func saveTags() {
+        if let encodedTags = try? JSONEncoder().encode(tags) {
+            tagsData = encodedTags
+        }
+    }
+    
+    private func loadTags() {
+        if let decodedTags = try? JSONDecoder().decode([String].self, from: tagsData) {
+            tags = decodedTags
+        }
+    }
+    
+    @Published var tags: [String] = []
+    
     
     // MARK: - Statistics
     /// showing if gps statistic tracking is on
@@ -1244,7 +1248,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         self.tags = self.tags.sorted()
-        
+
+        saveTags()
     }
     
     func createLocationNames(statisticsData: RunStatistic, completion: @escaping (String) -> Void) {
