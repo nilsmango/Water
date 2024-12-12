@@ -44,7 +44,7 @@ struct UpgradeView: View {
         FeatureItem(text: "Unlimited statistics", symbol: "chart.xyaxis.line"),
         FeatureItem(text: "Unlimited tags", symbol: "tag"),
         FeatureItem(text: "Editing of sessions", symbol: "pencil"),
-        FeatureItem(text: "Access to future features like Location Sharing", symbol: "location.fill")
+        FeatureItem(text: "Access to all future features", symbol: "checkmark")
     ]
         
     var body: some View {
