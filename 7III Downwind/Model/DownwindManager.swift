@@ -428,14 +428,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if month == nil {
                 for runs in groupedRunStatistics[yearIndex] {
                     for run in runs {
-                        if run.workoutType == .downwindSUPFoil || run.workoutType == .downwindProneFoil {
+                        if run.workoutType?.isDWSport ?? false {
                             totalDistance += run.runDistance
                         }
                     }
                 }
             } else {
                 for run in groupedRunStatistics[yearIndex][month!] {
-                    if run.workoutType == .downwindSUPFoil || run.workoutType == .downwindProneFoil {
+                    if run.workoutType?.isDWSport ?? false {
                         totalDistance += run.runDistance
                     }
                 }
