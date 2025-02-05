@@ -120,7 +120,7 @@ enum WorkoutType: String, Codable, CaseIterable {
     
     var isDWSport: Bool {
         switch self {
-        case .downwindSUP, .downwindSUPFoil, .downwindProneFoil, .sailing, .dWParawing:
+        case .downwindSUP, .downwindSUPFoil, .downwindProneFoil, .dWParawing:
             return true
         default:
             return false
