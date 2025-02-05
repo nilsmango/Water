@@ -407,67 +407,121 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    func calculateSessions(for yearIndex: Int, month: Int? = nil) -> Int {
+    /// Calculating all sessions in the for the year or month of the year. Returns the total and each session in a dict
+    func calculateSessions(for yearIndex: Int, month: Int? = nil) -> (total: Int, types: [WorkoutType: Int]) {
         var totalSessions = 0
-        if groupedRunStatistics.count > yearIndex {
-            if month == nil {
-                for runs in groupedRunStatistics[yearIndex] {
-                    totalSessions += runs.count
-                }
-            } else {
-                totalSessions = groupedRunStatistics[yearIndex][month!].count
-            }
-        }
-        return totalSessions
-    }
-    
-    func calculateDownwindDistance(for yearIndex: Int, month: Int? = nil) -> String {
-        // total distance in meter
-        var totalDistance = 0.0
+        var workoutCounts: [WorkoutType: Int] = [:]
+        
         if groupedRunStatistics.count > yearIndex {
             if month == nil {
                 for runs in groupedRunStatistics[yearIndex] {
                     for run in runs {
-                        if run.workoutType?.isDWSport ?? false {
-                            totalDistance += run.runDistance
+                        totalSessions += 1
+                        if let type = run.workoutType {
+                            workoutCounts[type, default: 0] += 1
                         }
                     }
                 }
             } else {
                 for run in groupedRunStatistics[yearIndex][month!] {
-                    if run.workoutType?.isDWSport ?? false {
-                        totalDistance += run.runDistance
+                    totalSessions += 1
+                    if let type = run.workoutType {
+                        workoutCounts[type, default: 0] += 1
                     }
                 }
             }
         }
-        if totalDistance == 0 {
-            return ""
-        } else {
-            return makePrettyDistance(meters: totalDistance, system: measurementSystem)
-        }
+        return (totalSessions, workoutCounts)
     }
     
-    func calculateTimeOnWater(for yearIndex: Int, month: Int? = nil) -> String {
-        var totalTime = 0.0
+    func calculateDistance(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: String]) {
+        var totalDistance = 0.0
+        var workoutDistances: [WorkoutType: Double] = [:]
+
         if groupedRunStatistics.count > yearIndex {
             if month == nil {
                 for runs in groupedRunStatistics[yearIndex] {
                     for run in runs {
-                            totalTime += run.runTime
+                        if let type = run.workoutType {
+                            totalDistance += run.runDistance
+                            workoutDistances[type, default: 0] += run.runDistance
+                        }
+                    }
+                }
+            } else {
+                for run in groupedRunStatistics[yearIndex][month!] {
+                    if let type = run.workoutType {
+                        totalDistance += run.runDistance
+                        workoutDistances[type, default: 0] += run.runDistance
+                    }
+                }
+            }
+        }
+
+        let totalString = totalDistance == 0 ? "" : makePrettyDistance(meters: totalDistance, system: measurementSystem)
+        let typeStrings = workoutDistances.mapValues { makePrettyDistance(meters: $0, system: measurementSystem) }
+
+        return (totalString, typeStrings)
+    }
+    
+    func calculateDownwindDistance(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: String]) {
+        var totalDistance = 0.0
+        var workoutDistances: [WorkoutType: Double] = [:]
+
+        if groupedRunStatistics.count > yearIndex {
+            if month == nil {
+                for runs in groupedRunStatistics[yearIndex] {
+                    for run in runs {
+                        if let type = run.workoutType, type.isDWSport {
+                            totalDistance += run.runDistance
+                            workoutDistances[type, default: 0] += run.runDistance
+                        }
+                    }
+                }
+            } else {
+                for run in groupedRunStatistics[yearIndex][month!] {
+                    if let type = run.workoutType, type.isDWSport {
+                        totalDistance += run.runDistance
+                        workoutDistances[type, default: 0] += run.runDistance
+                    }
+                }
+            }
+        }
+
+        let totalString = totalDistance == 0 ? "" : makePrettyDistance(meters: totalDistance, system: measurementSystem)
+        let typeStrings = workoutDistances.mapValues { makePrettyDistance(meters: $0, system: measurementSystem) }
+
+        return (totalString, typeStrings)
+    }
+
+    func calculateTimeOnWater(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: String]) {
+        var totalTime = 0.0
+        var workoutTimes: [WorkoutType: Double] = [:]
+
+        if groupedRunStatistics.count > yearIndex {
+            if month == nil {
+                for runs in groupedRunStatistics[yearIndex] {
+                    for run in runs {
+                        totalTime += run.runTime
+                        if let type = run.workoutType {
+                            workoutTimes[type, default: 0] += run.runTime
+                        }
                     }
                 }
             } else {
                 for run in groupedRunStatistics[yearIndex][month!] {
                     totalTime += run.runTime
+                    if let type = run.workoutType {
+                        workoutTimes[type, default: 0] += run.runTime
+                    }
                 }
             }
         }
-        if totalTime == 0 {
-            return ""
-        } else {
-            return makePrettyTime(timeInMinutes: totalTime)
-        }
+
+        let totalString = totalTime == 0 ? "" : makePrettyTime(timeInMinutes: totalTime)
+        let typeStrings = workoutTimes.mapValues { makePrettyTime(timeInMinutes: $0) }
+
+        return (totalString, typeStrings)
     }
     
     
