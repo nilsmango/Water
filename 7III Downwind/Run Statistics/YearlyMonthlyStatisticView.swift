@@ -90,7 +90,7 @@ class MockDownwindManager: DownwindManager {
     }
 
     override func calculateTimeOnWater(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: String]) {
-        return ("15h 30m", [.dWParawing: "2h", .parawing: "4h", .pumpFoil: "5h 30m", .foilSurf: "2h", .wingFoil: "2h"])
+        return ("15 h 30 m", [.dWParawing: "2 h", .parawing: "4 h", .pumpFoil: "5 h 30 m", .foilSurf: "2 h", .wingFoil: "2 h"])
     }
     
     override func calculateDistance(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: String]) {
