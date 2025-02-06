@@ -19,6 +19,10 @@ struct RunStatistic: Identifiable, Codable {
     var runDistance: Double
     /// top speed in km/h
     var topSpeed: Double
+    /// 10 sec top speed in km/h
+    var topSpeed10s: Double?
+    /// 1 sec top speed in km/h
+    var topSpeed1s: Double?
     /// average speed in km/h
     var averageSpeed: Double?
     var kCalories: Double?
@@ -50,13 +54,15 @@ struct RunStatistic: Identifiable, Codable {
         }
         
         // Custom initializer for direct initialization 1
-    init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, averageSpeed: Double, kCalories: Double, locationData: [LocationData], tags: [String], workoutType: WorkoutType, startDate: Date, endDate: Date) {
+    init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, averageSpeed: Double, kCalories: Double, locationData: [LocationData], tags: [String], workoutType: WorkoutType, startDate: Date, endDate: Date, topSpeed1s: Double, topSpeed10s: Double) {
         self.id = id
         self.runName = runName
         self.crewStatistics = crewStatistics
         self.runTime = runTime
         self.runDistance = runDistance
         self.topSpeed = topSpeed
+        self.topSpeed1s = topSpeed1s
+        self.topSpeed10s = topSpeed10s
         self.kCalories = kCalories
 //        self.heartRates = [] // Assuming heart rates are not provided in this initializer
 //        self.averageHeartRate = 0 // Assuming average heart rate is not provided in this initializer

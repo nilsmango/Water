@@ -743,9 +743,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.runStatistics[runIndex].endDate = runEdit?.finishLocation?.timestamp ?? workout.endDate
                                 self.runStatistics[runIndex].startLocation = metaData.startLocation
                                 self.runStatistics[runIndex].locationString = runEdit?.locationString
+                                self.runStatistics[runIndex].topSpeed1s = runEdit?.topSpeed1s
+                                self.runStatistics[runIndex].topSpeed10s = runEdit?.topSpeed10s
                             }
                         } else {
-                            var statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate)
+                            var statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate, topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0)
                             statistic.startLocation = metaData.startLocation
                             statistic.locationString = runEdit?.locationString
                             
@@ -884,7 +886,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         } else {
             startLocation = backup?.startLocation
         }
-        
+                
         return (tags: tags, workoutType: workoutType, averageSpeed: averageSpeed, topSpeed: topSpeed, totalDistance: totalDistance, startLocation: startLocation)
     }
     
@@ -1262,6 +1264,19 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             runEdits[editIndex].locationString = string
         } else {
             let runEdit = RunEdit(id: statisticsID, locationString: string)
+            runEdits.append(runEdit)
+        }
+        saveRunEdits()
+    }
+    
+    /// save top speeds to run edits
+    func saveTopSpeeds(speed1s: Double?, speed10s: Double?, statisticsID: UUID) {
+        if speed1s == nil || speed10s == nil { return }
+        if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsID }) {
+            runEdits[editIndex].topSpeed1s = speed1s
+            runEdits[editIndex].topSpeed10s = speed10s
+        } else {
+            let runEdit = RunEdit(id: statisticsID, topSpeed10s: speed10s, topSpeed1s: speed1s)
             runEdits.append(runEdit)
         }
         saveRunEdits()

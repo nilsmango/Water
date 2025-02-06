@@ -37,6 +37,7 @@ func calculateDirectDistance(from myself: Member, to member: Member) -> CLLocati
     return directDistance
 }
 
+
 private let metersPerYard = 0.9144
 private let yardsPerMile = 1760.0
 private let metersPerMile = 1609.344
@@ -99,22 +100,20 @@ private func formatWithSeparator(_ number: Int, separator: String) -> String {
 }
 
 /// Takes a speed in km/h, returns a pretty speed in km/h or mph
-func makePrettySpeed(speed: Double, system: MeasurementSystem) -> String {
+func makePrettySpeed(speed: Double?, system: MeasurementSystem) -> String {
+    if speed == nil || speed!.isNaN || speed!.isInfinite || speed == 0.0 {
+        return "0.0 km/h"
+    }
     switch system {
     case .metric:
-        if speed.isNaN || speed.isInfinite {
-            return "0.0 km/h"
-        }
-        if speed >= 10.0 {
-            return String(Int(speed.rounded())) + " km/h"
+        if speed! >= 10.0 {
+            return String(Int(speed!.rounded())) + " km/h"
         } else {
-            return String(format: "%.1f", speed) + " km/h"
+            return String(format: "%.1f", speed!) + " km/h"
         }
+        
     case .imperial:
-        if speed.isNaN {
-            return "0.0 mph"
-        }
-        let mph = speed * 1000 / metersPerMile
+        let mph = speed! * 1000 / metersPerMile
         
         if mph >= 10.0 {
             return String(Int(mph.rounded())) + " mph"
@@ -229,3 +228,90 @@ func calculateBearingToTarget(myTrueHeading: Double, myLatitude: Double, myLongi
 enum LocationError {
     case none, noPermission, notPossible
 }
+
+/// returns 1 sec and 10 sec top speeds in km/h from an array of LocationData
+func calculateTopSpeeds(from data: [LocationData]) -> (topSpeed1Sec: Double?, topSpeed10Sec: Double?) {
+    var topSpeed1Sec: Double = 0
+    var topSpeed10Sec: Double = 0
+    
+    for i in 0..<data.count {
+        // 1-second window
+        if let oneSecSpeed = calculateSpeed(in: data, fromIndex: i, duration: 1) {
+            topSpeed1Sec = max(topSpeed1Sec, oneSecSpeed)
+        }
+        // 10-second window
+        if let tenSecSpeed = calculateSpeed(in: data, fromIndex: i, duration: 10) {
+            topSpeed10Sec = max(topSpeed10Sec, tenSecSpeed)
+        }
+    }
+    
+    return (topSpeed1Sec * 3.6, topSpeed10Sec * 3.6)
+}
+
+private func calculateSpeed(in data: [LocationData], fromIndex index: Int, duration: TimeInterval) -> Double? {
+    let start = data[index]
+    let endTime = start.timestamp.addingTimeInterval(duration)
+    
+    var distance: Double = 0
+    var lastPoint = start
+    
+    for i in index+1..<data.count {
+        let point = data[i]
+        if point.timestamp > endTime { break }
+        
+        let fromLocation = CLLocation(latitude: lastPoint.latitude, longitude: lastPoint.longitude)
+        let toLocation = CLLocation(latitude: point.latitude, longitude: point.longitude)
+        
+        distance += fromLocation.distance(from: toLocation)
+        lastPoint = point
+    }
+    
+    let timeElapsed = lastPoint.timestamp.timeIntervalSince(start.timestamp)
+    return timeElapsed > 0 ? distance / timeElapsed : nil
+}
+
+/// returns how many times you got below 8 km/h (not counting the first non flight and the last (falls)), and also the % of not flying.
+func calculateNonFoilStats(from data: [LocationData], thresholdSpeedKmh: Double = 8.0) -> (nonFoilCount: Int, nonFoilPercentage: Double) {
+    guard data.count > 1 else { return (0, 0.0) }
+    
+    let thresholdSpeedMs = thresholdSpeedKmh / 3.6
+    var nonFoilCount = 0
+    var nonFoilDuration: TimeInterval = 0
+    let totalDuration = data.last!.timestamp.timeIntervalSince(data.first!.timestamp)
+    
+    var isNonFoil = false
+    var periodStart: Date?
+    var firstMovementDetected = false
+
+    for i in 1..<data.count {
+        let speed = calculateSpeed(in: data, fromIndex: i - 1, duration: 1) ?? 0
+        
+        if speed >= thresholdSpeedMs {
+            firstMovementDetected = true
+            if isNonFoil {
+                isNonFoil = false
+                if let start = periodStart {
+                    nonFoilDuration += data[i - 1].timestamp.timeIntervalSince(start)
+                    nonFoilCount += 1
+                }
+            }
+        } else if firstMovementDetected {
+            if !isNonFoil {
+                isNonFoil = true
+                periodStart = data[i - 1].timestamp
+            }
+        }
+    }
+    
+    // Add final non-foil duration if it didn't end moving
+    if isNonFoil {
+        // Don't count non-foil at the end
+        if nonFoilCount > 0 {
+            nonFoilCount -= 1
+        }
+    }
+    
+    let nonFoilPercentage = (nonFoilDuration / totalDuration) * 100
+    return (nonFoilCount, nonFoilPercentage)
+}
+

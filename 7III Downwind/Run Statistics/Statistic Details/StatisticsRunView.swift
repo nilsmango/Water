@@ -47,7 +47,7 @@ struct StatisticsRunView: View {
         
         List {
             Section {
-                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm")
+                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm")
             } header: {
                 StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
             }
@@ -115,8 +115,8 @@ struct StatisticsRunView: View {
             
             downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
                 
+                // if empty create location start and end names after loading route
                 if statisticsData.locationString == nil || statisticsData.locationString == "" {
-                    // create location start and end names after loading route
                     downwindManager.createLocationNames(statisticsData: statisticsData) { location in
                         locationName = location
                         DispatchQueue.main.async {
@@ -125,6 +125,17 @@ struct StatisticsRunView: View {
                         }
                     }
                 }
+                // if no 10 s and 1 s top speed calculate and add those
+                if (statisticsData.topSpeed1s ?? 0.0) == 0.0 || (statisticsData.topSpeed10s ?? 0.0) == 0.0 {
+                    let topSpeeds = calculateTopSpeeds(from: statisticsData.locationData)
+                    DispatchQueue.main.async {
+                        statisticsData.topSpeed1s = topSpeeds.topSpeed1Sec
+                        statisticsData.topSpeed10s = topSpeeds.topSpeed10Sec
+                        downwindManager.saveTopSpeeds(speed1s: topSpeeds.topSpeed1Sec, speed10s: topSpeeds.topSpeed10Sec, statisticsID: statisticsData.id)
+                    }
+                }
+                
+                // TODO: also calculate falls and % on foil + turns
 
                 // update some things if we have location data
                 if !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 {

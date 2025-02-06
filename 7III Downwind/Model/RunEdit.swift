@@ -19,8 +19,13 @@ struct RunEdit: Identifiable, Codable {
     var newTotalDistance: Double?
     /// top speed in km/h
     var newTopSpeed: Double?
+    /// 10 sec top speed in km/h
+    var topSpeed10s: Double?
+    /// 1 sec top speed in km/h
+    var topSpeed1s: Double?
     /// average speed in km/h
     var newAverageSpeed: Double?
+    
     
 //    var newKCalories: Double?
 //    var newAverageHeartRate: Double?

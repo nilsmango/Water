@@ -13,6 +13,8 @@ struct StatisticsDetails: View {
     let averageSpeed: String
     let averagePace: String
     let topSpeed: String
+    let topsSpeed1s: String
+    let topsSpeed10s: String
     let kCal: String
     let heartRate: String
     
@@ -36,23 +38,37 @@ struct StatisticsDetails: View {
         }
         
         HStack {
+            // we can use 0.0 km/h because we get that if speed is zero
             if topSpeed != "0.0 km/h" {
-                StatisticsInfoViews(header: "Top Speed", bodyText: topSpeed)
+                StatisticsInfoViews(header: "GPS Top Speed", bodyText: topSpeed)
                     .frame(width: width, alignment: .leading)
             }
-            
-            if heartRate != "0 bpm" {
-                HStack {
-                    StatisticsInfoViews(header: "∅-Heart Rate", bodyText: heartRate)
-                        .frame(width: width, alignment: .leading)
-                }
-            }
-            
         }
         
-        if kCal != "0 kcal" {
-            StatisticsInfoViews(header: "Activity Calories", bodyText: kCal)
+        if topsSpeed10s != "0.0 km/h" {
+            HStack {
+                if topsSpeed1s != "0.0 km/h" {
+                    StatisticsInfoViews(header: "1 Sec Top Speed ", bodyText: topsSpeed1s)
+                        .frame(width: width, alignment: .leading)
+                }
+                
+                StatisticsInfoViews(header: "10 Sec Top Speed ", bodyText: topsSpeed10s)
+                    .frame(width: width, alignment: .leading)
+            }
         }
+        
+        HStack {
+            if heartRate != "0 bpm" {
+                StatisticsInfoViews(header: "∅-Heart Rate", bodyText: heartRate)
+                        .frame(width: width, alignment: .leading)
+            }
+            
+            if kCal != "0 kcal" {
+                StatisticsInfoViews(header: "Activity Calories", bodyText: kCal)
+                    .frame(width: width, alignment: .leading)
+            }
+        }
+        
         
         
     }
@@ -61,7 +77,7 @@ struct StatisticsDetails: View {
 #Preview {
     List {
         Section {
-            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", kCal: "84 kcal", heartRate: "120 bpm")
+            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm")
         }
     }
 }
