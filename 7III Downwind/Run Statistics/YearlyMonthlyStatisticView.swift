@@ -34,12 +34,9 @@ struct YearlyMonthlyStatisticView: View {
         if !timeData.total.isEmpty {
             DisclosureGroup {
                 ForEach(timeData.types.sorted(by: { $0.value > $1.value }), id: \.key) { time in
-                    var prettyString = time.key.prettyString
-                    if prettyString.last == "e" {
-                        Text("\(time.value) of \(prettyString.removeLast())ing")
-                    } else {
-                        Text("\(time.value) of \(prettyString)ing")
-                    }
+                    let prettyString = formatActivityName(time.key.prettyString)
+                    
+                    Text("\(makePrettyTime(timeInMinutes: time.value)) of \(prettyString)")
                 }
             } label: {
                 Label("\(timeData.total) of Water Time", systemImage: "stopwatch")
@@ -51,14 +48,9 @@ struct YearlyMonthlyStatisticView: View {
         if !totalDistanceData.total.isEmpty {
             DisclosureGroup {
                 ForEach(totalDistanceData.types.sorted(by: { $0.value > $1.value }), id: \.key) { distance in
-                    let prettyString = distance.key.prettyString
-                    if prettyString == "Paddling" || prettyString == "Wake Thief" || prettyString == "Sailing" || prettyString == "Canoe" {
-                        Text("\(distance.value) of \(prettyString)")
-                    } else if prettyString.last == "e" {
-                        Text("\(distance.value) of \(prettyString.dropLast())ing")
-                    } else {
-                        Text("\(distance.value) of \(prettyString)ing")
-                    }
+                    let prettyString = formatActivityName(distance.key.prettyString)
+                    
+                    Text("\(makePrettyDistance(meters: distance.value, system: downwindManager.measurementSystem)) of \(prettyString)")
                 }
             } label: {
                 Label("\(totalDistanceData.total) Total Distance", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath.fill")
@@ -70,12 +62,9 @@ struct YearlyMonthlyStatisticView: View {
         if !dwDistanceData.total.isEmpty {
             DisclosureGroup {
                 ForEach(dwDistanceData.types.sorted(by: { $0.value > $1.value }), id: \.key) { distance in
-                    let prettyString = distance.key.prettyString
-                    if prettyString.last == "e" {
-                        Text("\(distance.value) of \(prettyString.dropLast())ing")
-                    } else {
-                        Text("\(distance.value) of \(prettyString)ing")
-                    }
+                    let prettyString = formatActivityName(distance.key.prettyString)
+                    
+                    Text("\(makePrettyDistance(meters: distance.value, system: downwindManager.measurementSystem)) of \(prettyString)")
                 }
             } label: {
                 Label("\(dwDistanceData.total) of Downwind", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
@@ -89,16 +78,16 @@ class MockDownwindManager: DownwindManager {
         return (15, [.dWParawing: 1, .parawing: 4, .pumpFoil: 5, .foilSurf: 2, .wingFoil: 3])
     }
 
-    override func calculateTimeOnWater(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: String]) {
-        return ("15 h 30 m", [.dWParawing: "2 h", .parawing: "4 h", .pumpFoil: "5 h 30 m", .foilSurf: "2 h", .wingFoil: "2 h"])
+    override func calculateTimeOnWater(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: Double]) {
+        return ("12 h", [.dWParawing: 1203, .parawing: 3434, .pumpFoil: 3535, .wingFoil: 2923])
     }
     
-    override func calculateDistance(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: String]) {
-        return ("150 km", [.dWParawing: "20 km", .downwindSUPFoil: "40 km", .downwindProneFoil: "30 km", .windFoil: "30 km", .foilSurf: "20 km", .kite: "10 km"])
+    override func calculateDistance(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: Double]) {
+        return ("150 km", [.dWParawing: 20000, .downwindSUPFoil: 40000, .downwindProneFoil: 30000, .windFoil: 30000, .foilSurf: 20000, .kite: 10000])
     }
     
-    override func calculateDownwindDistance(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: String]) {
-        return ("90 km", [.dWParawing: "20 km", .kite: "40 km", .downwindProneFoil: "30 km"])
+    override func calculateDownwindDistance(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: Double]) {
+        return ("90 km", [.dWParawing: 20000, .kite: 40000, .downwindProneFoil: 30000])
     }
 }
 

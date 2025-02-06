@@ -49,11 +49,13 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem, statistics: B
             let km = meters / 1000
             let kilometer: String
             if km >= 100 || !statistics {
-                kilometer = String(Int(km.rounded()))
+                kilometer = formatWithSeparator(Int(km.rounded()), separator: "'")
             } else {
                 // rounding to two decimals
                 let rounded = (km * 100).rounded() / 100
-                kilometer = String(format: "%.2f", rounded)
+                let parts = String(format: "%.2f", rounded).split(separator: ".")
+                let formatted = formatWithSeparator(Int(parts[0]) ?? 0, separator: "'")
+                kilometer = "\(formatted).\(parts[1])"
             }
             let string = "\(kilometer) km"
             return string
@@ -74,7 +76,7 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem, statistics: B
         if yards >= yardsPerMile {
             let miles = yards / yardsPerMile
             let roundedMiles = Int(miles.rounded())
-            let string = "\(roundedMiles) mi"
+            let string = "\(formatWithSeparator(roundedMiles, separator: ",") ) mi"
             return string
             
         } else {
@@ -87,6 +89,13 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem, statistics: B
             }
         }
     }
+}
+
+private func formatWithSeparator(_ number: Int, separator: String) -> String {
+    let numberFormatter = NumberFormatter()
+    numberFormatter.groupingSeparator = separator
+    numberFormatter.numberStyle = .decimal
+    return numberFormatter.string(from: NSNumber(value: number)) ?? "\(number)"
 }
 
 /// Takes a speed in km/h, returns a pretty speed in km/h or mph
@@ -116,18 +125,30 @@ func makePrettySpeed(speed: Double, system: MeasurementSystem) -> String {
     
 }
 
-/// Takes a time in minutes, returns a pretty time in h or min
+/// Takes a time in minutes, returns a pretty time in d, h, min, s
 func makePrettyTime(timeInMinutes: Double) -> String {
-    if timeInMinutes >= 60.0 {
-        let roundedMinutes = timeInMinutes.rounded()
-        let hours = Int(roundedMinutes / 60)
-        let remainingMinutes = Int(roundedMinutes) % 60
+    if timeInMinutes >= 1440.0 { // 1440 minutes in a day
+        let totalMinutes = Int(timeInMinutes.rounded())
+        let days = totalMinutes / 1440
+        let hours = (totalMinutes % 1440) / 60
+        let remainingMinutes = totalMinutes % 60
+        var result = "\(days) d"
+        if hours > 0 {
+            result += " \(hours) h"
+        }
+        if remainingMinutes > 0 {
+            result += " \(remainingMinutes) min"
+        }
+        return result
+    } else if timeInMinutes >= 60.0 {
+        let totalMinutes = Int(timeInMinutes.rounded())
+        let hours = totalMinutes / 60
+        let remainingMinutes = totalMinutes % 60
         if remainingMinutes > 0 {
             return "\(hours) h \(remainingMinutes) min"
         } else {
             return "\(hours) h"
         }
-        
     } else {
         let minutes = Int(timeInMinutes)
         let seconds = Int((timeInMinutes - Double(minutes)) * 60)
@@ -138,7 +159,6 @@ func makePrettyTime(timeInMinutes: Double) -> String {
         }
     }
 }
-
 
 func makeShortName(name: String) -> String {
     let words = name.components(separatedBy: " ")

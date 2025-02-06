@@ -92,3 +92,14 @@ func makeStringFromDate(_ date: Date) -> String {
     dateFormatter.dateFormat = "yy-MM-dd"
     return dateFormatter.string(from: date)
 }
+
+func formatActivityName(_ name: String) -> String {
+    let exceptions = ["Paddling", "Wake Thief", "Sailing", "Canoe"]
+    if exceptions.contains(name) {
+        return name
+    } else if name.hasSuffix("e") {
+        return "\(name.dropLast())ing"
+    } else {
+        return "\(name)ing"
+    }
+}

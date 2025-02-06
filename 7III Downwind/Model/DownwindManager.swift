@@ -434,7 +434,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return (totalSessions, workoutCounts)
     }
     
-    func calculateDistance(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: String]) {
+    func calculateDistance(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: Double]) {
         var totalDistance = 0.0
         var workoutDistances: [WorkoutType: Double] = [:]
 
@@ -459,12 +459,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
 
         let totalString = totalDistance == 0 ? "" : makePrettyDistance(meters: totalDistance, system: measurementSystem)
-        let typeStrings = workoutDistances.mapValues { makePrettyDistance(meters: $0, system: measurementSystem) }
 
-        return (totalString, typeStrings)
+        return (totalString, workoutDistances)
     }
     
-    func calculateDownwindDistance(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: String]) {
+    func calculateDownwindDistance(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: Double]) {
         var totalDistance = 0.0
         var workoutDistances: [WorkoutType: Double] = [:]
 
@@ -489,12 +488,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
 
         let totalString = totalDistance == 0 ? "" : makePrettyDistance(meters: totalDistance, system: measurementSystem)
-        let typeStrings = workoutDistances.mapValues { makePrettyDistance(meters: $0, system: measurementSystem) }
 
-        return (totalString, typeStrings)
+        return (totalString, workoutDistances)
     }
 
-    func calculateTimeOnWater(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: String]) {
+    func calculateTimeOnWater(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: Double]) {
         var totalTime = 0.0
         var workoutTimes: [WorkoutType: Double] = [:]
 
@@ -519,9 +517,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
 
         let totalString = totalTime == 0 ? "" : makePrettyTime(timeInMinutes: totalTime)
-        let typeStrings = workoutTimes.mapValues { makePrettyTime(timeInMinutes: $0) }
 
-        return (totalString, typeStrings)
+        return (totalString, workoutTimes)
     }
     
     
