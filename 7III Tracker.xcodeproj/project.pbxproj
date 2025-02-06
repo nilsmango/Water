@@ -127,6 +127,7 @@
 		78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
 		78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E32C18C93F00C75A60 /* WorkoutType.swift */; };
 		78B388E62C1A136800C75A60 /* YearlyMonthlyStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
+		78B5EF192D539D7D0079B16A /* GPXExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B5EF182D539D7D0079B16A /* GPXExportButton.swift */; };
 		78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */; };
 		78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */; };
 		78C4D23A2BA6DADB00639E65 /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* LocationData.swift */; };
@@ -303,6 +304,7 @@
 		78A9EB072B57132F0054E9F9 /* RunShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunShareView.swift; sourceTree = "<group>"; };
 		78B388E32C18C93F00C75A60 /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
 		78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearlyMonthlyStatisticView.swift; sourceTree = "<group>"; };
+		78B5EF182D539D7D0079B16A /* GPXExportButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXExportButton.swift; sourceTree = "<group>"; };
 		78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsControlCenter.swift; sourceTree = "<group>"; };
 		78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatistic.swift; sourceTree = "<group>"; };
 		78C4D2392BA6DADB00639E65 /* LocationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationData.swift; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
 				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
 				78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */,
+				78B5EF182D539D7D0079B16A /* GPXExportButton.swift */,
 				781A4B9D2C4E45040046AE0E /* SocialSharing */,
 			);
 			path = "Statistic Details";
@@ -902,6 +905,7 @@
 				78320BC72BB1D97800D6A772 /* StatisticsModelings.swift in Sources */,
 				783A53D32B5FD18000701D7F /* NoActiveRunnersView.swift in Sources */,
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
+				78B5EF192D539D7D0079B16A /* GPXExportButton.swift in Sources */,
 				78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
 				781A4BAD2C4E9F310046AE0E /* SharePreviewWrapper.swift in Sources */,

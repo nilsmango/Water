@@ -45,9 +45,9 @@ struct GPXExportButton: View {
     var body: some View {
         ShareLink(
             item: generateGPXFile(),
-            preview: SharePreview("\(activityName).gpx", image: Image(systemName: "map"))
+            preview: SharePreview("\(activityName).gpx", image: Image(systemName: "globe.europe.africa.fill"))
         ) {
-            Label("Export GPX", systemImage: "square.and.arrow.up")
+            Label("GPX", systemImage: "point.bottomleft.forward.to.point.topright.scurvepath")
         }
     }
     
@@ -55,7 +55,7 @@ struct GPXExportButton: View {
         let gpxString = """
         <?xml version="1.0" encoding="UTF-8"?>
         <gpx version="1.1"
-            creator="WaterSportsApp"
+            creator="7III Water"
             xmlns="http://www.topografix.com/GPX/1/1"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
@@ -79,7 +79,7 @@ struct GPXExportButton: View {
             </trk>
         </gpx>
         """
-        return GPXFile(gpxString: gpxString)
+        return GPXFile(gpxString: gpxString, filename: "\(activityName).gpx")
     }
     
     private func formatDate(_ date: Date) -> String {
@@ -91,13 +91,17 @@ struct GPXExportButton: View {
 
 struct GPXFile: Transferable {
     let gpxString: String
-    
+    let filename: String
+
     static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(contentType: .gpx, exporting: { file in
             Data(file.gpxString.utf8)
         }, importing: { data in
-            GPXFile(gpxString: String(decoding: data, as: UTF8.self))
+            GPXFile(gpxString: String(decoding: data, as: UTF8.self), filename: "export.gpx")
         })
+        .suggestedFileName { file in
+            file.filename
+        }
     }
 }
 

@@ -85,3 +85,10 @@ func makePrettyMinutesString(timeInSeconds: Double, paceFormat: Bool = false) ->
         return ""
     }
 }
+
+
+func makeStringFromDate(_ date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yy-MM-dd"
+    return dateFormatter.string(from: date)
+}

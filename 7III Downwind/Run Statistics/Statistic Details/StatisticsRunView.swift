@@ -168,6 +168,11 @@ struct StatisticsRunView: View {
                     } label: {
                         Label("Photo", systemImage: "photo")
                     }
+                    
+                    GPXExportButton(locationData: statisticsData.locationData, activityName:  (statisticsData.locationString ?? locationName) + " " + makeStringFromDate(statisticsData.startDate ?? Date()), workoutType: statisticsData.workoutType ?? .surf)
+                    
+                    
+                    
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
