@@ -126,4 +126,22 @@ enum WorkoutType: String, Codable, CaseIterable {
             return false
         }
     }
+    
+    var countFalls: Bool {
+        switch self {
+        case .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .pumpFoil:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var countWaves: Bool {
+        switch self {
+        case .surf, .supSurf, .foilSurf, .supFoil, .wakeFoil, .wakeSurf, .wakeThief:
+            return true
+        default:
+            return false
+        }
+    }
 }

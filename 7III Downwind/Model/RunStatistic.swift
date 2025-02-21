@@ -27,6 +27,11 @@ struct RunStatistic: Identifiable, Codable {
     var averageSpeed: Double?
     var kCalories: Double?
     var averageHeartRate: Double?
+    /// pop ups dedected
+    var popUps: Int?
+    /// percentage on foil of time
+    var percentageOnFoil: Double?
+    var turnsCount: Int?
     
     var locationData: [LocationData]
     
@@ -54,7 +59,7 @@ struct RunStatistic: Identifiable, Codable {
         }
         
         // Custom initializer for direct initialization 1
-    init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, averageSpeed: Double, kCalories: Double, locationData: [LocationData], tags: [String], workoutType: WorkoutType, startDate: Date, endDate: Date, topSpeed1s: Double, topSpeed10s: Double) {
+    init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, averageSpeed: Double, kCalories: Double, locationData: [LocationData], tags: [String], workoutType: WorkoutType, startDate: Date, endDate: Date, topSpeed1s: Double, topSpeed10s: Double, popUps: Int, percentageOnFoil: Double, turnsCount: Int) {
         self.id = id
         self.runName = runName
         self.crewStatistics = crewStatistics
@@ -71,6 +76,9 @@ struct RunStatistic: Identifiable, Codable {
         self.workoutType = workoutType
         self.startDate = startDate
         self.endDate = endDate
+        self.popUps = popUps
+        self.percentageOnFoil = percentageOnFoil
+        self.turnsCount = turnsCount
     }
     // Custom initializer for direct initialization 2
     init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, locationData: [LocationData], tags: [String]?) {

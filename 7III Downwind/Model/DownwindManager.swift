@@ -105,6 +105,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var routeBuilder: HKWorkoutRouteBuilder? = nil
     var workoutBuilder: HKWorkoutBuilder? = nil
     
+    let thresholdSpeedKmhDW: Double = 10.0
+    let thresholdSpeedKmhWaves: Double = 14.0
+    
     /// backup to health
     var backupWorkoutData = [RunStatistic]()
     
@@ -745,9 +748,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.runStatistics[runIndex].locationString = runEdit?.locationString
                                 self.runStatistics[runIndex].topSpeed1s = runEdit?.topSpeed1s
                                 self.runStatistics[runIndex].topSpeed10s = runEdit?.topSpeed10s
+                                self.runStatistics[runIndex].popUps = runEdit?.popUps
+                                self.runStatistics[runIndex].percentageOnFoil = runEdit?.percentageOnFoil
+                                self.runStatistics[runIndex].turnsCount = runEdit?.turnsCount
                             }
                         } else {
-                            var statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate, topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0)
+                            // TODO: add foil statistics
+                            var statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate, topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0, popUps: runEdit?.popUps ?? 0, percentageOnFoil: runEdit?.percentageOnFoil ?? 0, turnsCount: runEdit?.turnsCount ?? 0)
                             statistic.startLocation = metaData.startLocation
                             statistic.locationString = runEdit?.locationString
                             
@@ -1282,6 +1289,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         saveRunEdits()
     }
     
+    /// save on foil stats to run edits
+    func saveOnFoilStats(popUps: Int, percentageOnFoil: Double, turns: Int, statisticsID: UUID) {
+        if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsID }) {
+            runEdits[editIndex].popUps = popUps
+            runEdits[editIndex].percentageOnFoil = percentageOnFoil
+            runEdits[editIndex].turnsCount = turns
+        } else {
+            let runEdit = RunEdit(id: statisticsID, popUps: popUps, percentageOnFoil: percentageOnFoil, turnsCount: turns)
+            runEdits.append(runEdit)
+        }
+        saveRunEdits()
+    }
+    
+    
     /// save statistic to disk with new tags
     func saveStatisticWithNewTags(tags: [String], type: WorkoutType, saveType: Bool = false, statisticsData: RunStatistic) {
         if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsData.id }) {
@@ -1423,6 +1444,32 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             runStatistics[index].averageSpeed = (newDistanceAndSpeed.totalDistance / 1000) / (runStatistics[index].runTime / 60)
             newRunEdit.newAverageSpeed = runStatistics[index].averageSpeed
+            
+            // updating 1 s and 10 s top speed
+            let newTopSpeeds = calculateTopSpeeds(from: newStatistic.locationData)
+            runStatistics[index].topSpeed1s = newTopSpeeds.topSpeed1Sec
+            runStatistics[index].topSpeed10s = newTopSpeeds.topSpeed10Sec
+            newRunEdit.topSpeed1s = newTopSpeeds.topSpeed1Sec
+            newRunEdit.topSpeed10s = newTopSpeeds.topSpeed10Sec
+            
+            // updating falls and % on foil and turns
+            if let workoutType = newStatistic.workoutType {
+                var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int) = (0, 0, 0)
+                if workoutType.countFalls {
+                    foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: thresholdSpeedKmhDW, countTurns: workoutType.isDWSport)
+                } else if workoutType.countWaves {
+                    foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: thresholdSpeedKmhWaves, countTurns: workoutType.isDWSport)
+                }
+                if foilStats != (0, 0, 0) {
+                    runStatistics[index].popUps = foilStats.popUps
+                    runStatistics[index].percentageOnFoil = foilStats.timeOnFoilPercentage
+                    runStatistics[index].turnsCount = foilStats.turns
+                    
+                    newRunEdit.popUps = foilStats.popUps
+                    newRunEdit.percentageOnFoil = foilStats.timeOnFoilPercentage
+                    newRunEdit.turnsCount = foilStats.turns
+                }
+            }
             
             // now update the grouped array
             updateGroupedRunArray()

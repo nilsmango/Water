@@ -26,6 +26,10 @@ struct RunEdit: Identifiable, Codable {
     /// average speed in km/h
     var newAverageSpeed: Double?
     
+    var popUps: Int?
+    var percentageOnFoil: Double?
+    var turnsCount: Int?
+    
     
 //    var newKCalories: Double?
 //    var newAverageHeartRate: Double?

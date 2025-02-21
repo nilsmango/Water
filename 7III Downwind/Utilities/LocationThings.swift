@@ -270,48 +270,197 @@ private func calculateSpeed(in data: [LocationData], fromIndex index: Int, durat
     return timeElapsed > 0 ? distance / timeElapsed : nil
 }
 
-/// returns how many times you got below 8 km/h (not counting the first non flight and the last (falls)), and also the % of not flying.
-func calculateNonFoilStats(from data: [LocationData], thresholdSpeedKmh: Double = 8.0) -> (nonFoilCount: Int, nonFoilPercentage: Double) {
-    guard data.count > 1 else { return (0, 0.0) }
-    
-    let thresholdSpeedMs = thresholdSpeedKmh / 3.6
-    var nonFoilCount = 0
-    var nonFoilDuration: TimeInterval = 0
-    let totalDuration = data.last!.timestamp.timeIntervalSince(data.first!.timestamp)
-    
-    var isNonFoil = false
-    var periodStart: Date?
-    var firstMovementDetected = false
-
-    for i in 1..<data.count {
-        let speed = calculateSpeed(in: data, fromIndex: i - 1, duration: 1) ?? 0
-        
-        if speed >= thresholdSpeedMs {
-            firstMovementDetected = true
-            if isNonFoil {
-                isNonFoil = false
-                if let start = periodStart {
-                    nonFoilDuration += data[i - 1].timestamp.timeIntervalSince(start)
-                    nonFoilCount += 1
-                }
-            }
-        } else if firstMovementDetected {
-            if !isNonFoil {
-                isNonFoil = true
-                periodStart = data[i - 1].timestamp
-            }
-        }
-    }
-    
-    // Add final non-foil duration if it didn't end moving
-    if isNonFoil {
-        // Don't count non-foil at the end
-        if nonFoilCount > 0 {
-            nonFoilCount -= 1
-        }
-    }
-    
-    let nonFoilPercentage = (nonFoilDuration / totalDuration) * 100
-    return (nonFoilCount, nonFoilPercentage)
+private enum TurnDirection {
+    case left, right
 }
 
+private func averageBearing(from data: [LocationData], currentIndex: Int, windowSize: Int) -> Double {
+    var sum: Double = 0
+    for j in (currentIndex - windowSize + 1)...currentIndex {
+        sum += calculateBearing(
+            sourceLatitude: data[j - 1].latitude,
+            sourceLongitude: data[j - 1].longitude,
+            targetLatitude: data[j].latitude,
+            targetLongitude: data[j].longitude
+        )
+    }
+    return sum / Double(windowSize)
+}
+
+
+private func bearingDifference(newBearing: Double, oldBearing: Double, oldDirection: TurnDirection?) -> TurnDirection {
+    let difference = (newBearing - oldBearing).truncatingRemainder(dividingBy: 360)
+    let normalizedDiff = (difference + 540).truncatingRemainder(dividingBy: 360) - 180
+    
+    // If difference is positive, it's a right turn
+    // If difference is negative, it's a left turn
+    // if no difference return old direction
+    if let oldDirection = oldDirection, normalizedDiff == 0 {
+        return oldDirection
+    } else {
+        return normalizedDiff >= 0 ? .right : .left
+    }
+    
+}
+
+/// returns how many times you got below threshold speed (not counting the first non flight and the last (falls)), and also the % of not flying (time).
+func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double = 8.0, countTurns: Bool = false) -> (popUps: Int, timeOnFoilPercentage: Double, turns: Int) {
+    let indexes = findAboveThresholdIndexes(in: data, thresholdKmh: thresholdSpeedKmh)
+//    print(indexes)
+    
+//    for index in indexes {
+//        let time = data[index].timestamp.timeIntervalSince(data.first!.timestamp)
+//        let speed = (data[index].speed ?? 0) * 3.6
+//        print("Time: " + makePrettyTime(timeInMinutes: time / 60) + ", Speed: " + String(speed))
+//    }
+    
+    var popUps = 0
+    popUps = Int(indexes.count / 2)
+    
+    // removing one pop up if we are flying from the start
+    if indexes.first == 0 && popUps > 0 {
+        popUps -= 1
+    }
+    
+    var timeOnFoil = 0.0
+    var turnsData = [[LocationData]]()
+    
+    for i in stride(from: 1, to: indexes.count, by: 2) {
+        let dataIndex1 = indexes[i - 1]
+        let dataIndex2 = indexes[i]
+        let time = data[dataIndex2].timestamp.timeIntervalSince(data[dataIndex1].timestamp)
+        timeOnFoil += time
+        
+        turnsData.append(Array(data[dataIndex1...dataIndex2]))
+    }
+    
+    let totalTime = data.last!.timestamp.timeIntervalSince(data.first!.timestamp)
+    let timeOnFoilPercentage = (timeOnFoil / totalTime) * 100
+    
+    var turns = 0
+    if countTurns {
+        for data in turnsData {
+            turns += findTurns(in: data)
+        }
+//        print("Turns: \(turns)")
+    }
+    
+    return (popUps, timeOnFoilPercentage, turns)
+}
+
+
+/// Returns the indexes where we go from below threshold to above and back again. Taking 3 seconds because then we are sure to fly.
+private func findAboveThresholdIndexes(in data: [LocationData], thresholdKmh: Double, minimumTimeInSeconds: Double = 3) -> [Int] {
+    let thresholdMs = thresholdKmh / 3.6 // Convert km/h to m/s
+    var transitionIndexes: [Int] = []
+    
+    var currentState: Bool? = nil // true = above threshold, false = below threshold
+    var potentialTransitionIndex: Int? = nil
+    var potentialTransitionTime: Date? = nil
+    
+    for (index, location) in data.enumerated() {
+        guard let speed = location.speed else { continue }
+        let speedIsAboveThreshold = speed > thresholdMs
+        
+        // init
+        if currentState == nil {
+            // if we are above threshold from the start we want to test, else we just start in current state
+            if speedIsAboveThreshold {
+                // Initial state setup to start testing if we are going steady above threshold from the start
+                currentState = !speedIsAboveThreshold
+                // setting first transition to start if we are above threshold
+                potentialTransitionTime = location.timestamp
+                potentialTransitionIndex = index
+            } else {
+                currentState = speedIsAboveThreshold
+            }
+            
+            continue
+        }
+        
+        if speedIsAboveThreshold != currentState {
+            // Speed crossed the threshold, start timing the potential transition
+            if potentialTransitionTime == nil {
+                potentialTransitionTime = location.timestamp
+                potentialTransitionIndex = index
+            }
+            // Check if we've been on the new side for more than min time
+            if let startTime = potentialTransitionTime,
+               location.timestamp.timeIntervalSince(startTime) >= minimumTimeInSeconds {
+                // Record the first index of the transition
+                if let validIndex = potentialTransitionIndex {
+                    transitionIndexes.append(validIndex)
+                }
+                // Update current state to reflect the transition
+                currentState = speedIsAboveThreshold
+                potentialTransitionTime = nil
+                potentialTransitionIndex = nil
+            }
+        } else {
+            // Speed reverted back before completing the transition time, reset potential transition
+            potentialTransitionTime = nil
+            potentialTransitionIndex = nil
+        }
+    }
+    
+    if transitionIndexes.count % 2 != 0 {
+        let lastIndex = data.count - 1
+        transitionIndexes.append(lastIndex)
+    }
+    
+    return transitionIndexes
+}
+
+
+/// finds the number of turns in a given run
+private func findTurns(in data: [LocationData], smoothingValue: Int = 2) -> Int {
+    var currentHeading: Double? = nil
+    var currentDirection: TurnDirection? = nil
+//    var lastTurnIndex = 0
+    var potentialTurnIndex: Int? = nil
+    var turnCount: Int = 0
+    
+    // safety
+    if data.count <= 1 {
+        return turnCount
+    }
+    
+    for i in 1..<data.count {
+        let sourceLocation = data[i-1]
+        let targetLocation = data[i]
+        let newHeading = calculateBearing(sourceLatitude: sourceLocation.latitude, sourceLongitude: sourceLocation.longitude, targetLatitude: targetLocation.latitude, targetLongitude: targetLocation.longitude)
+        
+        if currentHeading != nil {
+            
+            let newDirection = bearingDifference(newBearing: newHeading, oldBearing: currentHeading!, oldDirection: currentDirection)
+            
+            if currentDirection == nil {
+                // init of direction
+                currentDirection = newDirection
+                
+            } else if currentDirection != newDirection {
+                // check if we have a potential index
+                if potentialTurnIndex != nil {
+                    // check if we are already outside the smoothing window
+                    if i - potentialTurnIndex! >= smoothingValue {
+                        // turn detected
+                        turnCount += 1
+                        potentialTurnIndex = nil
+                        currentDirection = newDirection
+                    }
+                } else {
+                    potentialTurnIndex = i
+                }
+                
+            } else {
+                // if we are not on anew direction we reset the potential turn index
+                potentialTurnIndex = nil
+            }
+            
+        }
+        // update currentHeading
+        currentHeading = newHeading
+    }
+    
+    return turnCount
+}

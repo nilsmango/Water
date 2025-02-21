@@ -18,6 +18,10 @@ struct StatisticsDetails: View {
     let kCal: String
     let heartRate: String
     
+    let popUps: Int
+    let percentageOnFoil: Double
+    let turns: Int
+    
     let width = UIScreen.main.bounds.width / 3
     var body: some View {
         
@@ -37,7 +41,23 @@ struct StatisticsDetails: View {
             }
         }
         
+        if percentageOnFoil != 0.0 {
+            HStack {
+                    StatisticsInfoViews(header: "Pop Ups", bodyText: String(popUps))
+                        .frame(width: width, alignment: .leading)
+                
+                StatisticsInfoViews(header: "Time On Foil", bodyText: String(format: "%.1f", percentageOnFoil) + " %")
+                    .frame(width: width, alignment: .leading)
+            }
+        }
+        
+        
         HStack {
+            if turns != 0 {
+                StatisticsInfoViews(header: "Turns", bodyText: String(turns))
+                    .frame(width: width, alignment: .leading)
+            }
+            
             // we can use 0.0 km/h because we get that if speed is zero
             if topSpeed != "0.0 km/h" {
                 StatisticsInfoViews(header: "GPS Top Speed", bodyText: topSpeed)
@@ -57,27 +77,26 @@ struct StatisticsDetails: View {
             }
         }
         
-        HStack {
-            if heartRate != "0 bpm" {
-                StatisticsInfoViews(header: "∅-Heart Rate", bodyText: heartRate)
+        if heartRate != "0 bpm" || kCal != "0 kcal" {
+            HStack {
+                if heartRate != "0 bpm" {
+                    StatisticsInfoViews(header: "∅-Heart Rate", bodyText: heartRate)
+                            .frame(width: width, alignment: .leading)
+                }
+                
+                if kCal != "0 kcal" {
+                    StatisticsInfoViews(header: "Activity Calories", bodyText: kCal)
                         .frame(width: width, alignment: .leading)
-            }
-            
-            if kCal != "0 kcal" {
-                StatisticsInfoViews(header: "Activity Calories", bodyText: kCal)
-                    .frame(width: width, alignment: .leading)
+                }
             }
         }
-        
-        
-        
     }
 }
 
 #Preview {
     List {
         Section {
-            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm")
+            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134)
         }
     }
 }
