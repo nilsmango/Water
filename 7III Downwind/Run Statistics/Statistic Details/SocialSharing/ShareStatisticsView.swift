@@ -21,6 +21,7 @@ struct ShareStatisticsView: View {
     @State private var useMap = true
     @State private var showAverageSpeed = true
     @State private var speedSelection: SpeedOption = .speed
+    @State private var topSpeedSelection: TopSpeedOption = .top1
     
     @State private var showTopSpeed = false
     @State private var selectedImage: UIImage?
@@ -34,13 +35,17 @@ struct ShareStatisticsView: View {
     @State private var scale: Double = 1.0
     @State private var showLocation = true
     
+    @State private var showPopUps = false
+    @State private var showTimeOnFoil = false
+    @State private var showTurns = false
+    
     @State private var showCalories = false
     @State private var showHeartRate = false
     @State private var offset = -8.0
     
     var body: some View {
         ScrollView {
-            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, offset: $offset) { view in
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showTurns: showTurns, offset: $offset) { view in
                 self.previewUIView = view
             }
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
@@ -59,52 +64,23 @@ struct ShareStatisticsView: View {
                     .padding(.top, 6)
             }
             
-            Group {
-                //                    Toggle("Use Map", isOn: $useMap)
-                Stepper(value: $scale, in: 0.5...1.0, step: 0.1) {
-                    HStack {
-                        Text("Overlay Scale")
-                        Spacer()
-                        Text("\(scale, specifier: "%.1f")")
-                            .monospacedDigit()
-                    }
-                }
-                Toggle("Show Location", isOn: $showLocation)
-                
-                let hasDistance = statisticsData.runDistance > 0
-                
-                if hasDistance {
-                    Picker("∅-Speed Format", selection: $speedSelection) {
-                        ForEach(SpeedOption.allCases, id: \.self) { option in
-                            Text(option.rawValue).tag(option)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .disabled(!showAverageSpeed)
-                    
-                    Toggle("Show \(speedSelection.rawValue)", isOn: $showAverageSpeed)
-                    
-                    Toggle("Show Top Speed", isOn: $showTopSpeed)
-                    
-                    Toggle("Show Calories", isOn: $showCalories)
-                    Toggle("Show ∅-Heart Rate", isOn: $showHeartRate)
-                }
-                
-                
-                if !useMap {
-                    HStack {
-                        Button("Choose Photo") {
-                            showImagePicker = true
-                        }
-                        Spacer()
-                        Button("Take Photo") {
-                            showCamera = true
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal, 32)
-            .padding(.top, 8)
+            OverlaySettingsView(
+                        scale: $scale,
+                        showLocation: $showLocation,
+                        showAverageSpeed: $showAverageSpeed,
+                        speedSelection: $speedSelection,
+                        showTopSpeed: $showTopSpeed,
+                        topSpeedSelection: $topSpeedSelection,
+                        showPopUps: $showPopUps,
+                        showTimeOnFoil: $showTimeOnFoil,
+                        showTurns: $showTurns,
+                        showCalories: $showCalories,
+                        showHeartRate: $showHeartRate,
+                        useMap: $useMap,
+                        showImagePicker: $showImagePicker,
+                        showCamera: $showCamera,
+                        statisticsData: statisticsData
+                    )
             
             HStack {
                 Button {

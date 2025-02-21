@@ -13,6 +13,7 @@ struct ShareImagePreview: View {
     var useMap: Bool
     var showingSpeedInsteadPace: Bool
     var showTopSpeed: Bool
+    var topSpeedSelection: TopSpeedOption
     var selectedImage: UIImage?
     var showAverageSpeed: Bool
     var scale: Double
@@ -20,6 +21,9 @@ struct ShareImagePreview: View {
     var showLocation: Bool
     var showCalories: Bool
     var showHeart: Bool
+    var showPopUps: Bool
+    var showTimeOnFoil: Bool
+    var showTurns: Bool
     
     @Binding var offset: Double
     
@@ -53,6 +57,10 @@ struct ShareImagePreview: View {
                     Spacer(minLength: 0.0)
                     Group {
                         let hasDistance = statisticsData.runDistance > 0
+                                                
+                        let topSpeedValue = getTopSpeedValue()
+                        
+                        let topSpeedString = topSpeedSelection.rawValue
                         
                         ShareOverlay(
                             sport: statisticsData.workoutType?.prettyString ?? "Surfing",
@@ -62,14 +70,21 @@ struct ShareImagePreview: View {
                             extraValue: hasDistance ? showingSpeedInsteadPace ?
                                 makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem) :
                                 downwindManager.calculateAveragePace(statistic: statisticsData) : String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm",
-                            topSpeedValue: hasDistance ? showTopSpeed ? makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem) : nil : nil,
+                            topSpeedValue: hasDistance ? showTopSpeed ? topSpeedValue : nil : nil,
+                            topSpeedString: topSpeedString,
                             showAverageSpeed: hasDistance ? showAverageSpeed : true,
                             locationName: locationName,
                             showLocation: showLocation,
                             caloriesTitle: showCalories ? "Calories" : nil,
                             caloriesText: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal",
                             heartTitle: showHeart ? "∅-Heart Rate" : nil,
-                            heartText: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm"
+                            heartText: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm",
+                            popUpsTitle: showPopUps ? "Pop Ups" : nil,
+                            popUpsText: String(statisticsData.popUps ?? 0),
+                            timeOnFoilTitle: showTimeOnFoil ? "Time On Foil" : nil,
+                            timeOnFoilText: String(format: "%.1f", statisticsData.percentageOnFoil ?? 0) + " %",
+                            turnsTitle: showTurns ? "Turns" : nil,
+                            turnsText: String(statisticsData.turnsCount ?? 0)
                         )
                         .scaleEffect(scale, anchor: UnitPoint(x: 1, y: 1))
                     }
@@ -96,8 +111,21 @@ struct ShareImagePreview: View {
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
         }
     }
+    
+    private func getTopSpeedValue() -> String {
+        switch topSpeedSelection {
+        case .gps:
+            return makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem)
+        case .top1:
+            return makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem)
+        case .top10:
+            return makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem)
+        }
+    }
 }
 
+
+
 #Preview {
-    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, offset: .constant(-8.0))
+    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showTurns: true, offset: .constant(-8.0))
 }

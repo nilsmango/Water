@@ -15,6 +15,7 @@ struct ShareOverlay: View {
     var extraTitle: String
     var extraValue: String
     var topSpeedValue: String?
+    var topSpeedString: String
     var showAverageSpeed: Bool
     var locationName: String?
     var showLocation: Bool
@@ -22,6 +23,13 @@ struct ShareOverlay: View {
     var caloriesText: String
     var heartTitle: String?
     var heartText: String
+    
+    var popUpsTitle: String?
+    var popUpsText: String
+    var timeOnFoilTitle: String?
+    var timeOnFoilText: String
+    var turnsTitle: String?
+    var turnsText: String
         
     var body: some View {
         VStack(alignment: .trailing, spacing: 0.0) {
@@ -52,40 +60,48 @@ struct ShareOverlay: View {
                                         
                     ShareStatStack(title: sport, value: distance)
                     
-                    Divider()
-                        .frame(height: 35)
-                        .background(.white)
+                    ShareOverlayDivider()
                     
                     ShareStatStack(title: "Time", value: time)
                     
                     if showAverageSpeed {
-                        Divider()
-                            .frame(height: 35)
-                            .background(.white)
+                        ShareOverlayDivider()
                         
                         ShareStatStack(title: extraTitle, value: extraValue)
                     }
                     
                     if let topSpeed = topSpeedValue {
-                        Divider()
-                            .frame(height: 35)
-                            .background(.white)
+                        ShareOverlayDivider()
                         
-                        ShareStatStack(title: "Top Speed", value: topSpeed)
+                        ShareStatStack(title: topSpeedString, value: topSpeed)
+                    }
+                    
+                    if let popUpsTitle = popUpsTitle {
+                        ShareOverlayDivider()
+                        
+                        ShareStatStack(title: popUpsTitle, value: popUpsText)
+                    }
+                    
+                    if let timeOnFoilTitle = timeOnFoilTitle {
+                        ShareOverlayDivider()
+                        
+                        ShareStatStack(title: timeOnFoilTitle, value: timeOnFoilText)
+                    }
+                    
+                    if let turnsTitle = turnsTitle {
+                        ShareOverlayDivider()
+                        
+                        ShareStatStack(title: turnsTitle, value: turnsText)
                     }
                     
                     if let caloriesTitle = caloriesTitle {
-                        Divider()
-                            .frame(height: 35)
-                            .background(.white)
+                        ShareOverlayDivider()
                         
                         ShareStatStack(title: caloriesTitle, value: caloriesText)
                     }
                     
                     if let heartTitle = heartTitle {
-                        Divider()
-                            .frame(height: 35)
-                            .background(.white)
+                        ShareOverlayDivider()
                         
                         ShareStatStack(title: heartTitle, value: heartText)
                     }
@@ -109,7 +125,7 @@ struct ShareOverlay: View {
         VStack(alignment: .trailing) {
             Spacer()
             HStack {
-                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true, caloriesTitle: "Calories", caloriesText: "23 kcal", heartTitle: "long her", heartText: "")
+                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h",  topSpeedString: "10s Top Speed", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true, caloriesTitle: "Calories", caloriesText: "23 kcal", heartTitle: "long her", heartText: "23", popUpsTitle: nil, popUpsText: "", timeOnFoilTitle: nil, timeOnFoilText: "", turnsTitle: nil, turnsText: "")
                     .scaleEffect(1, anchor: UnitPoint(x: 1, y: 1))
             }
             

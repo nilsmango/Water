@@ -13,12 +13,17 @@ struct SharePreviewWrapper: UIViewRepresentable {
     var useMap: Bool
     var showingSpeedInsteadPace: Bool
     var showTopSpeed: Bool
+    var topSpeedSelection: TopSpeedOption
     var showAverageSpeed: Bool
     var scale: Double
     var locationName: String?
     var showLocation: Bool
     var showCalories: Bool
     var showHeartRate: Bool
+    var showPopUps: Bool
+    var showTimeOnFoil: Bool
+    var showTurns: Bool
+    
     @Binding var offset: Double
 
     
@@ -26,7 +31,7 @@ struct SharePreviewWrapper: UIViewRepresentable {
     
     
     func makeUIView(context: Context) -> UIView {
-        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, offset: $offset))
+        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showTurns: showTurns, offset: $offset))
         controller.view.backgroundColor = .clear
         DispatchQueue.main.async {
             self.onRendered(controller.view)
@@ -35,7 +40,7 @@ struct SharePreviewWrapper: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIView, context: Context) {
-        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, offset: $offset))
+        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showTurns: showTurns, offset: $offset))
         controller.view.backgroundColor = .clear
         DispatchQueue.main.async {
             self.onRendered(controller.view)
