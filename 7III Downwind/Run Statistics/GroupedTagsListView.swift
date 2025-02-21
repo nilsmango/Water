@@ -9,32 +9,94 @@ import SwiftUI
 
 struct GroupedTagsListView: View {
     @ObservedObject var downwindManager: DownwindManager
+        
+        init(downwindManager: DownwindManager) {
+            self.downwindManager = downwindManager
+            
+            // Set the color for the page indicators
+            UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.blackAndWhite
+            UIPageControl.appearance().pageIndicatorTintColor = UIColor.grayAndGray
+        }
     
     @State private var chosenTags = [String]()
+    @State private var chosenLocations = [String]()
     
-    var filteredGroupedStatistics: [[[RunStatistic]]] { downwindManager.filterGroupedStatistics(tags: chosenTags) }
+    @State private var tabSelection: Tab = .tags
+    
+    private enum Tab {
+        case tags, locations
+        
+        var prettyString: String {
+            switch self {
+            case .tags:
+                return "Tags"
+            case .locations:
+                return "Locations"
+            }
+        }
+    }
+    
+    var filteredGroupedStatistics: [[[RunStatistic]]] { downwindManager.filterGroupedStatistics(tags: chosenTags, location: chosenLocations.first ?? "") }
+    
+    let maxHeight = UIScreen.main.bounds.height / 3.5
+    
+    
     
     var body: some View {
         // add a row of FlexibleView items that are buttons that will get added to the tags
         VStack {
             
-            FlexibleView(
-                data: downwindManager.tags,
-                spacing: 5,
-                alignment: .leading
-            ) { string in
+            TabView(selection: $tabSelection) {
                 
-                SelectionButtonLabel(string: string, chosenStrings: $chosenTags)
-                    .onTapGesture {
-                        if chosenTags.contains(string) {
-                            chosenTags.removeAll(where: { $0 == string})
-                        } else {
-                            chosenTags.append(string)
-                        }
+                ScrollView {
+                    FlexibleView(
+                        data: downwindManager.tags,
+                        spacing: 5,
+                        alignment: .leading
+                    ) { string in
+                        
+                        SelectionButtonLabel(string: string, chosenStrings: $chosenTags)
+                            .onTapGesture {
+                                if chosenTags.contains(string) {
+                                    chosenTags.removeAll(where: { $0 == string})
+                                } else {
+                                    chosenTags.append(string)
+                                }
+                            }
+                        
                     }
+                }
+//                .frame(maxHeight: maxHeight)
+                .padding([.bottom, .horizontal])
+                        .tag(Tab.tags)
                 
+                ScrollView {
+                    FlexibleView(
+                        data: downwindManager.locationStrings,
+                        spacing: 5,
+                        alignment: .leading
+                    ) { string in
+                        
+                        SelectionButtonLabel(string: string, chosenStrings: $chosenLocations)
+                            .onTapGesture {
+                                if chosenLocations.contains(string) {
+                                    chosenLocations.removeAll(where: { $0 == string})
+                                } else {
+                                    chosenLocations.removeAll()
+                                    chosenLocations.append(string)
+                                }
+                            }
+                        
+                    }
+                }
+//                .frame(maxHeight: maxHeight)
+                .padding([.bottom, .horizontal])
+                        .tag(Tab.locations)
+                               
             }
-            .padding()
+            .tabViewStyle(PageTabViewStyle())
+            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .interactive))
+            .frame(maxHeight: maxHeight)
             
             List {
                 ForEach(0..<filteredGroupedStatistics.count, id: \.self) { yearIndex in
@@ -47,7 +109,7 @@ struct GroupedTagsListView: View {
                                 NavigationLink {
                                     StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
                                 } label: {
-                                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil")
+                                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "Surfing")
                                 }
                             }
                             
@@ -66,7 +128,8 @@ struct GroupedTagsListView: View {
                 }
             }
         }
-        .navigationTitle("Filter by Tags")
+        .navigationTitle("\(tabSelection.prettyString)")
+        .navigationBarTitleDisplayMode(.inline)
         
     }
     
@@ -78,15 +141,23 @@ struct GroupedTagsListView: View {
     }
     
     private func monthSectionHeader(yearIndex: Int, monthIndex: Int) -> String {
-        let month = Calendar.current.component(.month, from: filteredGroupedStatistics[yearIndex][monthIndex].first?.startDate ?? Date.distantPast)
-        let monthName = Calendar.current.monthSymbols[month - 1]
-        let year = Calendar.current.component(.year, from: filteredGroupedStatistics[yearIndex].first?.first?.startDate ?? Date.distantPast)
-        let yearString = String(year)
+        let monthComponent = filteredGroupedStatistics[yearIndex][monthIndex].first?.startDate
+        var monthName = ""
+        var yearString = ""
+        if let monthComponent = monthComponent {
+            let month = Calendar.current.component(.month, from: monthComponent)
+            monthName = Calendar.current.monthSymbols[month - 1]
+            let year = Calendar.current.component(.year, from: monthComponent)
+            yearString = String(year)
+        }
+        
         return monthName + " " + yearString
     }
 }
 
 
 #Preview {
-    GroupedTagsListView(downwindManager: DownwindManager())
+    NavigationStack {
+        GroupedTagsListView(downwindManager: DownwindManager())
+    }
 }

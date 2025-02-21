@@ -103,7 +103,7 @@ struct StatisticsView: View {
         .navigationTitle("Statistics")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink("Filter by Tags") {
+                NavigationLink("Filter") {
                     GroupedTagsListView(downwindManager: downwindManager)
                 }
             }

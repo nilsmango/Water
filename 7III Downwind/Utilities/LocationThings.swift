@@ -334,8 +334,15 @@ func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double 
         turnsData.append(Array(data[dataIndex1...dataIndex2]))
     }
     
-    let totalTime = data.last!.timestamp.timeIntervalSince(data.first!.timestamp)
-    let timeOnFoilPercentage = (timeOnFoil / totalTime) * 100
+    var totalTime: TimeInterval = 0
+    if data.count > 0 {
+        totalTime = data.last!.timestamp.timeIntervalSince(data.first!.timestamp)
+    }
+    
+    var timeOnFoilPercentage = (timeOnFoil / totalTime) * 100
+    if timeOnFoilPercentage.isNaN {
+        timeOnFoilPercentage = 0
+    }
     
     var turns = 0
     if countTurns {

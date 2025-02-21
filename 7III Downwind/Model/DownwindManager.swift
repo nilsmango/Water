@@ -96,6 +96,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var loadingRunStatistics = false
     var runEdits: [RunEdit] = []
     @Published var groupedRunStatistics: [[[RunStatistic]]] = []
+    @Published var locationStrings: [String] = []
+
     // TODO: make this non published?
     @Published var locationAccuracy: Double = 1000.0
     // summary view
@@ -787,6 +789,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         self.loadingRunStatistics = false
                         
+                        self.updateLocationStrings()
+                        
                     }
                 }
                 
@@ -1265,14 +1269,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// save location string to run edits
-    func saveLocationString(string: String, statisticsID: UUID) {
+    func saveLocationString(string: String, statisticsID: UUID, withSaving: Bool = true) {
         if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsID }) {
             runEdits[editIndex].locationString = string
         } else {
             let runEdit = RunEdit(id: statisticsID, locationString: string)
             runEdits.append(runEdit)
         }
-        saveRunEdits()
+        if withSaving {
+            saveRunEdits()
+        }
     }
     
     /// save top speeds to run edits
@@ -1339,7 +1345,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func createLocationNames(statisticsData: RunStatistic, completion: @escaping (String) -> Void) {
-        var locationName = ""
+        var locationName = "Unknown Location"
 
         func processEndLocation() {
             if let lastDataPoint = statisticsData.locationData.last {
@@ -1518,6 +1524,64 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
+    /// find missing location strings and add them
+    private func updateLocationStrings() {
+        var changedLocationStrings = false
+        let dispatchGroup = DispatchGroup()
+        
+        print("running location strings update")
+        
+        for statistic in runStatistics {
+            if statistic.locationString == nil || statistic.locationString!.isEmpty {
+                if !changedLocationStrings {
+                    changedLocationStrings = true
+                }
+                
+                if let index = runStatistics.firstIndex(where: { $0.id == statistic.id }) {
+                    dispatchGroup.enter()
+                    createLocationNames(statisticsData: statistic) { location in
+                        DispatchQueue.main.async {
+                            // saving to run edits without saving them to disk (will do that only once and later)
+                            self.saveLocationString(string: location, statisticsID: statistic.id, withSaving: false)
+                            self.runStatistics[index].locationString = location
+                        }
+                        let dateString = statistic.startDate?.formatted(date: .abbreviated, time: .omitted) ?? "unknown"
+
+                        print("updated location string of: \(location), date: \(dateString)")
+                        dispatchGroup.leave()
+                    }
+                }
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            if changedLocationStrings {
+                    self.updateGroupedRunArray()
+                    print("updated grouped run array")
+                    // save run edits only once
+                    self.saveRunEdits()
+                    print("print saved run edits")
+                }
+            // updating the list of location strings
+            self.updateLocationStringsList()
+            }
+    }
+    
+    private func updateLocationStringsList() {
+        DispatchQueue.main.async {
+            for statistic in self.runStatistics {
+            if let string = statistic.locationString, string != "" {
+                if !self.locationStrings.contains(string) {
+                        self.locationStrings.append(string)
+                    }
+                }
+            }
+            
+            self.locationStrings.sort()
+        }
+    }
+    
+    
     /// returns missing locations
     private func findMissingLocationData(original: [LocationData], new: [LocationData]) -> [LocationData] {
         let missingData = original.filter { !new.contains($0) }
@@ -1543,14 +1607,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// filter the grouped statistics array
-    func filterGroupedStatistics(tags: [String]) -> [[[RunStatistic]]] {
-        if tags.isEmpty {
+    func filterGroupedStatistics(tags: [String], location: String) -> [[[RunStatistic]]] {
+        if tags.isEmpty && location.isEmpty {
             return groupedRunStatistics
         } else {
             let filteredGroupedStatistics = groupedRunStatistics.map { group in
                 group.map { subGroup in
                     subGroup.filter { statistic in
-                        tags.allSatisfy { tag in
+                        // Filter by tags
+                        let tagMatches = tags.allSatisfy { tag in
                             if let statisticTags = statistic.tags {
                                 let tagString = statisticTags.joined(separator: " ").lowercased()
                                 return tagString.contains(tag.lowercased())
@@ -1558,6 +1623,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 return false
                             }
                         }
+                        // Filter by location
+                        let locationMatches = location.isEmpty || statistic.locationString == location
+                        return tagMatches && locationMatches
                     }
                 }
             }
