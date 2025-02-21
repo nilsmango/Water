@@ -19,7 +19,7 @@ struct UpgradeView: View {
     @State private var wasPurchased = false
     @State private var showCodeSheet = false
     
-    enum Tab {
+    private enum Tab {
         case poseidon, weekend, kook
         
         var color: Color {
@@ -34,13 +34,13 @@ struct UpgradeView: View {
         }
     }
     
-    struct FeatureItem: Identifiable {
+    private struct FeatureItem: Identifiable {
         let id = UUID()
         let text: String
         let symbol: String
     }
 
-    let features = [
+    private let features = [
         FeatureItem(text: "Unlimited statistics", symbol: "chart.xyaxis.line"),
         FeatureItem(text: "Unlimited tags", symbol: "tag"),
         FeatureItem(text: "Editing of sessions", symbol: "pencil"),
