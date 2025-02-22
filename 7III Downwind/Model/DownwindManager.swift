@@ -439,6 +439,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return (totalSessions, workoutCounts)
     }
     
+    func getWorkoutsOfList() -> [String] {
+        var workoutStrings: [String] = []
+        for run in runStatistics {
+            if let type = run.workoutType {
+                let string = type.prettyString
+                if !workoutStrings.contains(string) {
+                    workoutStrings.append(string)
+                }
+            }
+        }
+        workoutStrings.sort()
+        return workoutStrings
+    }
+    
     func calculateDistance(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: Double]) {
         var totalDistance = 0.0
         var workoutDistances: [WorkoutType: Double] = [:]
@@ -1659,15 +1673,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// filter the grouped statistics array
-    func filterGroupedStatistics(tags: [String], location: String) -> [[[RunStatistic]]] {
-        if tags.isEmpty && location.isEmpty {
+    func filterGroupedStatistics(tags: [String], location: String, workout: String) -> [[[RunStatistic]]] {
+        if tags.isEmpty && location.isEmpty && workout.isEmpty {
             return groupedRunStatistics
         } else {
             let filteredGroupedStatistics = groupedRunStatistics.map { group in
                 group.map { subGroup in
                     subGroup.filter { statistic in
                         // Filter by tags
-                        let tagMatches = tags.allSatisfy { tag in
+                        let tagMatches = tags.isEmpty || tags.allSatisfy { tag in
                             if let statisticTags = statistic.tags {
                                 let tagString = statisticTags.joined(separator: " ").lowercased()
                                 return tagString.contains(tag.lowercased())
@@ -1675,9 +1689,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 return false
                             }
                         }
-                        // Filter by location
+                        
+                        // Filter by location & workout
                         let locationMatches = location.isEmpty || statistic.locationString == location
-                        return tagMatches && locationMatches
+                        let workoutMatches = workout.isEmpty || (statistic.workoutType?.prettyString ?? "") == workout
+                        
+                        return tagMatches && locationMatches && workoutMatches
                     }
                 }
             }

@@ -19,12 +19,13 @@ struct GroupedTagsListView: View {
         }
     
     @State private var chosenTags = [String]()
-    @State private var chosenLocations = [String]()
+    @State private var chosenLocation = ""
+    @State private var chosenWorkout = ""
     
     @State private var tabSelection: Tab = .tags
     
     private enum Tab {
-        case tags, locations
+        case tags, locations, workouts
         
         var prettyString: String {
             switch self {
@@ -32,13 +33,15 @@ struct GroupedTagsListView: View {
                 return "Tags"
             case .locations:
                 return "Locations"
+            case .workouts:
+                return "Workouts"
             }
         }
     }
     
-    var filteredGroupedStatistics: [[[RunStatistic]]] { downwindManager.filterGroupedStatistics(tags: chosenTags, location: chosenLocations.first ?? "") }
+    var filteredGroupedStatistics: [[[RunStatistic]]] { downwindManager.filterGroupedStatistics(tags: chosenTags, location: chosenLocation, workout: chosenWorkout) }
     
-    let maxHeight = UIScreen.main.bounds.height / 3.5
+    let maxHeight = UIScreen.main.bounds.height / 5
     
     
     
@@ -66,37 +69,26 @@ struct GroupedTagsListView: View {
                         
                     }
                 }
-//                .frame(maxHeight: maxHeight)
+                 .frame(maxHeight: maxHeight)
                 .padding([.bottom, .horizontal])
-                        .tag(Tab.tags)
+                .tag(Tab.tags)
                 
-                ScrollView {
-                    FlexibleView(
-                        data: downwindManager.locationStrings,
-                        spacing: 5,
-                        alignment: .leading
-                    ) { string in
-                        
-                        SelectionButtonLabel(string: string, chosenStrings: $chosenLocations)
-                            .onTapGesture {
-                                if chosenLocations.contains(string) {
-                                    chosenLocations.removeAll(where: { $0 == string})
-                                } else {
-                                    chosenLocations.removeAll()
-                                    chosenLocations.append(string)
-                                }
-                            }
-                        
-                    }
-                }
-//                .frame(maxHeight: maxHeight)
-                .padding([.bottom, .horizontal])
-                        .tag(Tab.locations)
+                StringSelectionView(allStrings: downwindManager.locationStrings, chosenString: $chosenLocation)
+                    .frame(maxHeight: maxHeight)
+                    .padding([.bottom])
+                    .tag(Tab.locations)
+                
+                
+                StringSelectionView(allStrings: downwindManager.getWorkoutsOfList(), chosenString: $chosenWorkout)
+                    .frame(maxHeight: maxHeight)
+                    .padding([.bottom])
+                    .tag(Tab.workouts)
                                
             }
+            .frame(maxHeight: maxHeight + 60)
             .tabViewStyle(PageTabViewStyle())
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .interactive))
-            .frame(maxHeight: maxHeight)
+            .padding(.bottom, -10)
             
             List {
                 ForEach(0..<filteredGroupedStatistics.count, id: \.self) { yearIndex in
@@ -109,7 +101,7 @@ struct GroupedTagsListView: View {
                                 NavigationLink {
                                     StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
                                 } label: {
-                                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "Surfing", withTags: true, tags: statistic.tags ?? [], withLocation: chosenLocations.isEmpty ? true : false, location: statistic.locationString ?? "", withoutLocationSymbol: true)
+                                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "Surfing", withTags: true, tags: statistic.tags ?? [], withLocation: true, location: statistic.locationString ?? "", withoutLocationSymbol: true)
                                 }
                             }
                             
