@@ -900,7 +900,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return (tags: tags, workoutType: workoutType, averageSpeed: averageSpeed, topSpeed: topSpeed, totalDistance: totalDistance, startLocation: startLocation)
     }
     
-    private func updateGroupedRunArray() {
+    func updateGroupedRunArray() {
         let calendar = Calendar.current
         var grouped: [[[RunStatistic]]] = []
         
@@ -1309,16 +1309,18 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     /// save statistic to disk with new tags
-    func saveStatisticWithNewTags(tags: [String], type: WorkoutType, saveType: Bool = false, statisticsData: RunStatistic) {
+    func saveStatisticWithNewTags(tags: [String], type: WorkoutType, saveType: Bool = false, statisticsData: RunStatistic, locationName: String = "") {
         if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsData.id }) {
             runEdits[editIndex].newTags = tags
             if saveType {
                 runEdits[editIndex].newWorkoutType = type
+                runEdits[editIndex].locationString = locationName
             }
         } else {
             var runEdit = RunEdit(id: statisticsData.id, newTags: tags)
             if saveType {
                 runEdit.newWorkoutType = type
+                runEdit.locationString = locationName
             }
             runEdits.append(runEdit)
         }
@@ -1328,6 +1330,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             runStatistics[index].tags = tags
             if saveType {
                 runStatistics[index].workoutType = type
+                runStatistics[index].locationString = locationName
             }
         }
         
@@ -1342,16 +1345,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         self.tags = self.tags.sorted()
 
         saveTags()
+        
+        if saveType && !locationName.isEmpty {
+            updateAndSortLocationStrings(location: locationName)
+        }
     }
     
     func createLocationNames(statisticsData: RunStatistic, completion: @escaping (String) -> Void) {
         var locationName = "Unknown Location"
-
+        
         func processEndLocation() {
             if let lastDataPoint = statisticsData.locationData.last {
-                getNameOfLocation(location: lastDataPoint) { endName in
+                GeocodingManager.shared.getNameOfLocation(location: lastDataPoint) { endName in
                     if let endName = endName, !locationName.contains("→"), locationName != endName {
-                        locationName = locationName.isEmpty ? endName : "\(locationName) → \(endName)"
+                        locationName = locationName.isEmpty || locationName == "Unknown Location" ? endName : "\(locationName) → \(endName)"
                     }
                     completion(locationName)
                 }
@@ -1359,16 +1366,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 completion(locationName)
             }
         }
-
+        
         if let firstDataPoint = statisticsData.locationData.first {
-            getNameOfLocation(location: firstDataPoint) { startName in
+            GeocodingManager.shared.getNameOfLocation(location: firstDataPoint) { startName in
                 if let startName = startName {
                     locationName = startName
                 }
                 processEndLocation()
             }
         } else if let startLocation = statisticsData.startLocation {
-            getNameOfLocation(location: startLocation) { startName in
+            GeocodingManager.shared.getNameOfLocation(location: startLocation) { startName in
                 if let startName = startName {
                     locationName = startName
                 }
@@ -1527,45 +1534,90 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// find missing location strings and add them
     private func updateLocationStrings() {
         var changedLocationStrings = false
-        let dispatchGroup = DispatchGroup()
+        
+        updateLocationStringsList()
         
         print("running location strings update")
         
         for statistic in runStatistics {
-            if statistic.locationString == nil || statistic.locationString!.isEmpty {
-                if !changedLocationStrings {
-                    changedLocationStrings = true
-                }
+            if statistic.locationString == nil || statistic.locationString == "" {
                 
-                if let index = runStatistics.firstIndex(where: { $0.id == statistic.id }) {
-                    dispatchGroup.enter()
-                    createLocationNames(statisticsData: statistic) { location in
-                        DispatchQueue.main.async {
-                            // saving to run edits without saving them to disk (will do that only once and later)
-                            self.saveLocationString(string: location, statisticsID: statistic.id, withSaving: false)
-                            self.runStatistics[index].locationString = location
+                loadWorkoutRouteEndpoints(id: statistic.id) { endpoints in
+                    
+                    if endpoints != nil || statistic.startLocation != nil {
+                        let locationData = endpoints != nil ? [endpoints!.0, endpoints!.1] : []
+                        let fakeRunStatistic = RunStatistic(id: statistic.id, locationData: locationData, startLocation: statistic.startLocation)
+                        
+                        if !changedLocationStrings {
+                            changedLocationStrings = true
                         }
-                        let dateString = statistic.startDate?.formatted(date: .abbreviated, time: .omitted) ?? "unknown"
+                        
+                        if let index = self.runStatistics.firstIndex(where: { $0.id == statistic.id }) {
+//                            dispatchGroup.enter()
+                            self.createLocationNames(statisticsData: fakeRunStatistic) { location in
+                                DispatchQueue.main.async {
+                                    // saving to run edits without saving them to disk (will do that only once and later)
+                                    self.saveLocationString(string: location, statisticsID: statistic.id, withSaving: true)
+                                    self.runStatistics[index].locationString = location
+                                    // updating the locationStrings
+                                    self.updateAndSortLocationStrings(location: location)
+                                }
+                                let dateString = statistic.startDate?.formatted(date: .abbreviated, time: .omitted) ?? "unknown"
 
-                        print("updated location string of: \(location), date: \(dateString)")
-                        dispatchGroup.leave()
+                                print("updating location string of: \(location), date: \(dateString)")
+//                                dispatchGroup.leave()
+                                self.updateGroupedRunArray()
+                                
+                            }
+                        }
+                        
+                    } else {
+                        print("Could not load route endpoints nor startLocation found for run")
                     }
                 }
             }
         }
-        
-        dispatchGroup.notify(queue: .main) {
-            if changedLocationStrings {
-                    self.updateGroupedRunArray()
-                    print("updated grouped run array")
-                    // save run edits only once
-                    self.saveRunEdits()
-                    print("print saved run edits")
-                }
-            // updating the list of location strings
-            self.updateLocationStringsList()
-            }
     }
+    
+    func updateAndSortLocationStrings(location: String) {
+        if !locationStrings.contains(location) {
+            locationStrings.append(location)
+        }
+        locationStrings.sort()
+    }
+    
+    private func loadWorkoutRouteEndpoints(id: UUID, completion: @escaping ((LocationData, LocationData)?) -> Void) {
+        // Only proceed if health data is available
+        guard HKHealthStore.isHealthDataAvailable() else {
+            completion(nil)
+            return
+        }
+        
+        // Load the workout route
+        loadWorkoutRouteHeartFromHealth(id: id) { route, _ in
+            guard let route = route else {
+                completion(nil)
+                return
+            }
+            
+            // Convert route to location data
+            self.locationDataFromWorkoutRoute(route: route) { locationData in
+                // Check if we have enough location points
+                guard locationData.count >= 2 else {
+                    completion(nil)
+                    return
+                }
+                
+                let firstLocation = locationData[0]
+                let lastLocation = locationData[locationData.count - 1]
+                
+                DispatchQueue.main.async {
+                    completion((firstLocation, lastLocation))
+                }
+            }
+        }
+    }
+    
     
     private func updateLocationStringsList() {
         DispatchQueue.main.async {

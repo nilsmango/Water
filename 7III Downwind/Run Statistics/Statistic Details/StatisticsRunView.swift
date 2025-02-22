@@ -16,6 +16,7 @@ struct StatisticsRunView: View {
     var runDates: String { downwindManager.makeTimeIntervalDate(startDate: statisticsData.startDate ?? statisticsData.locationData.first?.timestamp ?? Date.now, endDate: statisticsData.endDate ?? statisticsData.locationData.last?.timestamp ?? Date.now, withYear: true) }
     
     @State private var locationName: String = ""
+    @State private var editLocationName: String = ""
     
     @State private var showRounds = false
     @State private var showMapSheet = false
@@ -112,16 +113,25 @@ struct StatisticsRunView: View {
             if statisticsData.tags != nil {
                 tags = statisticsData.tags!
             }
+            locationName = statisticsData.locationString ?? ""
+            editLocationName = locationName
             
             downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
                 
                 // if empty create location start and end names after loading route
-                if statisticsData.locationString == nil || statisticsData.locationString == "" {
+                if statisticsData.locationString == nil || statisticsData.locationString == "" || statisticsData.locationString == "Unknown Location" {
                     downwindManager.createLocationNames(statisticsData: statisticsData) { location in
                         locationName = location
                         DispatchQueue.main.async {
                             downwindManager.saveLocationString(string: locationName, statisticsID: statisticsData.id)
                             statisticsData.locationString = locationName
+                            if let index = downwindManager.runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
+                                downwindManager.runStatistics[index].locationString = locationName
+                                // update grouped array
+                                downwindManager.updateGroupedRunArray()
+                            }
+                            // updating the locationStrings
+                            downwindManager.updateAndSortLocationStrings(location: location)
                         }
                     }
                 }
@@ -154,19 +164,20 @@ struct StatisticsRunView: View {
                         }
                     }
                 }
-
-                // update some things if we have location data
-                if !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 {
-                    DispatchQueue.main.async {
-                        downwindManager.saveEditedRoute(newStatistic: statisticsData, updatingExternal: true)
-                    }
-                }
+                
                 
                 downwindManager.fetchHeartRatesOverTime(startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
                     if let heartRateData = heartRateData {
                         heartRates = heartRateData
                     }
-                }                
+                }
+                
+                // update some things if we have location data but no distance
+                if !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 {
+                    DispatchQueue.main.async {
+                        downwindManager.saveEditedRoute(newStatistic: statisticsData, updatingExternal: true)
+                    }
+                }
             }
             
         if downwindManager.showPromptForReview {
@@ -350,7 +361,7 @@ struct StatisticsRunView: View {
         .sheet(isPresented: $showTagsEditView, content: {
             NavigationStack {
                 List {
-                    TagsEditView(tags: $editTags, downwindManager: downwindManager, type: .constant(.windsurf))
+                    TagsEditView(tags: $editTags, downwindManager: downwindManager, type: .constant(.windsurf), locationString: .constant(""))
                 }
                 .navigationTitle("Edit Tags")
                 .toolbar {
@@ -378,7 +389,7 @@ struct StatisticsRunView: View {
         .sheet(isPresented: $showEditData, content: {
             NavigationStack {
                 List {
-                    TagsEditView(tags: $editTags, downwindManager: downwindManager, type: $editType, withTypeEdit: true)
+                    TagsEditView(tags: $editTags, downwindManager: downwindManager, type: $editType, locationString: $editLocationName, withTypeEdit: true)
                 }
                 .navigationTitle("Edit Data")
                 .toolbar {
@@ -393,12 +404,14 @@ struct StatisticsRunView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             tags = editTags
-                            downwindManager.saveStatisticWithNewTags(tags: tags, type: editType, saveType: true, statisticsData: statisticsData)
+                            locationName = editLocationName
+                            statisticsData.locationString = editLocationName
+                            downwindManager.saveStatisticWithNewTags(tags: tags, type: editType, saveType: true, statisticsData: statisticsData, locationName: editLocationName)
                             showEditData = false
                         }, label: {
                             Text("Save")
                         })
-                        .disabled(tags == editTags && statisticsData.workoutType == editType)
+                        .disabled(tags == editTags && statisticsData.workoutType == editType && editLocationName == locationName)
                     }
                 }
             }

@@ -80,6 +80,7 @@
 		785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */; };
 		785CCF182D6891260075CA4C /* OverlaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF172D6891260075CA4C /* OverlaySettingsView.swift */; };
 		785CCF1A2D6894DB0075CA4C /* ShareOverlayDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF192D6894DB0075CA4C /* ShareOverlayDivider.swift */; };
+		785CCF1C2D69DE8B0075CA4C /* GeocodingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1B2D69DE8B0075CA4C /* GeocodingManager.swift */; };
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
@@ -260,6 +261,7 @@
 		785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayAlertView.swift; sourceTree = "<group>"; };
 		785CCF172D6891260075CA4C /* OverlaySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlaySettingsView.swift; sourceTree = "<group>"; };
 		785CCF192D6894DB0075CA4C /* ShareOverlayDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareOverlayDivider.swift; sourceTree = "<group>"; };
+		785CCF1B2D69DE8B0075CA4C /* GeocodingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingManager.swift; sourceTree = "<group>"; };
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
@@ -512,6 +514,7 @@
 				78B388E32C18C93F00C75A60 /* WorkoutType.swift */,
 				78C4D2392BA6DADB00639E65 /* LocationData.swift */,
 				78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */,
+				785CCF1B2D69DE8B0075CA4C /* GeocodingManager.swift */,
 				7877E1232BC3D87C00776890 /* PolylineData.swift */,
 			);
 			path = Model;
@@ -882,6 +885,7 @@
 				78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
 				781A4BA52C4E77B10046AE0E /* ShareStatisticsView.swift in Sources */,
+				785CCF1C2D69DE8B0075CA4C /* GeocodingManager.swift in Sources */,
 				78C4D2432BAB6A9500639E65 /* StatisticsMap.swift in Sources */,
 				781A4BA92C4E874E0046AE0E /* Snapshot.swift in Sources */,
 				781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */,

@@ -15,6 +15,10 @@ struct RunOverView: View {
     let averageSpeed: String
     let kCal: String
     let activityType: String
+    var withTags: Bool = false
+    var tags: [String] = []
+    var withLocation: Bool = false
+    var location: String = ""
     
     var body: some View {
         VStack {
@@ -26,6 +30,17 @@ struct RunOverView: View {
                     .fontDesign(.rounded)
                     .foregroundStyle(.accent)
                 Spacer()
+            }
+            
+            if withLocation, !location.isEmpty {
+                    HStack {
+                        Image(systemName: "location.fill")
+//                            .foregroundStyle(.accent)
+                        Text(location)
+                        
+                        Spacer()
+                    }
+                    .fontWeight(.bold)
             }
             
             if distance != "0 m" {
@@ -58,6 +73,17 @@ struct RunOverView: View {
                 }
             }
             
+            if withTags, !tags.isEmpty {
+                HStack {
+                    Text(tags.joined(separator: " "))
+                        .foregroundStyle(.accent)
+//                        .opacity(0.8)
+//                        .fontWeight(.bold)
+                    Spacer()
+                }
+            }
+            
+            
         }
     }
 }
@@ -68,7 +94,7 @@ struct RunOverView: View {
             NavigationLink {
                 Text("Run run run")
             } label: {
-                RunOverView(runDate: "Jan 03 20:30 - 23:00", runName: "Flying Eagles Club", distance: "21 km", time: "43 min 12 s", averageSpeed: "15 km/h", kCal: "1083 kcal", activityType: "DW SUP Foil")
+                RunOverView(runDate: "Jan 03 20:30 - 23:00", runName: "Flying Eagles Club", distance: "21 km", time: "43 min 12 s", averageSpeed: "15 km/h", kCal: "1083 kcal", activityType: "DW SUP Foil", withTags: true, tags: ["#swim", "#wakeboard", "#hitIt", "#fuckThis", "#progression"], withLocation: true, location: "Maglingen → Überlingen")
             }
         }
         

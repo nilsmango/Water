@@ -15,6 +15,8 @@ struct TagsEditView: View {
     @State private var allTags = [String]()
     
     @State private var newTag = ""
+    @State private var firstLocation = ""
+    @State private var secondLocation = ""
     
     @FocusState private var isFieldFocused: Bool
     
@@ -39,33 +41,74 @@ struct TagsEditView: View {
         allTags = Array(Set(downwindManager.tags + tags)).sorted()
     }
     
+    private func extractLocations() {
+        let components = locationString.components(separatedBy: "→").map { $0.trimmingCharacters(in: .whitespaces) }
+        firstLocation = components.first ?? ""
+        secondLocation = components.count > 1 ? components[1] : invisibleLocation
+    }
+    
     @Binding var type: WorkoutType
+    @Binding var locationString: String
     
     var withTypeEdit = false
     
+    let invisibleLocation = "Zerothing"
+    
     var body: some View {
         Section {
-            if allTags.isEmpty {
-                EmptyTagsView()
-            } else {
-                FlexibleView(
-                    data: allTags,
-                    spacing: 5,
-                    alignment: .leading
-                ) { tag in
-                    SelectionButtonLabel(string: tag, chosenStrings: $tags)
-                        .onTapGesture {
-                                if tags.contains(tag) {
-                                    tags.removeAll(where: { $0 == tag })
-                                    updateAllTags()
-                                } else {
-                                        tags.append(tag)
-                                        updateAllTags()
-                                }
-                        }
+            VStack {
+                HStack {
+//                    Label("", systemImage: "location.fill")
+//                        .padding(.trailing, -10)
+                    
+                    TextField("Start Location", text: $firstLocation)
+                    
+                    Group {
+                        Text("→")
+                        TextField("End Location", text: $secondLocation)
+                    }
+                    .opacity(secondLocation != invisibleLocation ? 1 : 0)
+                                        
+                    Spacer()
                 }
+                .onChange(of: firstLocation) { oldValue, newValue in
+                    if locationString.contains("→") {
+                        locationString = [newValue, secondLocation].map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: " → ")
+                        
+                    } else {
+                        locationString = newValue.trimmingCharacters(in: .whitespaces)
+                    }
+                }
+                
+                .onChange(of: secondLocation) { oldValue, newValue in
+                    if newValue == invisibleLocation || newValue == "" {
+                        locationString = firstLocation.trimmingCharacters(in: .whitespaces)
+                    } else {
+                        locationString = [firstLocation, newValue].map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: " → ")
+                    }
+                    
+                }
+                
+                HStack {
+                    if secondLocation != invisibleLocation {
+                        Button {
+                            secondLocation = invisibleLocation
+                        } label: {
+                            Text("Remove End Location")
+                            
+                        }
+                        
+                    } else {
+                        Button {
+                            secondLocation = ""
+                        } label: {
+                            Text("Add End Location")
+                        }
+                    }
+                    Spacer()
+                }
+                .buttonStyle(.borderedProminent)
             }
-            
         } header: {
             if withTypeEdit {
                 VStack(alignment: .leading) {
@@ -97,19 +140,52 @@ struct TagsEditView: View {
                             .textCase(nil)
                             .padding(.bottom)
                             .padding(.top, -6.0)
-                            
-                    Text("Edit Tags")
+                    
+                    Text("Edit Location")
                         .textCase(nil)
                         .font(.title3)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
+                    
                     }
                 }
             }
             
         .onAppear {
+            extractLocations()
             updateAllTags()
         }
+        
+        Section {
+            if allTags.isEmpty {
+                EmptyTagsView()
+            } else {
+                FlexibleView(
+                    data: allTags,
+                    spacing: 5,
+                    alignment: .leading
+                ) { tag in
+                    SelectionButtonLabel(string: tag, chosenStrings: $tags)
+                        .onTapGesture {
+                                if tags.contains(tag) {
+                                    tags.removeAll(where: { $0 == tag })
+                                    updateAllTags()
+                                } else {
+                                        tags.append(tag)
+                                        updateAllTags()
+                                }
+                        }
+                }
+            }
+        } header: {
+            Text("Edit Tags")
+                .textCase(nil)
+                .font(.title3)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                .padding(.top, -6.0)
+        }
+        
         Section {
             HStack {
                 TextField("Add New Tag", text: $newTag)
@@ -150,12 +226,13 @@ struct TagsEditView: View {
             
         }
     }
+    
 }
 
 #Preview {
     List {
         
-        TagsEditView(tags: .constant(createArray()), downwindManager: DownwindManager(), type: .constant(.canoe), withTypeEdit: true)
+        TagsEditView(tags: .constant(createArray()), downwindManager: DownwindManager(), type: .constant(.canoe), locationString: .constant("Concise → Murten"), withTypeEdit: true)
     }
 }
 
