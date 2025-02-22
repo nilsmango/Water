@@ -19,6 +19,7 @@ struct RunOverView: View {
     var tags: [String] = []
     var withLocation: Bool = false
     var location: String = ""
+    var withoutLocationSymbol: Bool = false
     
     var body: some View {
         VStack {
@@ -34,8 +35,11 @@ struct RunOverView: View {
             
             if withLocation, !location.isEmpty {
                     HStack {
-                        Image(systemName: "location.fill")
-//                            .foregroundStyle(.accent)
+                        if !withoutLocationSymbol {
+                            Image(systemName: "location.fill")
+    //                            .foregroundStyle(.accent)
+                        }
+                        
                         Text(location)
                         
                         Spacer()
