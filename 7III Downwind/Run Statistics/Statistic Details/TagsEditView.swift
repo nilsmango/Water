@@ -79,7 +79,6 @@ struct TagsEditView: View {
                         locationString = newValue.trimmingCharacters(in: .whitespaces)
                     }
                 }
-                
                 .onChange(of: secondLocation) { oldValue, newValue in
                     if newValue == invisibleLocation || newValue == "" {
                         locationString = firstLocation.trimmingCharacters(in: .whitespaces)
@@ -90,24 +89,51 @@ struct TagsEditView: View {
                 }
                 
                 HStack {
-                    if secondLocation != invisibleLocation {
-                        Button {
-                            secondLocation = invisibleLocation
-                        } label: {
-                            Text("Remove End Location")
+                        if secondLocation != invisibleLocation {
+                            Button {
+                                secondLocation = invisibleLocation
+                            } label: {
+                                Text("Remove End Location")
+                                
+                            }
                             
+                        } else {
+                            Button {
+                                secondLocation = ""
+                            } label: {
+                                Text("Add End Location")
+                            }
                         }
                         
-                    } else {
-                        Button {
-                            secondLocation = ""
-                        } label: {
-                            Text("Add End Location")
-                        }
-                    }
+                    
                     Spacer()
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.bordered)
+                .tint(.accent)
+                
+                if !downwindManager.locationStrings.isEmpty {
+                HStack {
+                    
+                        Menu {
+                            ForEach(downwindManager.locationStrings, id: \.self) { string in
+                                
+                                    Button(action: {
+                                        locationString = string
+                                        extractLocations()
+                                    }) {
+                                       Text(string)
+                                        
+                                    }
+                            }
+                        } label: {
+                            Text("Use Existing Location")
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.green)
+                    
+                    Spacer()
+                }
+                }
             }
         } header: {
             if withTypeEdit {
