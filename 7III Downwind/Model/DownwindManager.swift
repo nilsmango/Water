@@ -974,7 +974,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     self.locationDataFromWorkoutRoute(route: route) { locationData in
                         if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
                             var locationData = locationData
-                            // find backup
+                            // find backup - this is done by comparing start date, but actually would make more sense to use id (?)
                             if let backupIndex = self.backupWorkoutData.firstIndex(where: { $0.startDate == statistic.startDate }) {
                                 if locationData.isEmpty {
                                     locationData = self.backupWorkoutData[backupIndex].locationData
@@ -1603,6 +1603,18 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func loadWorkoutRouteEndpoints(id: UUID, completion: @escaping ((LocationData, LocationData)?) -> Void) {
         // Only proceed if health data is available
         guard HKHealthStore.isHealthDataAvailable() else {
+            // when we don't save to health we need this process
+            if let runEdit = runEdits.first(where: { $0.id == id }) {
+                if let deletedLocations = runEdit.deletedLocations {
+                    if let runIndex = runStatistics.firstIndex(where: { $0.id == id }) {
+                        let locationData = runStatistics[runIndex].locationData
+                        let newLocationData = locationData.filter { !deletedLocations.contains($0)}
+                        if newLocationData.count >= 2 {
+                            completion((newLocationData.first!, newLocationData.last!))
+                        }
+                    }
+                }
+            }
             completion(nil)
             return
         }
@@ -1616,6 +1628,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // Convert route to location data
             self.locationDataFromWorkoutRoute(route: route) { locationData in
+                var locationData = locationData
+                // find backup
+                if let backupIndex = self.backupWorkoutData.firstIndex(where: { $0.id == id }) {
+                    if locationData.isEmpty {
+                        locationData = self.backupWorkoutData[backupIndex].locationData
+                    }
+                }
+                
                 // Check if we have enough location points
                 guard locationData.count >= 2 else {
                     completion(nil)
@@ -3195,10 +3215,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("lastVersionPromptedForReview") var lastVersionPromptedForReview = ""
     @AppStorage("timesOpened") var appOpened = 0
     @Published var showPromptForReview = false
-    private let currentAppVersion: String = {
+    let currentAppVersion: String = {
         guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
             return "Unknown"
         }
         return version
     }()
+    
+    // MARK: - News Section
+    @AppStorage("lastVersionNewsClosed") var lastVersionNewsClosed = ""
 }

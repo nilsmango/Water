@@ -29,6 +29,10 @@ struct StartOptionsMenu: View {
                 Label("Help", systemImage: "questionmark.circle")
             }
             
+            NavigationLink(destination: VersionHistoryView()) {
+                Label("Version Log", systemImage: "list.bullet.clipboard")
+            }
+            
 //            Button(action: {
 //                showAboutSheet = true
 //            }, label: {

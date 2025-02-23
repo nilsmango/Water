@@ -82,6 +82,11 @@
 		785CCF1A2D6894DB0075CA4C /* ShareOverlayDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF192D6894DB0075CA4C /* ShareOverlayDivider.swift */; };
 		785CCF1C2D69DE8B0075CA4C /* GeocodingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1B2D69DE8B0075CA4C /* GeocodingManager.swift */; };
 		785CCF1E2D6A2EAC0075CA4C /* StringSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1D2D6A2EAC0075CA4C /* StringSelectionView.swift */; };
+		785CCF202D6B182E0075CA4C /* ListBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1F2D6B182E0075CA4C /* ListBackground.swift */; };
+		785CCF222D6B192B0075CA4C /* NewsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF212D6B192B0075CA4C /* NewsSection.swift */; };
+		785CCF242D6B195E0075CA4C /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF232D6B195E0075CA4C /* Version.swift */; };
+		785CCF262D6B197E0075CA4C /* VersionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF252D6B197E0075CA4C /* VersionHistory.swift */; };
+		785CCF282D6B1A0A0075CA4C /* VersionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF272D6B1A0A0075CA4C /* VersionHistoryView.swift */; };
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
@@ -264,6 +269,11 @@
 		785CCF192D6894DB0075CA4C /* ShareOverlayDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareOverlayDivider.swift; sourceTree = "<group>"; };
 		785CCF1B2D69DE8B0075CA4C /* GeocodingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingManager.swift; sourceTree = "<group>"; };
 		785CCF1D2D6A2EAC0075CA4C /* StringSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringSelectionView.swift; sourceTree = "<group>"; };
+		785CCF1F2D6B182E0075CA4C /* ListBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBackground.swift; sourceTree = "<group>"; };
+		785CCF212D6B192B0075CA4C /* NewsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsSection.swift; sourceTree = "<group>"; };
+		785CCF232D6B195E0075CA4C /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
+		785CCF252D6B197E0075CA4C /* VersionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionHistory.swift; sourceTree = "<group>"; };
+		785CCF272D6B1A0A0075CA4C /* VersionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionHistoryView.swift; sourceTree = "<group>"; };
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
@@ -475,7 +485,10 @@
 				78A283762C4115FE0052AA52 /* PremiumProducts.storekit */,
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
+				785CCF212D6B192B0075CA4C /* NewsSection.swift */,
+				785CCF272D6B1A0A0075CA4C /* VersionHistoryView.swift */,
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
+				785CCF1F2D6B182E0075CA4C /* ListBackground.swift */,
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				7840468E2C342160009F8733 /* SummaryView.swift */,
 				784046902C342363009F8733 /* StatisticMetricsView.swift */,
@@ -508,6 +521,8 @@
 			children = (
 				785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */,
 				785C4AB92B40AF7400EB07F8 /* Member.swift */,
+				785CCF232D6B195E0075CA4C /* Version.swift */,
+				785CCF252D6B197E0075CA4C /* VersionHistory.swift */,
 				785C4ABB2B40B04000EB07F8 /* Run.swift */,
 				785C4ACC2B41D28400EB07F8 /* DBRun.swift */,
 				785C4AD22B433D4000EB07F8 /* MemberRunData.swift */,
@@ -868,8 +883,10 @@
 				78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */,
 				7877E1382BC52BB400776890 /* SelectionButtonLabel.swift in Sources */,
 				78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */,
+				785CCF202D6B182E0075CA4C /* ListBackground.swift in Sources */,
 				781A4BB32C4FAFA70046AE0E /* VideoProcessingHelper.swift in Sources */,
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
+				785CCF282D6B1A0A0075CA4C /* VersionHistoryView.swift in Sources */,
 				783A53C72B5DA57C00701D7F /* RunMapView.swift in Sources */,
 				784083672C258112004C0857 /* GroupedTagsListView.swift in Sources */,
 				783A53CF2B5FBF5000701D7F /* RunType.swift in Sources */,
@@ -885,6 +902,7 @@
 				7840468F2C3421CF009F8733 /* SummaryView.swift in Sources */,
 				782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */,
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
+				785CCF222D6B192B0075CA4C /* NewsSection.swift in Sources */,
 				78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
 				785CCF1E2D6A2EAC0075CA4C /* StringSelectionView.swift in Sources */,
@@ -923,12 +941,14 @@
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
 				78B5EF192D539D7D0079B16A /* GPXExportButton.swift in Sources */,
 				78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */,
+				785CCF242D6B195E0075CA4C /* Version.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
 				781A4BAD2C4E9F310046AE0E /* SharePreviewWrapper.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
 				781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */,
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
+				785CCF262D6B197E0075CA4C /* VersionHistory.swift in Sources */,
 				7877E14B2BC5850C00776890 /* TagsFlexiView.swift in Sources */,
 				785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */,
 				78C4D23A2BA6DADB00639E65 /* LocationData.swift in Sources */,
@@ -1120,7 +1140,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				DEVELOPMENT_TEAM = A9H57996U3;
@@ -1149,7 +1169,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1168,7 +1188,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				DEVELOPMENT_TEAM = A9H57996U3;
@@ -1197,7 +1217,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1287,13 +1307,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = A9H57996U3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.tracker.-III-Water-Stickers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1308,13 +1328,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = A9H57996U3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.tracker.-III-Water-Stickers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

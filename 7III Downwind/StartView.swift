@@ -22,40 +22,92 @@ struct StartView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                StatisticsControlCenter(downwindManager: downwindManager)
-                    .padding()
-                
-                if downwindManager.activeRun.active {
-                    if downwindManager.user.onlyWatching == true {
-                        RunMapView(downwindManager: downwindManager)
-                    } else {
-                        RunListView(downwindManager: downwindManager)
+            Group {
+                if downwindManager.lastVersionNewsClosed != downwindManager.currentAppVersion {
+                    ScrollView {
+                        VStack {
+                            
+                            NewsSection(downwindManager: downwindManager)
+                                    .padding(.horizontal)
+                            
+                            
+                            StatisticsControlCenter(downwindManager: downwindManager)
+                                .padding()
+                            
+                            if downwindManager.activeRun.active {
+                                if downwindManager.user.onlyWatching == true {
+                                    RunMapView(downwindManager: downwindManager)
+                                } else {
+                                    RunListView(downwindManager: downwindManager)
+                                }
+                            } else {
+                                //                            Button(action: {
+                                //                                showRunPicker = true
+                                //                            }, label: {
+                                //                                Label("Online Locations", systemImage: "wifi")
+                                //                            })
+                                //                            .buttonStyle(.bordered)
+                                //                            .tint(.accentColor)
+                                //                            .padding(.top, 8)
+                            }
+                            
+                            if downwindManager.developerMode {
+                                Toggle("Collect Raw GPS", isOn: $downwindManager.collectRawGPS)
+                                    .padding()
+                                NavigationLink(destination: StatisticTestsView(downwindManager: downwindManager)) {
+                                    Label("Statistics Test", systemImage: "chart.xyaxis.line")
+                                }
+                                .buttonStyle(.bordered)
+                                .padding()
+                            }
+                            
+                            Spacer()
+                            
+                        }
                     }
+                    
                 } else {
-                    //                            Button(action: {
-                    //                                showRunPicker = true
-                    //                            }, label: {
-                    //                                Label("Online Locations", systemImage: "wifi")
-                    //                            })
-                    //                            .buttonStyle(.bordered)
-                    //                            .tint(.accentColor)
-                    //                            .padding(.top, 8)
-                }
+                    
                 
-                if downwindManager.developerMode {
-                    Toggle("Collect Raw GPS", isOn: $downwindManager.collectRawGPS)
+                VStack {
+                    
+                    
+                    StatisticsControlCenter(downwindManager: downwindManager)
                         .padding()
-                    NavigationLink(destination: StatisticTestsView(downwindManager: downwindManager)) {
-                        Label("Statistics Test", systemImage: "chart.xyaxis.line")
+                    
+                    if downwindManager.activeRun.active {
+                        if downwindManager.user.onlyWatching == true {
+                            RunMapView(downwindManager: downwindManager)
+                        } else {
+                            RunListView(downwindManager: downwindManager)
+                        }
+                    } else {
+                        //                            Button(action: {
+                        //                                showRunPicker = true
+                        //                            }, label: {
+                        //                                Label("Online Locations", systemImage: "wifi")
+                        //                            })
+                        //                            .buttonStyle(.bordered)
+                        //                            .tint(.accentColor)
+                        //                            .padding(.top, 8)
                     }
-                    .buttonStyle(.bordered)
-                    .padding()
+                    
+                    if downwindManager.developerMode {
+                        Toggle("Collect Raw GPS", isOn: $downwindManager.collectRawGPS)
+                            .padding()
+                        NavigationLink(destination: StatisticTestsView(downwindManager: downwindManager)) {
+                            Label("Statistics Test", systemImage: "chart.xyaxis.line")
+                        }
+                        .buttonStyle(.bordered)
+                        .padding()
+                    }
+                    
+                    Spacer()
+                    
                 }
-                
-                Spacer()
-                
+                }
             }
+            
             .navigationTitle(downwindManager.user.name.isEmpty ? "Aloha!" : "Aloha \(downwindManager.user.name)!")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

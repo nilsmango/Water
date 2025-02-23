@@ -43,7 +43,7 @@ struct StatisticsDetails: View {
         
         if percentageOnFoil != 0.0 && percentageOnFoil != .nan {
             HStack {
-                    StatisticsInfoViews(header: "Pop Ups", bodyText: String(popUps))
+                    StatisticsInfoViews(header: "Pop-Ups", bodyText: String(popUps))
                         .frame(width: width, alignment: .leading)
                 
                 StatisticsInfoViews(header: "Time On Foil", bodyText: String(format: "%.1f", percentageOnFoil) + " %")

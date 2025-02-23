@@ -181,13 +181,6 @@ struct StatisticsControlCenter: View {
     }
 }
 
-struct ListBackground: View {
-    var body: some View {
-        RoundedRectangle(cornerRadius: 10.0)
-            .fill(.listForeground)
-    }
-}
-
 #Preview {
     VStack {
         StatisticsControlCenter(downwindManager: DownwindManager())
