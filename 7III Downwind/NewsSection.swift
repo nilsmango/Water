@@ -42,7 +42,7 @@ struct NewsSection: View {
                     }) {
                         Label("Remove News", systemImage: "xmark.circle.fill")
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.bordered)
                     .tint(.primary)
                     Spacer()
                 }
