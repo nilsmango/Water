@@ -171,6 +171,12 @@ struct OptionsView: View {
                 }
                 .padding()
             }
+            
+            Section {
+                Text("Find your next wake to thieve in Switzerland with [Next Wave](https://apps.apple.com/ch/app/next-wave/id6739363035).")
+            } header: {
+                Text("Other Apps")
+            }
         }
         .alert(isPresented: $isShowingAlert) {
             Alert(
