@@ -52,28 +52,32 @@ struct GroupedTagsListView: View {
             TabView(selection: $tabSelection) {
                 
                 ScrollView {
-                    FlexibleView(
-                        data: downwindManager.tags,
-                        spacing: 5,
-                        alignment: .leading
-                    ) { string in
-                        
-                        SelectionButtonLabel(string: string, chosenStrings: $chosenTags)
-                            .onTapGesture {
-                                if chosenTags.contains(string) {
-                                    chosenTags.removeAll(where: { $0 == string})
-                                } else {
-                                    chosenTags.append(string)
+                    if downwindManager.tags.isEmpty {
+                        Text("Add tags to workouts to display them here.")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        FlexibleView(
+                            data: downwindManager.tags,
+                            spacing: 5,
+                            alignment: .leading
+                        ) { string in
+                            
+                            SelectionButtonLabel(string: string, chosenStrings: $chosenTags)
+                                .onTapGesture {
+                                    if chosenTags.contains(string) {
+                                        chosenTags.removeAll(where: { $0 == string})
+                                    } else {
+                                        chosenTags.append(string)
+                                    }
                                 }
-                            }
-                        
+                        }
                     }
                 }
                  .frame(maxHeight: maxHeight)
                 .padding([.bottom, .horizontal])
                 .tag(Tab.tags)
                 
-                StringSelectionView(allStrings: downwindManager.locationStrings, chosenString: $chosenLocation)
+                StringSelectionView(allStrings: downwindManager.locationStrings, chosenString: $chosenLocation, isLocations: true)
                     .frame(maxHeight: maxHeight)
                     .padding([.bottom])
                     .tag(Tab.locations)
