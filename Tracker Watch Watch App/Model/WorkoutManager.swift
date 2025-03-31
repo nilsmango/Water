@@ -210,6 +210,8 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 statisticTags.append(tag)
             }
         }
+        
+        WKExtension.shared().enableWaterLock()
     }
     
     // Request authorization to access HealthKit and to access location
