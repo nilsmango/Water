@@ -14,7 +14,7 @@ let versionHistory: [Version] = [
             introduction: "Big update:",
             changes: [
                 "Stats Overview: Now showing the number of sessions for all disciplines, including distance and time.",
-                "Stats Details: More speeds, turns, time on foil, and pop-ups for relevant sports.",
+                "Stats Details: More speeds, turns, time on foil, max distance on foil, and pop-ups for relevant sports.",
                 "Stats Edit: You can now edit locations.",
                 "Stats Filter: Added location and workout filters.",
                 "Export: Added GPX export for Strava, race.downwind.app, and more.",
