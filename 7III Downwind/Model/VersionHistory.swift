@@ -18,6 +18,7 @@ let versionHistory: [Version] = [
                 "Stats Edit: You can now edit locations.",
                 "Stats Filter: Added location and workout filters.",
                 "Export: Added GPX export for Strava, race.downwind.app, and more.",
+                "Apple Watch: Added option to restrict starting and stoping of sessions to turning the Digital Crown. Water lock now gets activated automatically.",
                 "Note: Locations are now cached. This might take a while for large datasets, but you will not lose any data if you close and reopen the app."
             ],
             releaseDate: "February 2025"
