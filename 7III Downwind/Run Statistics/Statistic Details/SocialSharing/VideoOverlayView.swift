@@ -68,10 +68,11 @@ struct VideoOverlayView: View {
                 Group {
                     if statisticsData.locationString != nil {
                         Toggle("Show Location", isOn: $showLocation)
+                            .tint(.accent)
                     }
                     if hasDistance {
-                        Toggle("Show Turns", isOn: $showTurns)
-                        Toggle("Show Average", isOn: $showAverageSpeed)
+                        Toggle("Show Turns", isOn: $showTurns).tint(.accent)
+                        Toggle("Show Average", isOn: $showAverageSpeed).tint(.accent)
                         if showAverageSpeed {
                             Picker("∅-Speed Format", selection: $speedSelection) {
                                 ForEach(SpeedOption.allCases, id: \.self) { option in
@@ -80,10 +81,10 @@ struct VideoOverlayView: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                         }
-                        Toggle("Show Top Speed", isOn: $showTopSpeed)
+                        Toggle("Show Top Speed", isOn: $showTopSpeed).tint(.accent)
                     }
                     
-                    Toggle("Top Placement (Instagram Reels)", isOn: $instagramReel)
+                    Toggle("Top Placement (Instagram Reels)", isOn: $instagramReel).tint(.accent)
                     
                 }
                 .padding(.top, 8)

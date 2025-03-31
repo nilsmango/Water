@@ -37,16 +37,14 @@ struct OverlaySettingsView: View {
                 }
             }
             Toggle("Show Location", isOn: $showLocation)
-            
+                .tint(.accent)
                 
                 let hasDistance = statisticsData.runDistance > 0
                 
                 if hasDistance {
                     
-                    
-                    
                     Toggle("Show \(speedSelection.rawValue)", isOn: $showAverageSpeed)
-                    
+                        .tint(.accent)
                     if showAverageSpeed {
                         Picker("∅-Speed Format", selection: $speedSelection) {
                             ForEach(SpeedOption.allCases, id: \.self) { option in
@@ -57,6 +55,7 @@ struct OverlaySettingsView: View {
                     }
                     
                     Toggle("Show Top Speed", isOn: $showTopSpeed)
+                        .tint(.accent)
                     
                     if showTopSpeed {
                         Picker("∅-Speed Format", selection: $topSpeedSelection) {
@@ -71,18 +70,23 @@ struct OverlaySettingsView: View {
                         
                     if statisticsData.workoutType?.countFalls ?? false || statisticsData.workoutType?.countWaves ?? false {
                         Toggle("Show Pop Ups", isOn: $showPopUps)
+                            .tint(.accent)
                     }
                     
                     if statisticsData.percentageOnFoil != 0 {
                         Toggle("Show Time On Foil", isOn: $showTimeOnFoil)
+                            .tint(.accent)
                     }
                     
                     if statisticsData.workoutType?.isDWSport ?? false {
                         Toggle("Show Turns", isOn: $showTurns)
+                            .tint(.accent)
                     }
                     
                     Toggle("Show Calories", isOn: $showCalories)
+                        .tint(.accent)
                     Toggle("Show ∅-Heart Rate", isOn: $showHeartRate)
+                        .tint(.accent)
                 }
             
             
