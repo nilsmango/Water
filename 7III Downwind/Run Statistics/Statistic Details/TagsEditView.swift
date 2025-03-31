@@ -55,40 +55,41 @@ struct TagsEditView: View {
     let invisibleLocation = "Zerothing"
     
     var body: some View {
-        Section {
-            VStack {
-                HStack {
-//                    Label("", systemImage: "location.fill")
-//                        .padding(.trailing, -10)
-                    
-                    TextField("Start Location", text: $firstLocation)
-                    
-                    Group {
-                        Text("→")
-                        TextField("End Location", text: $secondLocation)
-                    }
-                    .opacity(secondLocation != invisibleLocation ? 1 : 0)
-                                        
-                    Spacer()
-                }
-                .onChange(of: firstLocation) { oldValue, newValue in
-                    if locationString.contains("→") {
-                        locationString = [newValue, secondLocation].map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: " → ")
+        if withTypeEdit {
+            Section {
+                VStack {
+                    HStack {
+                        //                    Label("", systemImage: "location.fill")
+                        //                        .padding(.trailing, -10)
                         
-                    } else {
-                        locationString = newValue.trimmingCharacters(in: .whitespaces)
+                        TextField("Start Location", text: $firstLocation)
+                        
+                        Group {
+                            Text("→")
+                            TextField("End Location", text: $secondLocation)
+                        }
+                        .opacity(secondLocation != invisibleLocation ? 1 : 0)
+                        
+                        Spacer()
                     }
-                }
-                .onChange(of: secondLocation) { oldValue, newValue in
-                    if newValue == invisibleLocation || newValue == "" {
-                        locationString = firstLocation.trimmingCharacters(in: .whitespaces)
-                    } else {
-                        locationString = [firstLocation, newValue].map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: " → ")
+                    .onChange(of: firstLocation) { oldValue, newValue in
+                        if locationString.contains("→") {
+                            locationString = [newValue, secondLocation].map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: " → ")
+                            
+                        } else {
+                            locationString = newValue.trimmingCharacters(in: .whitespaces)
+                        }
+                    }
+                    .onChange(of: secondLocation) { oldValue, newValue in
+                        if newValue == invisibleLocation || newValue == "" {
+                            locationString = firstLocation.trimmingCharacters(in: .whitespaces)
+                        } else {
+                            locationString = [firstLocation, newValue].map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: " → ")
+                        }
+                        
                     }
                     
-                }
-                
-                HStack {
+                    HStack {
                         if secondLocation != invisibleLocation {
                             Button {
                                 secondLocation = invisibleLocation
@@ -105,38 +106,38 @@ struct TagsEditView: View {
                             }
                         }
                         
+                        
+                        Spacer()
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.accent)
                     
-                    Spacer()
-                }
-                .buttonStyle(.bordered)
-                .tint(.accent)
-                
-                if !downwindManager.locationStrings.isEmpty {
-                HStack {
-                    
-                        Menu {
-                            ForEach(downwindManager.locationStrings, id: \.self) { string in
-                                
+                    if !downwindManager.locationStrings.isEmpty {
+                        HStack {
+                            
+                            Menu {
+                                ForEach(downwindManager.locationStrings, id: \.self) { string in
+                                    
                                     Button(action: {
                                         locationString = string
                                         extractLocations()
                                     }) {
-                                       Text(string)
+                                        Text(string)
                                         
                                     }
+                                }
+                            } label: {
+                                Text("Use Existing Location")
                             }
-                        } label: {
-                            Text("Use Existing Location")
+                            .buttonStyle(.bordered)
+                            .tint(.green)
+                            
+                            Spacer()
                         }
-                        .buttonStyle(.bordered)
-                        .tint(.green)
-                    
-                    Spacer()
+                    }
                 }
-                }
-            }
-        } header: {
-            if withTypeEdit {
+            } header: {
+                
                 VStack(alignment: .leading) {
                     Text("Edit Sport")
                         .textCase(nil)
@@ -144,28 +145,28 @@ struct TagsEditView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                     
-                            Menu {
-                                ForEach(WorkoutType.allCases, id: \.self) { workoutType in
-                                    if workoutType != .not7IIIPaddleSport && workoutType != .not7IIISurfingSport {
-                                        Button(action: {
-                                            type = workoutType
-                                        }) {
-                                            if type == workoutType {
-                                                Label(workoutType.prettyString, systemImage: "checkmark")
-                                            } else {
-                                                Text(workoutType.prettyString)
-                                            }
-                                        }
+                    Menu {
+                        ForEach(WorkoutType.allCases, id: \.self) { workoutType in
+                            if workoutType != .not7IIIPaddleSport && workoutType != .not7IIISurfingSport {
+                                Button(action: {
+                                    type = workoutType
+                                }) {
+                                    if type == workoutType {
+                                        Label(workoutType.prettyString, systemImage: "checkmark")
+                                    } else {
+                                        Text(workoutType.prettyString)
                                     }
                                 }
-                            } label: {
-                                Text(type.prettyString)
                             }
-                            .buttonStyle(.bordered)
-                            .tint(.orange)
-                            .textCase(nil)
-                            .padding(.bottom)
-                            .padding(.top, -6.0)
+                        }
+                    } label: {
+                        Text(type.prettyString)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.orange)
+                    .textCase(nil)
+                    .padding(.bottom)
+                    .padding(.top, -6.0)
                     
                     Text("Edit Location")
                         .textCase(nil)
@@ -173,14 +174,11 @@ struct TagsEditView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                     
-                    }
                 }
             }
-            
-        .onAppear {
-            extractLocations()
-            updateAllTags()
         }
+        
+        
         
         Section {
             if allTags.isEmpty {
@@ -193,13 +191,13 @@ struct TagsEditView: View {
                 ) { tag in
                     SelectionButtonLabel(string: tag, chosenStrings: $tags)
                         .onTapGesture {
-                                if tags.contains(tag) {
-                                    tags.removeAll(where: { $0 == tag })
-                                    updateAllTags()
-                                } else {
-                                        tags.append(tag)
-                                        updateAllTags()
-                                }
+                            if tags.contains(tag) {
+                                tags.removeAll(where: { $0 == tag })
+                                updateAllTags()
+                            } else {
+                                tags.append(tag)
+                                updateAllTags()
+                            }
                         }
                 }
             }
@@ -210,6 +208,10 @@ struct TagsEditView: View {
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
                 .padding(.top, -6.0)
+        }
+        .onAppear {
+            extractLocations()
+            updateAllTags()
         }
         
         Section {

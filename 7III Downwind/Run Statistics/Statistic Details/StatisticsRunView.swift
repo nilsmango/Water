@@ -363,7 +363,6 @@ struct StatisticsRunView: View {
                 List {
                     TagsEditView(tags: $editTags, downwindManager: downwindManager, type: .constant(.windsurf), locationString: .constant(""))
                 }
-                .navigationTitle("Edit Tags")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(role: .destructive, action: {
@@ -392,6 +391,7 @@ struct StatisticsRunView: View {
                     TagsEditView(tags: $editTags, downwindManager: downwindManager, type: $editType, locationString: $editLocationName, withTypeEdit: true)
                 }
                 .navigationTitle("Edit Data")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(role: .destructive, action: {
