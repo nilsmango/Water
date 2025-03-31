@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MetricsView: View {
     @ObservedObject var workoutManager: WorkoutManager
+    @Binding var selection: Tab
+    @State private var crownValue = 0.0
     
     var body: some View {
         TimelineView(
@@ -106,12 +108,18 @@ struct MetricsView: View {
             .padding(.top)
             .padding(.bottom, 4)
         }
+            .focusable()
+            .digitalCrownRotation($crownValue, from: 0, through: 2, by: 1, sensitivity: .medium, isContinuous: false)
+            .onChange(of: crownValue) {
+                selection = .controls
+                crownValue = 0
+            }
     }
 }
 
 #Preview {
     NavigationStack {
-        MetricsView(workoutManager: WorkoutManager())
+        MetricsView(workoutManager: WorkoutManager(), selection: .constant(.metrics))
             .navigationTitle("SUP DW Foil")
             .navigationBarTitleDisplayMode(.inline)
     }

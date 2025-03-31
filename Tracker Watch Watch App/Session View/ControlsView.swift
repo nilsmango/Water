@@ -9,9 +9,14 @@ import SwiftUI
 
 struct ControlsView: View {
     @ObservedObject var workoutManager: WorkoutManager
+    @AppStorage("CrownMode") var crownMode: Bool = false
 
+    
     var body: some View {
         VStack {
+            if crownMode {
+                CrownButton(workoutManager: workoutManager, start: false)
+            } else {
                 Button {
                     workoutManager.endWorkout()
                     
@@ -21,6 +26,8 @@ struct ControlsView: View {
                 .tint(Color.red)
                 .font(.title3)
                 .fontWeight(.semibold)
+            }
+                
 //            VStack {
 //                Button {
 //                    workoutManager.togglePause()

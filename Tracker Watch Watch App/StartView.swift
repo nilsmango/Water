@@ -12,24 +12,32 @@ struct StartView: View {
     
     @State private var showTagsSheet = false
     @State private var showWorkoutList = false
+    @State private var showOptionsSheet = false
+    
+    @AppStorage("CrownMode") var crownMode: Bool = false
     
     var body: some View {
             VStack {
                 if workoutManager.hasHealthActivated {
-                    Button(action: {
-                        workoutManager.checkHealthKitAuthorizationStatus()
-                        if workoutManager.hasHealthActivated {
-                            workoutManager.path.append("session")
-                            workoutManager.startWorkout()
-                        }
-                        
-                    }, label: {
-                        Label("Start", systemImage: "play")
-                    })
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                    .tint(.green)
-                    .padding(.bottom)
+                    if crownMode {
+                        CrownButton(workoutManager: workoutManager, start: true)
+                            .padding(.bottom)
+                    } else {
+                        Button(action: {
+                            workoutManager.checkHealthKitAuthorizationStatus()
+                            if workoutManager.hasHealthActivated {
+                                workoutManager.path.append("session")
+                                workoutManager.startWorkout()
+                            }
+                            
+                        }, label: {
+                            Label("Start", systemImage: "play")
+                        })
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .tint(.green)
+                        .padding(.bottom)
+                    }                    
                     
                     VStack {
                         Button(action: {
@@ -51,11 +59,12 @@ struct StartView: View {
                             .padding(.trailing, 3)
                             
                             Button(action: {
-                                workoutManager.withGPS.toggle()
+                                showOptionsSheet = true
                             }, label: {
-                                Image(systemName: workoutManager.withGPS ? "location.fill" : "location.slash.fill")
+                                Image(systemName: "ellipsis")
                             })
-                            .tint(workoutManager.withGPS ? .green : .red)
+                            .tint(.accent)
+                            .fontWeight(.semibold)
                             .padding(.leading, 3)
                         }
                         
@@ -86,6 +95,9 @@ struct StartView: View {
             })
             .sheet(isPresented: $showTagsSheet, content: {
                 TagsSheetView(workoutManager: workoutManager, tags: $workoutManager.activeTags)
+            })
+            .sheet(isPresented: $showOptionsSheet, content: {
+                OptionsSheetView(workoutManager: workoutManager)
             })
         
 

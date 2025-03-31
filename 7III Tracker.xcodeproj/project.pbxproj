@@ -137,6 +137,8 @@
 		78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E32C18C93F00C75A60 /* WorkoutType.swift */; };
 		78B388E62C1A136800C75A60 /* YearlyMonthlyStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
 		78B5EF192D539D7D0079B16A /* GPXExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B5EF182D539D7D0079B16A /* GPXExportButton.swift */; };
+		78B71A9A2D9AC3340095068B /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B71A992D9AC3340095068B /* Tab.swift */; };
+		78B71A9C2D9AC4AB0095068B /* PlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B71A9B2D9AC4AB0095068B /* PlayingView.swift */; };
 		78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */; };
 		78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */; };
 		78C4D23A2BA6DADB00639E65 /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* LocationData.swift */; };
@@ -147,6 +149,8 @@
 		78E5A85A2C32AB4E00456ABC /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
 		78E5A85D2C32DA4100456ABC /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78E5A85C2C32DA4100456ABC /* Surge */; };
 		78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
+		78F36B2C2D9AB1160079F20B /* CrownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2B2D9AB1160079F20B /* CrownButton.swift */; };
+		78F36B2E2D9AB9C10079F20B /* OptionsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */; };
 		78F937F02C35816B00D34796 /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
 		78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCBD82C2C48E80091F9EA /* WaitingForListView.swift */; };
 		78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */; };
@@ -323,6 +327,8 @@
 		78B388E32C18C93F00C75A60 /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
 		78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearlyMonthlyStatisticView.swift; sourceTree = "<group>"; };
 		78B5EF182D539D7D0079B16A /* GPXExportButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXExportButton.swift; sourceTree = "<group>"; };
+		78B71A992D9AC3340095068B /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
+		78B71A9B2D9AC4AB0095068B /* PlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingView.swift; sourceTree = "<group>"; };
 		78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsControlCenter.swift; sourceTree = "<group>"; };
 		78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatistic.swift; sourceTree = "<group>"; };
 		78C4D2392BA6DADB00639E65 /* LocationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationData.swift; sourceTree = "<group>"; };
@@ -330,6 +336,8 @@
 		78C4D23E2BA7512A00639E65 /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
 		78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMap.swift; sourceTree = "<group>"; };
 		78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStatistic.swift; sourceTree = "<group>"; };
+		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
+		78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsSheetView.swift; sourceTree = "<group>"; };
 		78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindSportStatisticsMap.swift; sourceTree = "<group>"; };
 		78FBCBD82C2C48E80091F9EA /* WaitingForListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingForListView.swift; sourceTree = "<group>"; };
 		78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateQRCode.swift; sourceTree = "<group>"; };
@@ -628,6 +636,8 @@
 				78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */,
 				78844E2B2C2E9D6900B703F5 /* StartView.swift */,
 				78844E512C303C0E00B703F5 /* TagsSheetView.swift */,
+				78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */,
+				78F36B2B2D9AB1160079F20B /* CrownButton.swift */,
 				785C0C302C3D793D005CCE87 /* Upgrades */,
 				78844E392C2EA37F00B703F5 /* WorkoutTypeListView.swift */,
 				78844E4B2C2EB41100B703F5 /* Summary View */,
@@ -651,9 +661,11 @@
 			isa = PBXGroup;
 			children = (
 				78844E3C2C2EA87E00B703F5 /* SessionPagingView.swift */,
+				78B71A9B2D9AC4AB0095068B /* PlayingView.swift */,
 				78844E3E2C2EA99F00B703F5 /* MetricsView.swift */,
 				7840468C2C33329F009F8733 /* AverageHeartView.swift */,
 				78844E442C2EAD0A00B703F5 /* ControlsView.swift */,
+				78B71A992D9AC3340095068B /* Tab.swift */,
 				78844E402C2EAAD100B703F5 /* ElapsedTimeView.swift */,
 			);
 			path = "Session View";
@@ -982,10 +994,14 @@
 				78844E412C2EAAD100B703F5 /* ElapsedTimeView.swift in Sources */,
 				78844E4A2C2EB40900B703F5 /* ActivityRingsView.swift in Sources */,
 				78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */,
+				78B71A9A2D9AC3340095068B /* Tab.swift in Sources */,
 				78844E4E2C2EB65500B703F5 /* WorkoutManager.swift in Sources */,
+				78B71A9C2D9AC4AB0095068B /* PlayingView.swift in Sources */,
 				78844E3D2C2EA87E00B703F5 /* SessionPagingView.swift in Sources */,
 				78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */,
+				78F36B2C2D9AB1160079F20B /* CrownButton.swift in Sources */,
 				78844E552C303C6300B703F5 /* SelectionButtonLabel.swift in Sources */,
+				78F36B2E2D9AB9C10079F20B /* OptionsSheetView.swift in Sources */,
 				784046892C32E483009F8733 /* LocationData.swift in Sources */,
 				78E5A85A2C32AB4E00456ABC /* HCKalmanAlgorithm.swift in Sources */,
 				78844E522C303C0E00B703F5 /* TagsSheetView.swift in Sources */,

@@ -6,22 +6,17 @@
 //
 
 import SwiftUI
-import WatchKit
 
 struct SessionPagingView: View {
     @Environment(\.isLuminanceReduced) var isLuminanceReduced
     @ObservedObject var workoutManager: WorkoutManager
     @State private var selection: Tab = .metrics
-    
-    enum Tab {
-        case controls, metrics, nowPlaying
-    }
-    
+        
     var body: some View {
         TabView(selection: $selection) {
             ControlsView(workoutManager: workoutManager).tag(Tab.controls)
-            MetricsView(workoutManager: workoutManager).tag(Tab.metrics)
-            NowPlayingView().tag(Tab.nowPlaying)
+            MetricsView(workoutManager: workoutManager, selection: $selection).tag(Tab.metrics)
+            PlayingView(selection: $selection).tag(Tab.nowPlaying)
         }
         .navigationTitle(workoutManager.workoutType.prettyString)
         .navigationBarBackButtonHidden(true)
