@@ -29,6 +29,7 @@ struct RunEdit: Identifiable, Codable {
     var popUps: Int?
     var percentageOnFoil: Double?
     var turnsCount: Int?
+    var longestDistanceOnFoil: Double?
     
     
 //    var newKCalories: Double?

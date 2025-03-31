@@ -1309,13 +1309,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// save on foil stats to run edits
-    func saveOnFoilStats(popUps: Int, percentageOnFoil: Double, turns: Int, statisticsID: UUID) {
+    func saveOnFoilStats(popUps: Int, percentageOnFoil: Double, turns: Int, longestDistanceOnFoil: Double, statisticsID: UUID) {
         if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsID }) {
             runEdits[editIndex].popUps = popUps
             runEdits[editIndex].percentageOnFoil = percentageOnFoil
             runEdits[editIndex].turnsCount = turns
+            runEdits[editIndex].longestDistanceOnFoil = longestDistanceOnFoil
         } else {
-            let runEdit = RunEdit(id: statisticsID, popUps: popUps, percentageOnFoil: percentageOnFoil, turnsCount: turns)
+            let runEdit = RunEdit(id: statisticsID, popUps: popUps, percentageOnFoil: percentageOnFoil, turnsCount: turns, longestDistanceOnFoil: longestDistanceOnFoil)
             runEdits.append(runEdit)
         }
         saveRunEdits()
@@ -1480,20 +1481,22 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // updating falls and % on foil and turns
             if let workoutType = newStatistic.workoutType {
-                var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int) = (0, 0, 0)
+                var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double) = (0, 0, 0, 0)
                 if workoutType.countFalls {
                     foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: thresholdSpeedKmhDW, countTurns: workoutType.isDWSport)
                 } else if workoutType.countWaves {
                     foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: thresholdSpeedKmhWaves, countTurns: workoutType.isDWSport)
                 }
-                if foilStats != (0, 0, 0) {
+                if foilStats != (0, 0, 0, 0) {
                     runStatistics[index].popUps = foilStats.popUps
                     runStatistics[index].percentageOnFoil = foilStats.timeOnFoilPercentage
                     runStatistics[index].turnsCount = foilStats.turns
+                    runStatistics[index].longestDistanceOnFoil = foilStats.longestDistanceOnFoil
                     
                     newRunEdit.popUps = foilStats.popUps
                     newRunEdit.percentageOnFoil = foilStats.timeOnFoilPercentage
                     newRunEdit.turnsCount = foilStats.turns
+                    newRunEdit.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
                 }
             }
             

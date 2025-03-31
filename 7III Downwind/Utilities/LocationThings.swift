@@ -303,8 +303,8 @@ private func bearingDifference(newBearing: Double, oldBearing: Double, oldDirect
     
 }
 
-/// returns how many times you got below threshold speed (not counting the first non flight and the last (falls)), and also the % of not flying (time).
-func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double = 8.0, countTurns: Bool = false) -> (popUps: Int, timeOnFoilPercentage: Double, turns: Int) {
+/// returns how many times you got below threshold speed (not counting the first non flight and the last (falls)), and also the % of not flying (time) and also the longest distance on foil in n
+func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double = 8.0, countTurns: Bool = false) -> (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double) {
     let indexes = findAboveThresholdIndexes(in: data, thresholdKmh: thresholdSpeedKmh)
 //    print(indexes)
     
@@ -324,14 +324,32 @@ func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double 
     
     var timeOnFoil = 0.0
     var turnsData = [[LocationData]]()
+    var longestFlightIndexes: (Int, Int) = (0, 0)
+    var longestTime = 0.0
     
     for i in stride(from: 1, to: indexes.count, by: 2) {
         let dataIndex1 = indexes[i - 1]
         let dataIndex2 = indexes[i]
         let time = data[dataIndex2].timestamp.timeIntervalSince(data[dataIndex1].timestamp)
+        
+        if time > longestTime {
+            longestTime = time
+            longestFlightIndexes = (dataIndex1, dataIndex2)
+        }
+        
         timeOnFoil += time
         
         turnsData.append(Array(data[dataIndex1...dataIndex2]))
+    }
+    
+    var longestDistanceOnFoil = 0.0
+    
+    if longestTime > 0 {
+        for index in longestFlightIndexes.0...longestFlightIndexes.1 {
+            if index == longestFlightIndexes.0 { continue }
+            let distance = calculateDistances(fromLatitude: data[index-1].latitude, fromLongitude: data[index-1].longitude, toLatitude: data[index].latitude, toLongitude: data[index].longitude)
+            longestDistanceOnFoil += distance.directDistance
+        }
     }
     
     var totalTime: TimeInterval = 0
@@ -352,7 +370,7 @@ func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double 
 //        print("Turns: \(turns)")
     }
     
-    return (popUps, timeOnFoilPercentage, turns)
+    return (popUps, timeOnFoilPercentage, turns, longestDistanceOnFoil)
 }
 
 

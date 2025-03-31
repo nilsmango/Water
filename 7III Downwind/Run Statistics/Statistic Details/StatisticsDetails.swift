@@ -21,6 +21,7 @@ struct StatisticsDetails: View {
     let popUps: Int
     let percentageOnFoil: Double
     let turns: Int
+    let longestDistanceOnFoil: String
     
     let width = UIScreen.main.bounds.width / 3
     var body: some View {
@@ -43,20 +44,32 @@ struct StatisticsDetails: View {
         
         if percentageOnFoil != 0.0 && percentageOnFoil != .nan {
             HStack {
-                    StatisticsInfoViews(header: "Pop-Ups", bodyText: String(popUps))
-                        .frame(width: width, alignment: .leading)
-                
                 StatisticsInfoViews(header: "Time On Foil", bodyText: String(format: "%.1f", percentageOnFoil) + " %")
                     .frame(width: width, alignment: .leading)
+                
+                StatisticsInfoViews(header: "Max Distance On Foil", bodyText: longestDistanceOnFoil)
+                    .frame(width: width, alignment: .leading)
             }
-        }
-        
-        if turns != 0 || topSpeed != "0.0 km/h" {
+            
             HStack {
+                StatisticsInfoViews(header: "Pop-Ups", bodyText: String(popUps))
+                    .frame(width: width, alignment: .leading)
+                
                 if turns != 0 {
                     StatisticsInfoViews(header: "Turns", bodyText: String(turns))
                         .frame(width: width, alignment: .leading)
+                } else {
+                    // we can use 0.0 km/h because we get that if speed is zero
+                    if topSpeed != "0.0 km/h" {
+                        StatisticsInfoViews(header: "GPS Top Speed", bodyText: topSpeed)
+                            .frame(width: width, alignment: .leading)
+                    }
                 }
+            }
+        }
+        
+        if topSpeed != "0.0 km/h" && turns != 0 {
+            HStack {
                 
                 // we can use 0.0 km/h because we get that if speed is zero
                 if topSpeed != "0.0 km/h" {
@@ -97,7 +110,7 @@ struct StatisticsDetails: View {
 #Preview {
     List {
         Section {
-            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134)
+            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134, longestDistanceOnFoil: "15 km")
         }
     }
 }

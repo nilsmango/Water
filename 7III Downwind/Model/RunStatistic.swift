@@ -31,6 +31,8 @@ struct RunStatistic: Identifiable, Codable {
     var popUps: Int?
     /// percentage on foil of time
     var percentageOnFoil: Double?
+    /// longest distance on foil in m
+    var longestDistanceOnFoil: Double?
     var turnsCount: Int?
     
     var locationData: [LocationData]

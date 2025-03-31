@@ -48,7 +48,7 @@ struct StatisticsRunView: View {
         
         List {
             Section {
-                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm", popUps: statisticsData.popUps ?? 0, percentageOnFoil: statisticsData.percentageOnFoil ?? 0, turns: statisticsData.turnsCount ?? 0)
+                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm", popUps: statisticsData.popUps ?? 0, percentageOnFoil: statisticsData.percentageOnFoil ?? 0, turns: statisticsData.turnsCount ?? 0, longestDistanceOnFoil: makePrettyDistance(meters: statisticsData.longestDistanceOnFoil ?? 0, system: downwindManager.measurementSystem, statistics: true))
             } header: {
                 StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
             }
@@ -146,20 +146,21 @@ struct StatisticsRunView: View {
                 }
                 
                 // if foil sport and no % on foil calculate and save the stats
-                if statisticsData.percentageOnFoil ?? 0 == 0 {
+                if statisticsData.percentageOnFoil ?? 0 == 0 || statisticsData.longestDistanceOnFoil ?? 0 == 0 {
                     if let workoutType = statisticsData.workoutType {
-                        var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int) = (0, 0, 0)
+                        var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double) = (0, 0, 0, 0)
                         if workoutType.countFalls {
                             foilStats = calculateFoilingStats(from: statisticsData.locationData, thresholdSpeedKmh: downwindManager.thresholdSpeedKmhDW, countTurns: workoutType.isDWSport)
                         } else if workoutType.countWaves {
                             foilStats = calculateFoilingStats(from: statisticsData.locationData, thresholdSpeedKmh: downwindManager.thresholdSpeedKmhWaves, countTurns: workoutType.isDWSport)
                         }
-                        if foilStats != (popUps: 0, timeOnFoilPercentage: 0, turns: 0) {
+                        if foilStats != (popUps: 0, timeOnFoilPercentage: 0, turns: 0, longestDistanceOnFoil: 0) {
                             DispatchQueue.main.async {
                                 statisticsData.popUps = foilStats.popUps
                                 statisticsData.percentageOnFoil =  foilStats.timeOnFoilPercentage
                                 statisticsData.turnsCount = foilStats.turns
-                                downwindManager.saveOnFoilStats(popUps: foilStats.popUps, percentageOnFoil: foilStats.timeOnFoilPercentage, turns: foilStats.turns, statisticsID: statisticsData.id)
+                                statisticsData.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
+                                downwindManager.saveOnFoilStats(popUps: foilStats.popUps, percentageOnFoil: foilStats.timeOnFoilPercentage, turns: foilStats.turns, longestDistanceOnFoil: foilStats.longestDistanceOnFoil, statisticsID: statisticsData.id)
                             }
                         }
                     }
