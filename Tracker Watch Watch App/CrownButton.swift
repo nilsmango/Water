@@ -60,7 +60,7 @@ struct CrownButton: View {
                             gettingTapped = false
                         }
                     }
-            .focusable()
+            .focusable(!workoutManager.showingSummaryView)
             .digitalCrownRotation(
                 detent: $fillPercentage,
                 from: 0,
@@ -70,7 +70,6 @@ struct CrownButton: View {
                 isContinuous: false,
                 isHapticFeedbackEnabled: true
             )
-        
             
             .onChange(of: fillPercentage) {
                 if fillPercentage >= 100 {
