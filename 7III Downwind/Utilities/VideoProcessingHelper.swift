@@ -20,7 +20,11 @@ struct VideoProcessingHelper {
         showAverageSpeed: Bool,
         showLocation: Bool,
         locationName: String?,
-        instagramReel: Bool
+        instagramReel: Bool,
+        showTurns: Bool,
+        turnsTitle: String,
+        turnsValue: String
+        
     ) async throws -> URL {
         let composition = AVMutableComposition()
         
@@ -73,7 +77,10 @@ struct VideoProcessingHelper {
             scale: overlaySize.width / Constants.previewContainerWidth,
             showLocation: showLocation,
             locationName: locationName,
-            instagramReel: instagramReel
+            instagramReel: instagramReel,
+            showTurns: showTurns,
+            turnsTitle: turnsTitle,
+            turnsValue: turnsValue
         )
         
         let overlayImage = try await renderOverlay(overlayView, size: overlaySize)

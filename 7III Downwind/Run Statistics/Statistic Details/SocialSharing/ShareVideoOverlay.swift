@@ -20,6 +20,9 @@ struct VideoOverlayContainer: View {
     var showLocation: Bool
     var locationName: String?
     var instagramReel: Bool
+    var showTurns: Bool
+    var turnsTitle: String
+    var turnsValue: String
     
     var body: some View {
         let views: [AnyView] = [
@@ -36,6 +39,11 @@ struct VideoOverlayContainer: View {
                     ShareStatStack(title: sport, value: distance)
                     Divider().frame(height: 35).background(.white)
                     ShareStatStack(title: timeTitle, value: time)
+                    if showTurns {
+                        Divider().frame(height: 35).background(.white)
+                        ShareStatStack(title: turnsTitle, value: turnsValue)
+                    }
+                    
                     if showAverageSpeed {
                         Divider().frame(height: 35).background(.white)
                         ShareStatStack(title: extraTitle, value: extraValue)
@@ -97,6 +105,9 @@ struct ShareVideoOverlay: View {
     var showLocation: Bool
     var locationName: String?
     var instagramReel: Bool
+    var showTurns: Bool
+    var turnsTitle: String
+    var turnsValue: String
     
     var body: some View {
         
@@ -111,7 +122,10 @@ struct ShareVideoOverlay: View {
                 showAverageSpeed: showAverageSpeed,
                 showLocation: showLocation,
                 locationName: locationName,
-                instagramReel: instagramReel
+                instagramReel: instagramReel,
+                showTurns: showTurns,
+                turnsTitle: turnsTitle,
+                turnsValue: turnsValue
             )
             .scaleEffect(scale)
          
@@ -130,7 +144,10 @@ struct ShareVideoOverlay: View {
         scale: 1,
         showLocation: true,
         locationName: "Ipsach",
-        instagramReel: true
+        instagramReel: true,
+        showTurns: true,
+        turnsTitle: "Turns",
+        turnsValue: "432"
     )
     .background(.blue)
     

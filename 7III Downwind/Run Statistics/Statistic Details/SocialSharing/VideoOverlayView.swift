@@ -18,6 +18,7 @@ struct VideoOverlayView: View {
     @State private var showAverageSpeed = true
     @State private var speedSelection: SpeedOption = .speed
     @State private var instagramReel = false
+    @State private var showTurns = false
     
     @State private var selectedVideo: URL?
     @State private var showVideoPicker = false
@@ -50,7 +51,10 @@ struct VideoOverlayView: View {
                     scale: 0.9,
                     showLocation: showLocation,
                     locationName: statisticsData.locationString,
-                    instagramReel: instagramReel
+                    instagramReel: instagramReel,
+                    showTurns: showTurns,
+                    turnsTitle: "Turns",
+                    turnsValue: statisticsData.turnsCount == 0 || statisticsData.turnsCount == nil ? "-" : String(statisticsData.turnsCount!)
                 )
                 .frame(width: UIScreen.main.bounds.width - 32)
                 .padding(.vertical, 8)
@@ -66,6 +70,7 @@ struct VideoOverlayView: View {
                         Toggle("Show Location", isOn: $showLocation)
                     }
                     if hasDistance {
+                        Toggle("Show Turns", isOn: $showTurns)
                         Toggle("Show Average", isOn: $showAverageSpeed)
                         if showAverageSpeed {
                             Picker("∅-Speed Format", selection: $speedSelection) {
@@ -208,7 +213,10 @@ struct VideoOverlayView: View {
                 showAverageSpeed: hasDistance ? showAverageSpeed : true,
                 showLocation: showLocation,
                 locationName: statisticsData.locationString, 
-                instagramReel: instagramReel
+                instagramReel: instagramReel,
+                showTurns: showTurns,
+                turnsTitle: "Turns",
+                turnsValue: statisticsData.turnsCount == 0 || statisticsData.turnsCount == nil ? "-" : String(statisticsData.turnsCount!)
             )
         } catch {
             self.error = error
