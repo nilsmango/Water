@@ -801,20 +801,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     
                     for run in self.importedRuns {
                         // overwriting the statistic if we find one at the same time as we are pretty sure we don't want both of them
-                        // TODO: make this uncommented again
-//                        let matchingRuns = self.runStatistics.filter { self.doTimeRangesOverlap(start1: $0.startDate, end1: $0.endDate, start2: run.locations.first?.timestamp, end2: run.locations.last?.timestamp) }
-//                        DispatchQueue.main.async {
-//                            self.runStatistics.removeAll { statisticRun in
-//                                matchingRuns.contains(where: { $0.id == statisticRun.id })
-//                            }
-//                        }
+
+                        let matchingRuns = self.runStatistics.filter { self.doTimeRangesOverlap(start1: $0.startDate, end1: $0.endDate, start2: run.locations.first?.timestamp, end2: run.locations.last?.timestamp) }
+                        DispatchQueue.main.async {
+                            self.runStatistics.removeAll { statisticRun in
+                                matchingRuns.contains(where: { $0.id == statisticRun.id })
+                            }
+                        }
                         // checking for run edit
                         var runEdit: RunEdit?
                         if let runEditIndex = self.runEdits.firstIndex(where: { $0.id == run.id }) {
                             runEdit = self.runEdits[runEditIndex]
                         }
                         
-                        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? run.runTime, runDistance: runEdit?.newTotalDistance ?? run.totalDistance, topSpeed: runEdit?.newTopSpeed ?? run.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? run.averageSpeed, kCalories: 0, locationData: [], tags: runEdit?.newTags ?? run.tags, workoutType: runEdit?.newWorkoutType ?? run.workoutType ?? .surf, startDate: runEdit?.startLocation?.timestamp ?? run.startLocation?.timestamp ?? Date(), endDate: runEdit?.finishLocation?.timestamp ?? run.locations.last?.timestamp ?? Date(), topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0, popUps: runEdit?.popUps ?? 0, percentageOnFoil: runEdit?.percentageOnFoil ?? 0, turnsCount: runEdit?.turnsCount ?? 0)
+                        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? run.runTime, runDistance: runEdit?.newTotalDistance ?? run.totalDistance, topSpeed: runEdit?.newTopSpeed ?? run.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? run.averageSpeed, kCalories: 0, locationData: run.locations, tags: runEdit?.newTags ?? run.tags, workoutType: runEdit?.newWorkoutType ?? run.workoutType ?? .surf, startDate: runEdit?.startLocation?.timestamp ?? run.startLocation?.timestamp ?? Date(), endDate: runEdit?.finishLocation?.timestamp ?? run.locations.last?.timestamp ?? Date(), topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0, popUps: runEdit?.popUps ?? 0, percentageOnFoil: runEdit?.percentageOnFoil ?? 0, turnsCount: runEdit?.turnsCount ?? 0)
                         newStatistic.startLocation = run.startLocation
                         newStatistic.locationString = runEdit?.locationString ?? run.locationString
                         
@@ -1560,6 +1560,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // find what changed in the route
             var newRunEdit = RunEdit(id: newStatistic.id)
             
+            // don't forget the tags!
+            newRunEdit.newTags = newStatistic.tags
+            
             // update start if changed
             if oldRoute.first! != newStatistic.locationData.first! {
                 newRunEdit.startLocation = newStatistic.locationData.first!
@@ -1630,47 +1633,54 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // now update the grouped array
             updateGroupedRunArray()
             
-            // if we don't have health kit available we have to go another way of saving the edit
-            if HKHealthStore.isHealthDataAvailable() {
-                
-                // find locations missing in the newStatistic, in relation to the original locations
-                loadWorkoutRouteFromID(id: newStatistic.id) { route in
-                    
-                    func createEdits(locationData: [LocationData]) {
-                        let deletedLocations = self.findMissingLocationData(original: locationData, new: newStatistic.locationData)
-                        newRunEdit.deletedLocations = deletedLocations
-                        
-                        // save newRunEdit to the runEdit array if or replace if it exists.
-                        if let index = self.runEdits.firstIndex(where: { $0.id == newRunEdit.id }) {
-                            self.runEdits[index] = newRunEdit
-                        } else {
-                            self.runEdits.append(newRunEdit)
-                        }
-                        self.saveRunEdits()
-                    }
-                    
-                    if let route = route {
-                        self.locationDataFromWorkoutRoute(route: route) { locationData in
-                            createEdits(locationData: locationData)
-                        }
-                        // check if we find a backup
-                    } else if let backupLocationData = self.backupWorkoutData.first(where: { $0.startDate == self.runStatistics[index].startDate })?.locationData {
-                        createEdits(locationData: backupLocationData)
-                    }
-                }
-                
-            } else {
-                // find difference of oldRoute and new newStatistic.locationData when we don't have health
-                let deletedLocations = findMissingLocationData(original: oldRoute, new: newStatistic.locationData)
+            func createEdits(locationData: [LocationData]) {
+                let deletedLocations = self.findMissingLocationData(original: locationData, new: newStatistic.locationData)
                 newRunEdit.deletedLocations = deletedLocations
                 
                 // save newRunEdit to the runEdit array if or replace if it exists.
-                if let index = runEdits.firstIndex(where: { $0.id == newRunEdit.id }) {
-                    runEdits[index] = newRunEdit
+                if let index = self.runEdits.firstIndex(where: { $0.id == newRunEdit.id }) {
+                    self.runEdits[index] = newRunEdit
                 } else {
-                    runEdits.append(newRunEdit)
+                    self.runEdits.append(newRunEdit)
                 }
-                saveRunEdits()
+                self.saveRunEdits()
+            }
+            
+            // if we are working with an imported run
+            if let index = importedRuns.firstIndex(where: { $0.id == newStatistic.id }) {
+                let route = importedRuns[index].locations
+                createEdits(locationData: route)
+                
+            } else {
+                // if we don't have health kit available we have to go another way of saving the edit
+                if HKHealthStore.isHealthDataAvailable() {
+                    
+                    // find locations missing in the newStatistic, in relation to the original locations
+                    loadWorkoutRouteFromID(id: newStatistic.id) { route in
+                        
+                        if let route = route {
+                            self.locationDataFromWorkoutRoute(route: route) { locationData in
+                                createEdits(locationData: locationData)
+                            }
+                            // check if we find a backup
+                        } else if let backupLocationData = self.backupWorkoutData.first(where: { $0.startDate == self.runStatistics[index].startDate })?.locationData {
+                            createEdits(locationData: backupLocationData)
+                        }
+                    }
+                    
+                } else {
+                    // find difference of oldRoute and new newStatistic.locationData when we don't have health
+                    let deletedLocations = findMissingLocationData(original: oldRoute, new: newStatistic.locationData)
+                    newRunEdit.deletedLocations = deletedLocations
+                    
+                    // save newRunEdit to the runEdit array if or replace if it exists.
+                    if let index = runEdits.firstIndex(where: { $0.id == newRunEdit.id }) {
+                        runEdits[index] = newRunEdit
+                    } else {
+                        runEdits.append(newRunEdit)
+                    }
+                    saveRunEdits()
+                }
             }
         }
     }
@@ -3393,7 +3403,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         importedRuns.append(run)
         saveImportedRunsToDisk()
         
-        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: run.runTime, runDistance: run.totalDistance, topSpeed: run.topSpeed, averageSpeed: run.averageSpeed, kCalories: 0, locationData: [], tags: run.tags, workoutType: run.workoutType ?? .surf, startDate: run.startLocation?.timestamp ?? Date(), endDate: run.locations.last?.timestamp ?? Date(), topSpeed1s: 0, topSpeed10s: 0, popUps: 0, percentageOnFoil: 0, turnsCount: 0)
+        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: run.runTime, runDistance: run.totalDistance, topSpeed: run.topSpeed, averageSpeed: run.averageSpeed, kCalories: 0, locationData: run.locations, tags: run.tags, workoutType: run.workoutType ?? .surf, startDate: run.startLocation?.timestamp ?? Date(), endDate: run.locations.last?.timestamp ?? Date(), topSpeed1s: 0, topSpeed10s: 0, popUps: 0, percentageOnFoil: 0, turnsCount: 0)
         newStatistic.startLocation = run.startLocation
         newStatistic.locationString = run.locationString
         
