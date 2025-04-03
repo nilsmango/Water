@@ -149,6 +149,9 @@
 		78E5A85A2C32AB4E00456ABC /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
 		78E5A85D2C32DA4100456ABC /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78E5A85C2C32DA4100456ABC /* Surge */; };
 		78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
+		78F047C32D9DA417003E11FA /* ImportRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C22D9DA417003E11FA /* ImportRun.swift */; };
+		78F047C52D9DA607003E11FA /* GPXStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C42D9DA607003E11FA /* GPXStuff.swift */; };
+		78F047C82D9DA655003E11FA /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
 		78F36B2C2D9AB1160079F20B /* CrownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2B2D9AB1160079F20B /* CrownButton.swift */; };
 		78F36B2E2D9AB9C10079F20B /* OptionsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */; };
 		78F937F02C35816B00D34796 /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
@@ -336,6 +339,8 @@
 		78C4D23E2BA7512A00639E65 /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
 		78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMap.swift; sourceTree = "<group>"; };
 		78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStatistic.swift; sourceTree = "<group>"; };
+		78F047C22D9DA417003E11FA /* ImportRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRun.swift; sourceTree = "<group>"; };
+		78F047C42D9DA607003E11FA /* GPXStuff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXStuff.swift; sourceTree = "<group>"; };
 		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
 		78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsSheetView.swift; sourceTree = "<group>"; };
 		78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindSportStatisticsMap.swift; sourceTree = "<group>"; };
@@ -350,6 +355,7 @@
 			files = (
 				78A283702C3E8D6C0052AA52 /* StoreKit.framework in Frameworks */,
 				785C4AC12B40B62E00EB07F8 /* KeychainSwift in Frameworks */,
+				78F047C82D9DA655003E11FA /* XMLCoder in Frameworks */,
 				78320BC02BB1C28400D6A772 /* Surge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -528,6 +534,7 @@
 			isa = PBXGroup;
 			children = (
 				785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */,
+				78F047C42D9DA607003E11FA /* GPXStuff.swift */,
 				785C4AB92B40AF7400EB07F8 /* Member.swift */,
 				785CCF232D6B195E0075CA4C /* Version.swift */,
 				785CCF252D6B197E0075CA4C /* VersionHistory.swift */,
@@ -535,6 +542,7 @@
 				785C4ACC2B41D28400EB07F8 /* DBRun.swift */,
 				785C4AD22B433D4000EB07F8 /* MemberRunData.swift */,
 				78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */,
+				78F047C22D9DA417003E11FA /* ImportRun.swift */,
 				784083632C21FB54004C0857 /* RunEdit.swift */,
 				78B388E32C18C93F00C75A60 /* WorkoutType.swift */,
 				78C4D2392BA6DADB00639E65 /* LocationData.swift */,
@@ -753,6 +761,7 @@
 			packageProductDependencies = (
 				785C4AC02B40B62E00EB07F8 /* KeychainSwift */,
 				78320BBF2BB1C28400D6A772 /* Surge */,
+				78F047C72D9DA655003E11FA /* XMLCoder */,
 			);
 			productName = "7III Downwind";
 			productReference = 785C4A952B358F7B00EB07F8 /* 7III Tracker.app */;
@@ -826,6 +835,7 @@
 			packageReferences = (
 				785C4ABF2B40B62E00EB07F8 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				78320BBE2BB1C28400D6A772 /* XCRemoteSwiftPackageReference "Surge" */,
+				78F047C62D9DA655003E11FA /* XCRemoteSwiftPackageReference "XMLCoder" */,
 			);
 			productRefGroup = 785C4A962B358F7B00EB07F8 /* Products */;
 			projectDirPath = "";
@@ -937,6 +947,7 @@
 				785C4AD12B4313EF00EB07F8 /* LocationThings.swift in Sources */,
 				78A2837E2C45578F0052AA52 /* RefundView.swift in Sources */,
 				785C4AB82B35D24200EB07F8 /* HelperFunctions.swift in Sources */,
+				78F047C32D9DA417003E11FA /* ImportRun.swift in Sources */,
 				783A53CD2B5E6C9A00701D7F /* ListInfoLabel.swift in Sources */,
 				7877E1392BC52BB400776890 /* _FlexibleView.swift in Sources */,
 				783A53D72B62C53C00701D7F /* RunListMapSheet.swift in Sources */,
@@ -953,6 +964,7 @@
 				787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */,
 				78B5EF192D539D7D0079B16A /* GPXExportButton.swift in Sources */,
 				78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */,
+				78F047C52D9DA607003E11FA /* GPXStuff.swift in Sources */,
 				785CCF242D6B195E0075CA4C /* Version.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
 				781A4BAD2C4E9F310046AE0E /* SharePreviewWrapper.swift in Sources */,
@@ -1259,6 +1271,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tracker-Watch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to Health data so we can save your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to Health data so we can display your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
@@ -1295,6 +1308,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tracker-Watch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to Health data so we can save your sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to Health data so we can display your sessions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
@@ -1419,6 +1433,14 @@
 				minimumVersion = 20.0.0;
 			};
 		};
+		78F047C62D9DA655003E11FA /* XCRemoteSwiftPackageReference "XMLCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CoreOffice/XMLCoder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.17.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1436,6 +1458,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 78320BBE2BB1C28400D6A772 /* XCRemoteSwiftPackageReference "Surge" */;
 			productName = Surge;
+		};
+		78F047C72D9DA655003E11FA /* XMLCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78F047C62D9DA655003E11FA /* XCRemoteSwiftPackageReference "XMLCoder" */;
+			productName = XMLCoder;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

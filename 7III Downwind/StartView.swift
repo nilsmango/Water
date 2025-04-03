@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct StartView: View {
     @ObservedObject var downwindManager: DownwindManager
@@ -20,57 +21,161 @@ struct StartView: View {
     
     @State private var showFirstTimeUserName = false
     
+    @State private var importedRuns: [ImportRun] = []
+    @State private var isImporting: Bool = false
+    @State private var isLoadingImportedRuns: Bool = false
+    
+    @State private var editTags = [String]()
+    @State private var showTagsEditView = false
+    @State private var editRunIndex: Int? = nil
+    
     var body: some View {
         NavigationStack {
-            Group {
-                if downwindManager.lastVersionNewsClosed != downwindManager.currentAppVersion {
-                    ScrollView {
-                        VStack {
-                            
-                            NewsSection(downwindManager: downwindManager)
-                                    .padding(.horizontal)
-                            
-                            
-                            StatisticsControlCenter(downwindManager: downwindManager)
-                                .padding()
-                            
-                            if downwindManager.activeRun.active {
-                                if downwindManager.user.onlyWatching == true {
-                                    RunMapView(downwindManager: downwindManager)
-                                } else {
-                                    RunListView(downwindManager: downwindManager)
+            ScrollView {
+                VStack {
+                    if downwindManager.lastVersionNewsClosed != downwindManager.currentAppVersion {
+                        NewsSection(downwindManager: downwindManager)
+                            .padding(.horizontal)
+                    }
+                    
+                    if isLoadingImportedRuns {
+                        ProgressView("Parsing Run(s)...")
+                            .padding()
+                    } else {
+                        ForEach(importedRuns.sorted(by: { $0.startLocation?.timestamp ?? Date.distantPast < $1.startLocation?.timestamp ?? Date.distantPast })) { run in
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Image(systemName: "calendar")
+                                    Text(downwindManager.makeTimeIntervalDate(startDate: run.startLocation?.timestamp ?? run.locations.first?.timestamp ?? Date.now, endDate: run.locations.last?.timestamp ?? Date.now))
+                                    
+                                    Spacer()
                                 }
-                            } else {
-                                //                            Button(action: {
-                                //                                showRunPicker = true
-                                //                            }, label: {
-                                //                                Label("Online Locations", systemImage: "wifi")
-                                //                            })
-                                //                            .buttonStyle(.bordered)
-                                //                            .tint(.accentColor)
-                                //                            .padding(.top, 8)
-                            }
-                            
-                            if downwindManager.developerMode {
-                                Toggle("Collect Raw GPS", isOn: $downwindManager.collectRawGPS)
-                                    .padding()
-                                NavigationLink(destination: StatisticTestsView(downwindManager: downwindManager)) {
-                                    Label("Statistics Test", systemImage: "chart.xyaxis.line")
+                                .fontWeight(.bold)
+                                
+                                if let locationString = run.locationString {
+                                    HStack {
+                                        Image(systemName: "location.fill")
+                                        
+                                        Text(locationString)
+                                        
+                                        Spacer()
+                                    }
+                                    .fontWeight(.bold)
+                                }
+                                
+                                
+                                Text("Run Time: \(makePrettyTime(timeInMinutes: run.runTime))")
+                                
+                                Text("Total Distance: \(makePrettyDistance(meters: run.totalDistance, system: downwindManager.measurementSystem, statistics: true))")
+                                
+                                Text("Number of locations found: \(run.locations.count)")
+                                
+                                Menu {
+                                    ForEach(WorkoutType.allCases.sorted(by: {
+                                        (downwindManager.workoutUsageCount[$0] ?? 0) > (downwindManager.workoutUsageCount[$1] ?? 0)
+                                    }), id: \.self) { type in
+                                        if type != .not7IIIPaddleSport && type != .not7IIISurfingSport {
+                                            Button(action: {
+                                                let index = importedRuns.firstIndex(where: { $0.id == run.id })
+                                                importedRuns[index!].workoutType = type
+                                            }) {
+                                                if run.workoutType == type {
+                                                    Label(type.prettyString, systemImage: "checkmark")
+                                                } else {
+                                                    Text(type.prettyString)
+                                                }
+                                            }
+                                        }
+                                    }
+                                } label: {
+                                    Text(run.workoutType?.prettyString ?? "Set Activity Type")
                                 }
                                 .buttonStyle(.bordered)
-                                .padding()
+                                .tint(.orange)
+                                
+                                let formattedTags = run.tags.joined(separator: " ")
+                                Text("Tags: \(formattedTags.count > 0 ? formattedTags : "No Tags")")
+                                
+                                Button {
+                                    if downwindManager.hasPurchasedPremium {
+                                        editTags = run.tags
+                                        editRunIndex = importedRuns.firstIndex(where: { $0.id == run.id })
+                                        showTagsEditView = true
+                                    } else {
+                                        downwindManager.showUpgradeSheet = true
+                                    }
+                                } label: {
+                                    run.tags.isEmpty ? downwindManager.hasPurchasedPremium ? Label("Add Tags", systemImage: "") : Label("Add Tags", systemImage: "lock.fill") : downwindManager.hasPurchasedPremium ? Label("Edit Tags", systemImage: "") : Label("Edit Tags", systemImage: "lock.fill")
+                                }
+                                .buttonStyle(.bordered)
+                                
+                                if run.workoutType != nil {
+                                    Button {
+                                        downwindManager.importRun(run: run)
+                                        // when done remove from array
+                                        importedRuns.removeAll(where: { $0.id == run.id })
+                                    } label: {
+                                        Label("Save Run", systemImage: "square.and.arrow.down")
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(.accent)
+                                }
+                                
+                                
+                                
                             }
-                            
-                            Spacer()
-                            
+                            .padding()
+                            .background {
+                                ListBackground()
+                            }
+                            .padding()
                         }
                     }
                     
-                } else {
-                    
-                
-                VStack {
-                    
+                    Button {
+                        isImporting = true
+                    } label: {
+                        Label(importedRuns.isEmpty ? "Import GPX Run(s)" :"Import more GPX Run(s)", systemImage: "square.and.arrow.down")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.accent)
+                    .disabled(isLoadingImportedRuns)
+                    .padding(.top)
+                    .fileImporter(
+                        isPresented: $isImporting,
+                        allowedContentTypes: [UTType(filenameExtension: "gpx")!],
+                        allowsMultipleSelection: true
+                    ) { result in
+                        isLoadingImportedRuns = true
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            let group = DispatchGroup()
+                            var newRuns: [ImportRun] = []
+
+                            switch result {
+                            case .success(let urls):
+                                for url in urls {
+                                    group.enter()
+                                    downwindManager.parseGPX(from: url) { run in
+                                        if let run = run {
+                                            newRuns.append(run)
+                                        }
+                                        group.leave()
+                                    }
+                                }
+
+                                group.notify(queue: .main) {
+                                    importedRuns.append(contentsOf: newRuns)
+                                    isLoadingImportedRuns = false
+                                }
+
+                            case .failure(let error):
+                                print("Error importing files: \(error)")
+                                DispatchQueue.main.async {
+                                    isLoadingImportedRuns = false
+                                }
+                            }
+                        }
+                    }
                     
                     StatisticsControlCenter(downwindManager: downwindManager)
                         .padding()
@@ -105,9 +210,8 @@ struct StartView: View {
                     Spacer()
                     
                 }
-                }
             }
-            
+        
             .navigationTitle(downwindManager.user.name.isEmpty ? "Aloha!" : "Aloha \(downwindManager.user.name)!")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -199,6 +303,35 @@ struct StartView: View {
                                 }
                             }
                         }
+                }
+            })
+            
+            .sheet(isPresented: $showTagsEditView, content: {
+                NavigationStack {
+                    List {
+                        TagsEditView(tags: $editTags, downwindManager: downwindManager, type: .constant(.windsurf), locationString: .constant(""))
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(role: .destructive, action: {
+                                showTagsEditView = false
+                            }, label: {
+                                Text("Cancel")
+                            })
+                            .tint(.red)
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                if let editRunIndex = editRunIndex {
+                                    importedRuns[editRunIndex].tags = editTags
+                                }
+                                showTagsEditView = false
+                            }, label: {
+                                Text("Save")
+                            })
+                            .disabled((editRunIndex != nil ? importedRuns[editRunIndex!].tags : []) == editTags)
+                        }
+                    }
                 }
             })
             

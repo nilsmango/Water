@@ -17,7 +17,7 @@ struct RunStatistic: Identifiable, Codable {
     var runTime: Double
     /// distance in meters
     var runDistance: Double
-    /// top speed in km/h
+    /// GPS top speed in km/h
     var topSpeed: Double
     /// 10 sec top speed in km/h
     var topSpeed10s: Double?

@@ -1,5 +1,5 @@
 {
-  "originHash" : "f55e1e2e4f67b077ff62e32bf3c38d689b7120de30e32497c9bb974428c9544d",
+  "originHash" : "cc01f8fecee87a0c26d02c3ee5a41d54ee147706a16ce72b97c3e8ff1ddf0896",
   "pins" : [
     {
       "identity" : "keychain-swift",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "6e4a47e63da8801afe6188cf039e9f04eb577721",
         "version" : "2.3.2"
+      }
+    },
+    {
+      "identity" : "xmlcoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CoreOffice/XMLCoder",
+      "state" : {
+        "revision" : "b1e944cbd0ef33787b13f639a5418d55b3bed501",
+        "version" : "0.17.1"
       }
     }
   ],

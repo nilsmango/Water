@@ -11,6 +11,7 @@ import _MapKit_SwiftUI
 import KeychainSwift
 import HealthKit
 import StoreKit
+import XMLCoder
 
 typealias Transaction = StoreKit.Transaction
 
@@ -545,6 +546,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let fileName = "locationStatistics.data"
     private let editFileName = "runEdits.data"
     private let backupWorkoutDataFileName = "backupWorkout.data"
+    private let importFileName = "importedRuns.data"
     
     
     /// Save runStatistics to disk
@@ -576,65 +578,82 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func deleteWorkout(id: UUID) {
         if HKHealthStore.isHealthDataAvailable() {
-            let workoutPredicate = HKQuery.predicateForObject(with: id)
-            
-            // Create a query to fetch the workout
-            let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: workoutPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (_, samples, error) in
-                guard error == nil else {
-                    // Handle error
-                    print("Error fetching workout: \(error!.localizedDescription)")
-                    return
+            // remove imported run if it is an imported one
+            if let index = importedRuns.firstIndex(where: { $0.id == id }) {
+                importedRuns.remove(at: index)
+                saveImportedRunsToDisk()
+                if let editIndex = self.runEdits.firstIndex(where: { $0.id == id }) {
+                    runEdits.remove(at: editIndex)
+                    saveRunEdits()
                 }
                 
-                if let workout = samples?.first as? HKWorkout {
+                if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                    DispatchQueue.main.async {
+                        self.runStatistics.remove(at: runIndex)
+                        self.updateGroupedRunArray()
+                    }
+                }
+                
+            } else {
+                let workoutPredicate = HKQuery.predicateForObject(with: id)
+                
+                // Create a query to fetch the workout
+                let workoutQuery = HKSampleQuery(sampleType: .workoutType(), predicate: workoutPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (_, samples, error) in
+                    guard error == nil else {
+                        // Handle error
+                        print("Error fetching workout: \(error!.localizedDescription)")
+                        return
+                    }
                     
-                    // remove workout
-                    self.healthStore.delete(workout) { (success, error) in
-                        if let error = error {
-                            print("Error deleting workout: \(error.localizedDescription)")
-                            return
-                        }
+                    if let workout = samples?.first as? HKWorkout {
                         
-                        if success {
-                            // also remove it from the arrays
-                            if let editIndex = self.runEdits.firstIndex(where: { $0.id == id }) {
-                                DispatchQueue.main.async {
-                                    self.runEdits.remove(at: editIndex)
-                                    self.saveRunEdits()
-                                }
+                        // remove workout
+                        self.healthStore.delete(workout) { (success, error) in
+                            if let error = error {
+                                print("Error deleting workout: \(error.localizedDescription)")
+                                return
                             }
                             
-                            if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
-                                DispatchQueue.main.async {
-                                    self.runStatistics.remove(at: runIndex)
-                                    self.updateGroupedRunArray()
+                            if success {
+                                // also remove it from the arrays
+                                if let editIndex = self.runEdits.firstIndex(where: { $0.id == id }) {
+                                    DispatchQueue.main.async {
+                                        self.runEdits.remove(at: editIndex)
+                                        self.saveRunEdits()
+                                    }
+                                }
+                                
+                                if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                                    DispatchQueue.main.async {
+                                        self.runStatistics.remove(at: runIndex)
+                                        self.updateGroupedRunArray()
+                                    }
                                 }
                             }
                         }
+                        
+                    } else {
+                        print("No workout found with the specified UUID. Saving the original array to disk")
+                        // if can't find in health
+                        if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                            DispatchQueue.main.async {
+                                self.runStatistics.remove(at: runIndex)
+                                self.updateGroupedRunArray()
+                            }
                     }
-                    
-                } else {
-                    print("No workout found with the specified UUID. Saving the original array to disk")
-                    // if can't find in health
-                    if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
-                        DispatchQueue.main.async {
-                            self.runStatistics.remove(at: runIndex)
-                            self.updateGroupedRunArray()
+                        // load old statistics from disk
+                        var oldStatistics = self.getRunStatisticsFromDisk()
+                        
+                        // find the to deleted statistic
+                        if let indexToRemove = oldStatistics.firstIndex(where: { $0.id == id }) {
+                            oldStatistics.remove(at: indexToRemove)
+                            self.saveRunStatistics(array: oldStatistics)
                         }
-                }
-                    // load old statistics from disk
-                    var oldStatistics = self.getRunStatisticsFromDisk()
-                    
-                    // find the to deleted statistic
-                    if let indexToRemove = oldStatistics.firstIndex(where: { $0.id == id }) {
-                        oldStatistics.remove(at: indexToRemove)
-                        self.saveRunStatistics(array: oldStatistics)
                     }
                 }
+                
+                healthStore.execute(workoutQuery)
             }
-            
-            healthStore.execute(workoutQuery)
-            
         } else {
             // only remove it from the arrays
             if let editIndex = runEdits.firstIndex(where: { $0.id == id }) {
@@ -674,7 +693,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             print("Error loading runStatistics: \(error)")
             return []
         }
-            
     }
     
     private func loadBackupWorkoutDataFromDisk() {
@@ -776,6 +794,32 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             DispatchQueue.main.async {
                                 self.runStatistics.append(statistic)
                             }
+                        }
+                    }
+                    
+                    self.loadImportedRunsFromDisk()
+                    
+                    for run in self.importedRuns {
+                        // overwriting the statistic if we find one at the same time as we are pretty sure we don't want both of them
+                        // TODO: make this uncommented again
+//                        let matchingRuns = self.runStatistics.filter { self.doTimeRangesOverlap(start1: $0.startDate, end1: $0.endDate, start2: run.locations.first?.timestamp, end2: run.locations.last?.timestamp) }
+//                        DispatchQueue.main.async {
+//                            self.runStatistics.removeAll { statisticRun in
+//                                matchingRuns.contains(where: { $0.id == statisticRun.id })
+//                            }
+//                        }
+                        // checking for run edit
+                        var runEdit: RunEdit?
+                        if let runEditIndex = self.runEdits.firstIndex(where: { $0.id == run.id }) {
+                            runEdit = self.runEdits[runEditIndex]
+                        }
+                        
+                        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? run.runTime, runDistance: runEdit?.newTotalDistance ?? run.totalDistance, topSpeed: runEdit?.newTopSpeed ?? run.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? run.averageSpeed, kCalories: 0, locationData: [], tags: runEdit?.newTags ?? run.tags, workoutType: runEdit?.newWorkoutType ?? run.workoutType ?? .surf, startDate: runEdit?.startLocation?.timestamp ?? run.startLocation?.timestamp ?? Date(), endDate: runEdit?.finishLocation?.timestamp ?? run.locations.last?.timestamp ?? Date(), topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0, popUps: runEdit?.popUps ?? 0, percentageOnFoil: runEdit?.percentageOnFoil ?? 0, turnsCount: runEdit?.turnsCount ?? 0)
+                        newStatistic.startLocation = run.startLocation
+                        newStatistic.locationString = runEdit?.locationString ?? run.locationString
+                        
+                        DispatchQueue.main.async {
+                            self.runStatistics.append(newStatistic)
                         }
                     }
                     
@@ -961,38 +1005,69 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         healthStore.execute(query)
     }
     
+    // TODO: fetch everything from importedRuns if the run is found there in this func
     func loadRouteAndHeartFromHealth(statistic: RunStatistic, completion: @escaping (Bool) -> Void) {
         let id = statistic.id
-        let dispatchGroup = DispatchGroup()
-
-        // only do this part when we have health
-        if HKHealthStore.isHealthDataAvailable() {
+        
+        // skip everything if we have an imported run
+        if let importedRun = self.importedRuns.first(where: { $0.id == id }) {
+            if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+            // we only need to edit if we have a run edit
+                if let runEdit = self.runEdits.first(where: { $0.id == id }) {
+                    // filtering out the deleted locations
+                    if let deletedLocations = runEdit.deletedLocations {
+                        let newLocationData = importedRun.locations.filter { !deletedLocations.contains($0)}
+                        DispatchQueue.main.async {
+                            self.runStatistics[runIndex].locationData = newLocationData
+                        }
+                    }
+                } else {
+                    self.runStatistics[runIndex].locationData = importedRun.locations
+                }
+                // heart rate
+                if importedRun.heartRates.count > 0 {
+                    self.runStatistics[runIndex].averageHeartRate = importedRun.averageHeartRate
+                }
+            }
+        } else {
             
-            // load the route and average heart rate
-            self.loadWorkoutRouteHeartFromHealth(id: id) { route, averageHeartRate in
-                if let route = route {
-                    self.locationDataFromWorkoutRoute(route: route) { locationData in
-                        if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
-                            var locationData = locationData
-                            // find backup - this is done by comparing start date, but actually would make more sense to use id (?)
-                            if let backupIndex = self.backupWorkoutData.firstIndex(where: { $0.startDate == statistic.startDate }) {
-                                if locationData.isEmpty {
-                                    locationData = self.backupWorkoutData[backupIndex].locationData
-                                } else {
-                                    self.backupWorkoutData.remove(at: backupIndex)
-                                    self.saveBackupWorkoutDataToDisk()
+            let dispatchGroup = DispatchGroup()
+            
+            // only do this part when we have health
+            if HKHealthStore.isHealthDataAvailable() {
+                
+                // load the route and average heart rate
+                self.loadWorkoutRouteHeartFromHealth(id: id) { route, averageHeartRate in
+                    if let route = route {
+                        self.locationDataFromWorkoutRoute(route: route) { locationData in
+                            if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                                var locationData = locationData
+                                // find backup - this is done by comparing start date, but actually would make more sense to use id (?)
+                                if let backupIndex = self.backupWorkoutData.firstIndex(where: { $0.startDate == statistic.startDate }) {
+                                    if locationData.isEmpty {
+                                        locationData = self.backupWorkoutData[backupIndex].locationData
+                                    } else {
+                                        self.backupWorkoutData.remove(at: backupIndex)
+                                        self.saveBackupWorkoutDataToDisk()
+                                    }
                                 }
-                            }
-                            
-                            // we only need to edit if we have a run edit
-                            if let runEdit = self.runEdits.first(where: { $0.id == id }) {
-                                // filtering out the deleted locations
-                                if let deletedLocations = runEdit.deletedLocations {
-                                    let newLocationData = locationData.filter { !deletedLocations.contains($0)}
-                                    dispatchGroup.enter()
-                                    DispatchQueue.main.async {
-                                        self.runStatistics[runIndex].locationData = newLocationData
-                                        dispatchGroup.leave()
+                                
+                                // we only need to edit if we have a run edit
+                                if let runEdit = self.runEdits.first(where: { $0.id == id }) {
+                                    // filtering out the deleted locations
+                                    if let deletedLocations = runEdit.deletedLocations {
+                                        let newLocationData = locationData.filter { !deletedLocations.contains($0)}
+                                        dispatchGroup.enter()
+                                        DispatchQueue.main.async {
+                                            self.runStatistics[runIndex].locationData = newLocationData
+                                            dispatchGroup.leave()
+                                        }
+                                    } else {
+                                        dispatchGroup.enter()
+                                        DispatchQueue.main.async {
+                                            self.runStatistics[runIndex].locationData = locationData
+                                            dispatchGroup.leave()
+                                        }
                                     }
                                 } else {
                                     dispatchGroup.enter()
@@ -1002,22 +1077,31 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     }
                                 }
                             } else {
+                                // we should never have to do that
+                                let run = RunStatistic(id: id, runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
                                 dispatchGroup.enter()
                                 DispatchQueue.main.async {
-                                    self.runStatistics[runIndex].locationData = locationData
+                                    self.runStatistics.append(run)
                                     dispatchGroup.leave()
                                 }
                             }
-                        } else {
-                            // we should never have to do that
-                            let run = RunStatistic(id: id, runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
-                            dispatchGroup.enter()
-                            DispatchQueue.main.async {
-                                self.runStatistics.append(run)
-                                dispatchGroup.leave()
+                            
+                            if let averageHeartRate = averageHeartRate {
+                                if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                                    dispatchGroup.enter()
+                                    DispatchQueue.main.async {
+                                        self.runStatistics[runIndex].averageHeartRate = averageHeartRate
+                                        dispatchGroup.leave()
+                                    }
+                                }
+                            }
+                            
+                            dispatchGroup.notify(queue: .main) {
+                                completion(true)
                             }
                         }
                         
+                    } else {
                         if let averageHeartRate = averageHeartRate {
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
                                 dispatchGroup.enter()
@@ -1032,42 +1116,27 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             completion(true)
                         }
                     }
-                    
-                } else {
-                    if let averageHeartRate = averageHeartRate {
-                        if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+                }
+            } else {
+                // when we don't save to health we need this process
+                if let runEdit = runEdits.first(where: { $0.id == id }) {
+                    if let deletedLocations = runEdit.deletedLocations {
+                        if let runIndex = runStatistics.firstIndex(where: { $0.id == id }) {
+                            let locationData = runStatistics[runIndex].locationData
+                            let newLocationData = locationData.filter { !deletedLocations.contains($0)}
                             dispatchGroup.enter()
                             DispatchQueue.main.async {
-                                self.runStatistics[runIndex].averageHeartRate = averageHeartRate
+                                self.runStatistics[runIndex].locationData = newLocationData
                                 dispatchGroup.leave()
                             }
                         }
-                    }
-                    
-                    dispatchGroup.notify(queue: .main) {
-                        completion(true)
+                    } else {
+                        print("no deleted locations found")
                     }
                 }
-            }
-        } else {
-            // when we don't save to health we need this process
-            if let runEdit = runEdits.first(where: { $0.id == id }) {
-                if let deletedLocations = runEdit.deletedLocations {
-                    if let runIndex = runStatistics.firstIndex(where: { $0.id == id }) {
-                        let locationData = runStatistics[runIndex].locationData
-                        let newLocationData = locationData.filter { !deletedLocations.contains($0)}
-                        dispatchGroup.enter()
-                        DispatchQueue.main.async {
-                            self.runStatistics[runIndex].locationData = newLocationData
-                            dispatchGroup.leave()
-                        }
-                    }
-                } else {
-                    print("no deleted locations found")
+                dispatchGroup.notify(queue: .main) {
+                    completion(false)
                 }
-            }
-            dispatchGroup.notify(queue: .main) {
-                completion(false)
             }
         }
     }
@@ -1187,7 +1256,65 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         healthStore.execute(query)
     }
     
-    func fetchHeartRatesOverTime(startTime: Date?, endTime: Date?, completion: @escaping ([Date: (Double, Double)]?, Error?) -> Void) {
+    func fetchHeartRatesOverTime(statisticID: UUID? = nil, startTime: Date?, endTime: Date?, completion: @escaping ([Date: (Double, Double)]?, Error?) -> Void) {
+        if statisticID != nil {
+            if let importedRun = importedRuns.first(where: { $0.id == statisticID }) {
+                if importedRun.heartRates.count > 0 {
+                    // Create comparable heart rates data
+                    var heartRateData: [Date: (Double, Double)] = [:]
+                    
+                    // Sort heart rates by date
+                    let sortedHeartRates = importedRun.heartRates.sorted(by: { $0.date < $1.date })
+                    
+                    // Calculate the interval based on time range and desired number of samples
+                    let firstDate = sortedHeartRates.first?.date ?? startTime ?? Date()
+                    let lastDate = sortedHeartRates.last?.date ?? endTime ?? Date()
+                    let interval = DateInterval(start: firstDate, end: lastDate)
+                    let intervalDuration = interval.duration
+                    let samplesCount = 80
+                    let timeInterval = max(Int(intervalDuration / Double(samplesCount)), 1)
+                    
+                    // Group heart rates into time bins
+                    var currentBinStart = firstDate
+                    var currentBinHeartRates: [Double] = []
+                    
+                    for heartRate in sortedHeartRates {
+                        // If this heart rate belongs to a new bin, process the previous bin
+                        if heartRate.date >= currentBinStart.addingTimeInterval(TimeInterval(timeInterval)) {
+                            if !currentBinHeartRates.isEmpty {
+                                let minRate = currentBinHeartRates.min() ?? 0.0
+                                let maxRate = currentBinHeartRates.max() ?? 0.0
+                                if minRate != 0.0 && maxRate != 0.0 {
+                                    heartRateData[currentBinStart] = (minRate, maxRate)
+                                }
+                            }
+                            
+                            // Move to the next bin that contains this heart rate
+                            while heartRate.date >= currentBinStart.addingTimeInterval(TimeInterval(timeInterval)) {
+                                currentBinStart = currentBinStart.addingTimeInterval(TimeInterval(timeInterval))
+                            }
+                            currentBinHeartRates = [heartRate.heartRate]
+                        } else {
+                            // Add to current bin
+                            currentBinHeartRates.append(heartRate.heartRate)
+                        }
+                    }
+                    
+                    // Process the last bin if it has data
+                    if !currentBinHeartRates.isEmpty {
+                        let minRate = currentBinHeartRates.min() ?? 0.0
+                        let maxRate = currentBinHeartRates.max() ?? 0.0
+                        if minRate != 0.0 && maxRate != 0.0 {
+                            heartRateData[currentBinStart] = (minRate, maxRate)
+                        }
+                    }
+                    
+                    completion(heartRateData, nil)
+                    return
+                }
+            }
+        }
+        
         guard let startTime = startTime, let endTime = endTime else {
             completion(nil, NSError(domain: "com.7iiitracker", code: -1, userInfo: [NSLocalizedDescriptionKey: "Heart rate type not available"]))
             return
@@ -2063,40 +2190,48 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// reverts all changes of the route
     func revertChangesForRoute(for statistic: RunStatistic, completion: @escaping (RunStatistic?) -> Void) {
-        if HKHealthStore.isHealthDataAvailable() {
-            loadWorkoutRouteFromID(id: statistic.id) { route in
-                if let route = route {
-                    self.locationDataFromWorkoutRoute(route: route) { locationData in
-                        var revertedRunStatistic = statistic
-                        revertedRunStatistic.locationData = locationData
-                        completion(revertedRunStatistic)
-                    }
-                } else if let backup = self.backupWorkoutData.first(where: { $0.startDate == statistic.startDate }) {
-                    completion(backup)
-            } else {
-                    completion(nil) // Return nil if the route is not found
-                }
-            }
+        if let index = importedRuns.firstIndex(where: { $0.id == statistic.id }) {
+            var statistic = statistic
+            statistic.locationData = importedRuns[index].locations
+            
+            completion(statistic)
         } else {
-            do {
-                // getting the runStatistics (if no health or for older files)
-                let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
-                let data = try Data(contentsOf: url)
-                let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
-                
-                if let ogRunStatistic = decodedStatistics.first(where: { $0.id == statistic.id }) {
-                    var revertedRunStatistic = statistic
-                    revertedRunStatistic.locationData = ogRunStatistic.locationData
-                    
-                    completion(revertedRunStatistic)
+            if HKHealthStore.isHealthDataAvailable() {
+                loadWorkoutRouteFromID(id: statistic.id) { route in
+                    if let route = route {
+                        self.locationDataFromWorkoutRoute(route: route) { locationData in
+                            var revertedRunStatistic = statistic
+                            revertedRunStatistic.locationData = locationData
+                            completion(revertedRunStatistic)
+                        }
+                    } else if let backup = self.backupWorkoutData.first(where: { $0.startDate == statistic.startDate }) {
+                        completion(backup)
                 } else {
+                        completion(nil) // Return nil if the route is not found
+                    }
+                }
+            } else {
+                do {
+                    // getting the runStatistics (if no health or for older files)
+                    let url = try self.getDocumentsDirectory().appendingPathComponent(self.fileName)
+                    let data = try Data(contentsOf: url)
+                    let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+                    
+                    if let ogRunStatistic = decodedStatistics.first(where: { $0.id == statistic.id }) {
+                        var revertedRunStatistic = statistic
+                        revertedRunStatistic.locationData = ogRunStatistic.locationData
+                        
+                        completion(revertedRunStatistic)
+                    } else {
+                        completion(nil)
+                    }
+                } catch {
+                    print("Error loading runStatistics: \(error)")
                     completion(nil)
                 }
-            } catch {
-                print("Error loading runStatistics: \(error)")
-                completion(nil)
             }
         }
+        
     }
     
     /// checks if there is an edit for a statistic
@@ -3227,4 +3362,193 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // MARK: - News Section
     @AppStorage("lastVersionNewsClosed") var lastVersionNewsClosed = ""
+    
+    // MARK: - GPX Import
+    
+    var importedRuns = [ImportRun]()
+    
+    private func loadImportedRunsFromDisk() {
+        do {
+            let url = try self.getDocumentsDirectory().appendingPathComponent(self.importFileName)
+            let data = try Data(contentsOf: url)
+            let decodedStatistics = try JSONDecoder().decode([ImportRun].self, from: data)
+            importedRuns = decodedStatistics
+        } catch {
+            print("Error loading imported runs: \(error)")
+        }
+    }
+    
+    private func saveImportedRunsToDisk() {
+        do {
+            let url = try self.getDocumentsDirectory().appendingPathComponent(self.importFileName)
+            let data = try JSONEncoder().encode(importedRuns)
+            try data.write(to: url)
+        } catch {
+            print("Error saving imported runs: \(error)")
+        }
+    }
+    
+    /// imports a run to the imported runs
+    func importRun(run: ImportRun) {
+        importedRuns.append(run)
+        saveImportedRunsToDisk()
+        
+        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: run.runTime, runDistance: run.totalDistance, topSpeed: run.topSpeed, averageSpeed: run.averageSpeed, kCalories: 0, locationData: [], tags: run.tags, workoutType: run.workoutType ?? .surf, startDate: run.startLocation?.timestamp ?? Date(), endDate: run.locations.last?.timestamp ?? Date(), topSpeed1s: 0, topSpeed10s: 0, popUps: 0, percentageOnFoil: 0, turnsCount: 0)
+        newStatistic.startLocation = run.startLocation
+        newStatistic.locationString = run.locationString
+        
+        DispatchQueue.main.async {
+            self.runStatistics.append(newStatistic)
+        }
+        
+        let updatedTags = self.updateMetaData(statistics: self.runStatistics)
+        
+        // sort the array, find matching statistics update the grouped array
+        DispatchQueue.main.async {
+            self.tags = updatedTags
+            
+            self.saveTags()
+            
+            self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast > $1.startDate ?? $1.locationData.first?.timestamp ?? Date.distantPast})
+            
+            self.findMatchingStatisticsAndMerge()
+            
+            // Free user only show 7 runs
+            if !self.hasPurchasedPremium {
+                self.statisticsCount = self.runStatistics.count
+                if self.statisticsCount > 7 {
+                    self.runStatistics = Array(self.runStatistics.prefix(7))
+                }
+            }
+            
+            self.updateGroupedRunArray()
+            
+            self.loadingRunStatistics = false
+            
+            self.updateLocationStrings()
+            
+        }
+    }
+    
+    
+    
+    func parseGPX(from url: URL, completion: @escaping (ImportRun?) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                guard url.startAccessingSecurityScopedResource() else {
+                    print("Failed to access security-scoped resource.")
+                    DispatchQueue.main.async { completion(nil) }
+                    return
+                }
+                defer { url.stopAccessingSecurityScopedResource() }
+
+                let data = try Data(contentsOf: url)
+                let decoder = XMLDecoder()
+
+                // Configure date decoding
+                decoder.dateDecodingStrategy = .custom { decoder in
+                    let container = try decoder.singleValueContainer()
+                    let dateString = try container.decode(String.self)
+
+                    let dateFormatter = ISO8601DateFormatter()
+                    dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+                    if let date = dateFormatter.date(from: dateString) {
+                        return date
+                    } else {
+                        let fallbackFormatter = ISO8601DateFormatter()
+                        fallbackFormatter.formatOptions = [.withInternetDateTime]
+                        if let date = fallbackFormatter.date(from: dateString) {
+                            return date
+                        }
+                        throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date format: \(dateString)")
+                    }
+                }
+
+                let gpx = try decoder.decode(GPX.self, from: data)
+
+                guard let track = gpx.trk.first, let trackSegment = track.trkseg.first else {
+                    DispatchQueue.main.async { completion(nil) }
+                    return
+                }
+
+                var locations: [LocationData] = []
+                var heartRates: [HeartRate] = []
+                var totalDistance: Double = 0
+                var topSpeed: Double = 0
+                var totalHeartRate: Double = 0
+                var validHeartRateCount: Double = 0
+                var startTime: Date? = nil
+                var endTime: Date? = nil
+
+                for (index, point) in trackSegment.trkpt.enumerated() {
+                    guard let latitude = Double(point.lat), let longitude = Double(point.lon), let time = point.time else {
+                        continue
+                    }
+
+                    let locationData = LocationData(timestamp: time, latitude: latitude, longitude: longitude, speed: point.speed)
+                    locations.append(locationData)
+
+                    if let hr = point.extensions?.trackPointExtension?.hr, let hrValue = Double(hr) {
+                        heartRates.append(HeartRate(date: time, heartRate: hrValue))
+                        totalHeartRate += hrValue
+                        validHeartRateCount += 1
+                    }
+
+                    if let speed = point.speed, speed > topSpeed {
+                        topSpeed = speed
+                    }
+
+                    if startTime == nil {
+                        startTime = time
+                    }
+                    endTime = time
+
+                    if index > 0 {
+                        let prevPoint = trackSegment.trkpt[index - 1]
+                        totalDistance += calculateDirectDistance(
+                            from: Member(name: "lastLocation", latitude: Double(prevPoint.lat)!, longitude: Double(prevPoint.lon)!),
+                            to: Member(name: "now", latitude: latitude, longitude: longitude)
+                        ) ?? 0
+                    }
+                }
+
+                guard let startTimeUnwrapped = startTime, let endTimeUnwrapped = endTime else {
+                    DispatchQueue.main.async { completion(nil) }
+                    return
+                }
+
+                let timeInterval = endTimeUnwrapped.timeIntervalSince(startTimeUnwrapped)
+                let runTimeMinutes = timeInterval / 60
+                let averageSpeed: Double = runTimeMinutes > 0 ? (totalDistance / (runTimeMinutes / 60)) / 1000 : 0
+                let averageHeartRate = validHeartRateCount > 0 ? totalHeartRate / validHeartRateCount : 0
+                let topSpeedKmh = topSpeed * 3.6
+                
+                self.createLocationNames(statisticsData: RunStatistic(id: UUID(), locationData: locations, startLocation: locations.first)) { location in
+                    let run = ImportRun(
+                        id: UUID(),
+                        runTime: runTimeMinutes,
+                        topSpeed: topSpeedKmh,
+                        averageSpeed: averageSpeed,
+                        totalDistance: totalDistance,
+                        startLocation: locations.first,
+                        locations: locations,
+                        heartRates: heartRates,
+                        averageHeartRate: averageHeartRate,
+                        locationString: location
+                    )
+                    
+                    DispatchQueue.main.async {
+                        completion(run)
+                    }
+                }
+                                
+                } catch {
+                    print("Error parsing GPX: \(error)")
+                    DispatchQueue.main.async {
+                        completion(nil)
+                    }
+                }
+        }
+    }
 }
