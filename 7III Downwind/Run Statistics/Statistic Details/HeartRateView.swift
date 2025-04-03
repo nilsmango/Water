@@ -21,7 +21,7 @@ struct HeartRateView: View {
     
     var body: some View {
         
-        if !heartRates.isEmpty {
+        if !heartRates.isEmpty && heartRates.values.flatMap({ [$0.0, $0.1] }).reduce(0, +) > 30 {
                                     
             Section {
                 HeartRateChartView(measurements: heartRates)
