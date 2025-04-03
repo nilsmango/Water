@@ -71,6 +71,23 @@ struct StartView: View {
                                 
                                 Text("Number of locations found: \(run.locations.count)")
                                 
+                                
+                                let formattedTags = run.tags.joined(separator: " ")
+                                Text("Tags: \(formattedTags.count > 0 ? formattedTags : "No Tags")")
+                                
+                                Button {
+                                    if downwindManager.hasPurchasedPremium {
+                                        editTags = run.tags
+                                        editRunIndex = importedRuns.firstIndex(where: { $0.id == run.id })
+                                        showTagsEditView = true
+                                    } else {
+                                        downwindManager.showUpgradeSheet = true
+                                    }
+                                } label: {
+                                    run.tags.isEmpty ? downwindManager.hasPurchasedPremium ? Label("Add Tags", systemImage: "") : Label("Add Tags", systemImage: "lock.fill") : downwindManager.hasPurchasedPremium ? Label("Edit Tags", systemImage: "") : Label("Edit Tags", systemImage: "lock.fill")
+                                }
+                                .buttonStyle(.bordered)
+                                
                                 Menu {
                                     ForEach(WorkoutType.allCases.sorted(by: {
                                         (downwindManager.workoutUsageCount[$0] ?? 0) > (downwindManager.workoutUsageCount[$1] ?? 0)
@@ -89,42 +106,42 @@ struct StartView: View {
                                         }
                                     }
                                 } label: {
-                                    Text(run.workoutType?.prettyString ?? "Set Activity Type")
+                                    Text(run.workoutType?.prettyString ?? "Select Activity")
                                 }
                                 .buttonStyle(.bordered)
                                 .tint(.orange)
                                 
-                                let formattedTags = run.tags.joined(separator: " ")
-                                Text("Tags: \(formattedTags.count > 0 ? formattedTags : "No Tags")")
-                                
-                                Button {
-                                    if downwindManager.hasPurchasedPremium {
-                                        editTags = run.tags
-                                        editRunIndex = importedRuns.firstIndex(where: { $0.id == run.id })
-                                        showTagsEditView = true
-                                    } else {
-                                        downwindManager.showUpgradeSheet = true
+                                HStack {
+                                    Button {
+                                        downwindManager.importRun(run: run)
+                                        // when done remove from array
+                                        importedRuns.removeAll(where: { $0.id == run.id })
+                                        showSavedOverlay = true
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                            showSavedOverlay = false
+                                        }
+                                        
+                                    } label: {
+                                        Label("Save Run", systemImage: "checkmark")
                                     }
-                                } label: {
-                                    run.tags.isEmpty ? downwindManager.hasPurchasedPremium ? Label("Add Tags", systemImage: "") : Label("Add Tags", systemImage: "lock.fill") : downwindManager.hasPurchasedPremium ? Label("Edit Tags", systemImage: "") : Label("Edit Tags", systemImage: "lock.fill")
-                                }
-                                .buttonStyle(.bordered)
-                                
-                                Button {
-                                    downwindManager.importRun(run: run)
-                                    // when done remove from array
-                                    importedRuns.removeAll(where: { $0.id == run.id })
-                                    showSavedOverlay = true
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                        showSavedOverlay = false
-                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(.accent)
+                                    .disabled(run.workoutType == nil)
+                                    .padding(.trailing)
                                     
-                                } label: {
-                                    Label("Save Run", systemImage: "square.and.arrow.down")
+                                    Button {
+                                        if let index = importedRuns.firstIndex(where: { $0.id == run.id }) {
+                                            importedRuns.remove(at: index)
+                                        }
+                                    } label: {
+                                        Label("Remove Run", systemImage: "xmark")
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .tint(.red)
                                 }
-                                .buttonStyle(.borderedProminent)
-                                .tint(.accent)
-                                .disabled(run.workoutType == nil)
+                                .padding(.top)
+                                
+                                
                                 
                             }
                             .padding()
