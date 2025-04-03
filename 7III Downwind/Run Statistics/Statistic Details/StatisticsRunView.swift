@@ -169,7 +169,7 @@ struct StatisticsRunView: View {
                 }
                 
                 
-                downwindManager.fetchHeartRatesOverTime(startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
+                downwindManager.fetchHeartRatesOverTime(statisticID: statisticsData.id, startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
                     if let heartRateData = heartRateData {
                         heartRates = heartRateData
                     }

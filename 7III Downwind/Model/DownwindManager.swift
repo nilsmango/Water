@@ -3413,7 +3413,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
                 
-        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: run.runTime, runDistance: run.totalDistance, topSpeed: run.topSpeed, averageSpeed: run.averageSpeed, kCalories: 0, locationData: run.locations, tags: run.tags, workoutType: run.workoutType ?? .surf, startDate: run.startLocation?.timestamp ?? Date(), endDate: run.locations.last?.timestamp ?? Date(), topSpeed1s: 0, topSpeed10s: 0, popUps: 0, percentageOnFoil: 0, turnsCount: 0)
+        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: run.runTime, runDistance: run.totalDistance, topSpeed: run.topSpeed, averageSpeed: run.averageSpeed, kCalories: 0, locationData: run.locations, tags: run.tags, workoutType: run.workoutType ?? .surf, startDate: run.locations.first?.timestamp ?? Date(), endDate: run.locations.last?.timestamp ?? Date(), topSpeed1s: 0, topSpeed10s: 0, popUps: 0, percentageOnFoil: 0, turnsCount: 0)
         newStatistic.startLocation = run.startLocation
         newStatistic.locationString = run.locationString
         
@@ -3536,7 +3536,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     DispatchQueue.main.async { completion(nil) }
                     return
                 }
-
+                
                 let timeInterval = endTimeUnwrapped.timeIntervalSince(startTimeUnwrapped)
                 let runTimeMinutes = timeInterval / 60
                 let averageSpeed: Double = runTimeMinutes > 0 ? (totalDistance / (runTimeMinutes / 60)) / 1000 : 0
