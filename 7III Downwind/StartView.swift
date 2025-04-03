@@ -127,7 +127,6 @@ struct StartView: View {
                                     .buttonStyle(.borderedProminent)
                                     .tint(.accent)
                                     .disabled(run.workoutType == nil)
-                                    .padding(.trailing)
                                     
                                     Button {
                                         if let index = importedRuns.firstIndex(where: { $0.id == run.id }) {
