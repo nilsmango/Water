@@ -5,17 +5,15 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeIconSystemGenerated</key>
-			<integer>0</integer>
 			<key>CFBundleTypeName</key>
-			<string>GPX</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>XML Files</string>
 			<key>LSHandlerRank</key>
-			<string>Default</string>
+			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
+				<string>public.xml</string>
 				<string>com.topografix.gpx</string>
+				<string>com.garmin.tcx</string>
 			</array>
 		</dict>
 		<dict/>
@@ -53,6 +51,8 @@
 			<array>
 				<string>public.xml</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>GPX File</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.topografix.gpx</string>
 			<key>UTTypeTagSpecification</key>
