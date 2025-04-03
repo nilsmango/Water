@@ -1028,6 +1028,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 if importedRun.heartRates.count > 0 {
                     self.runStatistics[runIndex].averageHeartRate = importedRun.averageHeartRate
                 }
+                completion(true)
             }
         } else {
             
@@ -1560,8 +1561,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // find what changed in the route
             var newRunEdit = RunEdit(id: newStatistic.id)
             
-            // don't forget the tags!
+            // don't forget the tags! And somehow we also need to save the activity otherwise we will lose it
             newRunEdit.newTags = newStatistic.tags
+            newRunEdit.newWorkoutType = newStatistic.workoutType
             
             // update start if changed
             if oldRoute.first! != newStatistic.locationData.first! {

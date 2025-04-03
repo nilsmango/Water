@@ -384,8 +384,24 @@ private func findAboveThresholdIndexes(in data: [LocationData], thresholdKmh: Do
     var potentialTransitionTime: Date? = nil
     
     for (index, location) in data.enumerated() {
-        guard let speed = location.speed else { continue }
-        let speedIsAboveThreshold = speed > thresholdMs
+        var speed: Double? = nil
+        if location.speed == nil {
+            if index > 0 {
+                // calculate speed from last location to this location
+                let lastLocation = data[index - 1]
+                let timeInterval = location.timestamp.timeIntervalSince(lastLocation.timestamp)
+                
+                let fromLocation = CLLocation(latitude: lastLocation.latitude, longitude: lastLocation.longitude)
+                let toLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+
+                let directDistance = fromLocation.distance(from: toLocation)
+                
+                speed = directDistance / timeInterval
+            }
+        } else {
+            speed = location.speed!
+        }
+        let speedIsAboveThreshold = speed ?? thresholdMs + 1 > thresholdMs
         
         // init
         if currentState == nil {

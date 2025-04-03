@@ -115,9 +115,9 @@ struct StatisticsRunView: View {
             }
             locationName = statisticsData.locationString ?? ""
             editLocationName = locationName
-            
+            print("on appear")
             downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
-                
+                print("got something from load route and heart from helth")
                 // if empty create location start and end names after loading route
                 if statisticsData.locationString == nil || statisticsData.locationString == "" || statisticsData.locationString == "Unknown Location" {
                     downwindManager.createLocationNames(statisticsData: statisticsData) { location in
@@ -147,6 +147,7 @@ struct StatisticsRunView: View {
                 
                 // if foil sport and no % on foil calculate and save the stats
                 if statisticsData.percentageOnFoil ?? 0 == 0 || statisticsData.longestDistanceOnFoil ?? 0 == 0 {
+                    print("Percentage on foil or longest distance on foil is 0")
                     if let workoutType = statisticsData.workoutType {
                         var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double) = (0, 0, 0, 0)
                         if workoutType.countFalls {
@@ -156,6 +157,7 @@ struct StatisticsRunView: View {
                         }
                         if foilStats != (popUps: 0, timeOnFoilPercentage: 0, turns: 0, longestDistanceOnFoil: 0) {
                             DispatchQueue.main.async {
+                                print("new pop ups: \(foilStats.popUps), percentage on foil: \(foilStats.timeOnFoilPercentage), turns: \(foilStats.turns), longest distance on foil: \(foilStats.longestDistanceOnFoil)")
                                 statisticsData.popUps = foilStats.popUps
                                 statisticsData.percentageOnFoil =  foilStats.timeOnFoilPercentage
                                 statisticsData.turnsCount = foilStats.turns
