@@ -28,6 +28,7 @@ struct StartView: View {
     @State private var editTags = [String]()
     @State private var showTagsEditView = false
     @State private var editRunIndex: Int? = nil
+    @State private var showSavedOverlay = false
     
     var body: some View {
         NavigationStack {
@@ -109,19 +110,21 @@ struct StartView: View {
                                 }
                                 .buttonStyle(.bordered)
                                 
-                                if run.workoutType != nil {
-                                    Button {
-                                        downwindManager.importRun(run: run)
-                                        // when done remove from array
-                                        importedRuns.removeAll(where: { $0.id == run.id })
-                                    } label: {
-                                        Label("Save Run", systemImage: "square.and.arrow.down")
+                                Button {
+                                    downwindManager.importRun(run: run)
+                                    // when done remove from array
+                                    importedRuns.removeAll(where: { $0.id == run.id })
+                                    showSavedOverlay = true
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        showSavedOverlay = false
                                     }
-                                    .buttonStyle(.borderedProminent)
-                                    .tint(.accent)
+                                    
+                                } label: {
+                                    Label("Save Run", systemImage: "square.and.arrow.down")
                                 }
-                                
-                                
+                                .buttonStyle(.borderedProminent)
+                                .tint(.accent)
+                                .disabled(run.workoutType == nil)
                                 
                             }
                             .padding()
@@ -245,6 +248,20 @@ struct StartView: View {
                     showStartRunSheet = true
                 }
             })
+            .overlay {
+                VStack {
+                    Spacer()
+                    Text("Saved Run!")
+                        .padding()
+                        .background {
+                            ListBackground()
+                        }
+                        .padding()
+                        .opacity(showSavedOverlay ? 1.0 : 0.0)
+                }
+                
+            }
+            
             .sheet(isPresented: $showStartRunSheet, content: {
                 NavigationStack {
                     StartRun(downwindManager: downwindManager, showSheet: $showStartRunSheet, runType: runType)
