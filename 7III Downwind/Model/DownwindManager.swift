@@ -3405,6 +3405,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         importedRuns.append(run)
         saveImportedRunsToDisk()
         
+        // find if another run is already at that time and remove that one
+        let matchingRuns = self.runStatistics.filter { self.doTimeRangesOverlap(start1: $0.startDate, end1: $0.endDate, start2: run.locations.first?.timestamp, end2: run.locations.last?.timestamp) }
+        DispatchQueue.main.async {
+            self.runStatistics.removeAll { statisticRun in
+                matchingRuns.contains(where: { $0.id == statisticRun.id })
+            }
+        }
+                
         var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: run.runTime, runDistance: run.totalDistance, topSpeed: run.topSpeed, averageSpeed: run.averageSpeed, kCalories: 0, locationData: run.locations, tags: run.tags, workoutType: run.workoutType ?? .surf, startDate: run.startLocation?.timestamp ?? Date(), endDate: run.locations.last?.timestamp ?? Date(), topSpeed1s: 0, topSpeed10s: 0, popUps: 0, percentageOnFoil: 0, turnsCount: 0)
         newStatistic.startLocation = run.startLocation
         newStatistic.locationString = run.locationString
@@ -3422,8 +3430,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.saveTags()
             
             self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast > $1.startDate ?? $1.locationData.first?.timestamp ?? Date.distantPast})
-            
-            self.findMatchingStatisticsAndMerge()
+
             
             // Free user only show 7 runs
             if !self.hasPurchasedPremium {
