@@ -57,7 +57,7 @@ struct TagsEditViewStatisticCapture: View {
         }
         
         Group {
-            if allTags.count > 0 && !downwindManager.hasPurchasedPremium {
+            if allTags.count > 3 && !downwindManager.hasPurchasedPremium {
                 Button {
                     downwindManager.showUpgradeSheet = true
                 } label: {
