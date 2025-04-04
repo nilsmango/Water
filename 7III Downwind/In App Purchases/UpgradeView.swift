@@ -59,7 +59,7 @@ struct UpgradeView: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
-            .navigationTitle("Early Adopter Offer")
+            .navigationTitle("Water Premium")
             
         } else if !SKPaymentQueue.canMakePayments() {
             VStack {
@@ -68,7 +68,7 @@ struct UpgradeView: View {
         } else {
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("Enhance your water sports tracking experience with our premium features.\nYour support helps us continually improve 7III Water and develop exciting new capabilities.\n\nAll early adopter offers come with:")
+                    Text("Enhance your water sports tracking experience with our premium features.\nYour support helps us continually improve 7III Water and develop exciting new capabilities.\n\nAll premium plans come with:")
                     Text("")
                     
                     ForEach(features) { feature in
@@ -180,7 +180,7 @@ struct UpgradeView: View {
 //        .background(
 //            .gray.opacity(0.4)
 //        )
-        .navigationTitle("Early Adopter Offer")
+        .navigationTitle("Water Premium")
         .alert(isPresented: $isShowingError, content: {
             Alert(title: Text(errorTitle), message: nil, dismissButton: .default(Text("Okay")))
         })
