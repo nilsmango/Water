@@ -33,23 +33,23 @@ struct StartRun: View {
                 Section {
 
                     TextField(runType.textFieldText, text: $runName)
-                        .focused($editorIsFocused, equals: .field)
-                        .onAppear() {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {  
-                                // making the text field focussed when it appears
-                                editorIsFocused = .field
-                            }
-                        }
-                        .onChange(of: runName) { oldValue, newValue in
-                            // Filter out characters that won't work in a URL
-                            let allowedCharacterSet = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._").union(.whitespaces)
-                            
-                            let filteredText = newValue.filter { character in
-                                allowedCharacterSet.contains(character.unicodeScalars.first!)
-                            }
-                            
-                            runName = filteredText
-                        }
+//                        .focused($editorIsFocused, equals: .field)
+//                        .onAppear() {
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {  
+//                                // making the text field focussed when it appears
+//                                editorIsFocused = .field
+//                            }
+//                        }
+//                        .onChange(of: runName) { oldValue, newValue in
+//                            // Filter out characters that won't work in a URL
+//                            let allowedCharacterSet = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._").union(.whitespaces)
+//                            
+//                            let filteredText = newValue.filter { character in
+//                                allowedCharacterSet.contains(character.unicodeScalars.first!)
+//                            }
+//                            
+//                            runName = filteredText
+//                        }
                 } header: {
                     Text("Run Name")
                 } footer: {
@@ -58,7 +58,7 @@ struct StartRun: View {
                             Spacer()
                             
                             Button(action: {
-                                runName = downwindManager.createRandomRunName()
+//                                runName = downwindManager.createRandomRunName()
                             }, label: {
                                 Label("Create Random Name", systemImage: "dice.fill")
                             })
@@ -73,78 +73,12 @@ struct StartRun: View {
                 }
             }
             
-            Button(action: {
-                
-                Task {
-                    do {
-                        try await downwindManager.checkAndUpdateUserInDB()
-                        
-                        switch runType {
-                        case .start:
-                            // start a new run and add yourself, load and update active run
-                            Task {
-                                do {
-                                    try await downwindManager.startNewRun(name: runName)
-                                    showSheet = false
-                                } catch {
-                                    print("Error starting new run: \(error)")
-                                    alertText = """
-                                    Error starting new run.
-                                    Make sure you are connected to the internet.
-                                    """
-                                    showAlert = true
-                                    downwindManager.activeRun.active = false
-                                }
-                            }
-                        case .join:
-                            // if not in db show "no run with that name is running at the moment"
-                            
-                            // if everything works out add yourself to the run and load and update active run
-                            Task {
-                                do {
-                                    try await downwindManager.joinRun(name: runName)
-                                    showSheet = false
-                                } catch GetRunError.badResponse {
-                                    alertText = "No run with that name found!"
-                                    showAlert = true
-                                    downwindManager.activeRun.active = false
-                                } catch {
-                                    alertText = "Error joining run: \(error)"
-                                    showAlert = true
-                                    downwindManager.activeRun.active = false
-                                }
-                            }
-                        case .watch:
-                            Task {
-                                do {
-                                    try await downwindManager.watchRun(name: runName)
-                                    showSheet = false
-                                } catch GetRunError.badResponse {
-                                    alertText = "No run with that name found!"
-                                    showAlert = true
-                                    downwindManager.activeRun.active = false
-                                } catch {
-                                    alertText = "Error joining run: \(error)"
-                                    showAlert = true
-                                    downwindManager.activeRun.active = false
-                                }
-                            }
-                        }
-                        
-                    } catch {
-                        print("error checking updating user: \(error)")
-                    }
-                }
+            
                 
                 
                 
                 
-            }, label: {
-                Label(runType.buttonLabel, systemImage: runType.symbol)
-            })
-            .buttonStyle(.bordered)
-            .disabled(runName == "")
-            .padding()
+            
         }
         .background(.listSheet)
         .overlay {

@@ -70,7 +70,7 @@ struct RunListView: View {
                         
                         downwindManager.user.onlyWatching = true
                         
-                        downwindManager.changeFromRunningToWatching()
+//                        downwindManager.changeFromRunningToWatching()
                             
                         }
 
@@ -84,13 +84,13 @@ struct RunListView: View {
                     title: Text("Are you sure?"),
                     message: Text("There might be no turning back."),
                     primaryButton: .destructive(Text("Yes, I am done!")) {
-                        Task {
-                            do {
-                                try await downwindManager.quitActiveRun()
-                            } catch {
-                                print("Error: \(error)")
-                            }
-                        }
+//                        Task {
+//                            do {
+//                                try await downwindManager.quitActiveRun()
+//                            } catch {
+//                                print("Error: \(error)")
+//                            }
+//                        }
                     },
                     secondaryButton: .default(Text("Cancel"))
                 )

@@ -28,43 +28,6 @@ struct _III_DownwindApp: App {
                         await downwindManager.updateCustomerProductStatus()
                     }
                 }
-                .overlay {
-                    OverlayAlertView(showAlert: $showAlert, text: alertText)
-                }
-                .confirmationDialog("Opening this run to:", isPresented: $showOpenURLDialog, actions: {
-                    Button("Join") {
-                        Task {
-                            do {
-                                try await downwindManager.joinRun(name: runToJoin)
-                            } catch GetRunError.badResponse {
-                                alertText = "No run with the name \"\(runToJoin)\" found!"
-                                showAlert = true
-                            } catch {
-                                alertText = "Error joining run: \(error)"
-                                showAlert = true
-                            }
-                        }
-                    }
-                    Button("Watch") {
-                        Task {
-                            do {
-                                try await downwindManager.watchRun(name: runToJoin)
-                            } catch GetRunError.badResponse {
-                                alertText = "No run with the name \"\(runToJoin)\" found!"
-                                showAlert = true
-                            } catch {
-                                alertText = "Error joining run: \(error)"
-                                showAlert = true
-                            }
-                        }
-                    }
-                })
-                .onOpenURL(perform: { url in
-                    // show overlay to ask if you want to join or watch the run. give it the url too.
-                    showOpenURLDialog = true
-                    runToJoin = makeURLToRunName(url: url)
-                    
-                })
         }
     }
 }

@@ -2417,7 +2417,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // add user to the run
         DispatchQueue.main.async {
-            self.user.onlyWatching = false
+//            self.user.onlyWatching = false
         }
         let updatedUser = Member(id: user.id, name: user.name, status: user.status, latitude: user.latitude, longitude: user.longitude, speed: user.speed, onlyWatching: false, createdOn: user.createdOn, lastUpdated: user.lastUpdated)
         try await addMembersToRun(members: [updatedUser], runID: newRun.id!)
@@ -2461,7 +2461,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // add user to the run
         DispatchQueue.main.async {
-            self.user.onlyWatching = false
+//            self.user.onlyWatching = false
         }
         let updatedUser = Member(id: user.id, name: user.name, status: user.status, latitude: user.latitude, longitude: user.longitude, speed: user.speed, onlyWatching: false, createdOn: user.createdOn, lastUpdated: user.lastUpdated)
         try await addMembersToRun(members: [updatedUser], runID: runToJoin.id!)
@@ -2480,7 +2480,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // add user to the run
         DispatchQueue.main.async {
-            self.user.onlyWatching = true
+//            self.user.onlyWatching = true
         }
         let updatedUser = Member(id: user.id, name: user.name, status: user.status, latitude: user.latitude, longitude: user.longitude, speed: user.speed, onlyWatching: true, createdOn: user.createdOn, lastUpdated: user.lastUpdated)
         try await addMembersToRun(members: [updatedUser], runID: runToJoin.id!)
@@ -2544,33 +2544,33 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // request for location authorization
         locationManager?.requestWhenInUseAuthorization()
         
-        DispatchQueue.main.async {
-            
-            // start active run
-            self.activeRun.id = run.id
-            self.activeRun.name = run.name
-            self.activeRun.startedOn = run.startedOn
-            self.activeRun.active = true
-            
-            // check if we have authorization to see location and start location
-            self.checkAndStartLocationService()
-        }
+//        DispatchQueue.main.async {
+//            
+//            // start active run
+//            self.activeRun.id = run.id
+//            self.activeRun.name = run.name
+//            self.activeRun.startedOn = run.startedOn
+//            self.activeRun.active = true
+//            
+//            // check if we have authorization to see location and start location
+//            self.checkAndStartLocationService()
+//        }
         
     }
     
     /// load run as watching only run
     private func startWatchingRun(run: Run) async throws {
         
-        DispatchQueue.main.async {
-            // start active run
-            self.activeRun.id = run.id
-            self.activeRun.name = run.name
-            self.activeRun.startedOn = run.startedOn
-            self.activeRun.active = true
-            
-            // start download timer
-            self.startUploadDownloadTimer(onlyDownload: true)
-        }
+//        DispatchQueue.main.async {
+//            // start active run
+//            self.activeRun.id = run.id
+//            self.activeRun.name = run.name
+//            self.activeRun.startedOn = run.startedOn
+//            self.activeRun.active = true
+//            
+//            // start download timer
+//            self.startUploadDownloadTimer(onlyDownload: true)
+//        }
         
     }
     
@@ -2619,7 +2619,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             if cloudService {
                 // starting the upload/download timer
-                self.startUploadDownloadTimer()
+//                self.startUploadDownloadTimer()
             }
             
             // Ensure the timer is added to the current run loop
@@ -2774,57 +2774,57 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func quitActiveRun() async throws {
         
         // reset the active run var
-        DispatchQueue.main.async {
-            
-            // make run inactive, keeping the id
-            self.activeRun = Run(name: "", members: self.activeRun.members, active: false)
-            
-            self.runTimer?.invalidate()
-            self.runTimer = nil
-            
-            // stop location and heading updating - only if the self tracking is not on
-            if !self.activeStatistics {
-                self.stopLocationService()
-            }
-            
-        }
+//        DispatchQueue.main.async {
+//            
+//            // make run inactive, keeping the id
+////            self.activeRun = Run(name: "", members: self.activeRun.members, active: false)
+//            
+//            self.runTimer?.invalidate()
+//            self.runTimer = nil
+//            
+//            // stop location and heading updating - only if the self tracking is not on
+//            if !self.activeStatistics {
+//                self.stopLocationService()
+//            }
+//            
+//        }
         // remove user from run / delete run if user is last member
-        do {
-            try await removeUserFromRun(run: activeRun)
-            // remove members from active run (probably not necessary)
-            DispatchQueue.main.async {
-                self.activeRun.members = []
-            }
-        } catch {
-            print("Error removing user from run: \(error)")
-        }
-        
-        // update the user location of nil on db for maximum privacy
-        do {
-            try await uploadUserLocation(makeItNil: true)
-        } catch {
-            print("Error uploading user location: \(error)")
-        }
+//        do {
+//            try await removeUserFromRun(run: activeRun)
+//            // remove members from active run (probably not necessary)
+//            DispatchQueue.main.async {
+//                self.activeRun.members = []
+//            }
+//        } catch {
+//            print("Error removing user from run: \(error)")
+//        }
+//        
+//        // update the user location of nil on db for maximum privacy
+//        do {
+//            try await uploadUserLocation(makeItNil: true)
+//        } catch {
+//            print("Error uploading user location: \(error)")
+//        }
     }
     
     
     /// loading members of active run
     func loadRunMembers(notUpdatingMemberStatistic: Bool = true) async throws {
-        print("loading members")
-        guard let runID = activeRun.id else {
-            print("Error: No active run ID!")
-            return }
-        
-        let url = try createDWURL(endpoint: Endpoints.runs + "/" + runID.uuidString + Endpoints.members)
-        
-        let membersResponse: [Member] = try await HTTPClient.shared.fetch(url: url)
-        
-        DispatchQueue.main.async {
-            self.activeRun.members = membersResponse.filter { $0.id != self.user.id }
-            if notUpdatingMemberStatistic == false {
-                self.updateMemberStatistics()
-            }
-        }
+//        print("loading members")
+//        guard let runID = activeRun.id else {
+//            print("Error: No active run ID!")
+//            return }
+//        
+//        let url = try createDWURL(endpoint: Endpoints.runs + "/" + runID.uuidString + Endpoints.members)
+//        
+//        let membersResponse: [Member] = try await HTTPClient.shared.fetch(url: url)
+//        
+//        DispatchQueue.main.async {
+//            self.activeRun.members = membersResponse.filter { $0.id != self.user.id }
+//            if notUpdatingMemberStatistic == false {
+//                self.updateMemberStatistics()
+//            }
+//        }
     }
     
     /// adding members to an active run
@@ -2836,6 +2836,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             try await HTTPClient.shared.postURL(url: newBaseURL)
         }
     }
+    
+    
     
     
     // MARK: - User

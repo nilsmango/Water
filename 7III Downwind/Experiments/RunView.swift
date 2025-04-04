@@ -26,16 +26,16 @@ struct RunView: View {
                 }
             }
         }
-        .onAppear {
-            Task {
-                do {
-                    try await downwindManager.loadRunMembers()
-                    
-                } catch {
-                    print("Error: \(error)")
-                }
-            }
-        }
+//        .onAppear {
+//            Task {
+//                do {
+////                    try await downwindManager.loadRunMembers()
+//                    
+//                } catch {
+//                    print("Error: \(error)")
+//                }
+//            }
+//        }
     }
 }
 
