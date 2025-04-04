@@ -3194,18 +3194,22 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     private func requestProducts(productIdentifiers: [String]) async {
         do {
-            // Request products from the App Store using the identifiers that the `product_ids.plist` file defines.
             let products = try await Product.products(for: productIdentifiers)
-            DispatchQueue.main.async {
-                self.premiumProducts = products
-            }
-
+            await updateProducts(products)
         } catch {
             print("Failed product request from the App Store server. \(error)")
-            DispatchQueue.main.async {
-                self.unableToLoadProducts = true
-            }
+            await markProductsAsUnavailable()
         }
+    }
+
+    @MainActor
+    private func updateProducts(_ products: [Product]) {
+        self.premiumProducts = products
+    }
+
+    @MainActor
+    private func markProductsAsUnavailable() {
+        self.unableToLoadProducts = true
     }
     
     func listenForTransactions() -> Task<Void, Error> {
