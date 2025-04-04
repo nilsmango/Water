@@ -45,7 +45,7 @@ struct PremiumSection: View {
                 }
             }
         } header: {
-            Text("Premium")
+            Text("Water Premium")
         }
     }
 }
