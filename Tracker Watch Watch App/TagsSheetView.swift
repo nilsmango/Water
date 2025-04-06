@@ -36,7 +36,7 @@ struct TagsSheetView: View {
     var body: some View {
         ScrollView {
             VStack {
-                if workoutManager.statisticTags.count > 0 && !workoutManager.hasPurchasedPremium {
+                if workoutManager.statisticTags.count > 2 && !workoutManager.hasPurchasedPremium {
                     Button {
                         showUpgradeSheet = true
                     } label: {
