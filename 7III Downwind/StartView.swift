@@ -199,6 +199,12 @@ struct StartView: View {
                     StatisticsControlCenter(downwindManager: downwindManager)
                         .padding()
                     
+                    if downwindManager.appOpened > 4 {
+                        ReviewRequestView()
+                            .padding(.horizontal)
+                    }
+                    
+                    
                     if downwindManager.activeRun.active {
                         if downwindManager.user.onlyWatching == true {
                             RunMapView(downwindManager: downwindManager)

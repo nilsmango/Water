@@ -29,6 +29,7 @@
 		78320BC02BB1C28400D6A772 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
 		78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
 		78320BC72BB1D97800D6A772 /* StatisticsModelings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */; };
+		783886472DA2DB5F00B12FE9 /* ReviewRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783886462DA2DB5F00B12FE9 /* ReviewRequestView.swift */; };
 		783A53C02B59A61B00701D7F /* MemberListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53BF2B59A61B00701D7F /* MemberListView.swift */; };
 		783A53C32B5D930400701D7F /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C22B5D930400701D7F /* MapView.swift */; };
 		783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C42B5D9DB000701D7F /* CircleAndText.swift */; };
@@ -223,6 +224,7 @@
 		78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCKalmanAlgorithm.swift; sourceTree = "<group>"; };
 		78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTestsView.swift; sourceTree = "<group>"; };
 		78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsModelings.swift; sourceTree = "<group>"; };
+		783886462DA2DB5F00B12FE9 /* ReviewRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestView.swift; sourceTree = "<group>"; };
 		783A53BF2B59A61B00701D7F /* MemberListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberListView.swift; sourceTree = "<group>"; };
 		783A53C22B5D930400701D7F /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		783A53C42B5D9DB000701D7F /* CircleAndText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAndText.swift; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 				785CCF212D6B192B0075CA4C /* NewsSection.swift */,
 				785CCF272D6B1A0A0075CA4C /* VersionHistoryView.swift */,
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
+				783886462DA2DB5F00B12FE9 /* ReviewRequestView.swift */,
 				785CCF1F2D6B182E0075CA4C /* ListBackground.swift */,
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				7840468E2C342160009F8733 /* SummaryView.swift */,
@@ -936,6 +939,7 @@
 				7877E1262BC3F7A800776890 /* StatisticsDetails.swift in Sources */,
 				781A4BA12C4E46F80046AE0E /* ShareStatStack.swift in Sources */,
 				782B675F2C3AC21C00B90578 /* UpgradeShowcase.swift in Sources */,
+				783886472DA2DB5F00B12FE9 /* ReviewRequestView.swift in Sources */,
 				78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */,
 				785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */,
 				785C4AE12B49DBF900EB07F8 /* OverlayAlertView.swift in Sources */,

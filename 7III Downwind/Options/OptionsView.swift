@@ -10,6 +10,7 @@ import StoreKit
 
 struct OptionsView: View {
     @ObservedObject var downwindManager: DownwindManager
+    @AppStorage("hasRespondedToReview") var hasRespondedToReviewRequest = false
     
     @Binding var showOptionsSheet: Bool
     @Binding var showFirstTimeUserName: Bool
@@ -150,7 +151,13 @@ struct OptionsView: View {
 //                Toggle(isOn: $downwindManager.showListDetail, label: {
 //                    Text("Show List Details")
 //                })
-                
+                if downwindManager.appOpened > 4 {
+                    Toggle("Show Review Request in Main View", isOn: Binding(
+                        get: { !hasRespondedToReviewRequest },
+                        set: { hasRespondedToReviewRequest = !$0 }
+                    ))
+                    .tint(.accent)
+                }
                 
             } header: {
                 Text("Other options")
