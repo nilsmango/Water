@@ -16,6 +16,7 @@ struct OverlaySettingsView: View {
     @Binding var topSpeedSelection: TopSpeedOption
     @Binding var showPopUps: Bool
     @Binding var showTimeOnFoil: Bool
+    @Binding var showMaxDistanceOnFoil: Bool
     @Binding var showTurns: Bool
     @Binding var showCalories: Bool
     @Binding var showHeartRate: Bool
@@ -67,14 +68,18 @@ struct OverlaySettingsView: View {
                     }
                     
                     
-                        
                     if statisticsData.workoutType?.countFalls ?? false || statisticsData.workoutType?.countWaves ?? false {
                         Toggle("Show Pop Ups", isOn: $showPopUps)
                             .tint(.accent)
                     }
                     
-                    if statisticsData.percentageOnFoil != 0 {
+                    if statisticsData.percentageOnFoil != nil && statisticsData.percentageOnFoil != 0 {
                         Toggle("Show Time On Foil", isOn: $showTimeOnFoil)
+                            .tint(.accent)
+                    }
+                    
+                    if statisticsData.longestDistanceOnFoil != 0 && statisticsData.longestDistanceOnFoil != nil {
+                        Toggle("Show Longest Flight", isOn: $showMaxDistanceOnFoil)
                             .tint(.accent)
                     }
                     

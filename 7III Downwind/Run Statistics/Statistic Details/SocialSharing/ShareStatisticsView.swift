@@ -37,6 +37,7 @@ struct ShareStatisticsView: View {
     
     @State private var showPopUps = false
     @State private var showTimeOnFoil = false
+    @State private var showMaxDistanceOnFoil = false
     @State private var showTurns = false
     
     @State private var showCalories = false
@@ -45,7 +46,7 @@ struct ShareStatisticsView: View {
     
     var body: some View {
         ScrollView {
-            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showTurns: showTurns, offset: $offset) { view in
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, offset: $offset) { view in
                 self.previewUIView = view
             }
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
@@ -72,7 +73,7 @@ struct ShareStatisticsView: View {
                         showTopSpeed: $showTopSpeed,
                         topSpeedSelection: $topSpeedSelection,
                         showPopUps: $showPopUps,
-                        showTimeOnFoil: $showTimeOnFoil,
+                        showTimeOnFoil: $showTimeOnFoil, showMaxDistanceOnFoil: $showMaxDistanceOnFoil,
                         showTurns: $showTurns,
                         showCalories: $showCalories,
                         showHeartRate: $showHeartRate,

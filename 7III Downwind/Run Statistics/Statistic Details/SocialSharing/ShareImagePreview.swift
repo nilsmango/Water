@@ -23,6 +23,7 @@ struct ShareImagePreview: View {
     var showHeart: Bool
     var showPopUps: Bool
     var showTimeOnFoil: Bool
+    var showMaxDistanceOnFoil: Bool
     var showTurns: Bool
     
     @Binding var offset: Double
@@ -83,6 +84,8 @@ struct ShareImagePreview: View {
                             popUpsText: String(statisticsData.popUps ?? 0),
                             timeOnFoilTitle: showTimeOnFoil ? "Time On Foil" : nil,
                             timeOnFoilText: String(format: "%.1f", statisticsData.percentageOnFoil ?? 0) + " %",
+                            maxDistanceOnFoilTitle: showMaxDistanceOnFoil ? "Longest Flight" : nil,
+                            maxDistanceOnFoilText:  String(format: "%.1f", (statisticsData.longestDistanceOnFoil ?? 0) / 1000) +  " km",
                             turnsTitle: showTurns ? "Turns" : nil,
                             turnsText: String(statisticsData.turnsCount ?? 0)
                         )
@@ -127,5 +130,5 @@ struct ShareImagePreview: View {
 
 
 #Preview {
-    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showTurns: true, offset: .constant(-8.0))
+    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showMaxDistanceOnFoil: true, showTurns: true, offset: .constant(-8.0))
 }

@@ -28,6 +28,8 @@ struct ShareOverlay: View {
     var popUpsText: String
     var timeOnFoilTitle: String?
     var timeOnFoilText: String
+    var maxDistanceOnFoilTitle: String?
+    var maxDistanceOnFoilText: String
     var turnsTitle: String?
     var turnsText: String
         
@@ -88,6 +90,12 @@ struct ShareOverlay: View {
                         ShareStatStack(title: timeOnFoilTitle, value: timeOnFoilText)
                     }
                     
+                    if let maxDistanceOnFoilTitle = maxDistanceOnFoilTitle {
+                        ShareOverlayDivider()
+                        
+                        ShareStatStack(title: maxDistanceOnFoilTitle, value: maxDistanceOnFoilText)
+                    }
+                    
                     if let turnsTitle = turnsTitle {
                         ShareOverlayDivider()
                         
@@ -125,7 +133,7 @@ struct ShareOverlay: View {
         VStack(alignment: .trailing) {
             Spacer()
             HStack {
-                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h",  topSpeedString: "10s Top Speed", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true, caloriesTitle: "Calories", caloriesText: "23 kcal", heartTitle: "long her", heartText: "23", popUpsTitle: nil, popUpsText: "", timeOnFoilTitle: nil, timeOnFoilText: "", turnsTitle: nil, turnsText: "")
+                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h",  topSpeedString: "10s Top Speed", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true, caloriesTitle: "Calories", caloriesText: "23 kcal", heartTitle: "long her", heartText: "23", popUpsTitle: nil, popUpsText: "", timeOnFoilTitle: nil, timeOnFoilText: "", maxDistanceOnFoilText: "", turnsTitle: nil, turnsText: "")
                     .scaleEffect(1, anchor: UnitPoint(x: 1, y: 1))
             }
             
