@@ -13,8 +13,12 @@ extension WorkoutType {
         switch self {
         case .foilSurf, .surf, .supSurf, .surfingSport, .not7IIISurfingSport:
             return "surfing"
-        case .wingFoil, .parawing, .dWParawing:
+        case .wingFoil:
             return "wingfoiling"
+        case .parawing:
+            return "parawinging"
+        case .dWParawing:
+            return "surfing"
         case .windFoil, .windsurf:
             return "windsurfing"
         case .kiteFoil, .kite:
