@@ -3025,25 +3025,25 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             resetKalmanFilter = false
                             
                         } else {
-                            var kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
-                            kalmanLocation = CLLocation(
-                                coordinate: kalmanLocation.coordinate,
-                                altitude: kalmanLocation.altitude,
-                                horizontalAccuracy: kalmanLocation.horizontalAccuracy,
-                                verticalAccuracy: kalmanLocation.verticalAccuracy,
-                                course: kalmanLocation.course,
-                                speed: newLocation.speed,
-                                timestamp: kalmanLocation.timestamp
-                            )
-                            
                             if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                                
+                                var kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
+                                kalmanLocation = CLLocation(
+                                    coordinate: kalmanLocation.coordinate,
+                                    altitude: kalmanLocation.altitude,
+                                    horizontalAccuracy: kalmanLocation.horizontalAccuracy,
+                                    verticalAccuracy: kalmanLocation.verticalAccuracy,
+                                    course: kalmanLocation.course,
+                                    speed: newLocation.speed,
+                                    timestamp: kalmanLocation.timestamp
+                                )
+                                
+                                
                                 routeBuilder?.insertRouteData([kalmanLocation]) { (success, error) in
                                     if !success {
                                         // Handle any errors here.
                                     }
                                 }
-                            }
-                            
                             
                             DispatchQueue.main.async {
                                 self.user.latitude = kalmanLocation.coordinate.latitude
@@ -3058,6 +3058,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 
                                 self.updateStatistic()
                             }
+                        }
                         }
                     }
                 }
