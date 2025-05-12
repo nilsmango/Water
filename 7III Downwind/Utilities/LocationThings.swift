@@ -376,8 +376,8 @@ func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double 
 }
 
 
-/// Returns the indexes where we go from below threshold to above and back again. Taking 5 seconds because then we are sure to fly.
-private func findAboveThresholdIndexes(in data: [LocationData], thresholdKmh: Double, minimumTimeInSeconds: Double = 5) -> [Int] {
+/// Returns the indexes where we go from below threshold to above and back again. Taking 6 seconds because then we are sure to fly.
+private func findAboveThresholdIndexes(in data: [LocationData], thresholdKmh: Double, minimumTimeInSeconds: Double = 6) -> [Int] {
     let thresholdMs = thresholdKmh / 3.6 // Convert km/h to m/s
     var transitionIndexes: [Int] = []
     
