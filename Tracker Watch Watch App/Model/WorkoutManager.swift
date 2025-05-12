@@ -741,6 +741,14 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         return renewalInfo.willAutoRenew
     }
+    
+    // MARK: - Version
+    let currentAppVersion: String = {
+        guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return "Unknown"
+        }
+        return version
+    }()
 }
 
 // MARK: - HKWorkoutSessionDelegate

@@ -22,6 +22,8 @@ struct OptionsSheetView: View {
             Section {
                 Toggle("Use GPS", isOn: $workoutManager.withGPS)
                     .tint(.accent)
+            } footer: {
+                Text("\nApp Version: \(workoutManager.currentAppVersion)")
             }
         }
         .navigationTitle("Options")
