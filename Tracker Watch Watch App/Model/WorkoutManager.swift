@@ -95,7 +95,19 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         workoutUsageCount[type, default: 0] += 1
     }
     
-    @Published var activeTags = [String]()
+    @AppStorage("activeTags") private var activeTagsData: String = "[]"
+
+    var activeTags: [String] {
+        get {
+            (try? JSONDecoder().decode([String].self, from: Data(activeTagsData.utf8))) ?? []
+        }
+        set {
+            activeTagsData = (try? JSONEncoder().encode(newValue))
+                .flatMap { String(data: $0, encoding: .utf8) } ?? "[]"
+        }
+    }
+    
+    @AppStorage("keepHashtags") var keepHashtags = true
     
     private func loadTagsFromWorkouts() {
         self.loadWorkoutsFromHealthKit { workouts in
@@ -546,7 +558,9 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         averageSpeed = 0
         userLocation = nil
         previousUserLocation = nil
-        activeTags = []
+        if !keepHashtags {
+            activeTags = []
+        }
     }
     
     // MARK: - In App Purchase
@@ -850,3 +864,5 @@ extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
         }
     }
 }
+
+

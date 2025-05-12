@@ -19,6 +19,12 @@ struct OptionsSheetView: View {
             } footer: {
                 Label("Restricts starting and ending workouts to the Digital Crown.", systemImage: "info.circle")
             }
+            
+            Section {
+                Toggle("Keep Selected Hashtags", isOn: $workoutManager.keepHashtags)
+                    .tint(.accent)
+            }
+            
             Section {
                 Toggle("Use GPS", isOn: $workoutManager.withGPS)
                     .tint(.accent)
