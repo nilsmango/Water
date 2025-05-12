@@ -25,10 +25,8 @@ struct StartView: View {
                     } else {
                         Button(action: {
                             workoutManager.checkHealthKitAuthorizationStatus()
-                            if workoutManager.hasHealthActivated {
-                                workoutManager.path.append("session")
-                                workoutManager.startWorkout()
-                            }
+                            workoutManager.path.append("session")
+                            workoutManager.startWorkout()
                             
                         }, label: {
                             Label("Start", systemImage: "play")
