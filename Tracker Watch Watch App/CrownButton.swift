@@ -78,9 +78,10 @@ struct CrownButton: View {
                         workoutManager.checkHealthKitAuthorizationStatus()
                         workoutManager.path.append("session")
                         workoutManager.startWorkout()
-                        
+                        fillPercentage = 0
                     } else {
                         workoutManager.endWorkout()
+                        fillPercentage = 0
                     }
                 }
             }
