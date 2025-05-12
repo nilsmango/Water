@@ -70,20 +70,17 @@ struct CrownButton: View {
                 isContinuous: false,
                 isHapticFeedbackEnabled: true
             )
-            
             .onChange(of: fillPercentage) {
-                if fillPercentage >= 100 {
+                if fillPercentage == 100 {
+                    fillPercentage = 0
                     WKInterfaceDevice.current().play(.success)
                     if start {
                         workoutManager.checkHealthKitAuthorizationStatus()
-                        if workoutManager.hasHealthActivated {
-                            workoutManager.path.append("session")
-                            workoutManager.startWorkout()
-                        }
-                        fillPercentage = 0
+                        workoutManager.path.append("session")
+                        workoutManager.startWorkout()
+                        
                     } else {
                         workoutManager.endWorkout()
-                        fillPercentage = 0
                     }
                 }
             }
