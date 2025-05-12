@@ -267,7 +267,9 @@ private func calculateSpeed(in data: [LocationData], fromIndex index: Int, durat
     }
     
     let timeElapsed = lastPoint.timestamp.timeIntervalSince(start.timestamp)
-    return timeElapsed > 0 ? distance / timeElapsed : nil
+    
+    // Using all speeds that are within a 10% window
+    return timeElapsed >= duration * 0.98 ? distance / timeElapsed : nil
 }
 
 private enum TurnDirection {
