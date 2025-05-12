@@ -108,8 +108,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var routeBuilder: HKWorkoutRouteBuilder? = nil
     var workoutBuilder: HKWorkoutBuilder? = nil
     
-    let thresholdSpeedKmhDW: Double = 10.0
-    let thresholdSpeedKmhWaves: Double = 14.0
+    let thresholdSpeedKmhDW: Double = 8.0
+    let thresholdSpeedKmhWaves: Double = 12.3
     
     /// backup to health
     var backupWorkoutData = [RunStatistic]()
