@@ -121,6 +121,7 @@
 		78844E4E2C2EB65500B703F5 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E4D2C2EB65500B703F5 /* WorkoutManager.swift */; };
 		78844E522C303C0E00B703F5 /* TagsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E512C303C0E00B703F5 /* TagsSheetView.swift */; };
 		78844E552C303C6300B703F5 /* SelectionButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */; };
+		7885356B2DD33F0A00E223C1 /* FoilingThresholds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
 		7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898D40C2BBEB490007820DB /* StatisticsRounds.swift */; };
@@ -315,6 +316,7 @@
 		78844E4F2C2EBFF100B703F5 /* Tracker Watch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Tracker Watch Watch App.entitlements"; sourceTree = "<group>"; };
 		78844E502C2EC00D00B703F5 /* Tracker-Watch-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Tracker-Watch-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		78844E512C303C0E00B703F5 /* TagsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsSheetView.swift; sourceTree = "<group>"; };
+		7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoilingThresholds.swift; sourceTree = "<group>"; };
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		7898D40C2BBEB490007820DB /* StatisticsRounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRounds.swift; sourceTree = "<group>"; };
@@ -608,6 +610,7 @@
 				785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */,
 				788B938F2B63F49D00BA6B28 /* AboutView.swift */,
 				785CF9542B4FE74E00528B6D /* OptionsView.swift */,
+				7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */,
 				785C0C2A2C3C171A005CCE87 /* HelpView.swift */,
 				78A2837D2C45578F0052AA52 /* RefundView.swift */,
 				78A2837B2C4551BD0052AA52 /* PremiumSection.swift */,
@@ -983,6 +986,7 @@
 				7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */,
 				785C4AB02B359F8E00EB07F8 /* Constants.swift in Sources */,
 				78A2837C2C4551BD0052AA52 /* PremiumSection.swift in Sources */,
+				7885356B2DD33F0A00E223C1 /* FoilingThresholds.swift in Sources */,
 				782B67592C3A7A2B00B90578 /* UpgradeView.swift in Sources */,
 				785C4ADA2B45EAD000EB07F8 /* Extensions.swift in Sources */,
 				78C4D23F2BA7512A00639E65 /* RunOverView.swift in Sources */,

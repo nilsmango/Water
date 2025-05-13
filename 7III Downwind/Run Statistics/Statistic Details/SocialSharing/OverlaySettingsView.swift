@@ -68,7 +68,7 @@ struct OverlaySettingsView: View {
                     }
                     
                     
-                    if statisticsData.workoutType?.countFalls ?? false || statisticsData.workoutType?.countWaves ?? false {
+                    if statisticsData.workoutType?.calculateFoilingStats ?? false {
                         Toggle("Show Pop Ups", isOn: $showPopUps)
                             .tint(.accent)
                     }

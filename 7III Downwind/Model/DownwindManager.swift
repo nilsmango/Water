@@ -108,9 +108,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var routeBuilder: HKWorkoutRouteBuilder? = nil
     var workoutBuilder: HKWorkoutBuilder? = nil
     
-    let thresholdSpeedKmhDW: Double = 8.0
-    let thresholdSpeedKmhWaves: Double = 12.3
-    
     /// backup to health
     var backupWorkoutData = [RunStatistic]()
     
@@ -1614,10 +1611,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // updating falls and % on foil and turns
             if let workoutType = newStatistic.workoutType {
                 var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double) = (0, 0, 0, 0)
-                if workoutType.countFalls {
-                    foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: thresholdSpeedKmhDW, countTurns: workoutType.isDWSport)
-                } else if workoutType.countWaves {
-                    foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: thresholdSpeedKmhWaves, countTurns: workoutType.isDWSport)
+                if workoutType.calculateFoilingStats {
+                    foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: workoutType.thresholdSpeedKmhSlowSpeedWithDefault, countTurns: workoutType.countTurns)
                 }
                 if foilStats != (0, 0, 0, 0) {
                     runStatistics[index].popUps = foilStats.popUps

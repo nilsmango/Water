@@ -31,11 +31,11 @@ extension WorkoutType {
             return "canoeing"
         case .sailing:
             return "sailing"
-        case .pumpFoil, .downwindProneFoil:
+        case .pumpFoil, .downwindProneFoil, .eFoil, .eAssist:
             return "hydrofoil"
         case .wakeFoil, .wakeSurf, .wakeThief:
             return "wakeboarding"
-        case .windSkate, .wingSkate, .surfSkate, .pumpSkate:
+        case .windSkate, .wingSkate, .surfSkate, .pumpSkate, .pwSkate:
             return "skating"
         }
     }

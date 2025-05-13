@@ -150,11 +150,9 @@ struct StatisticsRunView: View {
                     print("Percentage on foil or longest distance on foil is 0")
                     if let workoutType = statisticsData.workoutType {
                         var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double) = (0, 0, 0, 0)
-                        if workoutType.countFalls {
-                            foilStats = calculateFoilingStats(from: statisticsData.locationData, thresholdSpeedKmh: downwindManager.thresholdSpeedKmhDW, countTurns: workoutType.isDWSport)
-                        } else if workoutType.countWaves {
-                            foilStats = calculateFoilingStats(from: statisticsData.locationData, thresholdSpeedKmh: downwindManager.thresholdSpeedKmhWaves, countTurns: workoutType.isDWSport)
-                        }
+                            if workoutType.calculateFoilingStats {
+                                foilStats = calculateFoilingStats(from: statisticsData.locationData, thresholdSpeedKmh: workoutType.thresholdSpeedKmhSlowSpeedWithDefault, countTurns: workoutType.countTurns)
+                            }
                         if foilStats != (popUps: 0, timeOnFoilPercentage: 0, turns: 0, longestDistanceOnFoil: 0) {
                             DispatchQueue.main.async {
                                 print("new pop ups: \(foilStats.popUps), percentage on foil: \(foilStats.timeOnFoilPercentage), turns: \(foilStats.turns), longest distance on foil: \(foilStats.longestDistanceOnFoil)")
