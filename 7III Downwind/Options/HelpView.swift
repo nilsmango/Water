@@ -21,6 +21,9 @@ struct HelpView: View {
                     RefundView(downwindManager: downwindManager)
                 }
                 Group {
+                    
+                    Link("Support Page with FAQ", destination: URL(string: "https://project7iii.com/water/support/")!)
+                    
                     Link("Privacy Policy", destination: URL(string: "https://project7iii.com/water/privacy-policy/")!)
                     
                     Link("Terms and Conditions", destination: URL(string: "https://project7iii.com/water/terms-and-conditions/")!)
@@ -30,7 +33,7 @@ struct HelpView: View {
             } header: {
                 Text("How can we help?")
             } footer: {
-                Text("Use **Contact us** to ask for support, report bugs, or send suggestions.\n\nApp Version: \(downwindManager.currentAppVersion)")
+                Text("Use **Contact us** to report bugs, or send suggestions.\n\nApp Version: \(downwindManager.currentAppVersion)")
             }
             
             
