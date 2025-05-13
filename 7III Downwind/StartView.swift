@@ -15,12 +15,8 @@ struct StartView: View {
     @State private var showStartRunSheet = false
     @State private var runType: RunType = .start
     
-    @State private var showOptionsSheet = false
-    @State private var showAboutSheet = false
     @State private var showCaptureStatistics = false
-    
-    @State private var showFirstTimeUserName = false
-    
+        
     @State private var importedRuns: [ImportRun] = []
     @State private var isImporting: Bool = false
     @State private var isLoadingImportedRuns: Bool = false
@@ -246,7 +242,7 @@ struct StartView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    StartOptionsMenu(downwindManager: downwindManager, showOptionsSheet: $showOptionsSheet, showAboutSheet: $showAboutSheet)
+                    StartOptionsMenu(downwindManager: downwindManager)
                 }
             }
             .overlay {
@@ -318,31 +314,8 @@ struct StartView: View {
                 }
             })
             
-            .sheet(isPresented: $showFirstTimeUserName, content: {
-                FirstTimeUserNameSet(downwindManager: downwindManager, showingSheet: $showFirstTimeUserName)
-                    .interactiveDismissDisabled()
-            })
-            
             .sheet(isPresented: $downwindManager.showingSummarySheet, content: {
                 SummaryView(downwindManager: downwindManager)
-            })
-            
-            .sheet(isPresented: $showOptionsSheet, content: {
-                NavigationStack {
-                    OptionsView(downwindManager: downwindManager, showOptionsSheet: $showOptionsSheet, showFirstTimeUserName: $showFirstTimeUserName)
-                        .navigationTitle("Options")
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button {
-                                    showOptionsSheet = false
-                                } label: {
-                                    Label("Close", systemImage: "xmark.circle.fill")
-                                        .symbolRenderingMode(.palette)
-                                        .foregroundStyle(.black, .gray)
-                                }
-                            }
-                        }
-                }
             })
             
             .sheet(isPresented: $showTagsEditView, content: {

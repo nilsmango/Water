@@ -12,9 +12,6 @@ struct OptionsView: View {
     @ObservedObject var downwindManager: DownwindManager
     @AppStorage("hasRespondedToReview") var hasRespondedToReviewRequest = false
     
-    @Binding var showOptionsSheet: Bool
-    @Binding var showFirstTimeUserName: Bool
-    
     @State private var userName = ""
     @State private var status = ""
     @State private var isShowingAlert = false
@@ -77,61 +74,61 @@ struct OptionsView: View {
                 }
                 
             }
-            
-            Section {
-                TextField("Frothingggggg!", text: $status)
-                    .onAppear {
-                        status = downwindManager.user.status ?? ""
-                    }
-                    .onChange(of: status, { oldValue, newValue in
-                        if newValue.count > Constants.maxLengthUser {
-                            status = String(newValue.prefix(Constants.maxLengthUser))
-                        }
-                    })
-            } header: {
-                Text("Your Status")
-            } footer: {
-                if status != downwindManager.user.status && status != "" {
-                    HStack {
-                        Spacer()
-                        
-                        Button(action: {
-                            downwindManager.user.status = status
-                            if downwindManager.user.id == nil {
-                                downwindManager.user.id = UUID()
-                            }
-                            downwindManager.saveUser()
-//                            Task {
-//                                do {
-//                                    try await downwindManager.checkAndUpdateUserInDB()
-//                                } catch {
-//                                    print("Error updating user in user to db: \(error)")
-//                                }
+//            
+//            Section {
+//                TextField("Frothingggggg!", text: $status)
+//                    .onAppear {
+//                        status = downwindManager.user.status ?? ""
+//                    }
+//                    .onChange(of: status, { oldValue, newValue in
+//                        if newValue.count > Constants.maxLengthUser {
+//                            status = String(newValue.prefix(Constants.maxLengthUser))
+//                        }
+//                    })
+//            } header: {
+//                Text("Your Status")
+//            } footer: {
+//                if status != downwindManager.user.status && status != "" {
+//                    HStack {
+//                        Spacer()
+//                        
+//                        Button(action: {
+//                            downwindManager.user.status = status
+//                            if downwindManager.user.id == nil {
+//                                downwindManager.user.id = UUID()
 //                            }
-                            
-                        }, label: {
-                            Label("Save", systemImage: "checkmark.circle")
-                        })
-                        .buttonStyle(.bordered)
-                        
-                        
-                        Spacer()
-                        
-                        Button(role: .destructive, action: {
-                            status = downwindManager.user.status ?? ""
-                            
-                        }, label: {
-                            Label("Cancel", systemImage: "xmark.circle")
-                                
-                        })
-                        .buttonStyle(.bordered)
-                        
-                        Spacer()
-                    }
-                    .padding()
-                }
-                
-            }
+//                            downwindManager.saveUser()
+////                            Task {
+////                                do {
+////                                    try await downwindManager.checkAndUpdateUserInDB()
+////                                } catch {
+////                                    print("Error updating user in user to db: \(error)")
+////                                }
+////                            }
+//                            
+//                        }, label: {
+//                            Label("Save", systemImage: "checkmark.circle")
+//                        })
+//                        .buttonStyle(.bordered)
+//                        
+//                        
+//                        Spacer()
+//                        
+//                        Button(role: .destructive, action: {
+//                            status = downwindManager.user.status ?? ""
+//                            
+//                        }, label: {
+//                            Label("Cancel", systemImage: "xmark.circle")
+//                                
+//                        })
+//                        .buttonStyle(.bordered)
+//                        
+//                        Spacer()
+//                    }
+//                    .padding()
+//                }
+//                
+//            }
             
             PremiumSection(downwindManager: downwindManager, showUpgradeView: $showUpgradeView, showManage: $showManage)
             
@@ -146,6 +143,10 @@ struct OptionsView: View {
                     ForEach(MeasurementSystem.allCases) { system in
                         Text(system.rawValue)
                     }
+                }
+                
+                NavigationLink(destination: FoilingThresholds()) {
+                    Text("Foiling Threshold Speeds")
                 }
                 
 //                Toggle(isOn: $downwindManager.showListDetail, label: {
@@ -193,9 +194,6 @@ struct OptionsView: View {
                     downwindManager.user = Member(id: nil, name: "", status: "", latitude: nil, longitude: nil, createdOn: nil)
                     downwindManager.saveUser()
                     
-                    showFirstTimeUserName = true
-                    showOptionsSheet = false
-                    
                     downwindManager.deleteStatistics()
 //                    Task {
 //                        do {
@@ -237,9 +235,10 @@ struct OptionsView: View {
                 }
             }
         }
+        .navigationTitle("Options")
     }
 }
 
 #Preview {
-    OptionsView(downwindManager: DownwindManager(), showOptionsSheet: .constant(true), showFirstTimeUserName: .constant(true))
+    OptionsView(downwindManager: DownwindManager())
 }
