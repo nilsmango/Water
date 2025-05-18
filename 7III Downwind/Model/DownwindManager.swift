@@ -2967,43 +2967,43 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             } else {
                 
                 if kalmanFilter == nil {
-                    // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
-                    self.kalmanFilter?.rValue = rValue
-                    self.kalmanFilter?.sigma = sigma
-                    
-                    // initializing the kalman filter
-                    self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
-                    
-                    let startLocation = CLLocation(
-                        coordinate: newLocation.coordinate,
-                        altitude: newLocation.altitude,
-                        horizontalAccuracy: newLocation.horizontalAccuracy,
-                        verticalAccuracy: newLocation.verticalAccuracy,
-                        course: newLocation.course,
-                        speed: newLocation.speed,
-                        timestamp: newLocation.timestamp
-                    )
-                    
                     if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                        // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
+                        self.kalmanFilter?.rValue = rValue
+                        self.kalmanFilter?.sigma = sigma
+                        
+                        // initializing the kalman filter
+                        self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                        
+                        let startLocation = CLLocation(
+                            coordinate: newLocation.coordinate,
+                            altitude: newLocation.altitude,
+                            horizontalAccuracy: newLocation.horizontalAccuracy,
+                            verticalAccuracy: newLocation.verticalAccuracy,
+                            course: newLocation.course,
+                            speed: newLocation.speed,
+                            timestamp: newLocation.timestamp
+                        )
+                    
                         routeBuilder?.insertRouteData([startLocation]) { (success, error) in
                             if !success {
                                 // Handle any errors here.
                             }
                         }
-                    }
                     
-                    DispatchQueue.main.async {
-                        self.user.latitude = newLocation.coordinate.latitude
-                        self.user.longitude = newLocation.coordinate.longitude
-                        var speed = newLocation.speed
-                        if speed < 0.0 {
-                            speed = 0.0
+                        DispatchQueue.main.async {
+                            self.user.latitude = newLocation.coordinate.latitude
+                            self.user.longitude = newLocation.coordinate.longitude
+                            var speed = newLocation.speed
+                            if speed < 0.0 {
+                                speed = 0.0
+                            }
+                            self.user.speed = speed
+                            
+                            self.locationAccuracy = newLocation.horizontalAccuracy
+                            
+                            self.updateStatistic()
                         }
-                        self.user.speed = speed
-                        
-                        self.locationAccuracy = newLocation.horizontalAccuracy
-                        
-                        self.updateStatistic()
                     }
                 } else {
                     if let kalmanFilter = self.kalmanFilter {
