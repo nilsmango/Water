@@ -19,7 +19,8 @@ enum Constants {
     static let locationTimerInterval: Double = 120
     
     /// min accuracy to use in statistics
-    static let minHorizontalAccuracy = 5.1
+    /// was 18 once
+    static let minHorizontalAccuracy = 12.0
     
     /// timer interval for the information toggling in the online locations view (run)
     static let updateTimer: Double = 5.0
