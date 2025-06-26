@@ -14,7 +14,7 @@ struct SessionPagingView: View {
         
     var body: some View {
         TabView(selection: $selection) {
-            ControlsView(workoutManager: workoutManager).tag(Tab.controls)
+            ControlsView(workoutManager: workoutManager, selection: $selection).tag(Tab.controls)
             MetricsView(workoutManager: workoutManager, selection: $selection).tag(Tab.metrics)
             PlayingView(selection: $selection).tag(Tab.nowPlaying)
         }

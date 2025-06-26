@@ -20,7 +20,7 @@ struct StartView: View {
             VStack {
                 if workoutManager.hasHealthActivated {
                     if crownMode {
-                        CrownButton(workoutManager: workoutManager, start: true)
+                        CrownButton(workoutManager: workoutManager, start: true, selection: .constant(.metrics))
                             .padding(.bottom)
                     } else {
                         Button(action: {

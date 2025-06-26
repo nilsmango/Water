@@ -10,12 +10,12 @@ import SwiftUI
 struct ControlsView: View {
     @ObservedObject var workoutManager: WorkoutManager
     @AppStorage("CrownMode") var crownMode: Bool = false
-
+    @Binding var selection: Tab
     
     var body: some View {
         VStack {
             if crownMode {
-                CrownButton(workoutManager: workoutManager, start: false)
+                CrownButton(workoutManager: workoutManager, start: false, selection: $selection)
             } else {
                 Button {
                     workoutManager.endWorkout()
@@ -51,5 +51,5 @@ struct ControlsView: View {
 }
 
 #Preview {
-    ControlsView(workoutManager: WorkoutManager())
+    ControlsView(workoutManager: WorkoutManager(), selection: .constant(.controls))
 }

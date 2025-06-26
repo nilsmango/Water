@@ -13,6 +13,7 @@ struct CrownButton: View {
     var start: Bool = true
     var metricsMode: Bool = false
     var color: Color { start ? .green : .red}
+    @Binding var selection: Tab
     
     @State private var fillPercentage: Double = 0.0
     @State private var gettingTapped = false
@@ -70,18 +71,22 @@ struct CrownButton: View {
                 isContinuous: false,
                 isHapticFeedbackEnabled: true
             )
-            .onChange(of: fillPercentage) {
+            .onChange(of: fillPercentage) { oldValue, newValue in
                 if fillPercentage == 100 {
                     fillPercentage = 0
                     WKInterfaceDevice.current().play(.success)
                     if start {
                         workoutManager.checkHealthKitAuthorizationStatus()
-                        workoutManager.startWorkout()
                         workoutManager.path.append("session")
+                        workoutManager.startWorkout()
                         fillPercentage = 0
                     } else {
                         workoutManager.endWorkout()
                         fillPercentage = 0
+                    }
+                } else if !start && oldValue > newValue {
+                    withAnimation {
+                        selection = .metrics
                     }
                 }
             }
@@ -89,5 +94,5 @@ struct CrownButton: View {
 }
 
 #Preview {
-    CrownButton(workoutManager: WorkoutManager())
+    CrownButton(workoutManager: WorkoutManager(), selection: .constant(.controls))
 }

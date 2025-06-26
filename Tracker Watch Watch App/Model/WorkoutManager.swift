@@ -186,6 +186,19 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         DispatchQueue.main.async {
             self.running = true
         }
+        // reseting things just in case
+        builder = nil
+        session = nil
+        workout = nil
+        activeEnergy = 0
+        averageHeartRate = 0
+        heartRate = 0
+        distance = 0
+        topSpeed = 0
+        averageSpeed = 0
+        userLocation = nil
+        previousUserLocation = nil
+        
         // update the workout usage count
         incrementWorkoutCount(for: workoutType)
         
@@ -228,6 +241,10 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if !statisticTags.contains(where: { $0.lowercased() == tag.lowercased() }) {
                 statisticTags.append(tag)
             }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            WKExtension.shared().enableWaterLock()
         }
     }
     
@@ -784,9 +801,6 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
                         didChangeTo toState: HKWorkoutSessionState,
                         from fromState: HKWorkoutSessionState,
                         date: Date) {
-        if toState == .running {
-            WKExtension.shared().enableWaterLock()
-        }
         
         // Wait for the session to transition states before ending the builder.
         if toState == .ended {
