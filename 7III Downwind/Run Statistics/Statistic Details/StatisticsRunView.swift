@@ -419,7 +419,7 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showRunEditView, content: {
             NavigationStack {
-                    StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit, editMode: true)
+                    EditMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit)
                     .navigationTitle("Edit Route")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
