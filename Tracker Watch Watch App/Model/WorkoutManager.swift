@@ -179,6 +179,13 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     let currentWatch = WKInterfaceDevice.current()
     
     func startWorkout() {
+        guard running == false else {
+                print("Workout already in progress. Ignoring start request.")
+                return
+            }
+        DispatchQueue.main.async {
+            self.running = true
+        }
         // update the workout usage count
         incrementWorkoutCount(for: workoutType)
         
@@ -222,8 +229,6 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 statisticTags.append(tag)
             }
         }
-        
-        WKExtension.shared().enableWaterLock()
     }
     
     // Request authorization to access HealthKit and to access location
@@ -353,7 +358,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         // ignoring the locations for a few seconds
         if ignoreFirstFewLocations {
             
-            if locationManagerStartTime.addingTimeInterval(secondsWeIgnoreLocations) < Date.now || locations.last!.horizontalAccuracy < 5.1 {
+            if locationManagerStartTime.addingTimeInterval(secondsWeIgnoreLocations) < Date.now || locations.last!.horizontalAccuracy < Constants.minHorizontalAccuracy {
                 ignoreFirstFewLocations = false
             }
             
@@ -495,10 +500,16 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func endWorkout() {
+        guard running == true else {
+            print("Workout stopping already in progress. Ignoring stop request.")
+                return
+        }
+        running = false
         session?.end()
         showingSummaryView = true
         path = NavigationPath()
         currentWatch.play(.stop)
+        
     }
     
     // MARK: - Workout Metrics
@@ -773,8 +784,8 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
                         didChangeTo toState: HKWorkoutSessionState,
                         from fromState: HKWorkoutSessionState,
                         date: Date) {
-        DispatchQueue.main.async {
-            self.running = toState == .running
+        if toState == .running {
+            WKExtension.shared().enableWaterLock()
         }
         
         // Wait for the session to transition states before ending the builder.

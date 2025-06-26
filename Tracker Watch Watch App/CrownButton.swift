@@ -76,8 +76,8 @@ struct CrownButton: View {
                     WKInterfaceDevice.current().play(.success)
                     if start {
                         workoutManager.checkHealthKitAuthorizationStatus()
-                        workoutManager.path.append("session")
                         workoutManager.startWorkout()
+                        workoutManager.path.append("session")
                         fillPercentage = 0
                     } else {
                         workoutManager.endWorkout()
