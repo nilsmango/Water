@@ -91,7 +91,6 @@
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
-		7877E1202BBFF14C00776890 /* locationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 7877E11F2BBFF14C00776890 /* locationData.json */; };
 		7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
 		7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
 		7877E1262BC3F7A800776890 /* StatisticsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1252BC3F7A800776890 /* StatisticsDetails.swift */; };
@@ -151,6 +150,8 @@
 		78E5A85A2C32AB4E00456ABC /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
 		78E5A85D2C32DA4100456ABC /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78E5A85C2C32DA4100456ABC /* Surge */; };
 		78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
+		78EC608D2E0D319E00C55950 /* EditMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC608C2E0D319E00C55950 /* EditMap.swift */; };
+		78EC608F2E0D331800C55950 /* locationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 78EC608E2E0D331800C55950 /* locationData.json */; };
 		78F047C32D9DA417003E11FA /* ImportRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C22D9DA417003E11FA /* ImportRun.swift */; };
 		78F047C52D9DA607003E11FA /* GPXStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C42D9DA607003E11FA /* GPXStuff.swift */; };
 		78F047C82D9DA655003E11FA /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
@@ -287,7 +288,6 @@
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
-		7877E11F2BBFF14C00776890 /* locationData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = locationData.json; path = ../../../../../locationData.json; sourceTree = "<group>"; };
 		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
 		7877E1232BC3D87C00776890 /* PolylineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineData.swift; sourceTree = "<group>"; };
 		7877E1252BC3F7A800776890 /* StatisticsDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsDetails.swift; sourceTree = "<group>"; };
@@ -343,6 +343,8 @@
 		78C4D23E2BA7512A00639E65 /* RunOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunOverView.swift; sourceTree = "<group>"; };
 		78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsMap.swift; sourceTree = "<group>"; };
 		78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStatistic.swift; sourceTree = "<group>"; };
+		78EC608C2E0D319E00C55950 /* EditMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMap.swift; sourceTree = "<group>"; };
+		78EC608E2E0D331800C55950 /* locationData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locationData.json; sourceTree = "<group>"; };
 		78F047C22D9DA417003E11FA /* ImportRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRun.swift; sourceTree = "<group>"; };
 		78F047C42D9DA607003E11FA /* GPXStuff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXStuff.swift; sourceTree = "<group>"; };
 		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
@@ -458,6 +460,7 @@
 				7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */,
 				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
 				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
+				78EC608C2E0D319E00C55950 /* EditMap.swift */,
 				78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */,
 				78B5EF182D539D7D0079B16A /* GPXExportButton.swift */,
 				781A4B9D2C4E45040046AE0E /* SocialSharing */,
@@ -561,6 +564,7 @@
 		785C4AA82B35916900EB07F8 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				78EC608E2E0D331800C55950 /* locationData.json */,
 				7877E1482BC52C9600776890 /* View+readSize.swift */,
 				781A4BB62C50F2470046AE0E /* SpeedOption.swift */,
 				781A4BB22C4FAFA70046AE0E /* VideoProcessingHelper.swift */,
@@ -574,7 +578,6 @@
 				785C4AD92B45EAD000EB07F8 /* Extensions.swift */,
 				785C4AAF2B359F8E00EB07F8 /* Constants.swift */,
 				78844E422C2EAB7000B703F5 /* ElapsedTimeFormatter.swift */,
-				7877E11F2BBFF14C00776890 /* locationData.json */,
 				785C4AD72B45B04800EB07F8 /* RunListSorting.swift */,
 				783A53CE2B5FBF5000701D7F /* RunType.swift */,
 				785CF9572B4FED3100528B6D /* MeasurementSystem.swift */,
@@ -859,9 +862,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78EC608F2E0D331800C55950 /* locationData.json in Resources */,
 				785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */,
 				785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */,
-				7877E1202BBFF14C00776890 /* locationData.json in Resources */,
 				78A283742C3FC2610052AA52 /* product_ids.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -920,6 +923,7 @@
 				783A53CF2B5FBF5000701D7F /* RunType.swift in Sources */,
 				783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
+				78EC608D2E0D319E00C55950 /* EditMap.swift in Sources */,
 				785CCF1A2D6894DB0075CA4C /* ShareOverlayDivider.swift in Sources */,
 				781A4BB12C4FAD5E0046AE0E /* VideoOverlayView.swift in Sources */,
 				7857BF342C57C16600AD7F4F /* VideoPicker.swift in Sources */,
@@ -1176,7 +1180,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 30;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				DEVELOPMENT_TEAM = A9H57996U3;
@@ -1205,7 +1209,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1224,7 +1228,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 30;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				DEVELOPMENT_TEAM = A9H57996U3;
@@ -1253,7 +1257,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1272,7 +1276,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = A9H57996U3;
 				ENABLE_PREVIEWS = YES;
@@ -1290,7 +1294,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1309,7 +1313,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = A9H57996U3;
 				ENABLE_PREVIEWS = YES;
@@ -1327,7 +1331,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1345,13 +1349,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = A9H57996U3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.tracker.-III-Water-Stickers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1366,13 +1370,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = A9H57996U3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.tracker.-III-Water-Stickers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
