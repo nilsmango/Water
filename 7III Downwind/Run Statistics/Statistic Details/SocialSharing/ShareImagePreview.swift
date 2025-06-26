@@ -25,6 +25,7 @@ struct ShareImagePreview: View {
     var showTimeOnFoil: Bool
     var showMaxDistanceOnFoil: Bool
     var showTurns: Bool
+    var fullScreen: Bool
     
     @Binding var offset: Double
     
@@ -33,10 +34,10 @@ struct ShareImagePreview: View {
             if useMap {
                 if let dW = statisticsData.workoutType?.isDWSport, dW == true {
                     StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
-                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                        .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
                 } else {
                     WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
-                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                        .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
                 }
                     
             } else if let image = selectedImage {
@@ -44,12 +45,12 @@ struct ShareImagePreview: View {
                 Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                        .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.25 : UIScreen.main.bounds.width)
                 
             } else {
                 Image("Icon")
                     .resizable()
-                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                    .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
                     .aspectRatio(contentMode: .fill)
             }
             VStack {
@@ -111,7 +112,7 @@ struct ShareImagePreview: View {
                 
             }
             .padding(.bottom, 8)
-            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+            .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
         }
     }
     
@@ -130,5 +131,5 @@ struct ShareImagePreview: View {
 
 
 #Preview {
-    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showMaxDistanceOnFoil: true, showTurns: true, offset: .constant(-8.0))
+    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showMaxDistanceOnFoil: true, showTurns: true, fullScreen: true, offset: .constant(-8.0))
 }

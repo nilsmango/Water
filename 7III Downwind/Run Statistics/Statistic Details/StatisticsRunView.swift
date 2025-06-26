@@ -447,7 +447,8 @@ struct StatisticsRunView: View {
                     }
             }
         })
-        .sheet(isPresented: $showShareSheet, content: {
+        
+        .fullScreenCover(isPresented: $showShareSheet, content: {
             NavigationStack {
                 Group {
                     if videoSharing {

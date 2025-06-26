@@ -43,13 +43,14 @@ struct ShareStatisticsView: View {
     @State private var showCalories = false
     @State private var showHeartRate = false
     @State private var offset = -8.0
+    @State private var fullScreen = true
     
     var body: some View {
         ScrollView {
-            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, offset: $offset) { view in
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, offset: $offset) { view in
                 self.previewUIView = view
             }
-            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+            .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
             .onChange(of: offset) { oldValue, newValue in
                 if oldValue >= -8.0 && newValue < -8.0 {
                     if scale > 0.7 {
@@ -59,7 +60,7 @@ struct ShareStatisticsView: View {
             }
             
             if useMap {
-                Label("You can adjust the map window", systemImage: "info.circle")
+                Label(fullScreen ? "Scroll by swiping on the statistics overlay." : "You can adjust the map window", systemImage: "info.circle")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .padding(.top, 6)
@@ -80,6 +81,7 @@ struct ShareStatisticsView: View {
                         useMap: $useMap,
                         showImagePicker: $showImagePicker,
                         showCamera: $showCamera,
+                        fullScreen: $fullScreen,
                         statisticsData: statisticsData
                     )
             
