@@ -95,6 +95,19 @@ struct RunStatistic: Identifiable, Codable {
 
     }
     
+    // Custom initializer for direct initialization 3
+    init(id: UUID, runName: String, crewStatistics: [CrewStatistic], runTime: Double, runDistance: Double, topSpeed: Double, locationData: [LocationData], tags: [String]?, locationString: String?) {
+        self.id = id
+        self.runName = runName
+        self.crewStatistics = crewStatistics
+        self.runTime = runTime
+        self.runDistance = runDistance
+        self.topSpeed = topSpeed
+        self.locationData = locationData
+        self.tags = tags
+        self.locationString = locationString
+    }
+    
     init(id: UUID, locationData: [LocationData], startLocation: LocationData?) {
         self.id = id
         self.runName = ""

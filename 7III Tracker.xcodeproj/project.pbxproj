@@ -152,6 +152,8 @@
 		78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
 		78EC608D2E0D319E00C55950 /* EditMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC608C2E0D319E00C55950 /* EditMap.swift */; };
 		78EC608F2E0D331800C55950 /* locationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 78EC608E2E0D331800C55950 /* locationData.json */; };
+		78EC60912E0DDBD100C55950 /* RouteSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC60902E0DDBD100C55950 /* RouteSticker.swift */; };
+		78EC60932E0EACF600C55950 /* StickerHowToView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC60922E0EACF600C55950 /* StickerHowToView.swift */; };
 		78F047C32D9DA417003E11FA /* ImportRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C22D9DA417003E11FA /* ImportRun.swift */; };
 		78F047C52D9DA607003E11FA /* GPXStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C42D9DA607003E11FA /* GPXStuff.swift */; };
 		78F047C82D9DA655003E11FA /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
@@ -345,6 +347,8 @@
 		78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewStatistic.swift; sourceTree = "<group>"; };
 		78EC608C2E0D319E00C55950 /* EditMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMap.swift; sourceTree = "<group>"; };
 		78EC608E2E0D331800C55950 /* locationData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locationData.json; sourceTree = "<group>"; };
+		78EC60902E0DDBD100C55950 /* RouteSticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSticker.swift; sourceTree = "<group>"; };
+		78EC60922E0EACF600C55950 /* StickerHowToView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerHowToView.swift; sourceTree = "<group>"; };
 		78F047C22D9DA417003E11FA /* ImportRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRun.swift; sourceTree = "<group>"; };
 		78F047C42D9DA607003E11FA /* GPXStuff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXStuff.swift; sourceTree = "<group>"; };
 		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
@@ -382,6 +386,8 @@
 			isa = PBXGroup;
 			children = (
 				781A4BA42C4E77B10046AE0E /* ShareStatisticsView.swift */,
+				78EC60902E0DDBD100C55950 /* RouteSticker.swift */,
+				78EC60922E0EACF600C55950 /* StickerHowToView.swift */,
 				785CCF172D6891260075CA4C /* OverlaySettingsView.swift */,
 				781A4BAE2C4EE64B0046AE0E /* ActivityViewController.swift */,
 				781A4BAA2C4E912F0046AE0E /* ShareImagePreview.swift */,
@@ -911,6 +917,7 @@
 				7877E1282BC41DB300776890 /* StatisticsInfoViews.swift in Sources */,
 				78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */,
 				78F937F02C35816B00D34796 /* WindSportStatisticsMap.swift in Sources */,
+				78EC60932E0EACF600C55950 /* StickerHowToView.swift in Sources */,
 				78C4D23C2BA74EBC00639E65 /* StatisticsView.swift in Sources */,
 				7877E1382BC52BB400776890 /* SelectionButtonLabel.swift in Sources */,
 				78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */,
@@ -968,6 +975,7 @@
 				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
 				78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */,
 				781562A32B94D92900E081FC /* QRCodeView.swift in Sources */,
+				78EC60912E0DDBD100C55950 /* RouteSticker.swift in Sources */,
 				781A4BB72C50F2470046AE0E /* SpeedOption.swift in Sources */,
 				78320BC72BB1D97800D6A772 /* StatisticsModelings.swift in Sources */,
 				785CCF182D6891260075CA4C /* OverlaySettingsView.swift in Sources */,

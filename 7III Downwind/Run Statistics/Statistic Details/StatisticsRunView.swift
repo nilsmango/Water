@@ -27,6 +27,7 @@ struct StatisticsRunView: View {
     @State private var showUpgradeSheet = false
     @State private var showShareSheet = false
     @State private var videoSharing = false
+    @State private var showStickerSheet = false
     
     @State private var tags = [String]()
     @State private var editTags = [String]()
@@ -209,6 +210,12 @@ struct StatisticsRunView: View {
                     } label: {
                         Label("Photo", systemImage: "photo")
                     }
+                    Button {
+                        showStickerSheet = true
+                    } label: {
+                        Label("Sticker Overlay", systemImage: "square.dashed")
+                    }
+                    
                     
                     GPXExportButton(locationData: statisticsData.locationData, activityName:  (statisticsData.locationString ?? locationName) + " " + makeStringFromDate(statisticsData.startDate ?? Date()), workoutType: statisticsData.workoutType ?? .surf)
                     
@@ -463,6 +470,26 @@ struct StatisticsRunView: View {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button(action: {
                                 showShareSheet = false
+                            }, label: {
+                                Label("Close", systemImage: "xmark.circle.fill")
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.black, .gray)
+                            })
+                        }
+                    }
+            }
+        })
+        
+        .fullScreenCover(isPresented: $showStickerSheet, content: {
+            NavigationStack {
+                    RouteSticker(downwindManager: downwindManager, statisticsData: statisticsData)
+                
+                .navigationTitle("Create Sticker")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(action: {
+                                showStickerSheet = false
                             }, label: {
                                 Label("Close", systemImage: "xmark.circle.fill")
                                     .symbolRenderingMode(.palette)
