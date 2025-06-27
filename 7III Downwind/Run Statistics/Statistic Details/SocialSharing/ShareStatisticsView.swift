@@ -58,12 +58,21 @@ struct ShareStatisticsView: View {
                     }
                 }
             }
+            .onChange(of: fullScreen) { oldValue, newValue in
+                if !fullScreen {
+                    offset = -8.0
+                } else {
+                    offset = 0.0
+                }
+            }
             
             if useMap {
-                Label(fullScreen ? "Scroll by swiping on the statistics overlay." : "You can adjust the map window", systemImage: "info.circle")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 6)
+                if !fullScreen {
+                    Label("You can adjust the map window", systemImage: "info.circle")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 6)
+                }
             }
             
             OverlaySettingsView(
@@ -100,6 +109,11 @@ struct ShareStatisticsView: View {
             }
             .buttonStyle(.borderedProminent)
             .padding()
+            .onAppear {
+                if fullScreen {
+                    offset = 0.0
+                }
+            }
             
         }
         

@@ -35,9 +35,11 @@ struct ShareImagePreview: View {
                 if let dW = statisticsData.workoutType?.isDWSport, dW == true {
                     StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
                         .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
+                        .allowsHitTesting(!fullScreen)
                 } else {
                     WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
                         .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
+                        .allowsHitTesting(!fullScreen)
                 }
                     
             } else if let image = selectedImage {
@@ -54,9 +56,14 @@ struct ShareImagePreview: View {
                     .aspectRatio(contentMode: .fill)
             }
             VStack {
-                Spacer()
+                    Spacer()
+                
                 HStack {
-                    Spacer(minLength: 0.0)
+                    
+                    if !fullScreen {
+                        Spacer(minLength: 0.0)
+                    }
+                    
                     Group {
                         let hasDistance = statisticsData.runDistance > 0
                                                 
@@ -88,9 +95,11 @@ struct ShareImagePreview: View {
                             maxDistanceOnFoilTitle: showMaxDistanceOnFoil ? "Longest Flight" : nil,
                             maxDistanceOnFoilText:  String(format: "%.1f", (statisticsData.longestDistanceOnFoil ?? 0) / 1000) +  " km",
                             turnsTitle: showTurns ? "Turns" : nil,
-                            turnsText: String(statisticsData.turnsCount ?? 0)
+                            turnsText: String(statisticsData.turnsCount ?? 0),
+                            fullScreen: fullScreen
                         )
-                        .scaleEffect(scale, anchor: UnitPoint(x: 1, y: 1))
+                        .scaleEffect(scale, anchor: fullScreen ? UnitPoint(x: 0.5, y: 1) : UnitPoint(x: 1, y: 1))
+
                     }
                     
                 }
@@ -98,12 +107,15 @@ struct ShareImagePreview: View {
                     GeometryReader { geo in
                         Color.clear
                             .onAppear {
-                                let sizeDifference = (geo.size.width - (UIScreen.main.bounds.width)) / 2
-                                if sizeDifference >= 0 {
-                                    offset = -sizeDifference + -8.0
-                                } else {
-                                    offset = -8.0
+                                if !fullScreen {
+                                    let sizeDifference = (geo.size.width - (UIScreen.main.bounds.width)) / 2
+                                    if sizeDifference >= 0 {
+                                        offset = -sizeDifference + -8.0
+                                    } else {
+                                        offset = -8.0
+                                    }
                                 }
+                                
                             }
                     }
                 }
@@ -111,7 +123,7 @@ struct ShareImagePreview: View {
                 
                 
             }
-            .padding(.bottom, 8)
+            .padding(.bottom, fullScreen ? 32 : 8)
             .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
         }
     }
