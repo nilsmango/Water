@@ -42,8 +42,7 @@ struct UpgradeView: View {
 
     private let features = [
         FeatureItem(text: "Unlimited statistics", symbol: "chart.xyaxis.line"),
-        FeatureItem(text: "Unlimited tags", symbol: "tag"),
-        FeatureItem(text: "Editing of sessions", symbol: "pencil"),
+        FeatureItem(text: "Unlimited editing of sessions", symbol: "pencil"),
         FeatureItem(text: "Access to all future features", symbol: "checkmark")
     ]
         
@@ -68,7 +67,7 @@ struct UpgradeView: View {
         } else {
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("Enhance your water sports tracking experience with our premium features.\nYour support helps us continually improve 7III Water and develop exciting new capabilities.\n\nAll premium plans come with:")
+                    Text("Enhance your water sports tracking experience with our premium features.\nYour support helps us continually improve 7III Water and develop exciting new capabilities. Thank you! ❤️\n\nAll premium plans come with:")
                     Text("")
                     
                     ForEach(features) { feature in

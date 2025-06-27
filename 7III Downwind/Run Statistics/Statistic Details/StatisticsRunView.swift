@@ -75,14 +75,11 @@ struct StatisticsRunView: View {
                             Spacer()
                             
                             Button() {
-                                if downwindManager.hasPurchasedPremium {
                                     editTags = tags
                                     showTagsEditView = true
-                                } else {
-                                    showUpgradeSheet = true
-                                }
+                                
                             } label: {
-                                tags.isEmpty ? downwindManager.hasPurchasedPremium ? Label("Add Tags", systemImage: "") : Label("Add Tags", systemImage: "lock.fill") : downwindManager.hasPurchasedPremium ? Label("Edit Tags", systemImage: "") : Label("Edit Tags", systemImage: "lock.fill")
+                                tags.isEmpty ? Label("Add Tags", systemImage: "") : Label("Edit Tags", systemImage: "")
                             }
                             .textCase(nil)
                             .font(.body)
@@ -94,13 +91,10 @@ struct StatisticsRunView: View {
                         HStack {
                             Spacer()
                             Button(role: .destructive) {
-                                if downwindManager.hasPurchasedPremium {
                                     showAlert = true
-                                } else {
-                                    showUpgradeSheet = true
-                                }
+
                             } label: {
-                                Label("Delete Run", systemImage: downwindManager.hasPurchasedPremium ? "trash" : "lock.fill")
+                                Label("Delete Run", systemImage: "trash")
                             }
                             .buttonStyle(.bordered)
                             Spacer()
@@ -231,7 +225,7 @@ struct StatisticsRunView: View {
                 if statisticsData.locationData.count > 2 {
                     Menu {
                         Button(action: {
-                            if downwindManager.hasPurchasedPremium {
+                            if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4 {
                                 // update the edit data
                                 statisticsDataEdit = statisticsData
                                 showRunEditView = true
@@ -240,7 +234,7 @@ struct StatisticsRunView: View {
                             }
                             
                         }, label: {
-                            if downwindManager.hasPurchasedPremium {
+                            if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4  {
                                 Text("Edit Route")
                             } else {
                                 Label("Edit Route", systemImage: "lock.fill")
@@ -249,44 +243,26 @@ struct StatisticsRunView: View {
                         })
                         
                         Button(action: {
-                            if downwindManager.hasPurchasedPremium {
                                 // update the edit data
                                 editTags = tags
                                 editType = statisticsData.workoutType ?? .surf
                                 showEditData = true
-                            } else {
-                                showUpgradeSheet = true
-                            }
+                            
                         }, label: {
-                            if downwindManager.hasPurchasedPremium {
                                 Text("Edit Data")
-                            } else {
-                                Label("Edit Data", systemImage: "lock.fill")
-                            }
                         })
                     } label: {
                         Text("Edit")
                     }
                 } else {
                     Button(action: {
-                        if downwindManager.hasPurchasedPremium {
                             // update the edit data
                             editTags = tags
                             editType = statisticsData.workoutType ?? .surf
                             showEditData = true
-                        } else {
-                            showUpgradeSheet = true
-                        }
+                       
                     }, label: {
-                        if downwindManager.hasPurchasedPremium {
                             Text("Edit")
-                        } else {
-                            HStack {
-                                Image(systemName: "lock.fill")
-                                    .font(.caption)
-                                Text("Edit")
-                            }
-                        }
                     })
                 }
             }
@@ -416,6 +392,7 @@ struct StatisticsRunView: View {
                             statisticsData.locationString = editLocationName
                             downwindManager.saveStatisticWithNewTags(tags: tags, type: editType, saveType: true, statisticsData: statisticsData, locationName: editLocationName)
                             showEditData = false
+                            downwindManager.editCounter += 1
                         }, label: {
                             Text("Save")
                         })

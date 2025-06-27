@@ -832,11 +832,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         self.findMatchingStatisticsAndMerge()
                         
-                        // Free user only show 7 runs
+                        // Free user only show 5 runs
                         if !self.hasPurchasedPremium {
                             self.statisticsCount = self.runStatistics.count
-                            if self.statisticsCount > 7 {
-                                self.runStatistics = Array(self.runStatistics.prefix(7))
+                            if self.statisticsCount > 5 {
+                                self.runStatistics = Array(self.runStatistics.prefix(5))
                             }
                         }
                         
@@ -3170,6 +3170,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var showUpgradeSheet = false
     @Published var statisticsCount = 0
     @Published var unableToLoadProducts = false
+    @AppStorage("editCounter") var editCounter = 0
     
     var updateListenerTask: Task<Void, Error>? = nil
     
@@ -3437,8 +3438,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // Free user only show 7 runs
             if !self.hasPurchasedPremium {
                 self.statisticsCount = self.runStatistics.count
-                if self.statisticsCount > 7 {
-                    self.runStatistics = Array(self.runStatistics.prefix(7))
+                if self.statisticsCount > 5 {
+                    self.runStatistics = Array(self.runStatistics.prefix(5))
                 }
             }
             

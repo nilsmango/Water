@@ -72,15 +72,12 @@ struct StartView: View {
                                 Text("Tags: \(formattedTags.count > 0 ? formattedTags : "No Tags")")
                                 
                                 Button {
-                                    if downwindManager.hasPurchasedPremium {
                                         editTags = run.tags
                                         editRunIndex = importedRuns.firstIndex(where: { $0.id == run.id })
                                         showTagsEditView = true
-                                    } else {
-                                        downwindManager.showUpgradeSheet = true
-                                    }
+                                   
                                 } label: {
-                                    run.tags.isEmpty ? downwindManager.hasPurchasedPremium ? Label("Add Tags", systemImage: "") : Label("Add Tags", systemImage: "lock.fill") : downwindManager.hasPurchasedPremium ? Label("Edit Tags", systemImage: "") : Label("Edit Tags", systemImage: "lock.fill")
+                                    run.tags.isEmpty ? Label("Add Tags", systemImage: "") : Label("Edit Tags", systemImage: "")
                                 }
                                 .buttonStyle(.bordered)
                                 

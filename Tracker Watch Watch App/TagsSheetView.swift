@@ -36,15 +36,6 @@ struct TagsSheetView: View {
     var body: some View {
         ScrollView {
             VStack {
-                if workoutManager.statisticTags.count > 2 && !workoutManager.hasPurchasedPremium {
-                    Button {
-                        showUpgradeSheet = true
-                    } label: {
-                        Label("Unlimited Tags", systemImage: "lock.fill")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    
-                } else {
                     TextField("Add New Tag", text: $newTag)
                         .padding()
                         .onSubmit {
@@ -60,7 +51,6 @@ struct TagsSheetView: View {
                                 newTag = ""
                             }
                         }
-                }
                     
                                     
 //                Button(action: {
