@@ -10,6 +10,23 @@ import Foundation
 let versionHistory: [Version] = [
     // MARK: Newest on Top + Keep the introduction short to not get truncated text.
     
+    Version(versionNumber: "1.2",
+            introduction: "Improvements:",
+            changes: [
+                "Better route edit map",
+                "Fixed Apple Watch using Digital Crown bugs",
+                "Improved 1 and 10 second Top Speed finding",
+                "You can now set Foiling Threshold speeds in Options",
+                "Added version number in Help and Options",
+                "Selected Tags now persist between sessions on Apple Watch",
+                "Added new Activities: PW Skate, E-Foil, E-Assist",
+                "Added full screen Map Photo export option",
+                "Added statistics Sticker Overlay export option",
+                "Unlocked 4 free Route Edits and unlimited Tags in free version"
+            ],
+            releaseDate: "July 2025"
+           ),
+    
     Version(versionNumber: "1.1",
             introduction: "Big update:",
             changes: [
