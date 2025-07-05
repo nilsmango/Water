@@ -43,7 +43,7 @@ struct ShareStatisticsView: View {
     @State private var showCalories = false
     @State private var showHeartRate = false
     @State private var offset = -8.0
-    @State private var fullScreen = true
+    let fullScreen = true
     
     var body: some View {
         ScrollView {
@@ -90,7 +90,6 @@ struct ShareStatisticsView: View {
                         useMap: $useMap,
                         showImagePicker: $showImagePicker,
                         showCamera: $showCamera,
-                        fullScreen: $fullScreen,
                         statisticsData: statisticsData
                     )
             

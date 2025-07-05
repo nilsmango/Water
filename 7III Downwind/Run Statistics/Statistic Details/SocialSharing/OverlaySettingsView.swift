@@ -23,14 +23,14 @@ struct OverlaySettingsView: View {
     @Binding var useMap: Bool
     @Binding var showImagePicker: Bool
     @Binding var showCamera: Bool
-    @Binding var fullScreen: Bool
+//    @Binding var fullScreen: Bool
     
     var statisticsData: RunStatistic
     
     var body: some View {
         Group {
-            Toggle("Insta Story", isOn: $fullScreen)
-                .tint(.accent)
+//            Toggle("Insta Story", isOn: $fullScreen)
+//                .tint(.accent)
             //                    Toggle("Use Map", isOn: $useMap)
             Stepper(value: $scale, in: 0.5...1.0, step: 0.1) {
                 HStack {
