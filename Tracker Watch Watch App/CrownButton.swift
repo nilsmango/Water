@@ -84,7 +84,7 @@ struct CrownButton: View {
                         workoutManager.endWorkout()
                         fillPercentage = 0
                     }
-                } else if !start && oldValue > newValue {
+                } else if !start && oldValue > newValue + 4 {
                     withAnimation {
                         selection = .metrics
                     }
