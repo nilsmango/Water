@@ -37,6 +37,48 @@ struct StartView: View {
                             .padding(.horizontal)
                     }
                     
+                    NavigationBar(showGPX: downwindManager.showGPXImport, isLoadingImportedRuns: isLoadingImportedRuns, isImporting: $isImporting, navigateToStats: {
+                        navPath.append(NavDestination.statistics)
+                    }, navigateToDashboard: {
+                        navPath.append(NavDestination.dashboards)
+                    })
+                    .padding(.top)
+                    .fileImporter(
+                        isPresented: $isImporting,
+                        allowedContentTypes: [UTType(filenameExtension: "gpx")!],
+                        allowsMultipleSelection: true
+                    ) { result in
+                        isLoadingImportedRuns = true
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            let group = DispatchGroup()
+                            var newRuns: [ImportRun] = []
+
+                            switch result {
+                            case .success(let urls):
+                                for url in urls {
+                                    group.enter()
+                                    downwindManager.parseGPX(from: url) { run in
+                                        if let run = run {
+                                            newRuns.append(run)
+                                        }
+                                        group.leave()
+                                    }
+                                }
+
+                                group.notify(queue: .main) {
+                                    importedRuns.append(contentsOf: newRuns)
+                                    isLoadingImportedRuns = false
+                                }
+
+                            case .failure(let error):
+                                print("Error importing files: \(error)")
+                                DispatchQueue.main.async {
+                                    isLoadingImportedRuns = false
+                                }
+                            }
+                        }
+                    }
+                    
                     if isLoadingImportedRuns {
                         ProgressView("Parsing Run(s)...")
                             .padding()
@@ -143,48 +185,6 @@ struct StartView: View {
                                 ListBackground()
                             }
                             .padding()
-                        }
-                    }
-
-                    NavigationBar(showGPX: downwindManager.showGPXImport, isLoadingImportedRuns: isLoadingImportedRuns, isImporting: $isImporting, navigateToStats: {
-                        navPath.append(NavDestination.statistics)
-                    }, navigateToDashboard: {
-                        navPath.append(NavDestination.dashboards)
-                    })
-                    .padding(.top)
-                    .fileImporter(
-                        isPresented: $isImporting,
-                        allowedContentTypes: [UTType(filenameExtension: "gpx")!],
-                        allowsMultipleSelection: true
-                    ) { result in
-                        isLoadingImportedRuns = true
-                        DispatchQueue.global(qos: .userInitiated).async {
-                            let group = DispatchGroup()
-                            var newRuns: [ImportRun] = []
-
-                            switch result {
-                            case .success(let urls):
-                                for url in urls {
-                                    group.enter()
-                                    downwindManager.parseGPX(from: url) { run in
-                                        if let run = run {
-                                            newRuns.append(run)
-                                        }
-                                        group.leave()
-                                    }
-                                }
-
-                                group.notify(queue: .main) {
-                                    importedRuns.append(contentsOf: newRuns)
-                                    isLoadingImportedRuns = false
-                                }
-
-                            case .failure(let error):
-                                print("Error importing files: \(error)")
-                                DispatchQueue.main.async {
-                                    isLoadingImportedRuns = false
-                                }
-                            }
                         }
                     }
                     
