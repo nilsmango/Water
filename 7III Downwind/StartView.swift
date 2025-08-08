@@ -233,14 +233,12 @@ struct StartView: View {
             .navigationDestination(for: NavDestination.self) { destination in
                 switch destination {
                 case .dashboards:
-                    // TODO: real dashboard
-                    EmptyView()
-                    //                Dashboards(manager: manager)
+                    Dashboards(navPath: $navPath)
                 case .dashboard(let dashboard):
                     EmptyView()
-                    //                if let index = manager.dashboards.firstIndex(where: { $0.id == dashboard.id }) {
-                    //                    DashboardView(manager: manager, dashboardIndex: index)
-                    //                }
+//                    if let index = manager.dashboards.firstIndex(where: { $0.id == dashboard.id }) {
+//                        DashboardView(manager: manager, dashboardIndex: index)
+//                    }
                 case .statistics:
                     StatisticsView(downwindManager: downwindManager)
                 }

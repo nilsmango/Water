@@ -157,6 +157,13 @@
 		78DB91382E45EFBA00B222C2 /* TrackedElementsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912F2E45EFBA00B222C2 /* TrackedElementsManager.swift */; };
 		78DB91392E45EFBA00B222C2 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912E2E45EFBA00B222C2 /* Dashboard.swift */; };
 		78DB913C2E45F1D700B222C2 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 78DB913B2E45F1D700B222C2 /* Kanna */; };
+		78DB91452E45FB9D00B222C2 /* Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB913E2E45FB9D00B222C2 /* Dashboards.swift */; };
+		78DB91462E45FB9D00B222C2 /* DashboardSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB913F2E45FB9D00B222C2 /* DashboardSettingsView.swift */; };
+		78DB91472E45FB9D00B222C2 /* TrackedElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */; };
+		78DB91492E45FB9D00B222C2 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91402E45FB9D00B222C2 /* DashboardView.swift */; };
+		78DB914A2E45FB9D00B222C2 /* WebPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91432E45FB9D00B222C2 /* WebPreview.swift */; };
+		78DB914B2E45FB9D00B222C2 /* NestedElementsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */; };
+		78DB914D2E45FC5100B222C2 /* AddElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB914C2E45FC5100B222C2 /* AddElementView.swift */; };
 		78E5A85A2C32AB4E00456ABC /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
 		78E5A85D2C32DA4100456ABC /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78E5A85C2C32DA4100456ABC /* Surge */; };
 		78E5A85E2C32DAF800456ABC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
@@ -363,6 +370,13 @@
 		78DB91312E45EFBA00B222C2 /* UnitConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitConverter.swift; sourceTree = "<group>"; };
 		78DB91322E45EFBA00B222C2 /* UnitType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitType.swift; sourceTree = "<group>"; };
 		78DB91332E45EFBA00B222C2 /* WebScrapingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebScrapingService.swift; sourceTree = "<group>"; };
+		78DB913E2E45FB9D00B222C2 /* Dashboards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboards.swift; sourceTree = "<group>"; };
+		78DB913F2E45FB9D00B222C2 /* DashboardSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSettingsView.swift; sourceTree = "<group>"; };
+		78DB91402E45FB9D00B222C2 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestedElementsRow.swift; sourceTree = "<group>"; };
+		78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedElementRow.swift; sourceTree = "<group>"; };
+		78DB91432E45FB9D00B222C2 /* WebPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreview.swift; sourceTree = "<group>"; };
+		78DB914C2E45FC5100B222C2 /* AddElementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddElementView.swift; sourceTree = "<group>"; };
 		78EC608C2E0D319E00C55950 /* EditMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMap.swift; sourceTree = "<group>"; };
 		78EC608E2E0D331800C55950 /* locationData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locationData.json; sourceTree = "<group>"; };
 		78EC60902E0DDBD100C55950 /* RouteSticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSticker.swift; sourceTree = "<group>"; };
@@ -541,6 +555,7 @@
 				7840468E2C342160009F8733 /* SummaryView.swift */,
 				784046902C342363009F8733 /* StatisticMetricsView.swift */,
 				782B67572C3A78E600B90578 /* In App Purchases */,
+				78DB913D2E45FB8D00B222C2 /* Dashboards */,
 				785CF9562B4FE85100528B6D /* Options */,
 				78C4D23D2BA750D200639E65 /* Run Statistics */,
 				7877E1342BC52BB300776890 /* FlexibleView */,
@@ -778,6 +793,20 @@
 			path = Dashboard;
 			sourceTree = "<group>";
 		};
+		78DB913D2E45FB8D00B222C2 /* Dashboards */ = {
+			isa = PBXGroup;
+			children = (
+				78DB913E2E45FB9D00B222C2 /* Dashboards.swift */,
+				78DB913F2E45FB9D00B222C2 /* DashboardSettingsView.swift */,
+				78DB914C2E45FC5100B222C2 /* AddElementView.swift */,
+				78DB91402E45FB9D00B222C2 /* DashboardView.swift */,
+				78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */,
+				78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */,
+				78DB91432E45FB9D00B222C2 /* WebPreview.swift */,
+			);
+			path = Dashboards;
+			sourceTree = "<group>";
+		};
 		78E5A85B2C32DA4100456ABC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -960,6 +989,7 @@
 				78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */,
 				785CCF202D6B182E0075CA4C /* ListBackground.swift in Sources */,
 				781A4BB32C4FAFA70046AE0E /* VideoProcessingHelper.swift in Sources */,
+				78DB914D2E45FC5100B222C2 /* AddElementView.swift in Sources */,
 				78DB91342E45EFBA00B222C2 /* UnitConverter.swift in Sources */,
 				78DB91352E45EFBA00B222C2 /* TrackedElement.swift in Sources */,
 				78DB91362E45EFBA00B222C2 /* WebScrapingService.swift in Sources */,
@@ -986,6 +1016,12 @@
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
 				785CCF222D6B192B0075CA4C /* NewsSection.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
+				78DB91452E45FB9D00B222C2 /* Dashboards.swift in Sources */,
+				78DB91462E45FB9D00B222C2 /* DashboardSettingsView.swift in Sources */,
+				78DB91472E45FB9D00B222C2 /* TrackedElementRow.swift in Sources */,
+				78DB91492E45FB9D00B222C2 /* DashboardView.swift in Sources */,
+				78DB914A2E45FB9D00B222C2 /* WebPreview.swift in Sources */,
+				78DB914B2E45FB9D00B222C2 /* NestedElementsRow.swift in Sources */,
 				785CCF1E2D6A2EAC0075CA4C /* StringSelectionView.swift in Sources */,
 				781A4BA52C4E77B10046AE0E /* ShareStatisticsView.swift in Sources */,
 				785CCF1C2D69DE8B0075CA4C /* GeocodingManager.swift in Sources */,
