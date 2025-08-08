@@ -9,10 +9,11 @@ import SwiftUI
 
 struct StartOptionsMenu: View {
     @ObservedObject var downwindManager: DownwindManager
+    @ObservedObject var dashboards: TrackedElementsManager
 
     var body: some View {
         Menu {
-            NavigationLink(destination: OptionsView(downwindManager: downwindManager)) {
+            NavigationLink(destination: OptionsView(downwindManager: downwindManager, dashboards: dashboards)) {
                 Label("Settings", systemImage: "gear")
             }
                         
@@ -36,5 +37,5 @@ struct StartOptionsMenu: View {
 }
 
 #Preview {
-    StartOptionsMenu(downwindManager: DownwindManager())
+    StartOptionsMenu(downwindManager: DownwindManager(), dashboards: TrackedElementsManager())
 }

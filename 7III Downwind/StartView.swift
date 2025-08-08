@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 
 struct StartView: View {
     @ObservedObject var downwindManager: DownwindManager
+    @StateObject private var manager = TrackedElementsManager()
     
     @State private var showRunPicker = false
     @State private var showStartRunSheet = false
@@ -233,12 +234,11 @@ struct StartView: View {
             .navigationDestination(for: NavDestination.self) { destination in
                 switch destination {
                 case .dashboards:
-                    Dashboards(navPath: $navPath)
+                    Dashboards(manager: manager, navPath: $navPath)
                 case .dashboard(let dashboard):
-                    EmptyView()
-//                    if let index = manager.dashboards.firstIndex(where: { $0.id == dashboard.id }) {
-//                        DashboardView(manager: manager, dashboardIndex: index)
-//                    }
+                    if let index = manager.dashboards.firstIndex(where: { $0.id == dashboard.id }) {
+                        DashboardView(manager: manager, dashboardIndex: index)
+                    }
                 case .statistics:
                     StatisticsView(downwindManager: downwindManager)
                 }
@@ -246,7 +246,7 @@ struct StartView: View {
             .navigationTitle(downwindManager.user.name.isEmpty ? "Aloha!" : "Aloha \(downwindManager.user.name)!")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    StartOptionsMenu(downwindManager: downwindManager)
+                    StartOptionsMenu(downwindManager: downwindManager, dashboards: manager)
                 }
             }
             .overlay {

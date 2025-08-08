@@ -7,7 +7,8 @@
 import SwiftUI
 
 struct Dashboards: View {
-    @StateObject private var manager = TrackedElementsManager()
+    @ObservedObject var manager: TrackedElementsManager
+    
     @State private var showingAddAlert = false
     @State private var isEdit = false
     @State private var showingInfoAlert = false
@@ -73,15 +74,6 @@ struct Dashboards: View {
                     Label("Add Dashboard", systemImage: "plus.circle.fill")
                 }
             }
-            
-            ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink {
-                    DashboardSettingsView(manager: manager)
-                } label: {
-                    Label("Settings", systemImage: "ellipsis.circle.fill")
-                }
-                
-            }
         }
         .alert(isEdit ? "Edit Name" : "Name your Dashboard", isPresented: $showingAddAlert, actions: {
             TextField("Name", text: $newDashboardName)
@@ -127,7 +119,7 @@ struct Dashboards: View {
 }
 
 #Preview {
-    Dashboards(navPath: .constant(NavigationPath()))
+    Dashboards(manager: TrackedElementsManager(), navPath: .constant(NavigationPath()))
 }
 
 
