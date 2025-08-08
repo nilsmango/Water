@@ -170,7 +170,6 @@
 		78F36B2C2D9AB1160079F20B /* CrownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2B2D9AB1160079F20B /* CrownButton.swift */; };
 		78F36B2E2D9AB9C10079F20B /* OptionsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */; };
 		78F937F02C35816B00D34796 /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
-		78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCBD82C2C48E80091F9EA /* WaitingForListView.swift */; };
 		78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */; };
 /* End PBXBuildFile section */
 
@@ -373,7 +372,6 @@
 		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
 		78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsSheetView.swift; sourceTree = "<group>"; };
 		78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindSportStatisticsMap.swift; sourceTree = "<group>"; };
-		78FBCBD82C2C48E80091F9EA /* WaitingForListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingForListView.swift; sourceTree = "<group>"; };
 		78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateQRCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -758,7 +756,6 @@
 			children = (
 				78320BC52BB1D95D00D6A772 /* FilterTesting */,
 				78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */,
-				78FBCBD82C2C48E80091F9EA /* WaitingForListView.swift */,
 				78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */,
 				78C4D23E2BA7512A00639E65 /* RunOverView.swift */,
 				784083662C258112004C0857 /* GroupedTagsListView.swift */,
@@ -988,7 +985,6 @@
 				782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */,
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
 				785CCF222D6B192B0075CA4C /* NewsSection.swift in Sources */,
-				78FBCBD92C2C48E80091F9EA /* WaitingForListView.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
 				785CCF1E2D6A2EAC0075CA4C /* StringSelectionView.swift in Sources */,
 				781A4BA52C4E77B10046AE0E /* ShareStatisticsView.swift in Sources */,

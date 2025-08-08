@@ -13,12 +13,18 @@ struct StatisticsView: View {
     @State private var showUpgradeSheet = false
     var body: some View {
         List {
-            // TODO: remove this and the waiting for list view
                 if downwindManager.loadingRunStatistics {
-                    WaitingForListView()
-                        .textCase(nil)
-                    
-                } else {
+                    Section {
+                        
+                    } header: {
+                        HStack {
+                            Spacer()
+                            ProgressView("Loading Statistics")
+                            Spacer()
+                        }
+                    }
+                    .textCase(nil)
+                }
                     
                     ForEach(0..<downwindManager.groupedRunStatistics.count, id: \.self) { yearIndex in
                         ForEach(0..<downwindManager.groupedRunStatistics[yearIndex].count, id: \.self) { monthIndex in
@@ -80,11 +86,13 @@ struct StatisticsView: View {
                         }
                     }
                 }
-            }
+            
             .refreshable {
-                // TODO: making this async so we can await here
                 // Reload both statistic arrays
-                downwindManager.loadRunStatistics()
+                if !downwindManager.loadingRunStatistics {
+                    downwindManager.loadRunStatistics()
+                }
+                
             }
             .sheet(isPresented: $showUpgradeSheet, content: {
                 NavigationStack {
