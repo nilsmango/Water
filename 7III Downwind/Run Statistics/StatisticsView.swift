@@ -13,6 +13,7 @@ struct StatisticsView: View {
     @State private var showUpgradeSheet = false
     var body: some View {
         List {
+            // TODO: remove this and the waiting for list view
                 if downwindManager.loadingRunStatistics {
                     WaitingForListView()
                         .textCase(nil)
@@ -81,6 +82,7 @@ struct StatisticsView: View {
                 }
             }
             .refreshable {
+                // TODO: making this async so we can await here
                 // Reload both statistic arrays
                 downwindManager.loadRunStatistics()
             }

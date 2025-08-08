@@ -26,8 +26,10 @@ struct StartView: View {
     @State private var editRunIndex: Int? = nil
     @State private var showSavedOverlay = false
     
+    @State private var navPath = NavigationPath()
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navPath) {
             ScrollView {
                 VStack {
                     if downwindManager.lastVersionNewsClosed != downwindManager.currentAppVersion {
@@ -143,15 +145,12 @@ struct StartView: View {
                             .padding()
                         }
                     }
-                    
-                    Button {
-                        isImporting = true
-                    } label: {
-                        Label(importedRuns.isEmpty ? "Import GPX Run(s)" :"Import more GPX Run(s)", systemImage: "square.and.arrow.down")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.accent)
-                    .disabled(isLoadingImportedRuns)
+
+                    NavigationBar(showGPX: downwindManager.showGPXImport, isLoadingImportedRuns: isLoadingImportedRuns, isImporting: $isImporting, navigateToStats: {
+                        navPath.append(NavDestination.statistics)
+                    }, navigateToDashboard: {
+                        navPath.append(NavDestination.dashboards)
+                    })
                     .padding(.top)
                     .fileImporter(
                         isPresented: $isImporting,
@@ -189,8 +188,10 @@ struct StartView: View {
                         }
                     }
                     
-                    StatisticsControlCenter(downwindManager: downwindManager)
-                        .padding()
+                    if downwindManager.showTracker {
+                        StatisticsControlCenter(downwindManager: downwindManager)
+                            .padding()
+                    }
                     
                     if downwindManager.appOpened > 4 {
                         ReviewRequestView()
@@ -229,15 +230,23 @@ struct StartView: View {
                     
                 }
             }
-        
+            .navigationDestination(for: NavDestination.self) { destination in
+                switch destination {
+                case .dashboards:
+                    // TODO: real dashboard
+                    EmptyView()
+                    //                Dashboards(manager: manager)
+                case .dashboard(let dashboard):
+                    EmptyView()
+                    //                if let index = manager.dashboards.firstIndex(where: { $0.id == dashboard.id }) {
+                    //                    DashboardView(manager: manager, dashboardIndex: index)
+                    //                }
+                case .statistics:
+                    StatisticsView(downwindManager: downwindManager)
+                }
+            }
             .navigationTitle(downwindManager.user.name.isEmpty ? "Aloha!" : "Aloha \(downwindManager.user.name)!")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: StatisticsView(downwindManager: downwindManager)) {
-                        Label("Statistics", systemImage: "chart.xyaxis.line")
-                            .labelStyle(.iconOnly)
-                    }
-                }
                 ToolbarItem(placement: .topBarTrailing) {
                     StartOptionsMenu(downwindManager: downwindManager)
                 }
@@ -343,14 +352,8 @@ struct StartView: View {
                     }
                 }
             })
-            
             .background(.listBackground)
-            
-            //                .onAppear {
-            //                    if downwindManager.user.id == nil {
-            //                        showFirstTimeUserName = true
-            //                    }
-            //                }
+
         }
         
     }

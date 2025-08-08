@@ -12,17 +12,16 @@ struct StartOptionsMenu: View {
 
     var body: some View {
         Menu {
-            NavigationLink(destination: AboutView(downwindManager: downwindManager)) {
-                Label("About", systemImage: "info.circle")
-            }
-            
             NavigationLink(destination: OptionsView(downwindManager: downwindManager)) {
-                Label("Options", systemImage: "gear")
-
+                Label("Settings", systemImage: "gear")
             }
                         
             NavigationLink(destination: HelpView(downwindManager: downwindManager)) {
                 Label("Help", systemImage: "questionmark.circle")
+            }
+            
+            NavigationLink(destination: AboutView(downwindManager: downwindManager)) {
+                Label("About", systemImage: "info.circle")
             }
             
             NavigationLink(destination: VersionHistoryView()) {
@@ -30,13 +29,9 @@ struct StartOptionsMenu: View {
             }
             
         } label: {
-            Label("Options", systemImage: "ellipsis.circle")
-                .labelStyle(.iconOnly)
+            Label("Options", systemImage: "ellipsis.circle.fill")
                 
         }
-        .font(.title3)
-        
-        
     }
 }
 

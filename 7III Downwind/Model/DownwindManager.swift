@@ -24,6 +24,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - App Storage and Init
     @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
     @AppStorage("showListDetail") var showListDetail: Bool = true
+    @AppStorage("showGPXImport") var showGPXImport: Bool = true
+    @AppStorage("showTracker") var showTracker: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
     @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUPFoil
         
@@ -720,22 +722,22 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func loadRunStatistics() {
         loadingRunStatistics = true
         DispatchQueue.global(qos: .background).async {
-                // getting the runStatistics (if no health or for older files)
-                var decodedStatistics = self.getRunStatisticsFromDisk()
-                // some cleaning up for old data
-                for (index, statistic) in decodedStatistics.enumerated() {
-                    if statistic.startDate == nil {
-                        decodedStatistics[index].startDate = statistic.locationData.first?.timestamp
-                        decodedStatistics[index].endDate = statistic.locationData.last?.timestamp
-                    }
+            // getting the runStatistics (if no health or for older files)
+            var decodedStatistics = self.getRunStatisticsFromDisk()
+            // some cleaning up for old data
+            for (index, statistic) in decodedStatistics.enumerated() {
+                if statistic.startDate == nil {
+                    decodedStatistics[index].startDate = statistic.locationData.first?.timestamp
+                    decodedStatistics[index].endDate = statistic.locationData.last?.timestamp
                 }
-                DispatchQueue.main.async {
-                    // Update UI on the main thread
-                    self.runStatistics = decodedStatistics
-                }
+            }
+            DispatchQueue.main.async {
+                // Update UI on the main thread
+                self.runStatistics = decodedStatistics
+            }
             
-                // getting the backup health from disk
-                self.loadBackupWorkoutDataFromDisk()
+            // getting the backup health from disk
+            self.loadBackupWorkoutDataFromDisk()
             
             do {
                 // getting the runEdits
@@ -798,7 +800,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     
                     for run in self.importedRuns {
                         // overwriting the statistic if we find one at the same time as we are pretty sure we don't want both of them
-
+                        
                         let matchingRuns = self.runStatistics.filter { self.doTimeRangesOverlap(start1: $0.startDate, end1: $0.endDate, start2: run.locations.first?.timestamp, end2: run.locations.last?.timestamp) }
                         DispatchQueue.main.async {
                             self.runStatistics.removeAll { statisticRun in
@@ -848,7 +850,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                     }
                 }
-                
             }
         }
     }

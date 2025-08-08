@@ -43,19 +43,11 @@ struct OptionsView: View {
                                 downwindManager.user.id = UUID()
                             }
                             downwindManager.saveUser()
-//                            Task {
-//                                do {
-//                                    try await downwindManager.checkAndUpdateUserInDB()
-//                                } catch {
-//                                    print("Error updating user in user to db: \(error)")
-//                                }
-//                            }
                             
                         }, label: {
                             Label("Save", systemImage: "checkmark.circle")
                         })
                         .buttonStyle(.bordered)
-                        
                         
                         Spacer()
                         
@@ -74,70 +66,10 @@ struct OptionsView: View {
                 }
                 
             }
-//            
-//            Section {
-//                TextField("Frothingggggg!", text: $status)
-//                    .onAppear {
-//                        status = downwindManager.user.status ?? ""
-//                    }
-//                    .onChange(of: status, { oldValue, newValue in
-//                        if newValue.count > Constants.maxLengthUser {
-//                            status = String(newValue.prefix(Constants.maxLengthUser))
-//                        }
-//                    })
-//            } header: {
-//                Text("Your Status")
-//            } footer: {
-//                if status != downwindManager.user.status && status != "" {
-//                    HStack {
-//                        Spacer()
-//                        
-//                        Button(action: {
-//                            downwindManager.user.status = status
-//                            if downwindManager.user.id == nil {
-//                                downwindManager.user.id = UUID()
-//                            }
-//                            downwindManager.saveUser()
-////                            Task {
-////                                do {
-////                                    try await downwindManager.checkAndUpdateUserInDB()
-////                                } catch {
-////                                    print("Error updating user in user to db: \(error)")
-////                                }
-////                            }
-//                            
-//                        }, label: {
-//                            Label("Save", systemImage: "checkmark.circle")
-//                        })
-//                        .buttonStyle(.bordered)
-//                        
-//                        
-//                        Spacer()
-//                        
-//                        Button(role: .destructive, action: {
-//                            status = downwindManager.user.status ?? ""
-//                            
-//                        }, label: {
-//                            Label("Cancel", systemImage: "xmark.circle")
-//                                
-//                        })
-//                        .buttonStyle(.bordered)
-//                        
-//                        Spacer()
-//                    }
-//                    .padding()
-//                }
-//                
-//            }
-            
-            PremiumSection(downwindManager: downwindManager, showUpgradeView: $showUpgradeView, showManage: $showManage)
+
             
             Section {
-//                Picker("Run List Sorting", selection: $downwindManager.runListSorting) {
-//                    ForEach(RunListSorting.allCases) { sortCase in
-//                        Text(sortCase.rawValue)
-//                    }
-//                }
+
                 
                 Picker("Measurement System", selection: $downwindManager.measurementSystem) {
                     ForEach(MeasurementSystem.allCases) { system in
@@ -149,9 +81,12 @@ struct OptionsView: View {
                     Text("Foiling Threshold Speeds")
                 }
                 
-//                Toggle(isOn: $downwindManager.showListDetail, label: {
-//                    Text("Show List Details")
-//                })
+                Toggle("Show GPX import Button", isOn: $downwindManager.showGPXImport)
+                    .tint(.accent)
+                
+                Toggle("Show GPS Tracker in Main View", isOn: $downwindManager.showTracker)
+                    .tint(.accent)
+                
                 if downwindManager.appOpened > 4 {
                     Toggle("Show Review Request in Main View", isOn: Binding(
                         get: { !hasRespondedToReviewRequest },
@@ -180,6 +115,8 @@ struct OptionsView: View {
                 .padding()
             }
             
+            PremiumSection(downwindManager: downwindManager, showUpgradeView: $showUpgradeView, showManage: $showManage)
+            
             Section {
                 Text("Find your next wake to thieve in Switzerland with [Next Wave](https://apps.apple.com/ch/app/next-wave/id6739363035).")
             } header: {
@@ -195,13 +132,6 @@ struct OptionsView: View {
                     downwindManager.saveUser()
                     
                     downwindManager.deleteStatistics()
-//                    Task {
-//                        do {
-//                            try await downwindManager.deleteUserFromDB()
-//                        } catch {
-//                            print("Error deleting user in db: \(error)")
-//                        }
-//                    }
                 },
                 secondaryButton: .default(Text("Cancel"))
             )

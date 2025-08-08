@@ -1,6 +1,15 @@
 {
-  "originHash" : "cc01f8fecee87a0c26d02c3ee5a41d54ee147706a16ce72b97c3e8ff1ddf0896",
+  "originHash" : "7b5bca1c9b93680ed273ff465668451f871e1f811d7b92b08d1233830b2809c5",
   "pins" : [
+    {
+      "identity" : "kanna",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tid-kijyun/Kanna",
+      "state" : {
+        "revision" : "a23a4584f8e7de07cab420ae4d51eee553dd988d",
+        "version" : "6.0.1"
+      }
+    },
     {
       "identity" : "keychain-swift",
       "kind" : "remoteSourceControl",
