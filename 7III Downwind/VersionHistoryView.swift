@@ -41,7 +41,7 @@ struct VersionHistoryView: View {
                 }
             }
         }
-        .navigationTitle("Water Version Log")
+        .navigationTitle("Version Log")
     }
 }
 
