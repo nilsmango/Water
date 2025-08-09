@@ -30,19 +30,20 @@ struct NestedElementsRow: View {
             
             Spacer(minLength: 0.0)
             
-                if let error = error {
-                    Text(error)
-                        .foregroundStyle(.orange)
-                        .lineLimit(1)
-                    
-                } else if !rowText.isEmpty {
+                if !rowText.isEmpty {
                     HStack {
                         ForEach(Array(rowText.enumerated()), id: \.0) { index, text in
                                 if index > 0 {
                                     Text(" | ")
                                 }
                             if text.isEmpty {
-                                Text("-")
+                                if error != nil {
+                                    Image(systemName: "exclamationmark.triangle")
+                                                .foregroundColor(.orange)
+                                } else {
+                                    Text("-")
+                                }
+                                
                             } else {
                                 Text(text)
                             }
@@ -99,6 +100,6 @@ struct NestedElementsRow: View {
 
 #Preview {
     List {
-        NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: nil, rowText: ["4.5 kn", "7 kn", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: 0, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
+        NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: "some error", rowText: ["4.5 kn", "", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: 0, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
     }
 }
