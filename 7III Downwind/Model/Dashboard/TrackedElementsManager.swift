@@ -14,8 +14,8 @@ class TrackedElementsManager: ObservableObject {
     // MARK: - Dashboards
     
     @Published var dashboards: [Dashboard] = []
-    @AppStorage("preferredWindUnit") var preferredWindUnit: UnitType = .none
-    @AppStorage("preferredTempUnit") var preferredTempUnit: UnitType = .none
+    @AppStorage("preferredWindUnit") var preferredWindUnit: UnitType = .knots
+    @AppStorage("preferredTempUnit") var preferredTempUnit: UnitType = .celsius
     @AppStorage("showGroupedInfo") var showGroupInfo: Bool = true
     @AppStorage("PulledDown") var pulledDownList: Bool = false
     
