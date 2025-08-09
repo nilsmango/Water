@@ -29,7 +29,7 @@ struct DashboardView: View {
                         .font(.headline)
                         .foregroundColor(.secondary)
                     
-                    Text("Tap the + button to add your first web element to track")
+                    Text("Tap the ⋯ in the top right, then select 'Add New' to add your first web element to track")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
