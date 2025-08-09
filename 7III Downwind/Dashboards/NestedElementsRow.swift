@@ -50,7 +50,7 @@ struct NestedElementsRow: View {
                             }
                         
                         if let deg = directionDegrees {
-                            Image(systemName: "location.north.fill")
+                            Image(systemName: "arrow.up")
                                 .rotationEffect(.degrees(deg))
                         }
                     }
@@ -98,5 +98,7 @@ struct NestedElementsRow: View {
 
 
 #Preview {
-    NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: nil, rowText: ["4.5 kn", "7 kn", "N"], directionDegrees: 0.0, element: nil, dashboardIndex: 0, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
+    List {
+        NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: nil, rowText: ["4.5 kn", "7 kn", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: 0, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
+    }
 }

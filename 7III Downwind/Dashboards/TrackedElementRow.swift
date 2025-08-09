@@ -31,7 +31,7 @@ struct TrackedElementRow: View {
                     Text(value)
                     
                     if let deg = manager.degreesForDirection(value) {
-                        Image(systemName: "location.north.fill")
+                        Image(systemName: "arrow.up")
                             .rotationEffect(.degrees(deg))
                     }
                 }
