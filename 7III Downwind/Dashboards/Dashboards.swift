@@ -14,10 +14,21 @@ struct Dashboards: View {
     @State private var showingInfoAlert = false
     @State private var newDashboardName = ""
     @State private var newDashboardId: UUID?
+    @State private var isImportingDashboard = false
+    @State private var isLoadingImportedDashboards = false
     @Binding var navPath: NavigationPath
     
     var body: some View {
         List {
+            
+            if isLoadingImportedDashboards {
+                Section {
+                    
+                } header: {
+                    Text("Importing new Dashboards...")
+                }
+            }
+            
             ForEach(manager.dashboards) { dashboard in
                 NavigationLink(value: dashboard) {
                     Text(dashboard.name)
@@ -68,13 +79,57 @@ struct Dashboards: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showingAddAlert = true
+                Menu {
+                    Button {
+                        showingAddAlert = true
+                    } label: {
+                        Label("New", systemImage: "sparkles")
+                    }
+                    
+                    Button {
+                        isImportingDashboard = true
+                    } label: {
+                        Label("Import", systemImage: "square.and.arrow.down")
+                    }
+                    
                 } label: {
                     Label("Add Dashboard", systemImage: "plus.circle.fill")
                 }
+                
             }
         }
+        .fileImporter(
+            isPresented: $isImportingDashboard,
+            allowedContentTypes: [.json],
+            allowsMultipleSelection: true
+        ) { result in
+            isLoadingImportedDashboards = true
+
+                switch result {
+                case .success(let urls):
+                    for url in urls {
+                        if url.startAccessingSecurityScopedResource() {
+                            defer { url.stopAccessingSecurityScopedResource() }
+                            
+                            if let jsonString = try? String(contentsOf: url) {
+                                let itWorked = manager.importDashboardJSON(jsonString)
+                                print("Imported \(url.lastPathComponent): \(itWorked)")
+                            } else {
+                                print("Failed to read file: \(url.lastPathComponent)")
+                            }
+                        } else {
+                            print("Could not access file: \(url.lastPathComponent)")
+                        }
+                    }
+                    isLoadingImportedDashboards = false
+
+                case .failure(let error):
+                    print("Error importing files: \(error)")
+                    isLoadingImportedDashboards = false
+                    
+                }
+            }
+        
         .alert(isEdit ? "Edit Name" : "Name your Dashboard", isPresented: $showingAddAlert, actions: {
             TextField("Name", text: $newDashboardName)
             Button(isEdit ? "Update" : "Create") {
