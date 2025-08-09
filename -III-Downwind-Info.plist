@@ -4,21 +4,6 @@
 <dict>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>XML Files</string>
-			<key>LSHandlerRank</key>
-			<string>Alternate</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>public.xml</string>
-				<string>com.topografix.gpx</string>
-				<string>com.garmin.tcx</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
