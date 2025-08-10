@@ -228,6 +228,9 @@ struct DashboardView: View {
             if manager.refreshmentStatus != nil {
                 manager.cancelRefresh()
             }
+            if isAutoRefreshEnabled {
+                toggleAutoRefresh()
+            }
         }
     }
     
@@ -238,8 +241,10 @@ struct DashboardView: View {
             isAutoRefreshEnabled = false
         } else {
             autoRefreshTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { _ in
-                Task {
-                    await manager.refreshAllElements(dashboardIndex: dashboardIndex)
+                if manager.refreshmentStatus == nil {
+                    Task {
+                        await manager.refreshAllElements(dashboardIndex: dashboardIndex)
+                    }
                 }
             }
             isAutoRefreshEnabled = true
