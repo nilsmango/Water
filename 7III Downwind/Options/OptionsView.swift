@@ -77,6 +77,9 @@ struct OptionsView: View {
                 Toggle("GPS Tracker", isOn: $downwindManager.showTracker)
                     .tint(.accent)
                 
+                Toggle("Dashboard Widget Tap Info", isOn: $dashboards.showWidgetTap)
+                    .tint(.accent)
+                
                 if downwindManager.appOpened > 4 {
                     Toggle("Review Request", isOn: Binding(
                         get: { !hasRespondedToReviewRequest },

@@ -10,6 +10,8 @@ import SwiftUI
 struct WidgetDashboardView: View {
     @ObservedObject var manager: TrackedElementsManager
     let dashboard: Dashboard
+    @Binding var navPath: NavigationPath
+    
     let widgetPadding = 8.0
     
     var body: some View {
@@ -61,6 +63,9 @@ struct WidgetDashboardView: View {
                         }
                         .onTapGesture {
                             if manager.refreshmentStatus == nil {
+                                if manager.showWidgetTap {
+                                    manager.showWidgetTap = false
+                                }
                                 Task {
                                     await manager.refreshDashboard(dashboard: dashboard)
                                 }
@@ -72,6 +77,16 @@ struct WidgetDashboardView: View {
                             } label: {
                                 Label("Remove", systemImage: "pin.slash.fill")
                             }
+                            
+                            Button {
+                                navPath = NavigationPath()
+                                navPath.append(NavDestination.dashboards)
+                                navPath.append(NavDestination.dashboard(dashboard))
+                                
+                            } label: {
+                                Label("Go to Dashboard", systemImage: "gauge.open.with.lines.needle.33percent")
+                            }
+                            
                             if manager.widgetDashboardIds.count > 1 {
                                 if manager.canMoveWidgetUp(dashboardId: dashboard.id) {
                                     Button {
@@ -98,7 +113,11 @@ struct WidgetDashboardView: View {
             if let status = manager.widgetRefreshmentStatus {
                 Text(status)
             } else if let updated = dashboard.elements.first?.lastUpdated {
-                Text("Tap to refresh. Last updated: \(Text(updated, style: .relative)) ago.")
+                if manager.showWidgetTap {
+                    Text("Tap list to refresh. Last updated: \(Text(updated, style: .relative)) ago.")
+                } else {
+                    Text("Last updated: \(Text(updated, style: .relative)) ago.")
+                }
             }
         }
         .monospacedDigit()
@@ -117,7 +136,7 @@ struct WidgetDashboardView: View {
 #Preview {
     ScrollView {
         VStack {
-            WidgetDashboardView(manager: TrackedElementsManager(), dashboard: Dashboard(name: "Bielersee", elements: [TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "20 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "32 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "NW", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Vinguelz", lastValue: "32 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "NW", lastUpdated: Date(), lastError: nil)]))
+            WidgetDashboardView(manager: TrackedElementsManager(), dashboard: Dashboard(name: "Bielersee", elements: [TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "20 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "32 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "NW", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Vinguelz", lastValue: "32 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "NW", lastUpdated: Date(), lastError: nil)]), navPath: .constant(NavigationPath()))
         }
     }
     .background(.listBackground)

@@ -19,6 +19,7 @@ class TrackedElementsManager: ObservableObject {
     @AppStorage("preferredTempUnit") var preferredTempUnit: UnitType = .celsius
     @AppStorage("showGroupedInfo") var showGroupInfo: Bool = true
     @AppStorage("PulledDown") var pulledDownList: Bool = false
+    @AppStorage("showWidgetTap") var showWidgetTap: Bool = true
     
     private let webService = WebScrapingService()
     

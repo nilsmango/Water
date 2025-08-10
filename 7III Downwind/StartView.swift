@@ -206,7 +206,7 @@ struct StartView: View {
                     
                     ForEach(manager.widgetDashboardIds, id: \.self) { id in
                         if let dashboard = manager.dashboards.first(where: { $0.id == id }) {
-                            WidgetDashboardView(manager: manager, dashboard: dashboard)
+                            WidgetDashboardView(manager: manager, dashboard: dashboard, navPath: $navPath)
                         }
                     }
                     
