@@ -213,7 +213,7 @@ struct OptionsView: View {
                 }
             }
         }
-        .navigationTitle("Options")
+        .navigationTitle("Settings")
     }
 }
 
