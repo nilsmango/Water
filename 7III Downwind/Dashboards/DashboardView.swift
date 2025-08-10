@@ -153,9 +153,17 @@ struct DashboardView: View {
                     
                     Button(action: toggleAutoRefresh) {
                         Label(
-                            isAutoRefreshEnabled ? "Stop Auto Refresh" : "Start Auto Refresh (5min)",
+                            isAutoRefreshEnabled ? "Stop Auto Refresh" : "Start Auto Refresh (3 min)",
                             systemImage: isAutoRefreshEnabled ? "pause.circle" : "timer"
                         )
+                    }
+                    
+                    let dashboardId = manager.dashboards[dashboardIndex].id
+                    let isWidgetEnabled = manager.widgetDashboardIds.contains(dashboardId)
+                    Button {
+                        manager.toggleWidgetEnabled(dashboardId: dashboardId)
+                    } label: {
+                        Label(isWidgetEnabled ? "Remove from Main View" : "Add to Main View", systemImage: isWidgetEnabled ? "pin.slash.fill" : "pin.fill")
                     }
                     
                     Button {
@@ -240,7 +248,12 @@ struct DashboardView: View {
             autoRefreshTimer = nil
             isAutoRefreshEnabled = false
         } else {
-            autoRefreshTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { _ in
+            if manager.refreshmentStatus == nil {
+                Task {
+                    await manager.refreshAllElements(dashboardIndex: dashboardIndex)
+                }
+            }
+            autoRefreshTimer = Timer.scheduledTimer(withTimeInterval: 180, repeats: true) { _ in
                 if manager.refreshmentStatus == nil {
                     Task {
                         await manager.refreshAllElements(dashboardIndex: dashboardIndex)
