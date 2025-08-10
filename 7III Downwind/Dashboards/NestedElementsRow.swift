@@ -14,12 +14,12 @@ struct NestedElementsRow: View {
     let rowText: [String]
     let directionDegrees: Double?
     let element: TrackedElement?
-    let dashboardIndex: Int
+    let dashboardIndex: Int?
     let manager: TrackedElementsManager
     var onExpand: () -> Void
     var onEdit: () -> Void
     var onDuplicate: () -> Void
-    
+        
     var body: some View {
         HStack {
                 if let label = label {
@@ -51,8 +51,10 @@ struct NestedElementsRow: View {
                             }
                         
                         if let deg = directionDegrees {
+                            let size = 16.0
                             Image(systemName: "arrow.up")
                                 .rotationEffect(.degrees(deg))
+                                .frame(width: size, height: size)
                         }
                     }
                 } else {
@@ -61,38 +63,41 @@ struct NestedElementsRow: View {
                 }
                 
         }
-        
-        .contextMenu {
-            if let url = url {
-                Link(destination: URL(string: url)!) {
-                    Label("Go to Source", systemImage: "globe")
+        .listRowSeparator(.hidden)
+        .ifLet(dashboardIndex) { view, dashboardIndex in
+            view.contextMenu {
+                if let url = url {
+                    Link(destination: URL(string: url)!) {
+                        Label("Go to Source", systemImage: "globe")
+                    }
                 }
+                if element == nil {
+                    Button {
+                        onExpand()
+                    } label: {
+                        Label("Expand", systemImage: "chevron.down")
+                    }
+                } else {
+                    Button {
+                        onEdit()
+                    } label: {
+                        Label("Edit", systemImage: "square.and.pencil")
+                    }
+                    Button {
+                        onDuplicate()
+                    } label: {
+                        Label("Duplicate", systemImage: "document.on.document")
+                    }
+                    Button(role: .destructive) {
+                        manager.removeElement(element!, dashboardIndex: dashboardIndex)
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+                
             }
-            if element == nil {
-                Button {
-                    onExpand()
-                } label: {
-                    Label("Expand", systemImage: "chevron.down")
-                }
-            } else {
-                Button {
-                    onEdit()
-                } label: {
-                    Label("Edit", systemImage: "square.and.pencil")
-                }
-                Button {
-                    onDuplicate()
-                } label: {
-                    Label("Duplicate", systemImage: "document.on.document")
-                }
-                Button(role: .destructive) {
-                    manager.removeElement(element!, dashboardIndex: dashboardIndex)
-                } label: {
-                    Label("Delete", systemImage: "trash")
-                }
-            }
-            
         }
+        
     }
 }
 
@@ -100,6 +105,11 @@ struct NestedElementsRow: View {
 
 #Preview {
     List {
-        NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: "some error", rowText: ["4.5 kn", "", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: 0, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
+        NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: "some error", rowText: ["4.5 kn", "", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: nil, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
+            .listRowSeparator(.hidden)
+        NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: "some error", rowText: ["4.5 kn", "", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: nil, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
+            .listRowSeparator(.hidden)
     }
+    
+    
 }

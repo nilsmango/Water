@@ -42,6 +42,8 @@ struct StartView: View {
                         navPath.append(NavDestination.statistics)
                     }, navigateToDashboard: {
                         navPath.append(NavDestination.dashboards)
+                    }, removeGPXButton: {
+                        downwindManager.showGPXImport.toggle()
                     })
                     .padding(.top)
                     .fileImporter(
@@ -191,7 +193,21 @@ struct StartView: View {
                     
                     if downwindManager.showTracker {
                         StatisticsControlCenter(downwindManager: downwindManager)
+                            .contextMenu {
+                                Button {
+                                    downwindManager.showTracker.toggle()
+                                } label: {
+                                    Label("Remove", systemImage: "eye.slash.fill")
+                                }
+                                Label("You can add the GPS Tracker back in Settings", systemImage: "info.circle")
+                            }
                             .padding()
+                    }
+                    
+                    ForEach(manager.widgetDashboardIds, id: \.self) { id in
+                        if let dashboard = manager.dashboards.first(where: { $0.id == id }) {
+                            WidgetDashboardView(manager: manager, dashboard: dashboard)
+                        }
                     }
                     
                     if downwindManager.appOpened > 4 {

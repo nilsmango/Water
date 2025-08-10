@@ -123,6 +123,9 @@
 		7885356B2DD33F0A00E223C1 /* FoilingThresholds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
+		789476592E47D0DB005D8C58 /* WidgetDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */; };
+		7894765B2E488F5F005D8C58 /* IfLet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7894765A2E488F5F005D8C58 /* IfLet.swift */; };
+		7894765D2E489B35005D8C58 /* DashboardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7894765C2E489B35005D8C58 /* DashboardRow.swift */; };
 		7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898D40C2BBEB490007820DB /* StatisticsRounds.swift */; };
 		78A283702C3E8D6C0052AA52 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78A2836F2C3E8D6C0052AA52 /* StoreKit.framework */; };
 		78A283722C3E8DA00052AA52 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78A283712C3E8DA00052AA52 /* StoreKit.framework */; };
@@ -336,6 +339,9 @@
 		7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoilingThresholds.swift; sourceTree = "<group>"; };
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDashboardView.swift; sourceTree = "<group>"; };
+		7894765A2E488F5F005D8C58 /* IfLet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IfLet.swift; sourceTree = "<group>"; };
+		7894765C2E489B35005D8C58 /* DashboardRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRow.swift; sourceTree = "<group>"; };
 		7898D40C2BBEB490007820DB /* StatisticsRounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRounds.swift; sourceTree = "<group>"; };
 		78A2836F2C3E8D6C0052AA52 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		78A283712C3E8DA00052AA52 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.5.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -783,6 +789,7 @@
 			children = (
 				78DB912E2E45EFBA00B222C2 /* Dashboard.swift */,
 				78DB912F2E45EFBA00B222C2 /* TrackedElementsManager.swift */,
+				7894765A2E488F5F005D8C58 /* IfLet.swift */,
 				78DB91302E45EFBA00B222C2 /* TrackedElement.swift */,
 				78DB91312E45EFBA00B222C2 /* UnitConverter.swift */,
 				78DB91322E45EFBA00B222C2 /* UnitType.swift */,
@@ -795,8 +802,10 @@
 			isa = PBXGroup;
 			children = (
 				78DB913E2E45FB9D00B222C2 /* Dashboards.swift */,
+				7894765C2E489B35005D8C58 /* DashboardRow.swift */,
 				78DB914C2E45FC5100B222C2 /* AddElementView.swift */,
 				78DB91402E45FB9D00B222C2 /* DashboardView.swift */,
+				789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */,
 				78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */,
 				78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */,
 				78DB91432E45FB9D00B222C2 /* WebPreview.swift */,
@@ -1008,6 +1017,7 @@
 				785C4AD82B45B04800EB07F8 /* RunListSorting.swift in Sources */,
 				78A2837A2C450EA80052AA52 /* UpgradeStatus.swift in Sources */,
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
+				7894765D2E489B35005D8C58 /* DashboardRow.swift in Sources */,
 				7840468F2C3421CF009F8733 /* SummaryView.swift in Sources */,
 				782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */,
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
@@ -1062,6 +1072,7 @@
 				785CCF242D6B195E0075CA4C /* Version.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
 				781A4BAD2C4E9F310046AE0E /* SharePreviewWrapper.swift in Sources */,
+				789476592E47D0DB005D8C58 /* WidgetDashboardView.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
 				781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */,
@@ -1082,6 +1093,7 @@
 				781A4B9F2C4E45340046AE0E /* ShareOverlay.swift in Sources */,
 				785C4AD62B44096400EB07F8 /* RunListView.swift in Sources */,
 				784083642C21FB54004C0857 /* RunEdit.swift in Sources */,
+				7894765B2E488F5F005D8C58 /* IfLet.swift in Sources */,
 				785C0C2B2C3C171A005CCE87 /* HelpView.swift in Sources */,
 				7840835C2C218985004C0857 /* ChartStrideBy.swift in Sources */,
 				788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */,

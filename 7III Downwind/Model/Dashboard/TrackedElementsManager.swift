@@ -14,6 +14,7 @@ class TrackedElementsManager: ObservableObject {
     // MARK: - Dashboards
     
     @Published var dashboards: [Dashboard] = []
+    @Published var widgetDashboardIds: [UUID] = []
     @AppStorage("preferredWindUnit") var preferredWindUnit: UnitType = .knots
     @AppStorage("preferredTempUnit") var preferredTempUnit: UnitType = .celsius
     @AppStorage("showGroupedInfo") var showGroupInfo: Bool = true
@@ -27,6 +28,8 @@ class TrackedElementsManager: ObservableObject {
     
     func deleteDashboards(offsets: IndexSet) {
         dashboards.remove(atOffsets: offsets)
+        let removedIDs = offsets.map { dashboards[$0].id }
+        widgetDashboardIds.removeAll { removedIDs.contains($0) }
         saveDashboards()
     }
     
@@ -41,12 +44,19 @@ class TrackedElementsManager: ObservableObject {
         if let data = try? JSONEncoder().encode(dashboards) {
             UserDefaults.standard.set(data, forKey: "Dashboards")
         }
+        if let data = try? JSONEncoder().encode(widgetDashboardIds) {
+            UserDefaults.standard.set(data, forKey: "WidgetDashboards")
+        }
     }
     
     private func loadDashboards() {
         if let data = UserDefaults.standard.data(forKey: "Dashboards"),
            let decoded = try? JSONDecoder().decode([Dashboard].self, from: data) {
             dashboards = decoded
+        }
+        if let data = UserDefaults.standard.data(forKey: "WidgetDashboards"),
+           let decoded = try? JSONDecoder().decode([UUID].self, from: data) {
+            widgetDashboardIds = decoded
         }
     }
     
@@ -102,8 +112,13 @@ class TrackedElementsManager: ObservableObject {
     }
     
     func makeNestedElements(dashboardIndex: Int) -> [[TrackedElement]] {
-        var nestedElements: [[TrackedElement]] = []
         let elements = dashboards[dashboardIndex].elements
+        
+        return makeNestedElements(from: elements)
+    }
+    
+    func makeNestedElements(from elements: [TrackedElement]) -> [[TrackedElement]] {
+        var nestedElements: [[TrackedElement]] = []
         
         for element in elements {
             var foundArray = false
@@ -221,11 +236,18 @@ class TrackedElementsManager: ObservableObject {
     }
     
     @Published var refreshmentStatus: String?
+    @Published var widgetRefreshmentStatus: String?
     private var completedCount = 0
     private var shouldCancelRefresh = false
         
     func cancelRefresh() {
         shouldCancelRefresh = true
+    }
+    
+    func refreshDashboard(dashboard: Dashboard) async {
+        if let index = dashboards.firstIndex(where: { $0.id == dashboard.id }) {
+            await refreshAllElements(dashboardIndex: index)
+        }
     }
     
     func refreshAllElements(dashboardIndex: Int) async {
@@ -237,6 +259,7 @@ class TrackedElementsManager: ObservableObject {
         await MainActor.run {
             completedCount = 0
             refreshmentStatus = "Refreshing | 0/\(total)"
+            widgetRefreshmentStatus = "Refreshing \(dashboardToUpdate.name) | 0/\(total)"
         }
         
         let groupedByURL = Dictionary(grouping: elements) { $0.url }
@@ -246,6 +269,7 @@ class TrackedElementsManager: ObservableObject {
             if shouldCancelRefresh {
                 await MainActor.run {
                     refreshmentStatus = nil
+                    widgetRefreshmentStatus = nil
                 }
                 return
             }
@@ -253,6 +277,7 @@ class TrackedElementsManager: ObservableObject {
             await MainActor.run {
                 if shouldCancelRefresh {
                     refreshmentStatus = nil
+                    widgetRefreshmentStatus = nil
                     return
                 }
                 for element in updatedGroup {
@@ -260,6 +285,7 @@ class TrackedElementsManager: ObservableObject {
                         dashboards[dashboardIndex].elements[index] = element
                         completedCount += 1
                         self.refreshmentStatus = "Refreshing | \(completedCount)/\(total)"
+                        self.widgetRefreshmentStatus = "Refreshing \(dashboardToUpdate.name) | \(completedCount)/\(total)"
                     }
                 }
             }
@@ -268,6 +294,7 @@ class TrackedElementsManager: ObservableObject {
         await MainActor.run {
             self.saveDashboards()
             refreshmentStatus = nil
+            widgetRefreshmentStatus = nil
         }
     }
     
@@ -291,5 +318,45 @@ class TrackedElementsManager: ObservableObject {
         saveDashboards()
         
         return true
+    }
+    
+    // MARK: - Main View Widgets
+    
+    func toggleWidgetEnabled(dashboardId: UUID) {
+        if widgetDashboardIds.contains(dashboardId) {
+            widgetDashboardIds.removeAll { $0 == dashboardId }
+        } else {
+            widgetDashboardIds.append(dashboardId)
+        }
+    }
+    
+    func canMoveWidgetUp(dashboardId: UUID) -> Bool {
+        if let index = widgetDashboardIds.firstIndex(of: dashboardId) {
+            return index > 0
+        }
+        return false
+    }
+    
+    func canMoveWidgetDown(dashboardId: UUID) -> Bool {
+        if let index = widgetDashboardIds.firstIndex(of: dashboardId) {
+            return index < widgetDashboardIds.count - 1
+        }
+        return false
+    }
+    
+    func moveWidgetUp(dashboardId: UUID) {
+        if let index = widgetDashboardIds.firstIndex(of: dashboardId) {
+            if index > 0 {
+                widgetDashboardIds.swapAt(index, index - 1)
+            }
+        }
+    }
+    
+    func moveWidgetDown(dashboardId: UUID) {
+        if let index = widgetDashboardIds.firstIndex(of: dashboardId) {
+            if index < widgetDashboardIds.count - 1 {
+                widgetDashboardIds.swapAt(index, index + 1)
+            }
+        }
     }
 }

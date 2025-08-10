@@ -31,7 +31,8 @@ struct Dashboards: View {
             
             ForEach(manager.dashboards) { dashboard in
                 NavigationLink(value: dashboard) {
-                    Text(dashboard.name)
+                    let isWidgetEnabled = manager.widgetDashboardIds.contains(dashboard.id)
+                    DashboardRow(name: dashboard.name, isWidgetEnabled: isWidgetEnabled)
                         .contextMenu {
                             Button {
                                 newDashboardName = dashboard.name
@@ -48,6 +49,12 @@ struct Dashboards: View {
                                 showingInfoAlert = true
                             } label: {
                                 Label("Edit Info", systemImage: "info.circle")
+                            }
+                            
+                            Button {
+                                manager.toggleWidgetEnabled(dashboardId: dashboard.id)
+                            } label: {
+                                Label(isWidgetEnabled ? "Remove from Main View" : "Add to Main View", systemImage: isWidgetEnabled ? "pin.slash.fill" : "pin.fill")
                             }
                             
                             Button {

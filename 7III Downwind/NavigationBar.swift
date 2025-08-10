@@ -13,6 +13,7 @@ struct NavigationBar: View {
     @Binding var isImporting: Bool
     let navigateToStats: () -> Void
     let navigateToDashboard: () -> Void
+    let removeGPXButton: () -> Void
     
     var body: some View {
         HStack {
@@ -28,6 +29,14 @@ struct NavigationBar: View {
                         isImporting = true
                     }
                 }
+                .contextMenu {
+                    Button {
+                        removeGPXButton()
+                    } label: {
+                        Label("Remove", systemImage: "eye.slash.fill")
+                    }
+                    Label("You can add the button back in Settings", systemImage: "info.circle")
+                }
                 .disabled(isLoadingImportedRuns)
             }
             
@@ -37,5 +46,5 @@ struct NavigationBar: View {
 }
 
 #Preview {
-    NavigationBar(showGPX: true, isLoadingImportedRuns: false, isImporting: .constant(false), navigateToStats: {}, navigateToDashboard: {})
+    NavigationBar(showGPX: true, isLoadingImportedRuns: false, isImporting: .constant(false), navigateToStats: {}, navigateToDashboard: {}, removeGPXButton: {})
 }

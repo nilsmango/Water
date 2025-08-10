@@ -124,6 +124,8 @@ struct DashboardView: View {
                 }
             }
         }
+        .listStyle(.insetGrouped)
+        .environment(\.defaultMinListRowHeight, 0)
         .navigationTitle(name)
         .refreshable {
             if manager.refreshmentStatus == nil {
