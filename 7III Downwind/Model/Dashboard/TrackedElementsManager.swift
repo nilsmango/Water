@@ -191,10 +191,34 @@ class TrackedElementsManager: ObservableObject {
             "NNE": 22.5, "NE": 45, "ENE": 67.5,
             "E": 90, "ESE": 112.5, "SE": 135, "SSE": 157.5
         ]
+        
         let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        
+        // Check if it's a direction string first
         if let base = directionAngles[trimmed] {
             return (base + 180).truncatingRemainder(dividingBy: 360)
         }
+        
+        // Try to parse as numeric degrees
+        var numericString = trimmed
+        
+        // Remove "DEGREES", "DEGREE", "DEG", or "°" suffix if present
+        let degreesSuffixes = ["DEGREES", "DEGREE", "DEG", "°"]
+        for suffix in degreesSuffixes {
+            if numericString.hasSuffix(suffix) {
+                numericString = String(numericString.dropLast(suffix.count)).trimmingCharacters(in: .whitespacesAndNewlines)
+                break
+            }
+        }
+        
+        // Try to convert to Double
+        if let degrees = Double(numericString) {
+            // Validate range 0-360
+            if degrees >= 0 && degrees <= 360 {
+                return (degrees + 180).truncatingRemainder(dividingBy: 360)
+            }
+        }
+        
         return nil
     }
     
@@ -283,7 +307,9 @@ class TrackedElementsManager: ObservableObject {
                 }
                 for element in updatedGroup {
                     if let index = dashboards[dashboardIndex].elements.firstIndex(where: { $0.id == element.id }) {
-                        dashboards[dashboardIndex].elements[index] = element
+                        withAnimation {
+                            dashboards[dashboardIndex].elements[index] = element
+                        }
                         completedCount += 1
                         self.refreshmentStatus = "Refreshing | \(completedCount)/\(total)"
                         self.widgetRefreshmentStatus = "Refreshing \(dashboardToUpdate.name) | \(completedCount)/\(total)"

@@ -112,7 +112,7 @@ struct AddElementView: View {
                     } header: {
                         Text("Modify Output")
                     } footer: {
-                        Text("Capitalization will be ignored for removing of patterns. If the output is a number (after trimming), you can add a unit to enable automatic conversion to your preferred unit as set in Settings.")
+                        Text("Capitalization will be ignored for removing of patterns. If the output is a number (after trimming), you can add a unit to enable automatic conversion to your preferred unit as set in Settings. Degrees and directions will be displayed with an arrow.")
                     }
                     Section("Result") {
                         Text(element.displayValue(preferredWindUnit: manager.preferredWindUnit, preferredTemperatureUnit: manager.preferredTempUnit) ?? "")

@@ -19,49 +19,64 @@ struct NestedElementsRow: View {
     var onExpand: () -> Void
     var onEdit: () -> Void
     var onDuplicate: () -> Void
-        
+    
+    @State private var animationDegrees: Double = 0
+    
     var body: some View {
         HStack {
-                if let label = label {
-                    Text(label)
-                        .font(.headline)
-                        .lineLimit(1)
-                }
+            if let label = label {
+                Text(label)
+                    .font(.headline)
+                    .lineLimit(1)
+            }
             
             Spacer(minLength: 0.0)
             
-                if !rowText.isEmpty {
-                    HStack {
-                        ForEach(Array(rowText.enumerated()), id: \.0) { index, text in
-                                if index > 0 {
-                                    Text(" | ")
-                                }
-                            if text.isEmpty {
-                                if error != nil {
-                                    Image(systemName: "exclamationmark.triangle")
-                                                .foregroundColor(.orange)
-                                } else {
-                                    Text("-")
-                                }
-                                
+            if !rowText.isEmpty {
+                HStack {
+                    ForEach(Array(rowText.enumerated()), id: \.0) { index, text in
+                        if index > 0 {
+                            Text(" | ")
+                        }
+                        if text.isEmpty {
+                            if error != nil {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .foregroundColor(.orange)
                             } else {
-                                Text(text)
+                                Text("-")
                             }
-                                
-                            }
-                        
-                        if let deg = directionDegrees {
-                            let size = 16.0
-                            Image(systemName: "arrow.up")
-                                .rotationEffect(.degrees(deg))
-                                .frame(width: size, height: size)
+                            
+                        } else {
+                            Text(text)
+                                .scaleEffect(1.0)
                         }
                     }
-                } else {
-                    Text("--")
-                        .foregroundColor(.secondary)
+                    
+                    if directionDegrees != nil {
+                        let size = 16.0
+                        Image(systemName: "arrow.up")
+                            .rotationEffect(.degrees(animationDegrees))
+                            .frame(width: size, height: size)
+                    }
                 }
-                
+            } else {
+                Text("--")
+                    .foregroundColor(.secondary)
+            }
+        }
+        .onAppear {
+            if let directionDegrees = directionDegrees {
+                withAnimation {
+                    animationDegrees = directionDegrees
+                }
+            }
+        }
+        .onChange(of: directionDegrees) {
+            if let directionDegrees = directionDegrees {
+                withAnimation {
+                    animationDegrees = directionDegrees
+                }
+            }
         }
         .listRowSeparator(.hidden)
         .ifLet(dashboardIndex) { view, dashboardIndex in

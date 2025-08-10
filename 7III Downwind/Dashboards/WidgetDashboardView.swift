@@ -40,21 +40,12 @@ struct WidgetDashboardView: View {
                     let nestedElements = manager.makeNestedElements(from: dashboard.elements)
                     
                     VStack(spacing: widgetPadding*1.5) {
-                            ForEach(nestedElements.indices, id: \.self) { index in
-                                let elements = nestedElements[index]
+                            ForEach(nestedElements, id: \.self) { elements in
                                 let row = manager.makeNestedElementsRow(elements: elements)
-                                let element: TrackedElement? = nestedElements[index].count == 1 ? elements[0] : nil
-                                    NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: nil, manager: manager, onExpand: {
-                                        
-                                    }, onEdit: {
-
-                                        
-                                    }, onDuplicate: {
-
-                                    })
+                                let element: TrackedElement? = elements.count == 1 ? elements[0] : nil
+                                    NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: nil, manager: manager, onExpand: {}, onEdit: {}, onDuplicate: {})
                                     .padding(.horizontal)
-                                    .padding(.top, index == 0 ? 0 : widgetPadding/2)
-                                
+                                    .padding(.top, elements == nestedElements.first ? 0 : widgetPadding/2)
                             }
                         }
                         .padding(.vertical, widgetPadding*1.5)
@@ -105,7 +96,6 @@ struct WidgetDashboardView: View {
                             }
                         }
                         .padding(.horizontal)
-                    
                 }
         
         // Header
@@ -124,7 +114,6 @@ struct WidgetDashboardView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
         .padding(.horizontal)
-        .padding(.vertical, widgetPadding/2)
         .padding(.bottom, widgetPadding)
         .foregroundStyle(.secondary)
         .textCase(.uppercase)
