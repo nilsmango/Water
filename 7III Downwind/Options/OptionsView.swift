@@ -103,9 +103,6 @@ struct OptionsView: View {
                 NavigationLink(destination: FoilingThresholds()) {
                     Text("Foiling Threshold Speeds")
                 }
-                
-                Toggle("Auto Smooth Slow Parts", isOn: $downwindManager.smoothSlowParts)
-                    .tint(.accent)
                                 
             } header: {
                 Text("Tracker Options")
