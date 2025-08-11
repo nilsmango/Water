@@ -9,6 +9,16 @@ import Foundation
 
 let versionHistory: [Version] = [
     // MARK: Newest on Top + Keep the introduction short to not get truncated text.
+    Version(versionNumber: "1.3",
+            introduction: "Dashboards:",
+            changes: [
+                "Added Dashboards where you can pull all your wind stations’ data into one place.",
+                "Dashboards can also get added to the Main View.",
+                "A cleaner Main View with more control over what you see.",
+                "Added Error Logging for GPS Tracker."
+            ],
+            releaseDate: "August 2025"
+           ),
     
     Version(versionNumber: "1.2",
             introduction: "Improvements:",
