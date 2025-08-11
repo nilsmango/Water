@@ -13,6 +13,7 @@ struct WidgetDashboardView: View {
     @Binding var navPath: NavigationPath
     
     let widgetPadding = 8.0
+    @State private var tapOpacity: Double = 1
     
     var body: some View {
         
@@ -52,7 +53,12 @@ struct WidgetDashboardView: View {
                         .background {
                             ListBackground()
                         }
+                        .opacity(tapOpacity)
                         .onTapGesture {
+                                tapOpacity = 0.5
+                                    withAnimation {
+                                        tapOpacity = 1
+                                    }
                             if manager.refreshmentStatus == nil {
                                 if manager.showWidgetTap {
                                     manager.showWidgetTap = false
