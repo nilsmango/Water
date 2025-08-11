@@ -18,6 +18,8 @@ struct OptionsView: View {
     @State private var isShowingAlert = false
     @State private var showUpgradeView = false
     @State private var showManage = false
+    @State private var showingShareSheet = false
+    @State private var showingErrorList = false
     
     var body: some View {
         List {
@@ -101,6 +103,9 @@ struct OptionsView: View {
                 NavigationLink(destination: FoilingThresholds()) {
                     Text("Foiling Threshold Speeds")
                 }
+                
+                Toggle("Auto Smooth Slow Parts", isOn: $downwindManager.smoothSlowParts)
+                    .tint(.accent)
                                 
             } header: {
                 Text("Tracker Options")
@@ -146,27 +151,61 @@ struct OptionsView: View {
             } header: {
                 Text("Dashboard Element Wait Times")
             } footer: {
-                VStack(alignment: .leading) {
                     Text("After Placeholder specifies the time to wait after a placeholder element (no value or a leading dash) is found, to give the website a chance to change it to a real value. Increase this time if you find that you get placeholders even though on the website the real values are displayed.")
-                    
-                    HStack {
-                        
-                        Spacer()
-                        
-                        Button(role: .destructive, action: {
-                            isShowingAlert = true
-                            
-                        }, label: {
-                            Label("Delete All My Data", systemImage: "xmark.circle")
-                        })
-                        .buttonStyle(.bordered)
-                        
-                        Spacer()
+                                    
+            }
+                Section {
+                    Button {
+                        showingErrorList = true
+                    } label: {
+                        Label("View Error Log", systemImage: "text.page.badge.magnifyingglass")
                     }
-                    .padding()
-                }
+                    .sheet(isPresented: $showingErrorList) {
+                        ErrorListView(downwindManager: downwindManager)
+                    }
+                    
+                    Button {
+                        showingShareSheet = true
+                    } label: {
+                        Label("Share Error Log", systemImage: "square.and.arrow.up")
+                    }
+                    .sheet(isPresented: $showingShareSheet) {
+                        ShareSheet(items: [downwindManager.getErrorLog()])
+                    }
+                    
+                    Button() {
+                        downwindManager.clearLog()
+                    } label: {
+                        Label("Clear Error Log", systemImage: "trash")
+                            .foregroundStyle(.red)
+                    }
+                    
+                    
+                } header: {
+                    Text("Error Log")
+                } footer: {
+                    VStack(alignment: .leading) {
+                        
+                        HStack {
+                            
+                            Spacer()
+                            
+                            Button(role: .destructive, action: {
+                                isShowingAlert = true
+                                
+                            }, label: {
+                                Label("Delete All My Data", systemImage: "xmark.circle")
+                            })
+                            .buttonStyle(.bordered)
+                            
+                            Spacer()
+                        }
+                        .padding()
+                    }
+
                 
             }
+            
                                     
             Section {
                 Text("Find your next wake to thieve in Switzerland with [Next Wave](https://apps.apple.com/ch/app/next-wave/id6739363035).")
@@ -218,6 +257,49 @@ struct OptionsView: View {
         }
         .navigationTitle("Settings")
     }
+}
+
+struct ErrorListView: View {
+    let downwindManager: DownwindManager
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(downwindManager.getErrorEntries(), id: \.self) { error in
+                    Text(error)
+                        .font(.system(.caption, design: .monospaced))
+                        .lineLimit(nil)
+                }
+            }
+            .navigationTitle("Error Log")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    ShareLink(item: downwindManager.getErrorLog()) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ShareSheet for iOS share functionality
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {

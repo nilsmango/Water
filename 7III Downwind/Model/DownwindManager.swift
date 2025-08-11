@@ -235,7 +235,28 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func saveHealthWorkout() {
         showingSummarySheet = true
         
+        // Log potential data quality issues but don't prevent saving
+        if currentRunStatisticIndex >= runStatistics.count {
+            logError("Invalid currentRunStatisticIndex: \(currentRunStatisticIndex), array count: \(runStatistics.count)")
+        }
+        
         let activeRunStatistic = runStatistics[currentRunStatisticIndex]
+        
+        if activeRunStatistic.runDistance <= 0 {
+            logError("Warning: run distance is \(activeRunStatistic.runDistance) meters")
+        }
+        
+        if let avgSpeed = activeRunStatistic.averageSpeed, avgSpeed < 0 {
+            logError("Warning: average speed is negative: \(avgSpeed)")
+        }
+        
+        if activeRunStatistic.topSpeed < 0 {
+            logError("Warning: top speed is negative: \(activeRunStatistic.topSpeed)")
+        }
+        
+        if workoutBuilder == nil {
+            logError("Cannot save workout - workoutBuilder is nil")
+        }
         
         let runDistance = HKQuantity(unit: .meter(), doubleValue: activeRunStatistic.runDistance)
         let topSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: activeRunStatistic.topSpeed / 3.6)
@@ -253,26 +274,45 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         workoutBuilder?.addMetadata(allMetadata, completion: { success, error in
             if let error = error {
-                print("Error adding metadata: \(error.localizedDescription)")
+                self.logError("Error adding metadata: \(error.localizedDescription)")
+            }
+            
+            if !success {
+                self.logError("Adding metadata returned false")
             }
             
             self.workoutBuilder?.endCollection(withEnd: Date.now, completion: { success, error in
                 
+                if let error = error {
+                    self.logError("Error ending workout collection: \(error.localizedDescription)")
+                }
+                
+                if !success {
+                    self.logError("End collection returned false")
+                }
+                
                 self.workoutBuilder?.finishWorkout(completion: { workout, error in
                     if let error = error {
-                        print("Error finishing workout: \(error.localizedDescription)")
+                        self.logError("Error finishing workout: \(error.localizedDescription)")
                     }
                     
+                    if workout == nil {
+                        self.logError("Finish workout returned nil workout")
+                    }
                     
                     if let myWorkout = workout {
+                        if self.routeBuilder == nil {
+                            self.logError("Cannot finish route - routeBuilder is nil")
+                        }
+                        
                         self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
                             
                             if let error = error {
-                                print("Error finishing route: \(error.localizedDescription)")
+                                self.logError("Error finishing route: \(error.localizedDescription)")
                             }
                             
                             if newRoute == nil {
-                                print("Failed to finish route.")
+                                self.logError("Failed to finish route.")
                             }
                             
                             // Optional: Do something with the route here
@@ -293,7 +333,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.trackerSessionsCount += 1
                                 let sessionsLeft = self.freeTrackerSessionsNumber - self.trackerSessionsCount
                                 if sessionsLeft == -5 {
-                                    if SKPaymentQueue.canMakePayments() && !self.hasPurchasedPremium {
+                                    if !SKPaymentQueue.canMakePayments() {
+                                        self.logError("Cannot make payments - SKPaymentQueue unavailable")
+                                    } else if !self.hasPurchasedPremium {
                                         self.showUpgradeSheet = true
                                     }
                                 }
@@ -1020,8 +1062,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                     }
                 } else {
-                    self.runStatistics[runIndex].locationData = importedRun.locations
+                    DispatchQueue.main.async {
+                        self.runStatistics[runIndex].locationData = importedRun.locations
+                    }
                 }
+                
                 // heart rate
                 if importedRun.heartRates.count > 0 {
                     self.runStatistics[runIndex].averageHeartRate = importedRun.averageHeartRate
@@ -1139,7 +1184,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
     }
-    
     
     private func loadWorkoutRouteFromID(id: UUID, completion: @escaping (HKWorkoutRoute?) -> Void) {
         // Create a predicate to fetch the workout with the given UUID
@@ -2931,6 +2975,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // Location and Speed
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+        // Check if locations array is empty
+        guard !locations.isEmpty else {
+            logError("Received empty locations array from location manager")
+            return
+        }
+        
         // ignoring the locations for a few seconds
         if ignoreFirstFewLocations {
             
@@ -2941,23 +2991,44 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         } else {
             
             guard let newLocation = locations.last else {
-                print("Something wrong with locationManager")
-                return }
+                logError("Failed to get last location from locations array")
+                return
+            }
+            
+            // Check for poor accuracy
+            if newLocation.horizontalAccuracy > Constants.minHorizontalAccuracy {
+                logError("Poor location accuracy: \(newLocation.horizontalAccuracy)m (threshold: \(Constants.minHorizontalAccuracy)m)")
+            }
+            
+            // Check for invalid coordinates
+            if !CLLocationCoordinate2DIsValid(newLocation.coordinate) {
+                logError("Invalid coordinates received: lat=\(newLocation.coordinate.latitude), lon=\(newLocation.coordinate.longitude)")
+                return
+            }
+            
+            // Check for stale location data
+            if newLocation.timestamp.timeIntervalSinceNow < -30 {
+                logError("Received stale location data: timestamp is \(abs(newLocation.timestamp.timeIntervalSinceNow)) seconds old")
+            }
             
             if collectRawGPS {
                 routeBuilder?.insertRouteData(locations) { (success, error) in
                     if !success {
-                        // Handle any errors here.
+                        let errorMessage = error?.localizedDescription ?? "Unknown error"
+                        self.logError("Failed to insert raw GPS route data: \(errorMessage)")
                     }
                 }
                 
                 DispatchQueue.main.async {
-                    self.user.latitude = newLocation.coordinate.latitude
-                    self.user.longitude = newLocation.coordinate.longitude
+                    // Check for invalid speed
                     var speed = newLocation.speed
                     if speed < 0.0 {
+                        self.logError("Received negative speed value: \(speed) m/s, setting to 0.0")
                         speed = 0.0
                     }
+                    
+                    self.user.latitude = newLocation.coordinate.latitude
+                    self.user.longitude = newLocation.coordinate.longitude
                     self.user.speed = speed
                     
                     self.locationAccuracy = newLocation.horizontalAccuracy
@@ -2969,12 +3040,26 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 
                 if kalmanFilter == nil {
                     if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                        // Check if rValue and sigma are properly set
+                        if rValue <= 0 {
+                            logError("Invalid rValue for Kalman filter: \(rValue)")
+                        }
+                        if sigma <= 0 {
+                            logError("Invalid sigma for Kalman filter: \(sigma)")
+                        }
+                        
                         // setting the rValue of the Kalman filter. Higher values will give higher roundness to trajectories.
                         self.kalmanFilter?.rValue = rValue
                         self.kalmanFilter?.sigma = sigma
                         
                         // initializing the kalman filter
                         self.kalmanFilter = HCKalmanAlgorithm(initialLocation: newLocation)
+                        
+                        // Check if Kalman filter was successfully created
+                        if self.kalmanFilter == nil {
+                            logError("Failed to initialize Kalman filter with location: \(newLocation)")
+                            return
+                        }
                         
                         let startLocation = CLLocation(
                             coordinate: newLocation.coordinate,
@@ -2988,73 +3073,102 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     
                         routeBuilder?.insertRouteData([startLocation]) { (success, error) in
                             if !success {
-                                // Handle any errors here.
+                                let errorMessage = error?.localizedDescription ?? "Unknown error"
+                                self.logError("Failed to insert Kalman start location: \(errorMessage)")
                             }
                         }
                     
                         DispatchQueue.main.async {
-                            self.user.latitude = newLocation.coordinate.latitude
-                            self.user.longitude = newLocation.coordinate.longitude
+                            // Check for invalid speed
                             var speed = newLocation.speed
                             if speed < 0.0 {
+                                self.logError("Received negative speed value: \(speed) m/s, setting to 0.0")
                                 speed = 0.0
                             }
+                            
+                            self.user.latitude = newLocation.coordinate.latitude
+                            self.user.longitude = newLocation.coordinate.longitude
                             self.user.speed = speed
                             
                             self.locationAccuracy = newLocation.horizontalAccuracy
                             
                             self.updateStatistic()
                         }
+                    } else {
+                        logError("Cannot initialize Kalman filter - accuracy too poor: \(newLocation.horizontalAccuracy)m")
                     }
                 } else {
-                    if let kalmanFilter = self.kalmanFilter {
-                        if resetKalmanFilter == true {
+                    guard let kalmanFilter = self.kalmanFilter else {
+                        logError("Kalman filter became nil unexpectedly")
+                        return
+                    }
+                    
+                    if resetKalmanFilter == true {
+                        
+                        // Check parameter validity before reset
+                        if rValue <= 0 {
+                            logError("Invalid rValue for Kalman filter reset: \(rValue)")
+                        }
+                        if sigma <= 0 {
+                            logError("Invalid sigma for Kalman filter reset: \(sigma)")
+                        }
+                        
+                        // two of these four are not needed, but save is save
+                        self.kalmanFilter?.rValue = rValue
+                        self.kalmanFilter?.sigma = sigma
+                        kalmanFilter.rValue = rValue
+                        kalmanFilter.sigma = sigma
+                        
+                        kalmanFilter.resetKalman(newStartLocation: newLocation)
+                        
+                        resetKalmanFilter = false
+                        
+                    } else {
+                        if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
                             
-                            // two of these four are not needed, but save is save
-                            self.kalmanFilter?.rValue = rValue
-                            self.kalmanFilter?.sigma = sigma
-                            kalmanFilter.rValue = rValue
-                            kalmanFilter.sigma = sigma
+                            var kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
                             
-                            kalmanFilter.resetKalman(newStartLocation: newLocation)
+                            // Validate Kalman filter output
+                            if !CLLocationCoordinate2DIsValid(kalmanLocation.coordinate) {
+                                logError("Kalman filter produced invalid coordinates: lat=\(kalmanLocation.coordinate.latitude), lon=\(kalmanLocation.coordinate.longitude)")
+                                return
+                            }
                             
-                            resetKalmanFilter = false
+                            kalmanLocation = CLLocation(
+                                coordinate: kalmanLocation.coordinate,
+                                altitude: kalmanLocation.altitude,
+                                horizontalAccuracy: kalmanLocation.horizontalAccuracy,
+                                verticalAccuracy: kalmanLocation.verticalAccuracy,
+                                course: kalmanLocation.course,
+                                speed: newLocation.speed,
+                                timestamp: kalmanLocation.timestamp
+                            )
                             
-                        } else {
-                            if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
-                                
-                                var kalmanLocation = kalmanFilter.processState(currentLocation: newLocation)
-                                kalmanLocation = CLLocation(
-                                    coordinate: kalmanLocation.coordinate,
-                                    altitude: kalmanLocation.altitude,
-                                    horizontalAccuracy: kalmanLocation.horizontalAccuracy,
-                                    verticalAccuracy: kalmanLocation.verticalAccuracy,
-                                    course: kalmanLocation.course,
-                                    speed: newLocation.speed,
-                                    timestamp: kalmanLocation.timestamp
-                                )
-                                
-                                
-                                routeBuilder?.insertRouteData([kalmanLocation]) { (success, error) in
-                                    if !success {
-                                        // Handle any errors here.
-                                    }
+                            routeBuilder?.insertRouteData([kalmanLocation]) { (success, error) in
+                                if !success {
+                                    let errorMessage = error?.localizedDescription ?? "Unknown error"
+                                    self.logError("Failed to insert Kalman filtered location: \(errorMessage)")
                                 }
-                            
+                            }
+                        
                             DispatchQueue.main.async {
-                                self.user.latitude = kalmanLocation.coordinate.latitude
-                                self.user.longitude = kalmanLocation.coordinate.longitude
+                                // Check for invalid speed
                                 var speed = newLocation.speed
                                 if speed < 0.0 {
+                                    self.logError("Received negative speed value: \(speed) m/s, setting to 0.0")
                                     speed = 0.0
                                 }
+                                
+                                self.user.latitude = kalmanLocation.coordinate.latitude
+                                self.user.longitude = kalmanLocation.coordinate.longitude
                                 self.user.speed = speed
                                 
                                 self.locationAccuracy = newLocation.horizontalAccuracy
                                 
                                 self.updateStatistic()
                             }
-                        }
+                        } else {
+                            logError("Skipping location update - accuracy too poor for Kalman processing: \(newLocation.horizontalAccuracy)m")
                         }
                     }
                 }
@@ -3573,5 +3687,53 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                 }
         }
+    }
+    
+    // MARK: Error Logging
+    var errorLog: String = "Errors will show up here.\n"
+    private let errorFileName = "error_log.txt"
+    
+    private var fileURL: URL {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        return documentsPath.appendingPathComponent(errorFileName)
+    }
+    
+    func loadErrorLog() {
+        do {
+            errorLog = try String(contentsOf: fileURL, encoding: .utf8)
+        } catch {
+            errorLog = "Errors will show up here.\n"
+            print("Could not load error log: \(error)")
+        }
+    }
+    
+    private func logError(_ message: String) {
+        let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .medium)
+        let newEntry = "[\(timestamp)] \(message)\n"
+        errorLog += newEntry
+        print("Location Error: \(message)")
+        saveErrorLog()
+    }
+    
+    private func saveErrorLog() {
+        do {
+            try errorLog.write(to: fileURL, atomically: true, encoding: .utf8)
+        } catch {
+            print("Could not save error log: \(error)")
+        }
+    }
+    
+    func clearLog() {
+        errorLog = ""
+        saveErrorLog()
+    }
+    
+    func getErrorLog() -> String {
+            return errorLog
+        }
+    
+    // Get error log as array of individual entries for list display
+    func getErrorEntries() -> [String] {
+        return errorLog.components(separatedBy: "\n").filter { !$0.isEmpty }
     }
 }

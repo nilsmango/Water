@@ -24,6 +24,7 @@ struct _III_DownwindApp: App {
                     downwindManager.loadUser()
                     downwindManager.checkHealthKitAuthorizationStatus()
                     downwindManager.loadRunStatistics()
+                    downwindManager.loadErrorLog()
                     Task {
                         await downwindManager.updateCustomerProductStatus()
                     }
