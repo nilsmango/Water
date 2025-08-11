@@ -260,6 +260,7 @@ struct StartView: View {
                 }
             }
             .navigationTitle(downwindManager.user.name.isEmpty ? "Aloha!" : "Aloha \(downwindManager.user.name)!")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     StartOptionsMenu(downwindManager: downwindManager, dashboards: manager)
