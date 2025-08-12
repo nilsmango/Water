@@ -12,9 +12,10 @@ let versionHistory: [Version] = [
     Version(versionNumber: "1.3",
             introduction: "Dashboards!",
             changes: [
-                "Added Dashboards where you can pull all your wind stations’ data into one place.",
+                "Added Dashboards for pulling multiple wind stations’ data into one place.",
                 "Dashboards can get pinned to the Main View.",
                 "A cleaner Main View with more control over what you see.",
+                "Better GPS smoothing for non-downwind Maps.",
                 "Added Error Logging for GPS Tracker."
             ],
             releaseDate: "August 2025"
