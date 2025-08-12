@@ -9,7 +9,11 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject var manager: TrackedElementsManager
+    @ObservedObject var downwindManager: DownwindManager
+    
     let dashboardIndex: Int
+    @Binding var navPath: NavigationPath
+    
     @State private var showingAddSheet = false
     @State private var editingElement = false
     @State private var autoRefreshTimer: Timer?
@@ -43,56 +47,67 @@ struct DashboardView: View {
                 Section {
                     let nestedElements = manager.makeNestedElements(dashboardIndex: dashboardIndex)
                     ForEach(nestedElements, id: \.self) { elements in
-                       
-                        let row = manager.makeNestedElementsRow(elements: elements)
-                        let element: TrackedElement? = elements.count == 1 ? elements[0] : nil
-                        if !manager.expandedElements.contains(Set(elements.map(\.id))) {
-                            NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: dashboardIndex, manager: manager, onExpand: {
-                                manager.expandedElements.append(Set(elements.map(\.id)))
-                            }, onEdit: {
-                                newElement = element!
-                                editingElement = true
-                                showingAddSheet = true
-                                
-                            }, onDuplicate: {
-                                if let element = element {
-                                    newElement = TrackedElement(url: element.url, xpath: element.xpath, userLabel: element.userLabel, lastValue: "", lastUpdated: nil, lastError: nil, trimStart: element.trimStart, trimEnd: element.trimEnd, trimToOne: element.trimToOne, trimmingSelection: element.trimmingSelection, keepNumberNumber: element.keepNumberNumber, appendStart: element.appendStart, appendEnd: element.appendEnd)
-                                    showingAddSheet = true
-                                }
-                            })
-                        } else {
+                        let doNotShow = !downwindManager.hasPurchasedPremium && nestedElements.firstIndex(of: elements) != 0
+                        if doNotShow {
                             Button {
-                                if let index = manager.expandedElements.firstIndex(of: Set(elements.map(\.id))) {
-                                    manager.expandedElements.remove(at: index)
-                                }
+                                navPath = NavigationPath()
+                                downwindManager.showUpgradeSheet = true
+                                
                             } label: {
-                                HStack {
-                                    Text(row.label ?? "")
-                                        .font(.headline)
-                                        .foregroundStyle(.primary)
-                                    Spacer()
-                                    Image(systemName: "chevron.down")
-                                        .fontWeight(.bold)
-                                        .foregroundStyle(Color.accentColor)
-                                }
+                                Label("Unlock unlimited Elements", systemImage: "lock.fill")
                             }
-                            .foregroundColor(.primary)
-                            
-                            ForEach(elements) { element in
-                                TrackedElementRow(element: element, manager: manager, dashboardIndex: dashboardIndex, onEdit: {
-                                    newElement = element
+                            .listRowSeparator(.hidden)
+                        } else {
+                            let row = manager.makeNestedElementsRow(elements: elements)
+                            let element: TrackedElement? = elements.count == 1 ? elements[0] : nil
+                            if !manager.expandedElements.contains(Set(elements.map(\.id))) {
+                                NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: dashboardIndex, manager: manager, onExpand: {
+                                    manager.expandedElements.append(Set(elements.map(\.id)))
+                                }, onEdit: {
+                                    newElement = element!
                                     editingElement = true
                                     showingAddSheet = true
+                                    
                                 }, onDuplicate: {
-                                    newElement = TrackedElement(url: element.url, xpath: element.xpath, userLabel: element.userLabel, lastValue: "", lastUpdated: nil, lastError: nil, trimStart: element.trimStart, trimEnd: element.trimEnd, trimToOne: element.trimToOne, trimmingSelection: element.trimmingSelection, keepNumberNumber: element.keepNumberNumber, appendStart: element.appendStart, appendEnd: element.appendEnd)
-                                    showingAddSheet = true
+                                    if let element = element {
+                                        newElement = TrackedElement(url: element.url, xpath: element.xpath, userLabel: element.userLabel, lastValue: "", lastUpdated: nil, lastError: nil, trimStart: element.trimStart, trimEnd: element.trimEnd, trimToOne: element.trimToOne, trimmingSelection: element.trimmingSelection, keepNumberNumber: element.keepNumberNumber, appendStart: element.appendStart, appendEnd: element.appendEnd)
+                                        showingAddSheet = true
+                                    }
                                 })
-                            }
-                            .onDelete { indexSet in
-                                manager.deleteElements(from: elements, at: indexSet, dashboardIndex: dashboardIndex)
-                            }
-                            .onMove { indexSet, index in
-                                manager.moveElements(from: indexSet, to: index, elements: elements, dashboardIndex: dashboardIndex)
+                            } else {
+                                Button {
+                                    if let index = manager.expandedElements.firstIndex(of: Set(elements.map(\.id))) {
+                                        manager.expandedElements.remove(at: index)
+                                    }
+                                } label: {
+                                    HStack {
+                                        Text(row.label ?? "")
+                                            .font(.headline)
+                                            .foregroundStyle(.primary)
+                                        Spacer()
+                                        Image(systemName: "chevron.down")
+                                            .fontWeight(.bold)
+                                            .foregroundStyle(Color.accentColor)
+                                    }
+                                }
+                                .foregroundColor(.primary)
+                                
+                                ForEach(elements) { element in
+                                    TrackedElementRow(element: element, manager: manager, dashboardIndex: dashboardIndex, onEdit: {
+                                        newElement = element
+                                        editingElement = true
+                                        showingAddSheet = true
+                                    }, onDuplicate: {
+                                        newElement = TrackedElement(url: element.url, xpath: element.xpath, userLabel: element.userLabel, lastValue: "", lastUpdated: nil, lastError: nil, trimStart: element.trimStart, trimEnd: element.trimEnd, trimToOne: element.trimToOne, trimmingSelection: element.trimmingSelection, keepNumberNumber: element.keepNumberNumber, appendStart: element.appendStart, appendEnd: element.appendEnd)
+                                        showingAddSheet = true
+                                    })
+                                }
+                                .onDelete { indexSet in
+                                    manager.deleteElements(from: elements, at: indexSet, dashboardIndex: dashboardIndex)
+                                }
+                                .onMove { indexSet, index in
+                                    manager.moveElements(from: indexSet, to: index, elements: elements, dashboardIndex: dashboardIndex)
+                                }
                             }
                         }
                     }

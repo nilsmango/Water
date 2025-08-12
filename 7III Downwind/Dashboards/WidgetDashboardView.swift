@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WidgetDashboardView: View {
     @ObservedObject var manager: TrackedElementsManager
+    @ObservedObject var downwindManager: DownwindManager
     let dashboard: Dashboard
     @Binding var navPath: NavigationPath
     
@@ -42,11 +43,27 @@ struct WidgetDashboardView: View {
                     
                     VStack(spacing: widgetPadding*1.5) {
                             ForEach(nestedElements, id: \.self) { elements in
-                                let row = manager.makeNestedElementsRow(elements: elements)
-                                let element: TrackedElement? = elements.count == 1 ? elements[0] : nil
-                                    NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: nil, manager: manager, onExpand: {}, onEdit: {}, onDuplicate: {})
+                                let doNotShow = !downwindManager.hasPurchasedPremium && nestedElements.firstIndex(of: elements) != 0
+                                let doNotShowButton = !downwindManager.hasPurchasedPremium && nestedElements.firstIndex(of: elements) ?? 2 > 1
+                                
+                                if doNotShowButton {
+                                    
+                                } else if doNotShow {
+                                    Button {
+                                        downwindManager.showUpgradeSheet = true
+                                    } label: {
+                                        Label("Unlock unlimited Dashboards", systemImage: "lock.fill")
+                                    }
+                                    .buttonStyle(.borderedProminent)
                                     .padding(.horizontal)
                                     .padding(.top, elements == nestedElements.first ? 0 : widgetPadding/2)
+                                } else {
+                                    let row = manager.makeNestedElementsRow(elements: elements)
+                                    let element: TrackedElement? = elements.count == 1 ? elements[0] : nil
+                                        NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: nil, manager: manager, onExpand: {}, onEdit: {}, onDuplicate: {})
+                                        .padding(.horizontal)
+                                        .padding(.top, elements == nestedElements.first ? 0 : widgetPadding/2)
+                                }                                    
                             }
                         }
                         .padding(.vertical, widgetPadding*1.5)
@@ -131,7 +148,7 @@ struct WidgetDashboardView: View {
 #Preview {
     ScrollView {
         VStack {
-            WidgetDashboardView(manager: TrackedElementsManager(), dashboard: Dashboard(name: "Bielersee", elements: [TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "20 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "32 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "NW", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Vinguelz", lastValue: "32 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "NW", lastUpdated: Date(), lastError: nil)]), navPath: .constant(NavigationPath()))
+            WidgetDashboardView(manager: TrackedElementsManager(), downwindManager: DownwindManager(), dashboard: Dashboard(name: "Bielersee", elements: [TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "20 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "32 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Hafen", lastValue: "NW", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Vinguelz", lastValue: "32 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "Birke", lastValue: "20 kn", lastUpdated: Date(), lastError: nil), TrackedElement(url: "example.com", xpath: "", userLabel: "BItch", lastValue: "20 kn", lastUpdated: Date(), lastError: nil)]), navPath: .constant(NavigationPath()))
         }
     }
     .background(.listBackground)

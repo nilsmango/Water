@@ -8,6 +8,7 @@ import SwiftUI
 
 struct Dashboards: View {
     @ObservedObject var manager: TrackedElementsManager
+    @ObservedObject var downwindManager: DownwindManager
     
     @State private var showingAddAlert = false
     @State private var isEdit = false
@@ -30,48 +31,65 @@ struct Dashboards: View {
             }
             
             ForEach(manager.dashboards) { dashboard in
-                NavigationLink(value: dashboard) {
-                    let isWidgetEnabled = manager.widgetDashboardIds.contains(dashboard.id)
-                    DashboardRow(name: dashboard.name, isWidgetEnabled: isWidgetEnabled)
-                        .contextMenu {
-                            Button {
-                                newDashboardName = dashboard.name
-                                newDashboardId = dashboard.id
-                                isEdit = true
-                                showingAddAlert = true
-                            } label: {
-                                Label("Edit Name", systemImage: "square.and.pencil")
-                            }
-                            
-                            Button {
-                                newDashboardName = dashboard.info ?? ""
-                                newDashboardId = dashboard.id
-                                showingInfoAlert = true
-                            } label: {
-                                Label("Edit Info", systemImage: "info.circle")
-                            }
-                            
-                            Button {
-                                manager.toggleWidgetEnabled(dashboardId: dashboard.id)
-                            } label: {
-                                Label(isWidgetEnabled ? "Remove from Main View" : "Add to Main View", systemImage: isWidgetEnabled ? "pin.slash.fill" : "pin.fill")
-                            }
-                            
-                            Button {
-                                if let jsonString = manager.exportDashboardJSON(dashboard: dashboard) {
-                                    let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(dashboard.name).json")
-                                    try? jsonString.data(using: .utf8)?.write(to: tempURL)
-                                    let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
-                                    
-                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                       let window = windowScene.windows.first {
-                                        window.rootViewController?.present(activityVC, animated: true)
-                                    }
+                if !downwindManager.hasPurchasedPremium && manager.dashboards.firstIndex(of: dashboard) ?? 1 > 0 {
+                    Button {
+                        navPath = NavigationPath()
+                        downwindManager.showUpgradeSheet = true
+                        
+                    } label: {
+                        Label("Unlock unlimited Dashboards", systemImage: "lock.fill")
+                    }
+                } else {
+                    
+                    NavigationLink(value: dashboard) {
+                        let isWidgetEnabled = manager.widgetDashboardIds.contains(dashboard.id)
+                        DashboardRow(name: dashboard.name, isWidgetEnabled: isWidgetEnabled)
+                            .contextMenu {
+                                Button {
+                                    newDashboardName = dashboard.name
+                                    newDashboardId = dashboard.id
+                                    isEdit = true
+                                    showingAddAlert = true
+                                } label: {
+                                    Label("Edit Name", systemImage: "square.and.pencil")
                                 }
-                            } label: {
-                                Label("Share \(dashboard.name)", systemImage: "square.and.arrow.up")
+                                
+                                Button {
+                                    newDashboardName = dashboard.info ?? ""
+                                    newDashboardId = dashboard.id
+                                    showingInfoAlert = true
+                                } label: {
+                                    Label("Edit Info", systemImage: "info.circle")
+                                }
+                                
+                                Button {
+                                    manager.toggleWidgetEnabled(dashboardId: dashboard.id)
+                                } label: {
+                                    Label(isWidgetEnabled ? "Remove from Main View" : "Add to Main View", systemImage: isWidgetEnabled ? "pin.slash.fill" : "pin.fill")
+                                }
+                                
+                                Button(role: .destructive) {
+                                    manager.deleteDashboard(dashboard)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                                
+                                Button {
+                                    if let jsonString = manager.exportDashboardJSON(dashboard: dashboard) {
+                                        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(dashboard.name).json")
+                                        try? jsonString.data(using: .utf8)?.write(to: tempURL)
+                                        let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+                                        
+                                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                           let window = windowScene.windows.first {
+                                            window.rootViewController?.present(activityVC, animated: true)
+                                        }
+                                    }
+                                } label: {
+                                    Label("Share \(dashboard.name)", systemImage: "square.and.arrow.up")
+                                }
                             }
-                        }
+                    }
                 }
             }
             .onDelete(perform: manager.deleteDashboards)
@@ -81,7 +99,7 @@ struct Dashboards: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: Dashboard.self) { dashboard in
             if let index = manager.dashboards.firstIndex(where: { $0.id == dashboard.id }) {
-                DashboardView(manager: manager, dashboardIndex: index)
+                DashboardView(manager: manager, downwindManager: downwindManager, dashboardIndex: index, navPath: $navPath)
             }
         }
         .toolbar {
@@ -181,7 +199,7 @@ struct Dashboards: View {
 }
 
 #Preview {
-    Dashboards(manager: TrackedElementsManager(), navPath: .constant(NavigationPath()))
+    Dashboards(manager: TrackedElementsManager(), downwindManager: DownwindManager(), navPath: .constant(NavigationPath()))
 }
 
 

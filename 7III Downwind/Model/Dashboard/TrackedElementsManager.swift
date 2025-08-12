@@ -28,10 +28,16 @@ class TrackedElementsManager: ObservableObject {
     }
     
     func deleteDashboards(offsets: IndexSet) {
-        dashboards.remove(atOffsets: offsets)
         let removedIDs = offsets.map { dashboards[$0].id }
+        dashboards.remove(atOffsets: offsets)
         widgetDashboardIds.removeAll { removedIDs.contains($0) }
         saveDashboards()
+    }
+    
+    func deleteDashboard(_ dashboard: Dashboard) {
+        if let index = dashboards.firstIndex(of: dashboard) {
+            deleteDashboards(offsets: [index])
+        }
     }
     
     func moveDashboards(from source: IndexSet, to destination: Int) {

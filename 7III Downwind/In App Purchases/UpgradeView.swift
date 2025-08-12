@@ -41,9 +41,10 @@ struct UpgradeView: View {
     }
 
     private let features = [
-        FeatureItem(text: "Unlimited statistics", symbol: "chart.xyaxis.line"),
-        FeatureItem(text: "Unlimited editing of sessions", symbol: "pencil"),
-        FeatureItem(text: "Access to all future features", symbol: "checkmark")
+        FeatureItem(text: "Unlimited Statistics", symbol: "chart.xyaxis.line"),
+        FeatureItem(text: "Unlimited editing of Sessions", symbol: "pencil"),
+        FeatureItem(text: "Unlimited Dashboards", symbol: "gauge.open.with.lines.needle.33percent"),
+        FeatureItem(text: "Access to all future Features", symbol: "checkmark")
     ]
         
     var body: some View {
@@ -74,6 +75,7 @@ struct UpgradeView: View {
                         HStack {
                             Image(systemName: feature.symbol)
                                 .foregroundColor(.primary)
+                                .frame(width: 20)
                             Text(feature.text)
                         }
                         .padding(.vertical, 5)
@@ -176,9 +178,7 @@ struct UpgradeView: View {
                 }
                 .padding(.horizontal)
             }
-//        .background(
-//            .gray.opacity(0.4)
-//        )
+            .background(.listBackground)
         .navigationTitle("Water Premium")
         .alert(isPresented: $isShowingError, content: {
             Alert(title: Text(errorTitle), message: nil, dismissButton: .default(Text("Okay")))

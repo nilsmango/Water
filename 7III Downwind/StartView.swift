@@ -205,9 +205,25 @@ struct StartView: View {
                     }
                     
                     ForEach(manager.widgetDashboardIds, id: \.self) { id in
+                        // TODO: make not hasPurchased
                         if let dashboard = manager.dashboards.first(where: { $0.id == id }) {
-                            WidgetDashboardView(manager: manager, dashboard: dashboard, navPath: $navPath)
+                            if !downwindManager.hasPurchasedPremium && manager.widgetDashboardIds.firstIndex(of: id) ?? 2 > 0 {
+                                Text(dashboard.name)
+                                    .font(.headline)
+                                    .padding(4)
+                                
+                                Button {
+                                    downwindManager.showUpgradeSheet = true
+                                } label: {
+                                    Label("Unlock unlimited Dashboards", systemImage: "lock.fill")
+                                }
+                                .buttonStyle(.borderedProminent)
+                                
+                            } else {
+                                WidgetDashboardView(manager: manager, downwindManager: downwindManager, dashboard: dashboard, navPath: $navPath)
+                            }
                         }
+                        
                     }
                     
                     if downwindManager.appOpened > 4 {
@@ -250,10 +266,10 @@ struct StartView: View {
             .navigationDestination(for: NavDestination.self) { destination in
                 switch destination {
                 case .dashboards:
-                    Dashboards(manager: manager, navPath: $navPath)
+                    Dashboards(manager: manager, downwindManager: downwindManager, navPath: $navPath)
                 case .dashboard(let dashboard):
                     if let index = manager.dashboards.firstIndex(where: { $0.id == dashboard.id }) {
-                        DashboardView(manager: manager, dashboardIndex: index)
+                        DashboardView(manager: manager, downwindManager: downwindManager, dashboardIndex: index, navPath: $navPath)
                     }
                 case .statistics:
                     StatisticsView(downwindManager: downwindManager)
