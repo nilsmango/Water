@@ -31,7 +31,12 @@ struct Dashboards: View {
             }
             
             ForEach(manager.dashboards) { dashboard in
-                if !downwindManager.hasPurchasedPremium && manager.dashboards.firstIndex(of: dashboard) ?? 1 > 0 {
+                #if os(macOS)
+                let isNotMac = false
+                #else
+                let isNotMac = true
+                #endif
+                if !downwindManager.hasPurchasedPremium && manager.dashboards.firstIndex(of: dashboard) ?? 1 > 0 && isNotMac {
                     Button {
                         navPath = NavigationPath()
                         downwindManager.showUpgradeSheet = true
@@ -78,12 +83,22 @@ struct Dashboards: View {
                                     if let jsonString = manager.exportDashboardJSON(dashboard: dashboard) {
                                         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(dashboard.name).json")
                                         try? jsonString.data(using: .utf8)?.write(to: tempURL)
+
+                                        #if os(iOS)
                                         let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
-                                        
                                         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                                            let window = windowScene.windows.first {
                                             window.rootViewController?.present(activityVC, animated: true)
                                         }
+                                        #elseif os(macOS)
+                                        let panel = NSSavePanel()
+                                        panel.nameFieldStringValue = "\(dashboard.name).json"
+                                        panel.begin { response in
+                                            if response == .OK, let saveURL = panel.url {
+                                                try? FileManager.default.copyItem(at: tempURL, to: saveURL)
+                                            }
+                                        }
+                                        #endif
                                     }
                                 } label: {
                                     Label("Share \(dashboard.name)", systemImage: "square.and.arrow.up")
@@ -96,14 +111,16 @@ struct Dashboards: View {
             .onMove(perform: manager.moveDashboards)
         }
         .navigationTitle("Dashboards")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
         .navigationDestination(for: Dashboard.self) { dashboard in
             if let index = manager.dashboards.firstIndex(where: { $0.id == dashboard.id }) {
                 DashboardView(manager: manager, downwindManager: downwindManager, dashboardIndex: index, navPath: $navPath)
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: toolbarTrailingPlacement) {
                 Menu {
                     Button {
                         showingAddAlert = true

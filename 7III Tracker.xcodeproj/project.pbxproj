@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -179,6 +179,29 @@
 		78F36B2C2D9AB1160079F20B /* CrownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2B2D9AB1160079F20B /* CrownButton.swift */; };
 		78F36B2E2D9AB9C10079F20B /* OptionsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */; };
 		78F937F02C35816B00D34796 /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
+		78FB8BC92E4CCBD1009F5A6F /* DownwindManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */; };
+		78FB8C222E4CCCF0009F5A6F /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912E2E45EFBA00B222C2 /* Dashboard.swift */; };
+		78FB8C232E4CCCF6009F5A6F /* TrackedElementsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912F2E45EFBA00B222C2 /* TrackedElementsManager.swift */; };
+		78FB8C242E4CCCFD009F5A6F /* TrackedElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91302E45EFBA00B222C2 /* TrackedElement.swift */; };
+		78FB8C252E4CCCFD009F5A6F /* IfLet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7894765A2E488F5F005D8C58 /* IfLet.swift */; };
+		78FB8C262E4CCCFD009F5A6F /* UnitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91322E45EFBA00B222C2 /* UnitType.swift */; };
+		78FB8C272E4CCCFD009F5A6F /* UnitConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91312E45EFBA00B222C2 /* UnitConverter.swift */; };
+		78FB8C282E4CCCFD009F5A6F /* WebScrapingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91332E45EFBA00B222C2 /* WebScrapingService.swift */; };
+		78FB8C292E4CCD0C009F5A6F /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91402E45FB9D00B222C2 /* DashboardView.swift */; };
+		78FB8C2A2E4CCD0C009F5A6F /* TrackedElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */; };
+		78FB8C2B2E4CCD0C009F5A6F /* Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB913E2E45FB9D00B222C2 /* Dashboards.swift */; };
+		78FB8C2C2E4CCD0C009F5A6F /* NestedElementsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */; };
+		78FB8C2D2E4CCD0C009F5A6F /* DashboardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7894765C2E489B35005D8C58 /* DashboardRow.swift */; };
+		78FB8C2E2E4CCD0C009F5A6F /* WidgetDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */; };
+		78FB8C2F2E4CCD0C009F5A6F /* AddElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB914C2E45FC5100B222C2 /* AddElementView.swift */; };
+		78FB8C302E4CCD0C009F5A6F /* WebPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91432E45FB9D00B222C2 /* WebPreview.swift */; };
+		78FB8C312E4CCE58009F5A6F /* NavDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91042E45EF5C00B222C2 /* NavDestination.swift */; };
+		78FB8C332E4CCED2009F5A6F /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78FB8C322E4CCED2009F5A6F /* XMLCoder */; };
+		78FB8C352E4CCED2009F5A6F /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 78FB8C342E4CCED2009F5A6F /* Kanna */; };
+		78FB8C362E4CCF05009F5A6F /* product_ids.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78A283732C3FC2610052AA52 /* product_ids.plist */; };
+		78FB8C372E4CCFBC009F5A6F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
+		78FB8C392E4CD196009F5A6F /* ToolbarPlacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */; };
+		78FB8C3A2E4CD196009F5A6F /* ToolbarPlacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */; };
 		78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */; };
 /* End PBXBuildFile section */
 
@@ -196,6 +219,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 78A283852C4671400052AA52;
 			remoteInfo = "7III Water Stickers";
+		};
+		78FB8BAF2E4CCB4F009F5A6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 785C4A8D2B358F7B00EB07F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78FB8BA02E4CCB4E009F5A6F;
+			remoteInfo = "Water Mac";
+		};
+		78FB8BB92E4CCB4F009F5A6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 785C4A8D2B358F7B00EB07F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78FB8BA02E4CCB4E009F5A6F;
+			remoteInfo = "Water Mac";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -390,8 +427,18 @@
 		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
 		78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsSheetView.swift; sourceTree = "<group>"; };
 		78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindSportStatisticsMap.swift; sourceTree = "<group>"; };
+		78FB8BA12E4CCB4E009F5A6F /* Water Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Water Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78FB8BAE2E4CCB4F009F5A6F /* Water MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Water MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78FB8BB82E4CCB4F009F5A6F /* Water MacUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Water MacUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarPlacements.swift; sourceTree = "<group>"; };
 		78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateQRCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		78FB8BA22E4CCB4E009F5A6F /* Water Mac */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Water Mac"; sourceTree = "<group>"; };
+		78FB8BB12E4CCB4F009F5A6F /* Water MacTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Water MacTests"; sourceTree = "<group>"; };
+		78FB8BBB2E4CCB4F009F5A6F /* Water MacUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Water MacUITests"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		785C4A922B358F7B00EB07F8 /* Frameworks */ = {
@@ -412,6 +459,29 @@
 			files = (
 				78E5A85D2C32DA4100456ABC /* Surge in Frameworks */,
 				78A283722C3E8DA00052AA52 /* StoreKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78FB8B9E2E4CCB4E009F5A6F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78FB8C352E4CCED2009F5A6F /* Kanna in Frameworks */,
+				78FB8C332E4CCED2009F5A6F /* XMLCoder in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78FB8BAB2E4CCB4F009F5A6F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78FB8BB52E4CCB4F009F5A6F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,6 +595,9 @@
 				785C4A972B358F7B00EB07F8 /* 7III Downwind */,
 				78844E282C2E9D6900B703F5 /* Tracker Watch Watch App */,
 				78A283872C4671400052AA52 /* 7III Water Stickers */,
+				78FB8BA22E4CCB4E009F5A6F /* Water Mac */,
+				78FB8BB12E4CCB4F009F5A6F /* Water MacTests */,
+				78FB8BBB2E4CCB4F009F5A6F /* Water MacUITests */,
 				785C4A962B358F7B00EB07F8 /* Products */,
 				78E5A85B2C32DA4100456ABC /* Frameworks */,
 			);
@@ -536,6 +609,9 @@
 				785C4A952B358F7B00EB07F8 /* 7III Tracker.app */,
 				78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */,
 				78A283862C4671400052AA52 /* 7III Water.appex */,
+				78FB8BA12E4CCB4E009F5A6F /* Water Mac.app */,
+				78FB8BAE2E4CCB4F009F5A6F /* Water MacTests.xctest */,
+				78FB8BB82E4CCB4F009F5A6F /* Water MacUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -804,6 +880,7 @@
 				78DB913E2E45FB9D00B222C2 /* Dashboards.swift */,
 				7894765C2E489B35005D8C58 /* DashboardRow.swift */,
 				78DB914C2E45FC5100B222C2 /* AddElementView.swift */,
+				78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */,
 				78DB91402E45FB9D00B222C2 /* DashboardView.swift */,
 				789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */,
 				78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */,
@@ -887,6 +964,76 @@
 			productReference = 78A283862C4671400052AA52 /* 7III Water.appex */;
 			productType = "com.apple.product-type.app-extension.messages-sticker-pack";
 		};
+		78FB8BA02E4CCB4E009F5A6F /* Water Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water Mac" */;
+			buildPhases = (
+				78FB8B9D2E4CCB4E009F5A6F /* Sources */,
+				78FB8B9E2E4CCB4E009F5A6F /* Frameworks */,
+				78FB8B9F2E4CCB4E009F5A6F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				78FB8BA22E4CCB4E009F5A6F /* Water Mac */,
+			);
+			name = "Water Mac";
+			packageProductDependencies = (
+				78FB8C322E4CCED2009F5A6F /* XMLCoder */,
+				78FB8C342E4CCED2009F5A6F /* Kanna */,
+			);
+			productName = "Water Mac";
+			productReference = 78FB8BA12E4CCB4E009F5A6F /* Water Mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		78FB8BAD2E4CCB4F009F5A6F /* Water MacTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78FB8BC72E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water MacTests" */;
+			buildPhases = (
+				78FB8BAA2E4CCB4F009F5A6F /* Sources */,
+				78FB8BAB2E4CCB4F009F5A6F /* Frameworks */,
+				78FB8BAC2E4CCB4F009F5A6F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78FB8BB02E4CCB4F009F5A6F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				78FB8BB12E4CCB4F009F5A6F /* Water MacTests */,
+			);
+			name = "Water MacTests";
+			packageProductDependencies = (
+			);
+			productName = "Water MacTests";
+			productReference = 78FB8BAE2E4CCB4F009F5A6F /* Water MacTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		78FB8BB72E4CCB4F009F5A6F /* Water MacUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78FB8BC82E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water MacUITests" */;
+			buildPhases = (
+				78FB8BB42E4CCB4F009F5A6F /* Sources */,
+				78FB8BB52E4CCB4F009F5A6F /* Frameworks */,
+				78FB8BB62E4CCB4F009F5A6F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78FB8BBA2E4CCB4F009F5A6F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				78FB8BBB2E4CCB4F009F5A6F /* Water MacUITests */,
+			);
+			name = "Water MacUITests";
+			packageProductDependencies = (
+			);
+			productName = "Water MacUITests";
+			productReference = 78FB8BB82E4CCB4F009F5A6F /* Water MacUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -894,7 +1041,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1540;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					785C4A942B358F7B00EB07F8 = {
@@ -905,6 +1052,17 @@
 					};
 					78A283852C4671400052AA52 = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					78FB8BA02E4CCB4E009F5A6F = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					78FB8BAD2E4CCB4F009F5A6F = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 78FB8BA02E4CCB4E009F5A6F;
+					};
+					78FB8BB72E4CCB4F009F5A6F = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 78FB8BA02E4CCB4E009F5A6F;
 					};
 				};
 			};
@@ -930,6 +1088,9 @@
 				785C4A942B358F7B00EB07F8 /* 7III Tracker */,
 				78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */,
 				78A283852C4671400052AA52 /* 7III Water */,
+				78FB8BA02E4CCB4E009F5A6F /* Water Mac */,
+				78FB8BAD2E4CCB4F009F5A6F /* Water MacTests */,
+				78FB8BB72E4CCB4F009F5A6F /* Water MacUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -962,6 +1123,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				78A283892C4671420052AA52 /* Stickers.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78FB8B9F2E4CCB4E009F5A6F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78FB8C372E4CCFBC009F5A6F /* Assets.xcassets in Resources */,
+				78FB8C362E4CCF05009F5A6F /* product_ids.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78FB8BAC2E4CCB4F009F5A6F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78FB8BB62E4CCB4F009F5A6F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1060,6 +1244,7 @@
 				78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */,
 				781562A32B94D92900E081FC /* QRCodeView.swift in Sources */,
 				78EC60912E0DDBD100C55950 /* RouteSticker.swift in Sources */,
+				78FB8C3A2E4CD196009F5A6F /* ToolbarPlacements.swift in Sources */,
 				781A4BB72C50F2470046AE0E /* SpeedOption.swift in Sources */,
 				78320BC72BB1D97800D6A772 /* StatisticsModelings.swift in Sources */,
 				78DB908C2E44CA9500B222C2 /* NavigationButton.swift in Sources */,
@@ -1137,6 +1322,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		78FB8B9D2E4CCB4E009F5A6F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78FB8C292E4CCD0C009F5A6F /* DashboardView.swift in Sources */,
+				78FB8C2A2E4CCD0C009F5A6F /* TrackedElementRow.swift in Sources */,
+				78FB8C2B2E4CCD0C009F5A6F /* Dashboards.swift in Sources */,
+				78FB8C2C2E4CCD0C009F5A6F /* NestedElementsRow.swift in Sources */,
+				78FB8C2D2E4CCD0C009F5A6F /* DashboardRow.swift in Sources */,
+				78FB8C2E2E4CCD0C009F5A6F /* WidgetDashboardView.swift in Sources */,
+				78FB8C2F2E4CCD0C009F5A6F /* AddElementView.swift in Sources */,
+				78FB8C302E4CCD0C009F5A6F /* WebPreview.swift in Sources */,
+				78FB8BC92E4CCBD1009F5A6F /* DownwindManager.swift in Sources */,
+				78FB8C392E4CD196009F5A6F /* ToolbarPlacements.swift in Sources */,
+				78FB8C242E4CCCFD009F5A6F /* TrackedElement.swift in Sources */,
+				78FB8C252E4CCCFD009F5A6F /* IfLet.swift in Sources */,
+				78FB8C262E4CCCFD009F5A6F /* UnitType.swift in Sources */,
+				78FB8C272E4CCCFD009F5A6F /* UnitConverter.swift in Sources */,
+				78FB8C282E4CCCFD009F5A6F /* WebScrapingService.swift in Sources */,
+				78FB8C222E4CCCF0009F5A6F /* Dashboard.swift in Sources */,
+				78FB8C232E4CCCF6009F5A6F /* TrackedElementsManager.swift in Sources */,
+				78FB8C312E4CCE58009F5A6F /* NavDestination.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78FB8BAA2E4CCB4F009F5A6F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78FB8BB42E4CCB4F009F5A6F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1149,6 +1373,16 @@
 			isa = PBXTargetDependency;
 			target = 78A283852C4671400052AA52 /* 7III Water */;
 			targetProxy = 78A2838B2C4671420052AA52 /* PBXContainerItemProxy */;
+		};
+		78FB8BB02E4CCB4F009F5A6F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78FB8BA02E4CCB4E009F5A6F /* Water Mac */;
+			targetProxy = 78FB8BAF2E4CCB4F009F5A6F /* PBXContainerItemProxy */;
+		};
+		78FB8BBA2E4CCB4F009F5A6F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78FB8BA02E4CCB4E009F5A6F /* Water Mac */;
+			targetProxy = 78FB8BB92E4CCB4F009F5A6F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1483,6 +1717,138 @@
 			};
 			name = Release;
 		};
+		78FB8BC02E4CCB4F009F5A6F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Water Mac/Water_Mac.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A9H57996U3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Water-Mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		78FB8BC12E4CCB4F009F5A6F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Water Mac/Water_Mac.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A9H57996U3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Water-Mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		78FB8BC22E4CCB4F009F5A6F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A9H57996U3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Water-MacTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Water Mac.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Water Mac";
+			};
+			name = Debug;
+		};
+		78FB8BC32E4CCB4F009F5A6F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A9H57996U3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Water-MacTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Water Mac.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Water Mac";
+			};
+			name = Release;
+		};
+		78FB8BC42E4CCB4F009F5A6F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A9H57996U3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Water-MacUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Water Mac";
+			};
+			name = Debug;
+		};
+		78FB8BC52E4CCB4F009F5A6F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A9H57996U3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Water-MacUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Water Mac";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1518,6 +1884,33 @@
 			buildConfigurations = (
 				78A2838F2C4671420052AA52 /* Debug */,
 				78A283902C4671420052AA52 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78FB8BC02E4CCB4F009F5A6F /* Debug */,
+				78FB8BC12E4CCB4F009F5A6F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78FB8BC72E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water MacTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78FB8BC22E4CCB4F009F5A6F /* Debug */,
+				78FB8BC32E4CCB4F009F5A6F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78FB8BC82E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water MacUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78FB8BC42E4CCB4F009F5A6F /* Debug */,
+				78FB8BC52E4CCB4F009F5A6F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1584,6 +1977,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 78F047C62D9DA655003E11FA /* XCRemoteSwiftPackageReference "XMLCoder" */;
 			productName = XMLCoder;
+		};
+		78FB8C322E4CCED2009F5A6F /* XMLCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78F047C62D9DA655003E11FA /* XCRemoteSwiftPackageReference "XMLCoder" */;
+			productName = XMLCoder;
+		};
+		78FB8C342E4CCED2009F5A6F /* Kanna */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78DB913A2E45F1D700B222C2 /* XCRemoteSwiftPackageReference "Kanna" */;
+			productName = Kanna;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

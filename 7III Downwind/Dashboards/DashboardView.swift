@@ -47,7 +47,12 @@ struct DashboardView: View {
                 Section {
                     let nestedElements = manager.makeNestedElements(dashboardIndex: dashboardIndex)
                     ForEach(nestedElements, id: \.self) { elements in
-                        let doNotShow = !downwindManager.hasPurchasedPremium && nestedElements.firstIndex(of: elements) != 0
+                        #if os(macOS)
+                        let isNotMac = false
+                        #else
+                        let isNotMac = true
+                        #endif
+                        let doNotShow = !downwindManager.hasPurchasedPremium && nestedElements.firstIndex(of: elements) != 0 && isNotMac
                         if doNotShow {
                             Button {
                                 navPath = NavigationPath()
@@ -127,9 +132,11 @@ struct DashboardView: View {
                     }
                 } footer: {
                     VStack(alignment: .leading, spacing: 8) {
+                        #if os(iOS)
                         if manager.pulledDownList == false {
                             Text("ℹ️ Pull down to refresh the list!")
                         }
+                        #endif
                         if manager.showGroupInfo {
                             Text("💡 Elements with the same URL and a label sharing at least a 2-character prefix will be grouped.")
                         }
@@ -139,7 +146,9 @@ struct DashboardView: View {
                 }
             }
         }
+        #if os(iOS)
         .listStyle(.insetGrouped)
+        #endif
         .environment(\.defaultMinListRowHeight, 0)
         .navigationTitle(name)
         .refreshable {
@@ -149,7 +158,7 @@ struct DashboardView: View {
             }
         }
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
+            ToolbarItemGroup(placement: toolbarTrailingPlacement) {
                 Menu {
                     Button {
                         showingAddSheet = true
@@ -186,12 +195,24 @@ struct DashboardView: View {
                         if let jsonString = manager.exportDashboardJSON(dashboard: dashboard) {
                             let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(dashboard.name).json")
                             try? jsonString.data(using: .utf8)?.write(to: tempURL)
+                            
+                            #if os(macOS)
+                            let sharingPicker = NSSharingServicePicker(items: [tempURL])
+                            
+                            // Get the current window
+                            if let window = NSApp.keyWindow {
+                                // Show the sharing picker at the button location
+                                sharingPicker.show(relativeTo: .zero, of: window.contentView!, preferredEdge: .minY)
+                            }
+                            #else
+                            // iOS fallback (your original code)
                             let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
                             
                             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                                let window = windowScene.windows.first {
                                 window.rootViewController?.present(activityVC, animated: true)
                             }
+                            #endif
                         }
                     } label: {
                         Label("Share \(name)", systemImage: "square.and.arrow.up")
@@ -211,16 +232,18 @@ struct DashboardView: View {
             NavigationStack {
                 AddElementView(manager: manager, dashboardIndex: dashboardIndex, element: $newElement)
                     .navigationTitle(editingElement ? "Edit Element" : "Add Element")
+                #if os(iOS)
                     .navigationBarTitleDisplayMode(.inline)
+                #endif
                     .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
+                        ToolbarItem(placement: toolbarLeadingPlacement) {
                             Button("Cancel") {
                                 showingAddSheet = false
                                 editingElement = false
                                 newElement = TrackedElement(url: "", xpath: "", userLabel: "")
                             }
                         }
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                        ToolbarItem(placement: toolbarTrailingPlacement) {
                             Button(editingElement ? "Update" : "Save") {
                                 if editingElement {
                                     manager.editElement(newElement, dashboardIndex: dashboardIndex)

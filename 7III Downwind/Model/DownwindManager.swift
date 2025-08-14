@@ -8,8 +8,10 @@
 import SwiftUI
 import CoreLocation
 import _MapKit_SwiftUI
+#if os(iOS)
 import KeychainSwift
 import HealthKit
+#endif
 import StoreKit
 import XMLCoder
 
@@ -22,6 +24,7 @@ public enum StoreError: Error {
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // MARK: - App Storage and Init
+    #if os(iOS)
     @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
     @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("showGPXImport") var showGPXImport: Bool = true
@@ -49,7 +52,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func incrementWorkoutCount(for type: WorkoutType) {
         workoutUsageCount[type, default: 0] += 1
     }
-    
+    #endif
     override init() {
         super.init()
         // Start a transaction listener as close to app launch as possible so you don't miss any transactions.
@@ -63,16 +66,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             await updateCustomerProductStatus()
         }
-        
+        #if os(iOS)
         loadTags()
         
         setupLocationManager()
+        #endif
     }
     
     deinit {
         updateListenerTask?.cancel()
     }
-    
+#if os(iOS)
     // MARK: - Tags
     
     @AppStorage("statisticTags") private var tagsData: Data = Data()
@@ -3271,7 +3275,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// different sigmas and rvalues
     let sigmas = [0.01, 0.03, 0.0625, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9]
     let rValues = [42, 35, 29.0, 24.0, 15, 9, 1]
-    
+    #endif
     // MARK: - In App Purchases
     
     let freeTrackerSessionsNumber = 8
@@ -3493,6 +3497,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // MARK: - News Section
     @AppStorage("lastVersionNewsClosed") var lastVersionNewsClosed = ""
     
+    #if os(iOS)
     // MARK: - GPX Import
     
     var importedRuns = [ImportRun]()
@@ -3689,7 +3694,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    // MARK: Error Logging
+    // MARK: - Error Logging
     var errorLog: String = "Errors will show up here.\n"
     private let errorFileName = "error_log.txt"
     
@@ -3736,4 +3741,5 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func getErrorEntries() -> [String] {
         return errorLog.components(separatedBy: "\n").filter { !$0.isEmpty }
     }
+    #endif
 }

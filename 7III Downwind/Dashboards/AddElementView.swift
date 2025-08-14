@@ -32,7 +32,6 @@ struct AddElementView: View {
             let wordCount = value.components(separatedBy: .whitespaces).count
             return wordCount
         }
-        
     }
     
     var body: some View {
@@ -40,11 +39,13 @@ struct AddElementView: View {
                 Section {
                     TextField("Label (e.g., Ka'a Average Wind)", text: $element.userLabel)
                     TextField("Website URL", text: $element.url)
+                        #if os(iOS)
                         .keyboardType(.URL)
                         .autocapitalization(.none)
+                        #endif
                         .disableAutocorrection(true)
                 } header: {
-                    Text(("Element Details"))
+                    Text("Element Details")
                 }
                 
                 Section {

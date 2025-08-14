@@ -8,6 +8,14 @@
 import SwiftUI
 import WebKit
 
+#if os(iOS)
+import UIKit
+typealias PlatformViewRepresentable = UIViewRepresentable
+#elseif os(macOS)
+import AppKit
+typealias PlatformViewRepresentable = NSViewRepresentable
+#endif
+
 struct WebPreviewView: View {
     let url: String
     @Binding var cssSelector: String
@@ -45,9 +53,11 @@ struct WebPreviewView: View {
                 WebView(url: url, selectedElement: $selectedElement)
             
             .navigationTitle("Select Element")
+                #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+                #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: toolbarTrailingPlacement) {
                     Button("Cancel") {
                         dismiss()
                     }
@@ -60,33 +70,36 @@ struct WebPreviewView: View {
 }
 
 
-struct WebView: UIViewRepresentable {
+struct WebView: PlatformViewRepresentable {
     let url: String
     @Binding var selectedElement: String
-    
-    func makeUIView(context: Context) -> WKWebView {
+
+    #if os(iOS)
+    func makeUIView(context: Context) -> WKWebView { makeWebView(context: context) }
+    func updateUIView(_ uiView: WKWebView, context: Context) { updateWebView(uiView, context: context) }
+    #elseif os(macOS)
+    func makeNSView(context: Context) -> WKWebView { makeWebView(context: context) }
+    func updateNSView(_ nsView: WKWebView, context: Context) { updateWebView(nsView, context: context) }
+    #endif
+
+    private func makeWebView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
         let contentController = WKUserContentController()
-        
-        // Add message handler
         contentController.add(context.coordinator, name: "elementSelected")
         config.userContentController = contentController
-        
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = context.coordinator
-        
         return webView
     }
-    
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        if let url = URL(string: url) {
-            uiView.load(URLRequest(url: url))
+
+    private func updateWebView(_ webView: WKWebView, context: Context) {
+        if let u = URL(string: url) {
+            webView.load(URLRequest(url: u))
         }
     }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
+
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+
     
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
         let parent: WebView

@@ -34,7 +34,11 @@ struct WidgetDashboardView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 50)
+                    #if os(iOS)
                     .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    #elseif os(macOS)
+                    .background(Color(NSColor.windowBackgroundColor), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    #endif
                     .padding(.horizontal)
                         
                 } else {
@@ -67,9 +71,11 @@ struct WidgetDashboardView: View {
                             }
                         }
                         .padding(.vertical, widgetPadding*1.5)
+                    #if os(iOS)
                         .background {
                             ListBackground()
                         }
+                    #endif
                         .opacity(tapOpacity)
                         .onTapGesture {
                                 tapOpacity = 0.5
