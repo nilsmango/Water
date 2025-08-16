@@ -427,7 +427,7 @@
 		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
 		78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsSheetView.swift; sourceTree = "<group>"; };
 		78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindSportStatisticsMap.swift; sourceTree = "<group>"; };
-		78FB8BA12E4CCB4E009F5A6F /* Water Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Water Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78FB8BA12E4CCB4E009F5A6F /* Water 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Water 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78FB8BAE2E4CCB4F009F5A6F /* Water MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Water MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78FB8BB82E4CCB4F009F5A6F /* Water MacUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Water MacUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarPlacements.swift; sourceTree = "<group>"; };
@@ -609,7 +609,7 @@
 				785C4A952B358F7B00EB07F8 /* 7III Tracker.app */,
 				78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */,
 				78A283862C4671400052AA52 /* 7III Water.appex */,
-				78FB8BA12E4CCB4E009F5A6F /* Water Mac.app */,
+				78FB8BA12E4CCB4E009F5A6F /* Water 2.app */,
 				78FB8BAE2E4CCB4F009F5A6F /* Water MacTests.xctest */,
 				78FB8BB82E4CCB4F009F5A6F /* Water MacUITests.xctest */,
 			);
@@ -964,9 +964,9 @@
 			productReference = 78A283862C4671400052AA52 /* 7III Water.appex */;
 			productType = "com.apple.product-type.app-extension.messages-sticker-pack";
 		};
-		78FB8BA02E4CCB4E009F5A6F /* Water Mac */ = {
+		78FB8BA02E4CCB4E009F5A6F /* Water 2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water Mac" */;
+			buildConfigurationList = 78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water 2" */;
 			buildPhases = (
 				78FB8B9D2E4CCB4E009F5A6F /* Sources */,
 				78FB8B9E2E4CCB4E009F5A6F /* Frameworks */,
@@ -979,13 +979,13 @@
 			fileSystemSynchronizedGroups = (
 				78FB8BA22E4CCB4E009F5A6F /* Water Mac */,
 			);
-			name = "Water Mac";
+			name = "Water 2";
 			packageProductDependencies = (
 				78FB8C322E4CCED2009F5A6F /* XMLCoder */,
 				78FB8C342E4CCED2009F5A6F /* Kanna */,
 			);
 			productName = "Water Mac";
-			productReference = 78FB8BA12E4CCB4E009F5A6F /* Water Mac.app */;
+			productReference = 78FB8BA12E4CCB4E009F5A6F /* Water 2.app */;
 			productType = "com.apple.product-type.application";
 		};
 		78FB8BAD2E4CCB4F009F5A6F /* Water MacTests */ = {
@@ -1088,7 +1088,7 @@
 				785C4A942B358F7B00EB07F8 /* 7III Tracker */,
 				78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */,
 				78A283852C4671400052AA52 /* 7III Water */,
-				78FB8BA02E4CCB4E009F5A6F /* Water Mac */,
+				78FB8BA02E4CCB4E009F5A6F /* Water 2 */,
 				78FB8BAD2E4CCB4F009F5A6F /* Water MacTests */,
 				78FB8BB72E4CCB4F009F5A6F /* Water MacUITests */,
 			);
@@ -1376,12 +1376,12 @@
 		};
 		78FB8BB02E4CCB4F009F5A6F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 78FB8BA02E4CCB4E009F5A6F /* Water Mac */;
+			target = 78FB8BA02E4CCB4E009F5A6F /* Water 2 */;
 			targetProxy = 78FB8BAF2E4CCB4F009F5A6F /* PBXContainerItemProxy */;
 		};
 		78FB8BBA2E4CCB4F009F5A6F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 78FB8BA02E4CCB4E009F5A6F /* Water Mac */;
+			target = 78FB8BA02E4CCB4E009F5A6F /* Water 2 */;
 			targetProxy = 78FB8BB92E4CCB4F009F5A6F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1737,7 +1737,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Water-Mac";
+				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.Water2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
@@ -1766,7 +1766,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.Water-Mac";
+				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.Water2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
@@ -1888,7 +1888,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water Mac" */ = {
+		78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water 2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78FB8BC02E4CCB4F009F5A6F /* Debug */,
