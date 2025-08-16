@@ -294,32 +294,53 @@ class TrackedElementsManager: ObservableObject {
         }
         
         let groupedByURL = Dictionary(grouping: elements) { $0.url }
+        let urlGroups = Array(groupedByURL)
+        let maxConcurrency = 4
         
-        // Process each URL group
-        for (url, elementsForURL) in groupedByURL {
-            if shouldCancelRefresh {
-                await MainActor.run {
-                    refreshmentStatus = nil
-                    widgetRefreshmentStatus = nil
-                }
-                return
-            }
-            let updatedGroup = await webService.processElementsForURL(url: url, elements: elementsForURL, maxWaitTime: maxWaitTime, maxWaitAfterPlaceholder: maxWaitAfterPlaceholder)
-            await MainActor.run {
-                if shouldCancelRefresh {
-                    refreshmentStatus = nil
-                    widgetRefreshmentStatus = nil
-                    return
-                }
-                for element in updatedGroup {
-                    if let index = dashboards[dashboardIndex].elements.firstIndex(where: { $0.id == element.id }) {
-                        withAnimation {
-                            dashboards[dashboardIndex].elements[index] = element
-                        }
-                        completedCount += 1
-                        self.refreshmentStatus = "Refreshing | \(completedCount)/\(total)"
-                        self.widgetRefreshmentStatus = "Refreshing \(dashboardToUpdate.name) | \(completedCount)/\(total)"
+        // Process in batches to limit concurrent WebViews
+        for i in stride(from: 0, to: urlGroups.count, by: maxConcurrency) {
+            if shouldCancelRefresh { break }
+            
+            let endIndex = min(i + maxConcurrency, urlGroups.count)
+            let batch = Array(urlGroups[i..<endIndex])
+            
+            await withTaskGroup(of: (String, [TrackedElement]).self) { group in
+                for (url, elementsForURL) in batch {
+                    group.addTask {
+                        // Each task gets its own WebScrapingService instance
+                        let webService = WebScrapingService()
+                        let updatedGroup = await webService.processElementsForURL(
+                            url: url,
+                            elements: elementsForURL,
+                            maxWaitTime: self.maxWaitTime,
+                            maxWaitAfterPlaceholder: self.maxWaitAfterPlaceholder
+                        )
+                        return (url, updatedGroup)
                     }
+                }
+                
+                // Collect results from current batch
+                for await (_, updatedGroup) in group {
+                    await MainActor.run {
+                        if shouldCancelRefresh {
+                            refreshmentStatus = nil
+                            widgetRefreshmentStatus = nil
+                            return
+                        }
+                        
+                        for element in updatedGroup {
+                            if let index = dashboards[dashboardIndex].elements.firstIndex(where: { $0.id == element.id }) {
+                                withAnimation {
+                                    dashboards[dashboardIndex].elements[index] = element
+                                }
+                                completedCount += 1
+                                self.refreshmentStatus = "Refreshing | \(completedCount)/\(total)"
+                                self.widgetRefreshmentStatus = "Refreshing \(dashboardToUpdate.name) | \(completedCount)/\(total)"
+                            }
+                        }
+                    }
+                    
+                    if shouldCancelRefresh { break }
                 }
             }
         }
