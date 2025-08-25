@@ -116,7 +116,7 @@ extension WebScrapingService {
         
         
         let effectiveMaxWaitTime = foundPlaceholderAt != nil ?
-        min(maxWaitTime, Date().timeIntervalSince(foundPlaceholderAt!) + 2.0) : maxWaitTime
+        min(maxWaitTime, Date().timeIntervalSince(foundPlaceholderAt!) + maxWaitAfterPlaceholder) : maxWaitTime
         
         if elapsed >= effectiveMaxWaitTime {
             print("Timeout waiting for element at xpath: \(xpath) after \(elapsed) seconds")

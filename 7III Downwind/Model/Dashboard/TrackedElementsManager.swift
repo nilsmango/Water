@@ -232,8 +232,8 @@ class TrackedElementsManager: ObservableObject {
     
     // MARK: - refreshing
     
-    @AppStorage("maxWaitTime") var maxWaitTime: Double = 5.0
-    @AppStorage("maxWaitAfter") var maxWaitAfterPlaceholder: Double = 2.0
+    @AppStorage("maxWaitTime") var maxWaitTime: Double = 6.0
+    @AppStorage("maxWaitAfter") var maxWaitAfterPlaceholder: Double = 2.7
     
     func refreshElement(_ element: TrackedElement, dashboardIndex: Int) async {
         let elements = dashboards[dashboardIndex].elements
@@ -295,7 +295,7 @@ class TrackedElementsManager: ObservableObject {
         
         let groupedByURL = Dictionary(grouping: elements) { $0.url }
         let urlGroups = Array(groupedByURL)
-        let maxConcurrency = 4
+        let maxConcurrency = 10
         
         // Process in batches to limit concurrent WebViews
         for i in stride(from: 0, to: urlGroups.count, by: maxConcurrency) {

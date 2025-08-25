@@ -136,7 +136,7 @@
 		78A2837C2C4551BD0052AA52 /* PremiumSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837B2C4551BD0052AA52 /* PremiumSection.swift */; };
 		78A2837E2C45578F0052AA52 /* RefundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837D2C45578F0052AA52 /* RefundView.swift */; };
 		78A283892C4671420052AA52 /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78A283882C4671420052AA52 /* Stickers.xcassets */; };
-		78A2838D2C4671420052AA52 /* 7III Water.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 78A283862C4671400052AA52 /* 7III Water.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		78A2838D2C4671420052AA52 /* 7III Water Stickers.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 78A283862C4671400052AA52 /* 7III Water Stickers.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		78A9EB082B57132F0054E9F9 /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
 		78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E32C18C93F00C75A60 /* WorkoutType.swift */; };
 		78B388E62C1A136800C75A60 /* YearlyMonthlyStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
@@ -243,7 +243,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				78A2838D2C4671420052AA52 /* 7III Water.appex in Embed Foundation Extensions */,
+				78A2838D2C4671420052AA52 /* 7III Water Stickers.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,7 +387,7 @@
 		78A283792C450EA80052AA52 /* UpgradeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeStatus.swift; sourceTree = "<group>"; };
 		78A2837B2C4551BD0052AA52 /* PremiumSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumSection.swift; sourceTree = "<group>"; };
 		78A2837D2C45578F0052AA52 /* RefundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefundView.swift; sourceTree = "<group>"; };
-		78A283862C4671400052AA52 /* 7III Water.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "7III Water.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78A283862C4671400052AA52 /* 7III Water Stickers.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "7III Water Stickers.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78A283882C4671420052AA52 /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = "<group>"; };
 		78A2838A2C4671420052AA52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78A9EB072B57132F0054E9F9 /* RunShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunShareView.swift; sourceTree = "<group>"; };
@@ -427,7 +427,7 @@
 		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
 		78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsSheetView.swift; sourceTree = "<group>"; };
 		78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindSportStatisticsMap.swift; sourceTree = "<group>"; };
-		78FB8BA12E4CCB4E009F5A6F /* Water 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Water 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		78FB8BA12E4CCB4E009F5A6F /* 7III Water.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Water.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78FB8BAE2E4CCB4F009F5A6F /* Water MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Water MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78FB8BB82E4CCB4F009F5A6F /* Water MacUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Water MacUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarPlacements.swift; sourceTree = "<group>"; };
@@ -608,8 +608,8 @@
 			children = (
 				785C4A952B358F7B00EB07F8 /* 7III Tracker.app */,
 				78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */,
-				78A283862C4671400052AA52 /* 7III Water.appex */,
-				78FB8BA12E4CCB4E009F5A6F /* Water 2.app */,
+				78A283862C4671400052AA52 /* 7III Water Stickers.appex */,
+				78FB8BA12E4CCB4E009F5A6F /* 7III Water.app */,
 				78FB8BAE2E4CCB4F009F5A6F /* Water MacTests.xctest */,
 				78FB8BB82E4CCB4F009F5A6F /* Water MacUITests.xctest */,
 			);
@@ -949,9 +949,9 @@
 			productReference = 78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		78A283852C4671400052AA52 /* 7III Water */ = {
+		78A283852C4671400052AA52 /* 7III Water Stickers */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 78A2838E2C4671420052AA52 /* Build configuration list for PBXNativeTarget "7III Water" */;
+			buildConfigurationList = 78A2838E2C4671420052AA52 /* Build configuration list for PBXNativeTarget "7III Water Stickers" */;
 			buildPhases = (
 				78A283842C4671400052AA52 /* Resources */,
 			);
@@ -959,14 +959,14 @@
 			);
 			dependencies = (
 			);
-			name = "7III Water";
+			name = "7III Water Stickers";
 			productName = "7III Water Stickers";
-			productReference = 78A283862C4671400052AA52 /* 7III Water.appex */;
+			productReference = 78A283862C4671400052AA52 /* 7III Water Stickers.appex */;
 			productType = "com.apple.product-type.app-extension.messages-sticker-pack";
 		};
-		78FB8BA02E4CCB4E009F5A6F /* Water 2 */ = {
+		78FB8BA02E4CCB4E009F5A6F /* 7III Water */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water 2" */;
+			buildConfigurationList = 78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "7III Water" */;
 			buildPhases = (
 				78FB8B9D2E4CCB4E009F5A6F /* Sources */,
 				78FB8B9E2E4CCB4E009F5A6F /* Frameworks */,
@@ -979,13 +979,13 @@
 			fileSystemSynchronizedGroups = (
 				78FB8BA22E4CCB4E009F5A6F /* Water Mac */,
 			);
-			name = "Water 2";
+			name = "7III Water";
 			packageProductDependencies = (
 				78FB8C322E4CCED2009F5A6F /* XMLCoder */,
 				78FB8C342E4CCED2009F5A6F /* Kanna */,
 			);
 			productName = "Water Mac";
-			productReference = 78FB8BA12E4CCB4E009F5A6F /* Water 2.app */;
+			productReference = 78FB8BA12E4CCB4E009F5A6F /* 7III Water.app */;
 			productType = "com.apple.product-type.application";
 		};
 		78FB8BAD2E4CCB4F009F5A6F /* Water MacTests */ = {
@@ -1087,8 +1087,8 @@
 			targets = (
 				785C4A942B358F7B00EB07F8 /* 7III Tracker */,
 				78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */,
-				78A283852C4671400052AA52 /* 7III Water */,
-				78FB8BA02E4CCB4E009F5A6F /* Water 2 */,
+				78A283852C4671400052AA52 /* 7III Water Stickers */,
+				78FB8BA02E4CCB4E009F5A6F /* 7III Water */,
 				78FB8BAD2E4CCB4F009F5A6F /* Water MacTests */,
 				78FB8BB72E4CCB4F009F5A6F /* Water MacUITests */,
 			);
@@ -1371,17 +1371,17 @@
 		};
 		78A2838C2C4671420052AA52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 78A283852C4671400052AA52 /* 7III Water */;
+			target = 78A283852C4671400052AA52 /* 7III Water Stickers */;
 			targetProxy = 78A2838B2C4671420052AA52 /* PBXContainerItemProxy */;
 		};
 		78FB8BB02E4CCB4F009F5A6F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 78FB8BA02E4CCB4E009F5A6F /* Water 2 */;
+			target = 78FB8BA02E4CCB4E009F5A6F /* 7III Water */;
 			targetProxy = 78FB8BAF2E4CCB4F009F5A6F /* PBXContainerItemProxy */;
 		};
 		78FB8BBA2E4CCB4F009F5A6F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 78FB8BA02E4CCB4E009F5A6F /* Water 2 */;
+			target = 78FB8BA02E4CCB4E009F5A6F /* 7III Water */;
 			targetProxy = 78FB8BB92E4CCB4F009F5A6F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1730,6 +1730,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1759,6 +1761,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1879,7 +1883,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		78A2838E2C4671420052AA52 /* Build configuration list for PBXNativeTarget "7III Water" */ = {
+		78A2838E2C4671420052AA52 /* Build configuration list for PBXNativeTarget "7III Water Stickers" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78A2838F2C4671420052AA52 /* Debug */,
@@ -1888,7 +1892,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "Water 2" */ = {
+		78FB8BC62E4CCB4F009F5A6F /* Build configuration list for PBXNativeTarget "7III Water" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				78FB8BC02E4CCB4F009F5A6F /* Debug */,
