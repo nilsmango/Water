@@ -284,7 +284,8 @@ class TrackedElementsManager: ObservableObject {
     func refreshAllElements(dashboardIndex: Int) async {
         shouldCancelRefresh = false
         let dashboardToUpdate = dashboards[dashboardIndex]
-        let elements = dashboardToUpdate.elements
+        // shuffling to not always have the same update order
+        let elements = dashboardToUpdate.elements.shuffled()
         let total = elements.count
         
         await MainActor.run {
@@ -360,7 +361,7 @@ class TrackedElementsManager: ObservableObject {
     // Helper actor to coordinate delays between requests to the same URL base
     actor URLBaseDelayCoordinator {
         private var lastRequestTimes: [String: Date] = [:]
-        private let minimumDelay: TimeInterval = 0.4 // 400ms minimum
+        private let minimumDelay: TimeInterval = 0.6 // 400ms minimum
         private let maximumDelay: TimeInterval = 2.0 // 2000ms maximum
         
         func coordinatedDelay(for url: String) async {
