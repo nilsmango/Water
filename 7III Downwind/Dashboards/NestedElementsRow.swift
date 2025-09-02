@@ -33,32 +33,43 @@ struct NestedElementsRow: View {
             Spacer(minLength: 0.0)
             
             if !rowText.isEmpty {
-                HStack {
-                    ForEach(Array(rowText.enumerated()), id: \.0) { index, text in
-                        if index > 0 {
-                            Text(" | ")
-                        }
-                        if text.isEmpty {
-                            if error != nil {
-                                Image(systemName: "exclamationmark.triangle")
-                                    .foregroundColor(.orange)
-                            } else {
-                                Text("-")
+                if error != nil {
+//                    HStack {
+//                        Image(systemName: "exclamationmark.triangle")
+                        
+                        Text(error!)                        
+//                    }
+                    .lineLimit(1)
+                        .foregroundColor(.orange)
+                } else {
+                    HStack {
+                        ForEach(Array(rowText.enumerated()), id: \.0) { index, text in
+                            if index > 0 {
+                                Text(" | ")
                             }
-                            
-                        } else {
-                            Text(text)
-                                .scaleEffect(1.0)
+                            if text.isEmpty {
+                                if error != nil {
+                                    Image(systemName: "exclamationmark.triangle")
+                                        .foregroundColor(.orange)
+                                } else {
+                                    Text("-")
+                                }
+                                
+                            } else {
+                                Text(text)
+                                    .scaleEffect(1.0)
+                            }
                         }
-                    }
-                    
-                    if directionDegrees != nil {
-                        let size = 16.0
-                        Image(systemName: "arrow.up")
-                            .rotationEffect(.degrees(animationDegrees))
-                            .frame(width: size, height: size)
+                        
+                        if directionDegrees != nil {
+                            let size = 16.0
+                            Image(systemName: "arrow.up")
+                                .rotationEffect(.degrees(animationDegrees))
+                                .frame(width: size, height: size)
+                        }
                     }
                 }
+                
             } else {
                 Text("--")
                     .foregroundColor(.secondary)
@@ -120,7 +131,7 @@ struct NestedElementsRow: View {
 
 #Preview {
     List {
-        NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: "some error", rowText: ["4.5 kn", "", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: nil, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
+        NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: "some error because not found", rowText: ["4.5 kn", "", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: nil, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
             .listRowSeparator(.hidden)
         NestedElementsRow(label: "Vinguelz", url: "https://example.com", error: "some error", rowText: ["4.5 kn", "", "SW"], directionDegrees: 45.0, element: nil, dashboardIndex: nil, manager: TrackedElementsManager(), onExpand: {}, onEdit: {}, onDuplicate: {})
             .listRowSeparator(.hidden)

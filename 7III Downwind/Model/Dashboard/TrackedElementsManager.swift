@@ -297,6 +297,9 @@ class TrackedElementsManager: ObservableObject {
         let urlGroups = Array(groupedByURL)
         let maxConcurrency = 10
         
+        // Create a shared actor to coordinate delays per URL base
+        let delayCoordinator = URLBaseDelayCoordinator()
+        
         // Process in batches to limit concurrent WebViews
         for i in stride(from: 0, to: urlGroups.count, by: maxConcurrency) {
             if shouldCancelRefresh { break }
@@ -307,7 +310,9 @@ class TrackedElementsManager: ObservableObject {
             await withTaskGroup(of: (String, [TrackedElement]).self) { group in
                 for (url, elementsForURL) in batch {
                     group.addTask {
-                        // Each task gets its own WebScrapingService instance
+                        // Coordinate delay based on URL base
+                        await delayCoordinator.coordinatedDelay(for: url)
+                        
                         let webService = WebScrapingService()
                         let updatedGroup = await webService.processElementsForURL(
                             url: url,
@@ -349,6 +354,68 @@ class TrackedElementsManager: ObservableObject {
             self.saveDashboards()
             refreshmentStatus = nil
             widgetRefreshmentStatus = nil
+        }
+    }
+
+    // Helper actor to coordinate delays between requests to the same URL base
+    actor URLBaseDelayCoordinator {
+        private var lastRequestTimes: [String: Date] = [:]
+        private let minimumDelay: TimeInterval = 0.4 // 400ms minimum
+        private let maximumDelay: TimeInterval = 2.0 // 2000ms maximum
+        
+        func coordinatedDelay(for url: String) async {
+            let urlBase = extractURLBase(from: url)
+            let now = Date()
+            
+            if let lastRequestTime = lastRequestTimes[urlBase] {
+                let timeSinceLastRequest = now.timeIntervalSince(lastRequestTime)
+                let randomDelay = Double.random(in: minimumDelay...maximumDelay)
+                
+                if timeSinceLastRequest < randomDelay {
+                    let sleepTime = randomDelay - timeSinceLastRequest
+                    try? await Task.sleep(nanoseconds: UInt64(sleepTime * 1_000_000_000))
+                }
+            }
+            
+            lastRequestTimes[urlBase] = Date()
+        }
+        
+        private func extractURLBase(from urlString: String) -> String {
+            guard let url = URL(string: urlString),
+                  let host = url.host else {
+                return urlString // Fallback to full URL if parsing fails
+            }
+            
+            // Extract the main domain (e.g., "meteobase.ch" from "vingelz.meteobase.ch")
+            let mainDomain = extractMainDomain(from: host)
+            let scheme = url.scheme ?? "https"
+            return "\(scheme)://\(mainDomain)"
+        }
+        
+        private func extractMainDomain(from host: String) -> String {
+            let components = host.split(separator: ".")
+            
+            // Handle cases like "example.com", "example.co.uk", etc.
+            if components.count >= 2 {
+                // For most cases, take the last two components (domain + TLD)
+                let lastTwo = components.suffix(2).joined(separator: ".")
+                
+                // Handle special cases like .co.uk, .com.au, etc.
+                if components.count >= 3 {
+                    let lastThree = components.suffix(3).joined(separator: ".")
+                    let knownTwoPartTLDs = ["co.uk", "com.au", "co.jp", "com.br", "co.za", "com.mx"]
+                    
+                    for tld in knownTwoPartTLDs {
+                        if lastThree.hasSuffix(tld) {
+                            return lastThree
+                        }
+                    }
+                }
+                
+                return lastTwo
+            }
+            
+            return host // Fallback for edge cases
         }
     }
     
