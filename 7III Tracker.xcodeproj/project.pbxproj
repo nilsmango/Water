@@ -102,6 +102,10 @@
 		7877E1492BC52C9600776890 /* View+readSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1482BC52C9600776890 /* View+readSize.swift */; };
 		7877E14B2BC5850C00776890 /* TagsFlexiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E14A2BC5850C00776890 /* TagsFlexiView.swift */; };
 		787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
+		788382072E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
+		788382082E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
+		788382092E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
+		7883820A2E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
 		78844E2A2C2E9D6900B703F5 /* Tracker_WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */; };
 		78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E2B2C2E9D6900B703F5 /* StartView.swift */; };
 		78844E2E2C2E9D6A00B703F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78844E2D2C2E9D6A00B703F5 /* Assets.xcassets */; };
@@ -356,6 +360,7 @@
 		7877E1482BC52C9600776890 /* View+readSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+readSize.swift"; sourceTree = "<group>"; };
 		7877E14A2BC5850C00776890 /* TagsFlexiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsFlexiView.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
+		788382062E8BD68800C68EF6 /* 7III Water.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "7III Water.icon"; sourceTree = "<group>"; };
 		78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tracker Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker_WatchApp.swift; sourceTree = "<group>"; };
 		78844E2B2C2E9D6900B703F5 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
@@ -592,6 +597,7 @@
 		785C4A8C2B358F7B00EB07F8 = {
 			isa = PBXGroup;
 			children = (
+				788382062E8BD68800C68EF6 /* 7III Water.icon */,
 				785C4A972B358F7B00EB07F8 /* 7III Downwind */,
 				78844E282C2E9D6900B703F5 /* Tracker Watch Watch App */,
 				78A283872C4671400052AA52 /* 7III Water Stickers */,
@@ -1100,6 +1106,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				788382092E8BD68800C68EF6 /* 7III Water.icon in Resources */,
 				78EC608F2E0D331800C55950 /* locationData.json in Resources */,
 				785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */,
 				785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */,
@@ -1111,6 +1118,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				788382082E8BD68800C68EF6 /* 7III Water.icon in Resources */,
 				78844E312C2E9D6A00B703F5 /* Preview Assets.xcassets in Resources */,
 				78844E3B2C2EA6CB00B703F5 /* Assets.xcassets in Resources */,
 				78844E2E2C2E9D6A00B703F5 /* Assets.xcassets in Resources */,
@@ -1123,6 +1131,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78A283892C4671420052AA52 /* Stickers.xcassets in Resources */,
+				7883820A2E8BD68800C68EF6 /* 7III Water.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1131,6 +1140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78FB8C372E4CCFBC009F5A6F /* Assets.xcassets in Resources */,
+				788382072E8BD68800C68EF6 /* 7III Water.icon in Resources */,
 				78FB8C362E4CCF05009F5A6F /* product_ids.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1506,8 +1516,9 @@
 		785C4AA52B358F7D00EB07F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "7III Water";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 37;
@@ -1554,8 +1565,9 @@
 		785C4AA62B358F7D00EB07F8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "7III Water";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 37;
@@ -1602,8 +1614,9 @@
 		78844E362C2E9D6A00B703F5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "7III Water";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 19;
@@ -1639,8 +1652,9 @@
 		78844E372C2E9D6A00B703F5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "7III Water";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 19;
@@ -1720,8 +1734,9 @@
 		78FB8BC02E4CCB4F009F5A6F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "7III Water";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Water Mac/Water_Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1751,8 +1766,9 @@
 		78FB8BC12E4CCB4F009F5A6F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "7III Water";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Water Mac/Water_Mac.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
