@@ -17,14 +17,51 @@ struct WindSportStatisticsMap: View {
     
     var body: some View {
             Map {
-                // start and end annotations + edit polyline
-                if statisticsData.locationData.count > 0 {
-                        MapPolyline(coordinates: makeSmoothedCoordinates(from: statisticsData))
-                            .stroke(
-                                .neonYellow,
-//                                Gradient(colors: downwindManager.createGradientArray(for: statisticsData.locationData, numberOfElementsToKeep: 30)),
-                                style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
-                                            
+                
+                if let waves = statisticsData.waves, !waves.isEmpty {
+                    if statisticsData.locationData.count > 0 {
+                        let nonWaves = partsBetweenWaves(locationData: statisticsData.locationData, waves: waves)
+                        
+                        ForEach(nonWaves.indices, id: \.self) { waveIndex in
+                            
+                            MapPolyline(coordinates: makeSmoothedCoordinates(from: nonWaves[waveIndex]))
+                                .stroke(
+                                    .gray.opacity(0.2),
+                                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                                
+                                
+                        }
+                    }
+                    // Wave lines
+                    ForEach(waves.indices, id: \.self) { waveIndex in
+                        let coordinates = makeSmoothedCoordinates(from: waves[waveIndex])
+                        MapPolyline(coordinates: coordinates)
+                                .stroke(
+                                    .neonYellow,
+                                    style: StrokeStyle(
+                                        lineWidth: lineWidth,
+                                        lineCap: .round,
+                                        lineJoin: .round
+                                    )
+                                )
+                        
+                        }
+                    
+                    
+                    
+                } else {
+                    // Line
+                    if statisticsData.locationData.count > 0 {
+                        MapPolyline(coordinates: makeSmoothedCoordinates(from: statisticsData.locationData))
+                                .stroke(
+                                    .neonYellow,
+    //                                Gradient(colors: downwindManager.createGradientArray(for: statisticsData.locationData, numberOfElementsToKeep: 30)),
+                                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                }
+                
+                }
+                                      
+                    // Start and End
                     let startData = statisticsData.locationData.first!
                     let startCoordinate = CLLocationCoordinate2D(latitude: startData.latitude, longitude: startData.longitude)
                     Annotation("Start", coordinate: startCoordinate) {
@@ -42,14 +79,48 @@ struct WindSportStatisticsMap: View {
                             .stroke(.white, lineWidth: 2)
                             .frame(width: 15.0)
                     }
-                }
+                
             }
     }
 }
 
 // MARK: - Coordinate Processing Functions
 
-private func makeSmoothedCoordinates(from statistic: RunStatistic) -> [CLLocationCoordinate2D] {
+private func partsBetweenWaves(locationData: [LocationData], waves: [[LocationData]]) -> [[LocationData]] {
+    // Collect all wave points into a Set for fast lookup
+    let wavePoints = Set(waves.flatMap { $0 })
+    
+    var result: [[LocationData]] = []
+    var currentPart: [LocationData] = []
+    
+    for point in locationData {
+        if wavePoints.contains(point) {
+            // If we hit a wave point, finish current part, but get the start and end points in there
+            if currentPart.count == 1 {
+                currentPart = []
+                currentPart.append(point)
+            } else if !currentPart.isEmpty {
+                    currentPart.append(point)
+                    result.append(currentPart)
+                    currentPart = []
+            } else {
+                currentPart.append(point)
+            }
+        } else {
+            // Collect non-wave points
+            currentPart.append(point)
+        }
+    }
+    
+    // Add last part if any
+    if !currentPart.isEmpty {
+        result.append(currentPart)
+    }
+    
+    return result
+}
+
+private func makeSmoothedCoordinates(from statistic: [LocationData]) -> [CLLocationCoordinate2D] {
     let rawCoordinates = makeCoordinates(from: statistic)
     
     // Only smooth if we have enough points
@@ -59,9 +130,9 @@ private func makeSmoothedCoordinates(from statistic: RunStatistic) -> [CLLocatio
     return applyAngleSmoothing(coordinates: rawCoordinates)
 }
 
-private func makeCoordinates(from statistic: RunStatistic) -> [CLLocationCoordinate2D] {
+private func makeCoordinates(from statistic: [LocationData]) -> [CLLocationCoordinate2D] {
     var coordinates = [CLLocationCoordinate2D]()
-    for location in statistic.locationData {
+    for location in statistic {
         let locationCoordinates = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
         coordinates.append(locationCoordinates)
     }

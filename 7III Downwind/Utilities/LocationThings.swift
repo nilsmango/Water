@@ -306,7 +306,7 @@ private func bearingDifference(newBearing: Double, oldBearing: Double, oldDirect
 }
 
 /// returns how many times you got below threshold speed (not counting the first non flight and the last (falls)), and also the % of not flying (time) and also the longest distance on foil in n
-func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double = 8.0, countTurns: Bool = false) -> (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double) {
+func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double = 8.0, countTurns: Bool = false, returnWaves: Bool = false) -> (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double, waves: [[LocationData]]) {
     let indexes = findAboveThresholdIndexes(in: data, thresholdKmh: thresholdSpeedKmh)
 //    print(indexes)
     
@@ -372,7 +372,12 @@ func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double 
 //        print("Turns: \(turns)")
     }
     
-    return (popUps, timeOnFoilPercentage, turns, longestDistanceOnFoil)
+    var waves = [[LocationData]]()
+    if returnWaves {
+        waves = turnsData
+    }
+    
+    return (popUps, timeOnFoilPercentage, turns, longestDistanceOnFoil, waves)
 }
 
 

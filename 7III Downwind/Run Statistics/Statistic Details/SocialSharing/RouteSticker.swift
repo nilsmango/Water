@@ -215,30 +215,7 @@ struct RouteSticker: View {
                 with: routeInYellow ? .color(.neonYellow) : .color(.white),
                 style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round)
             )
-//            
-//            // Draw start point (green circle)
-//            if let startPoint = points.first {
-//                let startCircle = Path(ellipseIn: CGRect(
-//                    x: startPoint.x - 8,
-//                    y: startPoint.y - 8,
-//                    width: 16,
-//                    height: 16
-//                ))
-//                context.fill(startCircle, with: .color(.green))
-//                context.stroke(startCircle, with: .color(.white), lineWidth: 2)
-//            }
-//            
-//            // Draw end point (red circle)
-//            if let endPoint = points.last {
-//                let endCircle = Path(ellipseIn: CGRect(
-//                    x: endPoint.x - 8,
-//                    y: endPoint.y - 8,
-//                    width: 16,
-//                    height: 16
-//                ))
-//                context.fill(endCircle, with: .color(.white))
-//                context.stroke(endCircle, with: .color(.white), lineWidth: 2)
-//            }
+
         }
     }
     

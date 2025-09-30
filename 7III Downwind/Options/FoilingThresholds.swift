@@ -22,6 +22,9 @@ struct FoilingThresholds: View {
                         }
                     }
                 }
+            } header: {
+                Text("To refresh the speed threshold, you need to edit and remove a point (or change start) from any map that has already been calculated.")
+                    .font(.caption)
             }
         }
         .onAppear {

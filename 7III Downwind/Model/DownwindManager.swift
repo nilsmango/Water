@@ -1550,14 +1550,15 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// save on foil stats to run edits
-    func saveOnFoilStats(popUps: Int, percentageOnFoil: Double, turns: Int, longestDistanceOnFoil: Double, statisticsID: UUID) {
+    func saveOnFoilStats(popUps: Int, percentageOnFoil: Double, turns: Int, longestDistanceOnFoil: Double, statisticsID: UUID, waves: [[LocationData]]) {
         if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsID }) {
             runEdits[editIndex].popUps = popUps
             runEdits[editIndex].percentageOnFoil = percentageOnFoil
             runEdits[editIndex].turnsCount = turns
             runEdits[editIndex].longestDistanceOnFoil = longestDistanceOnFoil
+            runEdits[editIndex].waves = waves
         } else {
-            let runEdit = RunEdit(id: statisticsID, popUps: popUps, percentageOnFoil: percentageOnFoil, turnsCount: turns, longestDistanceOnFoil: longestDistanceOnFoil)
+            let runEdit = RunEdit(id: statisticsID, popUps: popUps, percentageOnFoil: percentageOnFoil, turnsCount: turns, longestDistanceOnFoil: longestDistanceOnFoil, waves: waves)
             runEdits.append(runEdit)
         }
         saveRunEdits()
@@ -1726,20 +1727,23 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // updating falls and % on foil and turns
             if let workoutType = newStatistic.workoutType {
-                var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double) = (0, 0, 0, 0)
-                if workoutType.calculateFoilingStats {
-                    foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: workoutType.thresholdSpeedKmhSlowSpeedWithDefault, countTurns: workoutType.countTurns)
-                }
-                if foilStats != (0, 0, 0, 0) {
+                var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double, waves: [[LocationData]]) = (0, 0, 0, 0, [[]])
+                    if workoutType.calculateFoilingStats {
+                        foilStats = calculateFoilingStats(from: newStatistic.locationData, thresholdSpeedKmh: workoutType.thresholdSpeedKmhSlowSpeedWithDefault, countTurns: workoutType.countTurns, returnWaves: workoutType.returnWaves)
+                    }
+                if foilStats != (popUps: 0, timeOnFoilPercentage: 0, turns: 0, longestDistanceOnFoil: 0, waves: [[]]) {
+                    
                     runStatistics[index].popUps = foilStats.popUps
                     runStatistics[index].percentageOnFoil = foilStats.timeOnFoilPercentage
                     runStatistics[index].turnsCount = foilStats.turns
                     runStatistics[index].longestDistanceOnFoil = foilStats.longestDistanceOnFoil
+                    runStatistics[index].waves = foilStats.waves
                     
                     newRunEdit.popUps = foilStats.popUps
                     newRunEdit.percentageOnFoil = foilStats.timeOnFoilPercentage
                     newRunEdit.turnsCount = foilStats.turns
                     newRunEdit.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
+                    newRunEdit.waves = foilStats.waves
                 }
             }
             

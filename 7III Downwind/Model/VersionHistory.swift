@@ -16,6 +16,7 @@ let versionHistory: [Version] = [
                 "Dashboards can get pinned to the Main View.",
                 "A cleaner Main View with more control over what you see.",
                 "Better GPS smoothing for non-downwind Maps.",
+                "Indicating waves in maps now for some water sports.",
                 "Added Error Logging for GPS Tracking with iPhone.",
                 "Various bug fixes.",
                 "Updated design for iOS 26."

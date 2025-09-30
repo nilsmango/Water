@@ -34,6 +34,7 @@ struct RunStatistic: Identifiable, Codable {
     /// longest distance on foil in m
     var longestDistanceOnFoil: Double?
     var turnsCount: Int?
+    var waves: [[LocationData]]?
     
     var locationData: [LocationData]
     

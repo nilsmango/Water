@@ -153,6 +153,15 @@ enum WorkoutType: String, Codable, CaseIterable {
             return false
         }
     }
+    
+    var returnWaves: Bool {
+        switch self {
+        case .pumpFoil, .foilSurf, .wakeThief, .supFoil, .wakeFoil, .wakeSurf:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 
@@ -172,7 +181,7 @@ extension WorkoutType {
 
     var defaultThresholdSpeed: Double {
         switch self {
-        case .surf, .supSurf, .foilSurf, .supFoil, .wakeFoil, .wakeSurf, .wakeThief: return 12.3
+        case .surf, .supSurf, .foilSurf, .supFoil, .wakeFoil, .wakeSurf, .wakeThief: return 11.2
         case .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .pumpFoil, .eFoil, .eAssist: return 8.0
         default: return 10.0
         }

@@ -30,7 +30,7 @@ struct RunEdit: Identifiable, Codable {
     var percentageOnFoil: Double?
     var turnsCount: Int?
     var longestDistanceOnFoil: Double?
-    
+    var waves: [[LocationData]]?
     
 //    var newKCalories: Double?
 //    var newAverageHeartRate: Double?
