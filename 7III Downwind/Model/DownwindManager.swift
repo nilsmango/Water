@@ -466,18 +466,30 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         var totalSessions = 0
         var workoutCounts: [WorkoutType: Int] = [:]
         
-        if groupedRunStatistics.count > yearIndex {
-            if month == nil {
-                for runs in groupedRunStatistics[yearIndex] {
-                    for run in runs {
-                        totalSessions += 1
-                        if let type = run.workoutType {
-                            workoutCounts[type, default: 0] += 1
-                        }
-                    }
+        // Ensure year index is valid
+        guard yearIndex >= 0 && yearIndex < groupedRunStatistics.count else {
+            return (0, [:])
+        }
+        
+        let yearData = groupedRunStatistics[yearIndex]
+        
+        if let month = month {
+            // Ensure month index is valid
+            guard month >= 0 && month < yearData.count else {
+                return (0, [:])
+            }
+            
+            for run in yearData[month] {
+                totalSessions += 1
+                if let type = run.workoutType {
+                    workoutCounts[type, default: 0] += 1
                 }
-            } else {
-                for run in groupedRunStatistics[yearIndex][month!] {
+            }
+            
+        } else {
+            // Iterate over all months
+            for runs in yearData {
+                for run in runs {
                     totalSessions += 1
                     if let type = run.workoutType {
                         workoutCounts[type, default: 0] += 1
@@ -485,6 +497,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
             }
         }
+        
         return (totalSessions, workoutCounts)
     }
     

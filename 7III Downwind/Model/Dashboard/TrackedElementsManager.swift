@@ -450,6 +450,7 @@ class TrackedElementsManager: ObservableObject {
         } else {
             widgetDashboardIds.append(dashboardId)
         }
+        saveDashboards()
     }
     
     func canMoveWidgetUp(dashboardId: UUID) -> Bool {
@@ -472,6 +473,7 @@ class TrackedElementsManager: ObservableObject {
                 widgetDashboardIds.swapAt(index, index - 1)
             }
         }
+        saveDashboards()
     }
     
     func moveWidgetDown(dashboardId: UUID) {
@@ -480,5 +482,6 @@ class TrackedElementsManager: ObservableObject {
                 widgetDashboardIds.swapAt(index, index + 1)
             }
         }
+        saveDashboards()
     }
 }
