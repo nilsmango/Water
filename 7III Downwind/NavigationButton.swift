@@ -39,8 +39,20 @@ struct NavigationButton: View {
             .padding(8)
             .foregroundStyle(.white)
             .background {
-                RoundedRectangle(cornerRadius: 10)
+                if #available(iOS 26.0, *) {
+                    ConcentricRectangle(
+                        corners: .concentric,
+                        isUniform: true
+                    )
                     .fill(color)
+                    .containerShape(
+                                .rect(cornerRadius: 24)
+                            )
+                } else {
+                    RoundedRectangle(cornerRadius: 10.0)
+                        .fill(color)
+                }
+ 
             }
         }
         

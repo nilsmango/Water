@@ -49,9 +49,7 @@ struct HelpView: View {
                             Button {
                                 showUpgradeView = false
                             } label: {
-                                Label("Close", systemImage: "xmark")
-                                    .symbolRenderingMode(.palette)
-                                    .foregroundStyle(.black, .gray)
+                                XMarkLabel()
                             }
                         }
                     }

@@ -224,7 +224,13 @@ struct DashboardView: View {
                     
                     
                 } label: {
-                    Image(systemName: "ellipsis.circle.fill")
+                    if #available(iOS 26, *) {
+                        Label("Options", systemImage: "ellipsis")
+
+                    } else {
+                        Image(systemName: "ellipsis.circle.fill")
+                    }
+                    
                 }
             }
         }

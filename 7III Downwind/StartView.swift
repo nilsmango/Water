@@ -326,9 +326,7 @@ struct StartView: View {
                                 Button {
                                     showStartRunSheet = false
                                 } label: {
-                                    Label("Close", systemImage: "xmark")
-                                        .symbolRenderingMode(.palette)
-                                        .foregroundStyle(.black, .gray)
+                                    XMarkLabel()
                                 }
                             }
                         }
@@ -342,9 +340,7 @@ struct StartView: View {
                                 Button {
                                     downwindManager.showUpgradeSheet = false
                                 } label: {
-                                    Label("Close", systemImage: "xmark")
-                                        .symbolRenderingMode(.palette)
-                                        .foregroundStyle(.black, .gray)
+                                    XMarkLabel()
                                 }
                             }
                         }

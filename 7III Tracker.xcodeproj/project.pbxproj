@@ -106,6 +106,7 @@
 		788382082E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
 		788382092E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
 		7883820A2E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
+		788382242E8BFCD800C68EF6 /* XMarkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382232E8BFCD800C68EF6 /* XMarkLabel.swift */; };
 		78844E2A2C2E9D6900B703F5 /* Tracker_WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */; };
 		78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E2B2C2E9D6900B703F5 /* StartView.swift */; };
 		78844E2E2C2E9D6A00B703F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78844E2D2C2E9D6A00B703F5 /* Assets.xcassets */; };
@@ -361,6 +362,7 @@
 		7877E14A2BC5850C00776890 /* TagsFlexiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsFlexiView.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
 		788382062E8BD68800C68EF6 /* 7III Water.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "7III Water.icon"; sourceTree = "<group>"; };
+		788382232E8BFCD800C68EF6 /* XMarkLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMarkLabel.swift; sourceTree = "<group>"; };
 		78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tracker Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker_WatchApp.swift; sourceTree = "<group>"; };
 		78844E2B2C2E9D6900B703F5 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
@@ -630,6 +632,7 @@
 				78A283762C4115FE0052AA52 /* PremiumProducts.storekit */,
 				785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */,
 				785C4AC22B40B84300EB07F8 /* StartView.swift */,
+				788382232E8BFCD800C68EF6 /* XMarkLabel.swift */,
 				78DB908B2E44CA9500B222C2 /* NavigationButton.swift */,
 				78DB908D2E44D2C300B222C2 /* NavigationBar.swift */,
 				785CCF212D6B192B0075CA4C /* NewsSection.swift */,
@@ -1250,6 +1253,7 @@
 				78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */,
 				78A283782C43D5130052AA52 /* StartView.swift in Sources */,
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
+				788382242E8BFCD800C68EF6 /* XMarkLabel.swift in Sources */,
 				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
 				78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */,
 				781562A32B94D92900E081FC /* QRCodeView.swift in Sources */,

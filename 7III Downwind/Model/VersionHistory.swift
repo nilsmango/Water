@@ -16,7 +16,9 @@ let versionHistory: [Version] = [
                 "Dashboards can get pinned to the Main View.",
                 "A cleaner Main View with more control over what you see.",
                 "Better GPS smoothing for non-downwind Maps.",
-                "Added Error Logging for GPS Tracker."
+                "Added Error Logging for GPS Tracking with iPhone.",
+                "Various bug fixes.",
+                "Updated design for iOS 26."
             ],
             releaseDate: "August 2025"
            ),
