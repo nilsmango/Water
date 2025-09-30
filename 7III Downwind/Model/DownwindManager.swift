@@ -215,8 +215,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // saving the workout
             if HKHealthStore.isHealthDataAvailable() {
-                saveWorkoutToHealthBackup()
                 saveHealthWorkout()
+                saveWorkoutToHealthBackup()
             } else {
                 // save the statistics to disk if we don't have health available
                 saveRunStatistics()
@@ -330,8 +330,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             DispatchQueue.main.async {
                                 self.workout = workout
                                 self.loadRunStatistics()
-                                self.showingSummarySheet = false
-                                self.workout = nil
+                                
                                 
                                 // update and save the tracker sessions count
                                 self.trackerSessionsCount += 1
@@ -350,6 +349,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                         // The app already displayed the rating and review request view. Store this current version.
                                         self.lastVersionPromptedForReview = self.currentAppVersion
                                     }
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                    self.showingSummarySheet = false
+                                    self.workout = nil
                                 }
                             }
                         }
@@ -622,6 +625,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
     func deleteWorkout(id: UUID) {
+        // delete backup if available
+        if let backupIndex = backupWorkoutData.firstIndex(where: { $0.id == id }) {
+            backupWorkoutData.remove(at: backupIndex)
+            saveBackupWorkoutDataToDisk()
+        }
+        
         if HKHealthStore.isHealthDataAvailable() {
             // remove imported run if it is an imported one
             if let index = importedRuns.firstIndex(where: { $0.id == id }) {
@@ -1150,6 +1159,51 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                         
                     } else {
+                        // If we don't have any route data, not even an empty one we try to find the backup. Very hacky
+                        
+                        var locationData = [LocationData]()
+                        if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
+
+                            // find backup - this is done by comparing start date, but actually would make more sense to use id (?)
+                            if let backupIndex = self.backupWorkoutData.firstIndex(where: { $0.startDate == statistic.startDate }) {
+                                locationData = self.backupWorkoutData[backupIndex].locationData
+                                
+                            }
+                            
+                            // we only need to edit if we have a run edit
+                            if let runEdit = self.runEdits.first(where: { $0.id == id }) {
+                                // filtering out the deleted locations
+                                if let deletedLocations = runEdit.deletedLocations {
+                                    let newLocationData = locationData.filter { !deletedLocations.contains($0)}
+                                    dispatchGroup.enter()
+                                    DispatchQueue.main.async {
+                                        self.runStatistics[runIndex].locationData = newLocationData
+                                        dispatchGroup.leave()
+                                    }
+                                } else {
+                                    dispatchGroup.enter()
+                                    DispatchQueue.main.async {
+                                        self.runStatistics[runIndex].locationData = locationData
+                                        dispatchGroup.leave()
+                                    }
+                                }
+                            } else {
+                                dispatchGroup.enter()
+                                DispatchQueue.main.async {
+                                    self.runStatistics[runIndex].locationData = locationData
+                                    dispatchGroup.leave()
+                                }
+                            }
+                        } else {
+                            // we should never have to do that
+                            let run = RunStatistic(id: id, runName: "", crewStatistics: [], runTime: 0.0, runDistance: 0.0, topSpeed: 0.0, locationData: locationData)
+                            dispatchGroup.enter()
+                            DispatchQueue.main.async {
+                                self.runStatistics.append(run)
+                                dispatchGroup.leave()
+                            }
+                        }
+                        
                         if let averageHeartRate = averageHeartRate {
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
                                 dispatchGroup.enter()
