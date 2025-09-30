@@ -33,7 +33,7 @@ struct HelpView: View {
             } header: {
                 Text("How can we help?")
             } footer: {
-                Text("Use **Contact us** to report bugs, or send suggestions.\n\nApp Version: \(downwindManager.currentAppVersion)")
+                Text("Use **Contact us** to report bugs, or send suggestions.\n\nApp Version: \(downwindManager.currentAppVersion) \(downwindManager.currentAppBuild)")
             }
             
             

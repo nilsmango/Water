@@ -13,6 +13,9 @@ struct AboutView: View {
     var body: some View {
         ScrollView() {
             VStack(alignment: .leading, spacing: 10) {
+                Text("App Version: \(downwindManager.currentAppVersion) \(downwindManager.currentAppBuild)")
+                    .font(.footnote)
+                
                 Text("What can you do with this app?")
                     .font(.headline)
                 Text("Track your water sports sessions from your iPhone or your Apple Watch. All the data will get stored in Health so you will never loose the data.\nWater also imports all the water sport sessions you did save to Health in the past.\nYou can also track a session with your Garmin watch and import it into Water.\nAnd you can edit any session you had. The edits will only get saved in 7III Water.")

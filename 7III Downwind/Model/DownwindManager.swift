@@ -3548,6 +3548,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return version
     }()
     
+    let currentAppBuild: String = {
+        guard let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String else {
+            return "" // fallback if build missing
+        }
+        return "(\(build))"
+    }()
+    
     // MARK: - News Section
     @AppStorage("lastVersionNewsClosed") var lastVersionNewsClosed = ""
     
