@@ -231,7 +231,7 @@ struct OptionsView: View {
                             Button {
                                 showUpgradeView = false
                             } label: {
-                                Label("Close", systemImage: "xmark.circle.fill")
+                                Label("Close", systemImage: "xmark")
                                     .symbolRenderingMode(.palette)
                                     .foregroundStyle(.black, .gray)
                             }

@@ -288,7 +288,7 @@ struct StatisticsRunView: View {
                             Button {
                                 showUpgradeSheet = false
                             } label: {
-                                Label("Close", systemImage: "xmark.circle.fill")
+                                Label("Close", systemImage: "xmark")
                                     .symbolRenderingMode(.palette)
                                     .foregroundStyle(.black, .gray)
                             }
@@ -308,7 +308,7 @@ struct StatisticsRunView: View {
                         Button(action: {
                             showRounds = false
                         }, label: {
-                            Label("Close", systemImage: "xmark.circle.fill")
+                            Label("Close", systemImage: "xmark")
                                 .symbolRenderingMode(.palette)
                                 .foregroundStyle(.black, .gray)
                         })
@@ -333,7 +333,7 @@ struct StatisticsRunView: View {
                                 Button(action: {
                                     showMapSheet = false
                                 }, label: {
-                                    Label("Close", systemImage: "xmark.circle.fill")
+                                    Label("Close", systemImage: "xmark")
                                         .symbolRenderingMode(.palette)
                                         .foregroundStyle(.black, .gray)
                                 })
@@ -448,7 +448,7 @@ struct StatisticsRunView: View {
                             Button(action: {
                                 showShareSheet = false
                             }, label: {
-                                Label("Close", systemImage: "xmark.circle.fill")
+                                Label("Close", systemImage: "xmark")
                                     .symbolRenderingMode(.palette)
                                     .foregroundStyle(.black, .gray)
                             })
@@ -468,7 +468,7 @@ struct StatisticsRunView: View {
                             Button(action: {
                                 showStickerSheet = false
                             }, label: {
-                                Label("Close", systemImage: "xmark.circle.fill")
+                                Label("Close", systemImage: "xmark")
                                     .symbolRenderingMode(.palette)
                                     .foregroundStyle(.black, .gray)
                             })

@@ -143,7 +143,7 @@ struct RouteSticker: View {
                         Button(action: {
                             showHowTo = false
                         }, label: {
-                            Label("Close", systemImage: "xmark.circle.fill")
+                            Label("Close", systemImage: "xmark")
                                 .symbolRenderingMode(.palette)
                                 .foregroundStyle(.black, .gray)
                         })

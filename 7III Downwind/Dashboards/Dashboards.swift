@@ -135,7 +135,7 @@ struct Dashboards: View {
                     }
                     
                 } label: {
-                    Label("Add Dashboard", systemImage: "plus.circle.fill")
+                    Label("Add Dashboard", systemImage: "plus")
                 }
                 
             }

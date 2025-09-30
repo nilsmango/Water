@@ -30,7 +30,7 @@ struct StartOptionsMenu: View {
             }
             
         } label: {
-            Label("Options", systemImage: "ellipsis.circle.fill")
+            Label("Options", systemImage: "ellipsis")
                 
         }
     }
