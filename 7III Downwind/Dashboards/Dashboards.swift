@@ -19,6 +19,8 @@ struct Dashboards: View {
     @State private var isLoadingImportedDashboards = false
     @Binding var navPath: NavigationPath
     
+    @AppStorage("showInfo") var showInfo: Bool = true
+    
     var body: some View {
         List {
             
@@ -30,85 +32,104 @@ struct Dashboards: View {
                 }
             }
             
-            ForEach(manager.dashboards) { dashboard in
-                #if os(macOS)
-                let isNotMac = false
-                #else
-                let isNotMac = true
-                #endif
-                if !downwindManager.hasPurchasedPremium && manager.dashboards.firstIndex(of: dashboard) ?? 1 > 0 && isNotMac {
-                    Button {
-                        navPath = NavigationPath()
-                        downwindManager.showUpgradeSheet = true
+            Section {
+                ForEach(manager.dashboards) { dashboard in
+                    #if os(macOS)
+                    let isNotMac = false
+                    #else
+                    let isNotMac = true
+                    #endif
+                    if !downwindManager.hasPurchasedPremium && manager.dashboards.firstIndex(of: dashboard) ?? 1 > 0 && isNotMac {
+                        Button {
+                            navPath = NavigationPath()
+                            downwindManager.showUpgradeSheet = true
+                            
+                        } label: {
+                            Label("Unlock unlimited Dashboards", systemImage: "lock.fill")
+                        }
+                    } else {
                         
-                    } label: {
-                        Label("Unlock unlimited Dashboards", systemImage: "lock.fill")
-                    }
-                } else {
-                    
-                    NavigationLink(value: dashboard) {
-                        let isWidgetEnabled = manager.widgetDashboardIds.contains(dashboard.id)
-                        DashboardRow(name: dashboard.name, isWidgetEnabled: isWidgetEnabled)
-                            .contextMenu {
-                                Button {
-                                    newDashboardName = dashboard.name
-                                    newDashboardId = dashboard.id
-                                    isEdit = true
-                                    showingAddAlert = true
-                                } label: {
-                                    Label("Edit Name", systemImage: "square.and.pencil")
-                                }
-                                
-                                Button {
-                                    newDashboardName = dashboard.info ?? ""
-                                    newDashboardId = dashboard.id
-                                    showingInfoAlert = true
-                                } label: {
-                                    Label("Edit Info", systemImage: "info.circle")
-                                }
-                                
-                                Button {
-                                    manager.toggleWidgetEnabled(dashboardId: dashboard.id)
-                                } label: {
-                                    Label(isWidgetEnabled ? "Remove from Main View" : "Add to Main View", systemImage: isWidgetEnabled ? "pin.slash.fill" : "pin.fill")
-                                }
-                                
-                                Button(role: .destructive) {
-                                    manager.deleteDashboard(dashboard)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                                
-                                Button {
-                                    if let jsonString = manager.exportDashboardJSON(dashboard: dashboard) {
-                                        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(dashboard.name).json")
-                                        try? jsonString.data(using: .utf8)?.write(to: tempURL)
-
-                                        #if os(iOS)
-                                        let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
-                                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                           let window = windowScene.windows.first {
-                                            window.rootViewController?.present(activityVC, animated: true)
+                        NavigationLink(value: dashboard) {
+                            let isWidgetEnabled = manager.widgetDashboardIds.contains(dashboard.id)
+                            DashboardRow(name: dashboard.name, isWidgetEnabled: isWidgetEnabled)
+                                .contextMenu {
+                                    Button {
+                                        newDashboardName = dashboard.name
+                                        newDashboardId = dashboard.id
+                                        isEdit = true
+                                        showingAddAlert = true
+                                        if showInfo {
+                                            showInfo = false
                                         }
-                                        #elseif os(macOS)
-                                        let panel = NSSavePanel()
-                                        panel.nameFieldStringValue = "\(dashboard.name).json"
-                                        panel.begin { response in
-                                            if response == .OK, let saveURL = panel.url {
-                                                try? FileManager.default.copyItem(at: tempURL, to: saveURL)
-                                            }
-                                        }
-                                        #endif
+                                    } label: {
+                                        Label("Edit Name", systemImage: "square.and.pencil")
                                     }
-                                } label: {
-                                    Label("Share \(dashboard.name)", systemImage: "square.and.arrow.up")
+                                    
+                                    Button {
+                                        newDashboardName = dashboard.info ?? ""
+                                        newDashboardId = dashboard.id
+                                        showingInfoAlert = true
+                                        if showInfo {
+                                            showInfo = false
+                                        }
+                                    } label: {
+                                        Label("Edit Info", systemImage: "info.circle")
+                                    }
+                                    
+                                    Button {
+                                        manager.toggleWidgetEnabled(dashboardId: dashboard.id)
+                                        if showInfo {
+                                            showInfo = false
+                                        }
+                                    } label: {
+                                        Label(isWidgetEnabled ? "Remove from Main View" : "Add to Main View", systemImage: isWidgetEnabled ? "pin.slash.fill" : "pin.fill")
+                                    }
+                                    
+                                    Button(role: .destructive) {
+                                        manager.deleteDashboard(dashboard)
+                                        if showInfo {
+                                            showInfo = false
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                    
+                                    Button {
+                                        if let jsonString = manager.exportDashboardJSON(dashboard: dashboard) {
+                                            let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(dashboard.name).json")
+                                            try? jsonString.data(using: .utf8)?.write(to: tempURL)
+
+                                            #if os(iOS)
+                                            let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+                                            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                               let window = windowScene.windows.first {
+                                                window.rootViewController?.present(activityVC, animated: true)
+                                            }
+                                            #elseif os(macOS)
+                                            let panel = NSSavePanel()
+                                            panel.nameFieldStringValue = "\(dashboard.name).json"
+                                            panel.begin { response in
+                                                if response == .OK, let saveURL = panel.url {
+                                                    try? FileManager.default.copyItem(at: tempURL, to: saveURL)
+                                                }
+                                            }
+                                            #endif
+                                        }
+                                    } label: {
+                                        Label("Share \(dashboard.name)", systemImage: "square.and.arrow.up")
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
+                .onDelete(perform: manager.deleteDashboards)
+                .onMove(perform: manager.moveDashboards)
+            } footer: {
+                if showInfo {
+                    Label("Long press for context menu (for pinning a Dashboard to Main View etc.)", systemImage: "info.circle")
+                }
             }
-            .onDelete(perform: manager.deleteDashboards)
-            .onMove(perform: manager.moveDashboards)
+            
         }
         .navigationTitle("Dashboards")
         #if os(iOS)
