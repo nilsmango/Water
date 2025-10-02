@@ -793,80 +793,98 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         return version
     }()
+    
+    let currentAppBuild: String = {
+        guard let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String else {
+            return "" // fallback if build missing
+        }
+        return "(\(build))"
+    }()
 }
 
 // MARK: - HKWorkoutSessionDelegate
 extension WorkoutManager: HKWorkoutSessionDelegate {
+    
     func workoutSession(_ workoutSession: HKWorkoutSession,
                         didChangeTo toState: HKWorkoutSessionState,
                         from fromState: HKWorkoutSessionState,
                         date: Date) {
         
-        // Wait for the session to transition states before ending the builder.
         if toState == .ended {
-            if withGPS {
-                // stop location tracking
-                stopLocationService()
-            }
-            
-            let runDistance = HKQuantity(unit: .meter(), doubleValue: distance)
-            let runTopSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: topSpeed)
-            let runAverageSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: averageSpeed)
-            let tags = activeTags.joined(separator: " ")
-            let workoutType = workoutType
+            // Request background time for watchOS
+            ProcessInfo.processInfo.performExpiringActivity(
+                withReason: "Saving workout route") { expired in
+                
+                if expired {
+                    print("⚠️ Background time expired before route saved")
+                    return
+                }
+                
+                // All your saving code goes INSIDE this block
+                let runDistance = HKQuantity(unit: .meter(), doubleValue: self.distance)
+                let runTopSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: self.topSpeed)
+                let runAverageSpeed = HKQuantity(unit: .meter().unitDivided(by: .second()), doubleValue: self.averageSpeed)
+                let tags = self.activeTags.joined(separator: " ")
+                let workoutType = self.workoutType
 
-            var allMetadata: [String: Any] = [
-                Constants.customMetadataKeyWorkoutType: workoutType.rawValue,
-                Constants.customMetadataKeyTags: tags
-            ]
-            if distance != 0.0 {
-                allMetadata[Constants.customTotalDistanceKey] = runDistance
-            }
-            if topSpeed != 0.0 {
-                allMetadata[HKMetadataKeyMaximumSpeed] = runTopSpeed
-            }
-            if averageSpeed != 0.0 {
-                allMetadata[HKMetadataKeyAverageSpeed] = runAverageSpeed
-            }
-            if !withGPS {
-                if let startLocation = startLocation {
-                    let locationString = "\(startLocation.coordinate.latitude), \(startLocation.coordinate.longitude)"
-                    allMetadata[Constants.customLocationKey] = locationString
+                var allMetadata: [String: Any] = [
+                    Constants.customMetadataKeyWorkoutType: workoutType.rawValue,
+                    Constants.customMetadataKeyTags: tags
+                ]
+                if self.distance != 0.0 {
+                    allMetadata[Constants.customTotalDistanceKey] = runDistance
                 }
-            }
-            
-            builder?.addMetadata(allMetadata, completion: { success, error in
-                if let error = error {
-                    print("Error adding metadata: \(error.localizedDescription)")
+                if self.topSpeed != 0.0 {
+                    allMetadata[HKMetadataKeyMaximumSpeed] = runTopSpeed
                 }
-                self.builder?.endCollection(withEnd: date) { (success, error) in
-                    self.builder?.finishWorkout { (workout, error) in
-                        DispatchQueue.main.async {
-                            self.workout = workout
-                        }
-                        if self.withGPS {
-                            if let workout = workout {
-                                self.routeBuilder?.finishRoute(with: workout, metadata: nil) { newRoute, error in
-                                    if let error = error {
-                                        print("Error finishing route: \(error.localizedDescription)")
+                if self.averageSpeed != 0.0 {
+                    allMetadata[HKMetadataKeyAverageSpeed] = runAverageSpeed
+                }
+                if !self.withGPS {
+                    if let startLocation = self.startLocation {
+                        let locationString = "\(startLocation.coordinate.latitude), \(startLocation.coordinate.longitude)"
+                        allMetadata[Constants.customLocationKey] = locationString
+                    }
+                }
+                
+                self.builder?.addMetadata(allMetadata, completion: { success, error in
+                    if let error = error {
+                        print("Error adding metadata: \(error.localizedDescription)")
+                    }
+                    self.builder?.endCollection(withEnd: date) { (success, error) in
+                        self.builder?.finishWorkout { (workout, error) in
+                            DispatchQueue.main.async {
+                                self.workout = workout
+                            }
+                            if self.withGPS {
+                                if let workout = workout {
+                                    self.routeBuilder?.finishRoute(with: workout, metadata: nil) { newRoute, error in
+                                        if let error = error {
+                                            print("❌ Error finishing route: \(error.localizedDescription)")
+                                        }
+                                        
+                                        if let route = newRoute {
+                                            print("✅ Successfully saved route: \(route.uuid)")
+                                        } else {
+                                            print("⚠️ Failed to finish route - route is nil")
+                                        }
+                                        
+                                        // Cleanup after route is saved
+                                        self.stopLocationService()
+                                        self.routeBuilder = nil
+                                        self.builder = nil
                                     }
-                                    
-                                    if newRoute == nil {
-                                        print("Failed to finish route.")
-                                    }
-                                    
-                                    // Optional: Do something with the route here
-                                    print("Successfully saved workout and route to HealthKit.")
-                                    
-                                    // Discard the routeBuilder and workoutBuilder
-                                    self.routeBuilder = nil
-                                    self.builder = nil
                                 }
+                            } else {
+                                // No GPS - cleanup immediately
+                                self.stopLocationService()
+                                self.routeBuilder = nil
+                                self.builder = nil
                             }
                         }
                     }
-                }
-            })
+                })
+            }
         }
     }
     
