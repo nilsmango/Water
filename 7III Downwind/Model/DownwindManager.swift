@@ -215,18 +215,19 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // saving the workout
             if HKHealthStore.isHealthDataAvailable() {
-                saveHealthWorkout()
                 saveWorkoutToHealthBackup()
+                saveHealthWorkout()
             } else {
                 // save the statistics to disk if we don't have health available
                 saveRunStatistics()
+                // only stop location when we don't have a loacation sharing still active
+                if !activeRun.active {
+                    // Stop location update
+                    stopLocationService()
+                }
             }
             
-            // only stop location when we don't have a loacation sharing still active
-            if !activeRun.active {
-                // Stop location update
-                stopLocationService()
-            }
+            
         }
     }    
     
@@ -276,6 +277,18 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             HKMetadataKeyAverageSpeed: averageSpeed
         ]
         
+        // Request background time for iOS
+        var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
+            
+        backgroundTaskID = UIApplication.shared.beginBackgroundTask(withName: "Saving workout route") {
+            // Expiration handler
+            print("⚠️ Background time expired before route saved")
+            if backgroundTaskID != .invalid {
+                UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                backgroundTaskID = .invalid
+            }
+        }
+        
         workoutBuilder?.addMetadata(allMetadata, completion: { success, error in
             if let error = error {
                 self.logError("Error adding metadata: \(error.localizedDescription)")
@@ -309,7 +322,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             self.logError("Cannot finish route - routeBuilder is nil")
                         }
                         
-                        self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { newRoute, error in
+                        self.routeBuilder?.finishRoute(with: myWorkout, metadata: nil) { [self] newRoute, error in
                             
                             if let error = error {
                                 self.logError("Error finishing route: \(error.localizedDescription)")
@@ -322,9 +335,23 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             // Optional: Do something with the route here
                             print("Successfully saved workout and route to HealthKit.")
                             
+                            // only now stop location to keep iphone active
+                            DispatchQueue.main.async {
+                                if !self.activeRun.active {
+                                    // Stop location update
+                                    self.stopLocationService()
+                                }
+                            }
+                            // End background task AFTER everything completes
+                            if backgroundTaskID != .invalid {
+                                                        UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                                                        backgroundTaskID = .invalid
+                                                    }
+                            
                             // Discard the routeBuilder and workoutBuilder
                             self.routeBuilder = nil
                             self.workoutBuilder = nil
+                            
                             
                             // Reload both statistic arrays
                             DispatchQueue.main.async {
@@ -1496,12 +1523,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             if let error = errorOrNil {
                 // Handle any errors here.
-                print("Error, no locations found: \(error)")
-                return
+                self.logError("Error, no locations found: \(error) - in locationDataFromWorkoutRoute")
+                return completion(allLocations)
             }
             
             guard let locations = locationsOrNil else {
-                fatalError("*** Invalid State: This can only fail if there was an error. ***")
+                self.logError("*** Invalid State: This can only fail if there was an error.  - in locationDataFromWorkoutRoute ***")
+                return completion(allLocations)
             }
             
             // Do something with this batch of location data.
