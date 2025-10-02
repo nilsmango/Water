@@ -43,7 +43,11 @@ struct StatisticsRunView: View {
     // trick for updating the map
     @State private var refreshPolyLines = false
     
+    @State private var showStallStats = false
+    @State private var stallEvents: [StallEvent] = []
+    
     var body: some View {
+        
         let cutDate = runDates.components(separatedBy: " ")
         let rounds = downwindManager.createRounds(for: statisticsData.locationData)
         
@@ -56,10 +60,20 @@ struct StatisticsRunView: View {
             
             if !statisticsData.locationData.isEmpty {
                 MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, rounds: rounds, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
-            }
+                
+                Section {
+                    SpeedChartView(data: statisticsData.locationData)
+                } header: {
+                    Text("Speed Chart")
+                        .textCase(nil)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                        .padding(.bottom, 9)
+                }
+            }            
             
                 HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate)
-                
             
                     Section {
                         TagsFlexiView(strings: tags)
@@ -192,81 +206,108 @@ struct StatisticsRunView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                
-                Menu {
-                    Button {
-                        videoSharing = true
-                        showShareSheet = true
+                if !showStallStats {
+                    Menu {
+                        Button {
+                            videoSharing = true
+                            showShareSheet = true
+                        } label: {
+                            Label("Video", systemImage: "film")
+                        }
+                        Button {
+                            videoSharing = false
+                            showShareSheet = true
+                        } label: {
+                            Label("Map Photo", systemImage: "photo")
+                        }
+                        Button {
+                            showStickerSheet = true
+                        } label: {
+                            Label("Sticker Overlay", systemImage: "square.dashed")
+                        }
+                        
+                        
+                        GPXExportButton(locationData: statisticsData.locationData, activityName:  (statisticsData.locationString ?? locationName) + " " + makeStringFromDate(statisticsData.startDate ?? Date()), workoutType: statisticsData.workoutType ?? .surf)
+                        
+                        
+                        
                     } label: {
-                        Label("Video", systemImage: "film")
+                        Label("Share", systemImage: "square.and.arrow.up")
                     }
-                    Button {
-                        videoSharing = false
-                        showShareSheet = true
-                    } label: {
-                        Label("Map Photo", systemImage: "photo")
-                    }
-                    Button {
-                        showStickerSheet = true
-                    } label: {
-                        Label("Sticker Overlay", systemImage: "square.dashed")
-                    }
-                    
-                    
-                    GPXExportButton(locationData: statisticsData.locationData, activityName:  (statisticsData.locationString ?? locationName) + " " + makeStringFromDate(statisticsData.startDate ?? Date()), workoutType: statisticsData.workoutType ?? .surf)
-                    
-                    
-                    
-                } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
                 }
             }
             
             ToolbarItem(placement: .topBarTrailing) {
-                
-                if statisticsData.locationData.count > 2 {
-                    Menu {
-                        Button(action: {
-                            if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4 {
-                                // update the edit data
-                                statisticsDataEdit = statisticsData
-                                showRunEditView = true
-                            } else {
-                                showUpgradeSheet = true
+                if showStallStats {
+                    Button {
+                        showStallStats.toggle()
+                    } label: {
+                        Label("Close", systemImage: "xmark")
+                    }
+                } else {
+                    if statisticsData.locationData.count > 2 {
+                        Menu {
+                            Button(action: {
+                                if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4 {
+                                    // update the edit data
+                                    statisticsDataEdit = statisticsData
+                                    showRunEditView = true
+                                } else {
+                                    showUpgradeSheet = true
+                                }
+                                
+                            }, label: {
+                                if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4  {
+                                    Text("Edit Route")
+                                } else {
+                                    Label("Edit Route", systemImage: "lock.fill")
+                                }
+                                
+                            })
+                            
+                            Button(action: {
+                                    // update the edit data
+                                    editTags = tags
+                                    editType = statisticsData.workoutType ?? .surf
+                                    showEditData = true
+                                
+                            }, label: {
+                                    Text("Edit Data")
+                            })
+                            
+                            if let workout = statisticsData.workoutType, workout.calculateFoilingStats {
+                                NavigationLink(destination: FoilingThresholds()) {
+                                    Text("Edit Threshold Speeds")
+                                }
                             }
                             
-                        }, label: {
-                            if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4  {
-                                Text("Edit Route")
-                            } else {
-                                Label("Edit Route", systemImage: "lock.fill")
+                            if statisticsData.locationData.isEmpty == false {
+                                Button {
+                                    stallEvents = FoilStallDetector.detectAllStallSpeeds(from: statisticsData.locationData)
+                                                        showStallStats = true
+                                } label: {
+                                    Text("Calculate Stall Speeds")
+                                }
                             }
                             
-                        })
-                        
+                            
+                            
+                        } label: {
+                            Text("Edit")
+                        }
+                    } else {
                         Button(action: {
                                 // update the edit data
                                 editTags = tags
                                 editType = statisticsData.workoutType ?? .surf
                                 showEditData = true
-                            
+                           
                         }, label: {
-                                Text("Edit Data")
+                                Text("Edit")
                         })
-                    } label: {
-                        Text("Edit")
                     }
-                } else {
-                    Button(action: {
-                            // update the edit data
-                            editTags = tags
-                            editType = statisticsData.workoutType ?? .surf
-                            showEditData = true
-                       
-                    }, label: {
-                            Text("Edit")
-                    })
                 }
+                
             }
         }
         
@@ -468,6 +509,13 @@ struct StatisticsRunView: View {
                     }
             }
         })
+        
+        .overlay {
+            if showStallStats {
+                StallStatsOverlay(events: stallEvents, isPresented: $showStallStats)
+                                .transition(.opacity)
+                        }
+        }
     }
 }
 

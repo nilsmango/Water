@@ -107,6 +107,9 @@
 		788382092E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
 		7883820A2E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
 		788382242E8BFCD800C68EF6 /* XMarkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382232E8BFCD800C68EF6 /* XMarkLabel.swift */; };
+		788382472E8EA63A00C68EF6 /* FoilStallDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382462E8EA63A00C68EF6 /* FoilStallDetector.swift */; };
+		788382492E8EA78B00C68EF6 /* StallStatsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */; };
+		7883824B2E8EB24800C68EF6 /* SpeedChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7883824A2E8EB24800C68EF6 /* SpeedChartView.swift */; };
 		78844E2A2C2E9D6900B703F5 /* Tracker_WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */; };
 		78844E2C2C2E9D6900B703F5 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E2B2C2E9D6900B703F5 /* StartView.swift */; };
 		78844E2E2C2E9D6A00B703F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78844E2D2C2E9D6A00B703F5 /* Assets.xcassets */; };
@@ -363,6 +366,9 @@
 		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
 		788382062E8BD68800C68EF6 /* 7III Water.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "7III Water.icon"; sourceTree = "<group>"; };
 		788382232E8BFCD800C68EF6 /* XMarkLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMarkLabel.swift; sourceTree = "<group>"; };
+		788382462E8EA63A00C68EF6 /* FoilStallDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoilStallDetector.swift; sourceTree = "<group>"; };
+		788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StallStatsOverlay.swift; sourceTree = "<group>"; };
+		7883824A2E8EB24800C68EF6 /* SpeedChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedChartView.swift; sourceTree = "<group>"; };
 		78844E272C2E9D6900B703F5 /* Tracker Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tracker Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78844E292C2E9D6900B703F5 /* Tracker_WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker_WatchApp.swift; sourceTree = "<group>"; };
 		78844E2B2C2E9D6900B703F5 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
@@ -568,6 +574,8 @@
 			isa = PBXGroup;
 			children = (
 				7877E1212BC2989300776890 /* StatisticsRunView.swift */,
+				788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */,
+				7883824A2E8EB24800C68EF6 /* SpeedChartView.swift */,
 				784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */,
 				7840835D2C21B279004C0857 /* MapSectionView.swift */,
 				7877E14A2BC5850C00776890 /* TagsFlexiView.swift */,
@@ -675,6 +683,7 @@
 				785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */,
 				78DB91042E45EF5C00B222C2 /* NavDestination.swift */,
 				78F047C42D9DA607003E11FA /* GPXStuff.swift */,
+				788382462E8EA63A00C68EF6 /* FoilStallDetector.swift */,
 				785C4AB92B40AF7400EB07F8 /* Member.swift */,
 				785CCF232D6B195E0075CA4C /* Version.swift */,
 				785CCF252D6B197E0075CA4C /* VersionHistory.swift */,
@@ -1180,6 +1189,7 @@
 				785C4ABC2B40B04000EB07F8 /* Run.swift in Sources */,
 				784083602C21C096004C0857 /* HeartRateView.swift in Sources */,
 				78096F3D2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift in Sources */,
+				788382492E8EA78B00C68EF6 /* StallStatsOverlay.swift in Sources */,
 				7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */,
 				788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */,
 				7877E1282BC41DB300776890 /* StatisticsInfoViews.swift in Sources */,
@@ -1216,6 +1226,7 @@
 				785C4ADC2B45EBD400EB07F8 /* BearingArrowView.swift in Sources */,
 				7894765D2E489B35005D8C58 /* DashboardRow.swift in Sources */,
 				7840468F2C3421CF009F8733 /* SummaryView.swift in Sources */,
+				7883824B2E8EB24800C68EF6 /* SpeedChartView.swift in Sources */,
 				782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */,
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
 				785CCF222D6B192B0075CA4C /* NewsSection.swift in Sources */,
@@ -1258,6 +1269,7 @@
 				78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */,
 				781562A32B94D92900E081FC /* QRCodeView.swift in Sources */,
 				78EC60912E0DDBD100C55950 /* RouteSticker.swift in Sources */,
+				788382472E8EA63A00C68EF6 /* FoilStallDetector.swift in Sources */,
 				78FB8C3A2E4CD196009F5A6F /* ToolbarPlacements.swift in Sources */,
 				781A4BB72C50F2470046AE0E /* SpeedOption.swift in Sources */,
 				78320BC72BB1D97800D6A772 /* StatisticsModelings.swift in Sources */,
