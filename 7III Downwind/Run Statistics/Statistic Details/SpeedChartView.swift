@@ -160,9 +160,9 @@ struct SpeedChartView: View {
             .frame(height: 200)
             
             HStack {
-                Stepper("Zoom: \(Int(zoom))", value: $zoom, in: 1...20)
+                Stepper("", value: $zoom, in: 1...20)
             }
-            .padding()
+            .padding(.vertical)
             
         }
         
