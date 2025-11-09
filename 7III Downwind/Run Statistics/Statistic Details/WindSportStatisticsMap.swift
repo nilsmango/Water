@@ -61,8 +61,8 @@ struct WindSportStatisticsMap: View {
                 
                 }
                                       
-                    // Start and End
-                    let startData = statisticsData.locationData.first!
+                // Start and End
+                if let startData = statisticsData.locationData.first {
                     let startCoordinate = CLLocationCoordinate2D(latitude: startData.latitude, longitude: startData.longitude)
                     Annotation("Start", coordinate: startCoordinate) {
                         Circle()
@@ -71,7 +71,9 @@ struct WindSportStatisticsMap: View {
                             .frame(width: 15.0)
                         
                     }
-                    let endData = statisticsData.locationData.last!
+                }
+                    
+                if let endData = statisticsData.locationData.last {
                     let endCoordinate = CLLocationCoordinate2D(latitude: endData.latitude, longitude: endData.longitude)
                     Annotation("Finish", coordinate: endCoordinate) {
                         Circle()
@@ -79,7 +81,7 @@ struct WindSportStatisticsMap: View {
                             .stroke(.white, lineWidth: 2)
                             .frame(width: 15.0)
                     }
-                
+                }
             }
     }
 }
