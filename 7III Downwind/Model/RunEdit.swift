@@ -39,4 +39,5 @@ struct RunEdit: Identifiable, Codable {
     
     var newWorkoutType: WorkoutType?
     var locationString: String?
+    var angles: [MapAngle]?
 }

@@ -12,6 +12,7 @@ struct MapSectionView: View {
     
     @Binding var showRounds: Bool
     @Binding var showMapSheet: Bool
+    @Binding var showAngleMap: Bool
     
     let rounds: [(String, String, String)]
     @Binding var statisticsData: RunStatistic
@@ -81,12 +82,26 @@ struct MapSectionView: View {
                 .font(.body)
             }
             .padding(.bottom, 9)
+        } footer: {
+            if statisticsData.workoutType?.angleSport == true && statisticsData.angles.isEmpty {
+                HStack {
+                    Spacer()
+                    Button {
+                        showAngleMap = true
+                    } label: {
+                        Label("Measure Angles", systemImage: "angle")
+                    }
+                    .buttonStyle(.bordered)
+                    .padding(.top)
+                    Spacer()
+                }
+            }
         }
     }
 }
 
 #Preview {
     List {
-        MapSectionView(downwindManager: DownwindManager(), showRounds: .constant(false), showMapSheet: .constant(false), rounds: [], statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
+        MapSectionView(downwindManager: DownwindManager(), showRounds: .constant(false), showMapSheet: .constant(false), showAngleMap: .constant(false), rounds: [], statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
     }
 }

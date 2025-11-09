@@ -47,6 +47,7 @@ struct StatisticsRunView: View {
     @State private var stallEvents: [StallEvent] = []
     
     @State private var zoom: CGFloat = 1.0
+    @State private var showAngleMap = false
     
     var body: some View {
         
@@ -61,7 +62,35 @@ struct StatisticsRunView: View {
             }
             
             if !statisticsData.locationData.isEmpty {
-                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, rounds: rounds, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
+                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
+                
+                if !statisticsData.angles.isEmpty {
+                    Section {
+                        AngleSection(angles: statisticsData.angles)
+                    } header: {
+                        
+                        HStack {
+                            Text("Angles")
+                                .textCase(nil)
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                            
+                            Spacer()
+                            
+                            Button {
+                                showAngleMap = true
+                            } label: {
+                                Label("Edit Angles", systemImage: "")
+                            }
+                            .textCase(nil)
+                            .font(.body)
+                            
+                        }
+                        .padding(.bottom, 9)
+                        
+                    }
+                }
                 
                 Section {
                     SpeedChartView(data: statisticsData.locationData, zoom: $zoom)
@@ -385,6 +414,24 @@ struct StatisticsRunView: View {
             }
             
         })
+        
+        .sheet(isPresented: $showAngleMap, content: {
+            NavigationStack {
+                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, angleTool: true)
+                        .navigationTitle(statisticsData.locationString ?? locationName)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button(action: {
+                                    showAngleMap = false
+                                }, label: {
+                                    XMarkLabel()
+                                })
+                            }
+                }
+            }
+        })
+        
         .sheet(isPresented: $showTagsEditView, content: {
             NavigationStack {
                 List {

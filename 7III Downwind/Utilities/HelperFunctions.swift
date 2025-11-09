@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 
 func createDWURL(endpoint: String) throws -> URL {
     let urlString = Constants.baseURL + endpoint
@@ -102,4 +103,48 @@ func formatActivityName(_ name: String) -> String {
     } else {
         return "\(name)ing"
     }
+}
+
+func calculateAngle(from coordinates: [CLLocationCoordinate2D]) -> String {
+    guard coordinates.count >= 3 else { return "N/A" }
+    
+    let p1 = coordinates[0]
+    let vertex = coordinates[1]
+    let p3 = coordinates[2]
+    
+    // Convert to radians for calculation
+    let lat1 = p1.latitude * .pi / 180
+    let lon1 = p1.longitude * .pi / 180
+    let lat2 = vertex.latitude * .pi / 180
+    let lon2 = vertex.longitude * .pi / 180
+    let lat3 = p3.latitude * .pi / 180
+    let lon3 = p3.longitude * .pi / 180
+    
+    // Calculate bearings from vertex to both points
+    let dLon1 = lon1 - lon2
+    let dLon3 = lon3 - lon2
+    
+    let y1 = sin(dLon1) * cos(lat1)
+    let x1 = cos(lat2) * sin(lat1) - sin(lat2) * cos(lat1) * cos(dLon1)
+    let bearing1 = atan2(y1, x1)
+    
+    let y3 = sin(dLon3) * cos(lat3)
+    let x3 = cos(lat2) * sin(lat3) - sin(lat2) * cos(lat3) * cos(dLon3)
+    let bearing3 = atan2(y3, x3)
+    
+    // Calculate angle between bearings
+    var angle = bearing3 - bearing1
+    
+    // Normalize to 0-360 degrees
+    angle = angle * 180 / .pi
+    if angle < 0 {
+        angle += 360
+    }
+    
+    // Get the smaller angle (interior angle)
+    if angle > 180 {
+        angle = 360 - angle
+    }
+    
+    return String(format: "%.1f°", angle)
 }

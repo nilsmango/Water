@@ -8,34 +8,47 @@
 import SwiftUI
 import MapKit
 
+private enum AngleMode {
+    case menu
+    case deleteAngles
+    case addAngles
+}
+
 struct WindSportStatisticsMap: View {
     @ObservedObject var downwindManager: DownwindManager
     
     @Binding var statisticsData: RunStatistic
 
     var lineWidth = 2.0
+    var angleTool = false
+    
+    @State private var coordinates: [CLLocationCoordinate2D] = []
+    @State private var angleToolToDelete: MapAngle?
+    @State private var showDeleteAlert = false
+    @State private var mode: AngleMode = .menu
     
     var body: some View {
-            Map {
-                
-                if let waves = statisticsData.waves, !waves.isEmpty {
-                    if statisticsData.locationData.count > 0 {
-                        let nonWaves = partsBetweenWaves(locationData: statisticsData.locationData, waves: waves)
-                        
-                        ForEach(nonWaves.indices, id: \.self) { waveIndex in
+        MapReader { proxy in
+                Map {
+                    
+                    if let waves = statisticsData.waves, !waves.isEmpty {
+                        if statisticsData.locationData.count > 0 {
+                            let nonWaves = partsBetweenWaves(locationData: statisticsData.locationData, waves: waves)
                             
-                            MapPolyline(coordinates: makeSmoothedCoordinates(from: nonWaves[waveIndex]))
-                                .stroke(
-                                    .gray.opacity(0.2),
-                                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                            ForEach(nonWaves.indices, id: \.self) { waveIndex in
+                                
+                                MapPolyline(coordinates: makeSmoothedCoordinates(from: nonWaves[waveIndex]))
+                                    .stroke(
+                                        .gray.opacity(0.2),
+                                        style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
                                 
                                 
+                            }
                         }
-                    }
-                    // Wave lines
-                    ForEach(waves.indices, id: \.self) { waveIndex in
-                        let coordinates = makeSmoothedCoordinates(from: waves[waveIndex])
-                        MapPolyline(coordinates: coordinates)
+                        // Wave lines
+                        ForEach(waves.indices, id: \.self) { waveIndex in
+                            let coordinates = makeSmoothedCoordinates(from: waves[waveIndex])
+                            MapPolyline(coordinates: coordinates)
                                 .stroke(
                                     .neonYellow,
                                     style: StrokeStyle(
@@ -44,45 +57,205 @@ struct WindSportStatisticsMap: View {
                                         lineJoin: .round
                                     )
                                 )
-                        
                         }
-                    
-                    
-                    
-                } else {
-                    // Line
-                    if statisticsData.locationData.count > 0 {
-                        MapPolyline(coordinates: makeSmoothedCoordinates(from: statisticsData.locationData))
+                        
+                        
+                    } else {
+                        // Line
+                        if statisticsData.locationData.count > 0 {
+                            MapPolyline(coordinates: makeSmoothedCoordinates(from: statisticsData.locationData))
                                 .stroke(
                                     .neonYellow,
-    //                                Gradient(colors: downwindManager.createGradientArray(for: statisticsData.locationData, numberOfElementsToKeep: 30)),
+                                    //                                Gradient(colors: downwindManager.createGradientArray(for: statisticsData.locationData, numberOfElementsToKeep: 30)),
                                     style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
-                }
-                
-                }
-                                      
-                // Start and End
-                if let startData = statisticsData.locationData.first {
-                    let startCoordinate = CLLocationCoordinate2D(latitude: startData.latitude, longitude: startData.longitude)
-                    Annotation("Start", coordinate: startCoordinate) {
-                        Circle()
-                            .fill(Color.green)
-                            .stroke(.white, lineWidth: 2)
-                            .frame(width: 15.0)
+                        }
                         
                     }
-                }
                     
-                if let endData = statisticsData.locationData.last {
-                    let endCoordinate = CLLocationCoordinate2D(latitude: endData.latitude, longitude: endData.longitude)
-                    Annotation("Finish", coordinate: endCoordinate) {
-                        Circle()
-                            .fill(Color.red)
-                            .stroke(.white, lineWidth: 2)
-                            .frame(width: 15.0)
+                    // Start and End
+                    if let startData = statisticsData.locationData.first {
+                        let startCoordinate = CLLocationCoordinate2D(latitude: startData.latitude, longitude: startData.longitude)
+                        Annotation("Start", coordinate: startCoordinate) {
+                            Circle()
+                                .fill(Color.green)
+                                .stroke(.white, lineWidth: 2)
+                                .frame(width: 15.0)
+                            
+                        }
+                    }
+                    
+                    if let endData = statisticsData.locationData.last {
+                        let endCoordinate = CLLocationCoordinate2D(latitude: endData.latitude, longitude: endData.longitude)
+                        Annotation("Finish", coordinate: endCoordinate) {
+                            Circle()
+                                .fill(Color.red)
+                                .stroke(.white, lineWidth: 2)
+                                .frame(width: 15.0)
+                        }
+                    }
+                    
+                    if angleTool {
+                        if coordinates.count == 1 {
+                            Annotation("", coordinate: coordinates.first!) {
+                                Circle()
+                                    .fill(Color.green)
+                                    .frame(width: lineWidth * 2)
+                            }
+                            
+                        } else if coordinates.count == 2 {
+                            MapPolyline(coordinates: coordinates)
+                                .stroke(
+                                    .green,
+                                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                            
+                            Annotation("", coordinate: coordinates.last!) {
+                                Circle()
+                                    .fill(Color.green)
+                                    .frame(width: lineWidth * 2)
+                            }
+                            
+                        }
+                        
+                        ForEach(statisticsData.angles) { angleTool in
+                            MapPolyline(coordinates: angleTool.coordinates)
+                                .stroke(
+                                    mode == .deleteAngles ? Color.red : Color.green,
+                                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                            
+                            Annotation(angleTool.angle, coordinate: angleTool.coordinates[1]) {
+                                ZStack {
+                                    Circle()
+                                        .fill(mode == .deleteAngles ? Color.red : Color.green)
+                                        .frame(width: mode == .deleteAngles ? lineWidth * 10 : lineWidth * 2)
+                                    
+                                    if mode == .deleteAngles {
+                                        Image(systemName: "trash")
+                                            .foregroundColor(.white)
+                                            .font(.system(size: lineWidth * 5))
+                                    }
+                                }
+                                .onTapGesture {
+                                    if mode == .deleteAngles {
+                                        angleToolToDelete = angleTool
+                                        showDeleteAlert = true
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+                
+            .onTapGestureBugFix { position in
+                if angleTool && mode == .addAngles {
+                    if let coordinate = proxy.convert(position, from: .local) {
+//                        print("Tapped at \(coordinate)")
+                        coordinates.append(coordinate)
+                        
+                        if coordinates.count == 3 {
+                            let newTool = MapAngle(coordinates: coordinates)
+                            coordinates = []
+                            statisticsData.angles.append(newTool)
+                            downwindManager.saveStatisticAngles(statisticsData: statisticsData)
+                        }
                     }
                 }
             }
+        
+            .overlay {
+                if angleTool {
+                    VStack {
+                        Spacer()
+                        
+                        Group {
+                            if mode == .menu {
+                                HStack {
+                                    Button {
+                                        mode = .addAngles
+                                    } label: {
+                                        Label("Add Angles", systemImage: "plus")
+                                    }
+                                    .foregroundStyle(.black)
+                                    .padding(8)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 32.0)
+                                            .fill(.white)
+                                    }
+                                    
+                                    if !statisticsData.angles.isEmpty {
+                                        Button {
+                                            mode = .deleteAngles
+                                        } label: {
+                                            Label("Remove Angles", systemImage: "trash")
+                                        }
+                                        .foregroundStyle(.black)
+                                        .padding(8)
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 32.0)
+                                                .fill(.white)
+                                        }
+                                    }
+                                }
+                            } else {
+                                HStack {
+                                    Group {
+                                        if mode == .deleteAngles {
+                                            Text("Tap any Angle to remove it")
+                                        } else {
+                                            if coordinates.count == 0 {
+                                                Text("Tap to add a first leg point")
+                                            } else if coordinates.count == 1 {
+                                                Text("Go to center now")
+                                            } else if coordinates.count == 2 {
+                                                Text("Add last leg")
+                                            }
+                                        }
+                                    }
+                                    .foregroundStyle(.black)
+                                    .padding(8)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 32.0)
+                                            .fill(.white)
+                                    }
+                                    
+                                    Button {
+                                        mode = .menu
+                                        coordinates = []
+                                    } label: {
+                                        Label("Done", systemImage: "checkmark")
+                                    }
+                                    .foregroundStyle(.white)
+                                    .padding(8)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 32.0)
+                                            .fill(Color.accentColor)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.vertical, 32)
+                        .padding(.horizontal)
+                    }
+                }
+            }
+            .alert("Remove Angle", isPresented: $showDeleteAlert) {
+                Button("Remove", role: .destructive) {
+                    if let toolToDelete = angleToolToDelete {
+                        statisticsData.angles.removeAll { $0.id == toolToDelete.id }
+                        angleToolToDelete = nil
+                        coordinates = []
+                        downwindManager.saveStatisticAngles(statisticsData: statisticsData)
+                    }
+                }
+                
+                Button("Cancel", role: .cancel) {
+                    angleToolToDelete = nil
+                }
+                
+            } message: {
+                Text("Are you sure you want to remove this angle measurement?")
+            }
+        }
     }
 }
 
@@ -205,6 +378,6 @@ private func calculateAngle(p1: CLLocationCoordinate2D, p2: CLLocationCoordinate
 }
 
 #Preview {
-    WindSportStatisticsMap(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData)))
+    WindSportStatisticsMap(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData)), angleTool: true)
 }
 

@@ -879,11 +879,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.runStatistics[runIndex].popUps = runEdit?.popUps
                                 self.runStatistics[runIndex].percentageOnFoil = runEdit?.percentageOnFoil
                                 self.runStatistics[runIndex].turnsCount = runEdit?.turnsCount
+                                self.runStatistics[runIndex].angles = runEdit?.angles ?? []
                             }
                         } else {
                             var statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate, topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0, popUps: runEdit?.popUps ?? 0, percentageOnFoil: runEdit?.percentageOnFoil ?? 0, turnsCount: runEdit?.turnsCount ?? 0)
                             statistic.startLocation = metaData.startLocation
                             statistic.locationString = runEdit?.locationString
+                            statistic.angles = runEdit?.angles ?? []
                             
                             DispatchQueue.main.async {
                                 self.runStatistics.append(statistic)
@@ -911,6 +913,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? run.runTime, runDistance: runEdit?.newTotalDistance ?? run.totalDistance, topSpeed: runEdit?.newTopSpeed ?? run.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? run.averageSpeed, kCalories: 0, locationData: run.locations, tags: runEdit?.newTags ?? run.tags, workoutType: runEdit?.newWorkoutType ?? run.workoutType ?? .surf, startDate: runEdit?.startLocation?.timestamp ?? run.startLocation?.timestamp ?? Date(), endDate: runEdit?.finishLocation?.timestamp ?? run.locations.last?.timestamp ?? Date(), topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0, popUps: runEdit?.popUps ?? 0, percentageOnFoil: runEdit?.percentageOnFoil ?? 0, turnsCount: runEdit?.turnsCount ?? 0)
                         newStatistic.startLocation = run.startLocation
                         newStatistic.locationString = runEdit?.locationString ?? run.locationString
+                        newStatistic.angles = runEdit?.angles ?? []
                         
                         DispatchQueue.main.async {
                             self.runStatistics.append(newStatistic)
@@ -1634,6 +1637,23 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         if saveType && !locationName.isEmpty {
             updateAndSortLocationStrings(location: locationName)
         }
+    }
+    
+    /// save statistic to disk with new angles
+    func saveStatisticAngles(statisticsData: RunStatistic) {
+        let angles = statisticsData.angles
+        if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsData.id }) {
+            runEdits[editIndex].angles = angles
+        } else {
+            let runEdit = RunEdit(id: statisticsData.id, angles: angles)
+            runEdits.append(runEdit)
+        }
+        saveRunEdits()
+        
+        if let index = runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
+            runStatistics[index].angles = angles
+        }
+        updateGroupedRunArray()
     }
     
     func createLocationNames(statisticsData: RunStatistic, completion: @escaping (String) -> Void) {

@@ -25,6 +25,9 @@
 		782B67592C3A7A2B00B90578 /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B67582C3A7A2B00B90578 /* UpgradeView.swift */; };
 		782B675D2C3ABBA700B90578 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
 		782B675F2C3AC21C00B90578 /* UpgradeShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */; };
+		782D8E072EC0B99900E2AE43 /* MapAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E062EC0B99900E2AE43 /* MapAngle.swift */; };
+		782D8E092EC0DA2E00E2AE43 /* MapTapGesture26.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E082EC0DA2E00E2AE43 /* MapTapGesture26.swift */; };
+		782D8E0B2EC0E57C00E2AE43 /* AngleSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */; };
 		78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
 		78320BC02BB1C28400D6A772 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
 		78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
@@ -288,6 +291,9 @@
 		782B67582C3A7A2B00B90578 /* UpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeView.swift; sourceTree = "<group>"; };
 		782B675C2C3ABBA700B90578 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
 		782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeShowcase.swift; sourceTree = "<group>"; };
+		782D8E062EC0B99900E2AE43 /* MapAngle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAngle.swift; sourceTree = "<group>"; };
+		782D8E082EC0DA2E00E2AE43 /* MapTapGesture26.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTapGesture26.swift; sourceTree = "<group>"; };
+		782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AngleSection.swift; sourceTree = "<group>"; };
 		78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCKalmanAlgorithm.swift; sourceTree = "<group>"; };
 		78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTestsView.swift; sourceTree = "<group>"; };
 		78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsModelings.swift; sourceTree = "<group>"; };
@@ -578,6 +584,7 @@
 				7883824A2E8EB24800C68EF6 /* SpeedChartView.swift */,
 				784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */,
 				7840835D2C21B279004C0857 /* MapSectionView.swift */,
+				782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */,
 				7877E14A2BC5850C00776890 /* TagsFlexiView.swift */,
 				7877E12B2BC52A0900776890 /* TagsEditView.swift */,
 				784083572C2170A3004C0857 /* EmptyTagsView.swift */,
@@ -690,6 +697,8 @@
 				785C4ABB2B40B04000EB07F8 /* Run.swift */,
 				785C4ACC2B41D28400EB07F8 /* DBRun.swift */,
 				785C4AD22B433D4000EB07F8 /* MemberRunData.swift */,
+				782D8E062EC0B99900E2AE43 /* MapAngle.swift */,
+				782D8E082EC0DA2E00E2AE43 /* MapTapGesture26.swift */,
 				78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */,
 				78F047C22D9DA417003E11FA /* ImportRun.swift */,
 				784083632C21FB54004C0857 /* RunEdit.swift */,
@@ -1233,6 +1242,7 @@
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
 				78DB91452E45FB9D00B222C2 /* Dashboards.swift in Sources */,
 				78DB91472E45FB9D00B222C2 /* TrackedElementRow.swift in Sources */,
+				782D8E092EC0DA2E00E2AE43 /* MapTapGesture26.swift in Sources */,
 				78DB91492E45FB9D00B222C2 /* DashboardView.swift in Sources */,
 				78DB914A2E45FB9D00B222C2 /* WebPreview.swift in Sources */,
 				78DB914B2E45FB9D00B222C2 /* NestedElementsRow.swift in Sources */,
@@ -1282,6 +1292,7 @@
 				78F047C52D9DA607003E11FA /* GPXStuff.swift in Sources */,
 				785CCF242D6B195E0075CA4C /* Version.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
+				782D8E0B2EC0E57C00E2AE43 /* AngleSection.swift in Sources */,
 				781A4BAD2C4E9F310046AE0E /* SharePreviewWrapper.swift in Sources */,
 				789476592E47D0DB005D8C58 /* WidgetDashboardView.swift in Sources */,
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
@@ -1307,6 +1318,7 @@
 				7894765B2E488F5F005D8C58 /* IfLet.swift in Sources */,
 				785C0C2B2C3C171A005CCE87 /* HelpView.swift in Sources */,
 				7840835C2C218985004C0857 /* ChartStrideBy.swift in Sources */,
+				782D8E072EC0B99900E2AE43 /* MapAngle.swift in Sources */,
 				788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */,
 				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,
 				781A4BAF2C4EE64B0046AE0E /* ActivityViewController.swift in Sources */,
