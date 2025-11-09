@@ -46,6 +46,8 @@ struct StatisticsRunView: View {
     @State private var showStallStats = false
     @State private var stallEvents: [StallEvent] = []
     
+    @State private var zoom: CGFloat = 1.0
+    
     var body: some View {
         
         let cutDate = runDates.components(separatedBy: " ")
@@ -62,16 +64,20 @@ struct StatisticsRunView: View {
                 MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, rounds: rounds, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
                 
                 Section {
-                    SpeedChartView(data: statisticsData.locationData)
+                    SpeedChartView(data: statisticsData.locationData, zoom: $zoom)
                 } header: {
-                    Text("Speed Chart")
-                        .textCase(nil)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                        .padding(.bottom, 9)
+                    HStack {
+                        Text("Speed")
+                            .textCase(nil)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        
+                        Stepper("", value: $zoom, in: 1...20)
+                    }
+                    .padding(.bottom, 9)
                 }
-            }            
+            }
             
                 HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate)
             

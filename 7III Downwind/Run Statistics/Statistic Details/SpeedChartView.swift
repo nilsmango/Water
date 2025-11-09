@@ -12,10 +12,10 @@ struct SpeedChartView: View {
 
     @State private var selectedIndex: Int? = nil
     @GestureState private var dragLocation: CGPoint? = nil
-    @State private var zoom: CGFloat = 1.0
+    @Binding var zoom: CGFloat
 
     var body: some View {
-        VStack {
+            
             GeometryReader { geo in
                 let speeds = data.compactMap { $0.speed ?? 0 }
                 let maxSpeed = (speeds.max() ?? 1) * 3.6 + 5 // km/h
@@ -159,16 +159,10 @@ struct SpeedChartView: View {
             }
             .frame(height: 200)
             
-            HStack {
-                Stepper("", value: $zoom, in: 1...20)
-            }
-            .padding(.vertical)
-            
         }
         
-    }
 }
 
 #Preview {
-    SpeedChartView(data: decodeLocationSampleData() ?? Constants.locationSampleData)
+    SpeedChartView(data: decodeLocationSampleData() ?? Constants.locationSampleData, zoom: .constant(2))
 }
