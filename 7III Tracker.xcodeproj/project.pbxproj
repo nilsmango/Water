@@ -28,6 +28,10 @@
 		782D8E072EC0B99900E2AE43 /* MapAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E062EC0B99900E2AE43 /* MapAngle.swift */; };
 		782D8E092EC0DA2E00E2AE43 /* MapTapGesture26.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E082EC0DA2E00E2AE43 /* MapTapGesture26.swift */; };
 		782D8E0B2EC0E57C00E2AE43 /* AngleSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */; };
+		782D8E302EC3CE7800E2AE43 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */; };
+		782D8E312EC3CE7800E2AE43 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */; };
+		782D8E322EC3CE7800E2AE43 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */; };
+		782D8E332EC3CE7800E2AE43 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */; };
 		78320BBB2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
 		78320BC02BB1C28400D6A772 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
 		78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
@@ -105,10 +109,6 @@
 		7877E1492BC52C9600776890 /* View+readSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1482BC52C9600776890 /* View+readSize.swift */; };
 		7877E14B2BC5850C00776890 /* TagsFlexiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E14A2BC5850C00776890 /* TagsFlexiView.swift */; };
 		787A7EE82B4B03C20083ECEF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
-		788382072E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
-		788382082E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
-		788382092E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
-		7883820A2E8BD68800C68EF6 /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 788382062E8BD68800C68EF6 /* 7III Water.icon */; };
 		788382242E8BFCD800C68EF6 /* XMarkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382232E8BFCD800C68EF6 /* XMarkLabel.swift */; };
 		788382472E8EA63A00C68EF6 /* FoilStallDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382462E8EA63A00C68EF6 /* FoilStallDetector.swift */; };
 		788382492E8EA78B00C68EF6 /* StallStatsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */; };
@@ -294,6 +294,7 @@
 		782D8E062EC0B99900E2AE43 /* MapAngle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAngle.swift; sourceTree = "<group>"; };
 		782D8E082EC0DA2E00E2AE43 /* MapTapGesture26.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTapGesture26.swift; sourceTree = "<group>"; };
 		782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AngleSection.swift; sourceTree = "<group>"; };
+		782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "7III Water.icon"; sourceTree = "<group>"; };
 		78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCKalmanAlgorithm.swift; sourceTree = "<group>"; };
 		78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTestsView.swift; sourceTree = "<group>"; };
 		78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsModelings.swift; sourceTree = "<group>"; };
@@ -370,7 +371,6 @@
 		7877E1482BC52C9600776890 /* View+readSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+readSize.swift"; sourceTree = "<group>"; };
 		7877E14A2BC5850C00776890 /* TagsFlexiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsFlexiView.swift; sourceTree = "<group>"; };
 		787A7EE72B4B03C20083ECEF /* StartRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRun.swift; sourceTree = "<group>"; };
-		788382062E8BD68800C68EF6 /* 7III Water.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "7III Water.icon"; sourceTree = "<group>"; };
 		788382232E8BFCD800C68EF6 /* XMarkLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMarkLabel.swift; sourceTree = "<group>"; };
 		788382462E8EA63A00C68EF6 /* FoilStallDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoilStallDetector.swift; sourceTree = "<group>"; };
 		788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StallStatsOverlay.swift; sourceTree = "<group>"; };
@@ -614,7 +614,7 @@
 		785C4A8C2B358F7B00EB07F8 = {
 			isa = PBXGroup;
 			children = (
-				788382062E8BD68800C68EF6 /* 7III Water.icon */,
+				782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */,
 				785C4A972B358F7B00EB07F8 /* 7III Downwind */,
 				78844E282C2E9D6900B703F5 /* Tracker Watch Watch App */,
 				78A283872C4671400052AA52 /* 7III Water Stickers */,
@@ -1127,9 +1127,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				788382092E8BD68800C68EF6 /* 7III Water.icon in Resources */,
 				78EC608F2E0D331800C55950 /* locationData.json in Resources */,
 				785C4AA12B358F7D00EB07F8 /* Preview Assets.xcassets in Resources */,
+				782D8E302EC3CE7800E2AE43 /* 7III Water.icon in Resources */,
 				785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */,
 				78A283742C3FC2610052AA52 /* product_ids.plist in Resources */,
 			);
@@ -1139,9 +1139,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				788382082E8BD68800C68EF6 /* 7III Water.icon in Resources */,
 				78844E312C2E9D6A00B703F5 /* Preview Assets.xcassets in Resources */,
 				78844E3B2C2EA6CB00B703F5 /* Assets.xcassets in Resources */,
+				782D8E312EC3CE7800E2AE43 /* 7III Water.icon in Resources */,
 				78844E2E2C2E9D6A00B703F5 /* Assets.xcassets in Resources */,
 				78A283752C3FC2610052AA52 /* product_ids.plist in Resources */,
 			);
@@ -1151,8 +1151,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				782D8E332EC3CE7800E2AE43 /* 7III Water.icon in Resources */,
 				78A283892C4671420052AA52 /* Stickers.xcassets in Resources */,
-				7883820A2E8BD68800C68EF6 /* 7III Water.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1161,8 +1161,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				78FB8C372E4CCFBC009F5A6F /* Assets.xcassets in Resources */,
-				788382072E8BD68800C68EF6 /* 7III Water.icon in Resources */,
 				78FB8C362E4CCF05009F5A6F /* product_ids.plist in Resources */,
+				782D8E322EC3CE7800E2AE43 /* 7III Water.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

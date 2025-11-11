@@ -8,7 +8,7 @@
     {
       "appearance" : "dark",
       "value" : {
-        "solid" : "display-p3:0.10969,0.12151,0.15829,1.00000"
+        "solid" : "display-p3:0.25420,0.49008,0.73200,1.00000"
       }
     }
   ],
@@ -16,59 +16,39 @@
     {
       "layers" : [
         {
-          "blend-mode" : "normal",
-          "fill-specializations" : [
-            {
-              "value" : {
-                "solid" : "extended-gray:1.00000,1.00000"
-              }
-            },
-            {
-              "appearance" : "dark",
-              "value" : {
-                "solid" : "extended-gray:1.00000,1.00000"
-              }
-            }
-          ],
-          "glass" : true,
-          "image-name" : "water circles.svg",
-          "name" : "water circles"
-        },
-        {
-          "fill" : {
-            "solid" : "display-p3:0.39556,0.77108,0.40078,1.00000"
-          },
-          "glass" : false,
-          "image-name" : "water start.svg",
-          "name" : "water start"
-        },
-        {
-          "fill" : {
-            "solid" : "display-p3:0.92279,0.30332,0.24067,1.00000"
-          },
-          "glass" : false,
-          "image-name" : "water finish.svg",
-          "name" : "water finish"
-        },
-        {
           "blend-mode-specializations" : [
+            {
+              "value" : "overlay"
+            },
             {
               "appearance" : "dark",
               "value" : "normal"
             }
           ],
-          "fill-specializations" : [
-            {
-              "value" : "automatic"
-            },
-            {
-              "appearance" : "dark",
-              "value" : "automatic"
-            }
-          ],
+          "fill" : "automatic",
           "glass" : false,
-          "image-name" : "water line.svg",
-          "name" : "water line"
+          "hidden" : false,
+          "image-name" : "0.3 layer.svg",
+          "name" : "0.3 layer",
+          "position" : {
+            "scale" : 2.06,
+            "translation-in-points" : [
+              0.7461256149659903,
+              164.9765625
+            ]
+          }
+        },
+        {
+          "hidden" : true,
+          "image-name" : "7III Tracker Logo 0.3.png",
+          "name" : "7III Tracker Logo 0.3",
+          "position" : {
+            "scale" : 1.07,
+            "translation-in-points" : [
+              -35.84000000000003,
+              -35.840000000000146
+            ]
+          }
         }
       ],
       "shadow" : {
