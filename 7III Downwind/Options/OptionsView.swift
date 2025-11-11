@@ -89,6 +89,16 @@ struct OptionsView: View {
                     ))
                     .tint(.accent)
                 }
+                
+                if downwindManager.lastVersionNewsClosed == downwindManager.currentAppVersion {
+                    Button {
+                        downwindManager.lastVersionNewsClosed = ""
+                    } label: {
+                        Label("Show the latest Version News again", systemImage: "newspaper")
+                    }
+                    
+                }
+                
             } header: {
                 Text("Main View")
             }

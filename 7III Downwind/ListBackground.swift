@@ -16,13 +16,13 @@ struct ListBackground: View {
                 corners: .concentric,
                 isUniform: true
             )
-            .fill(special ? .accent.opacity(0.2) : .listForeground)
+            .fill(special ? .accent : .listForeground)
             .containerShape(
                         .rect(cornerRadius: 24)
                     )
         } else {
             RoundedRectangle(cornerRadius: 10.0)
-                .fill(special ? .accent.opacity(0.2) : .listForeground)
+                .fill(special ? .accent : .listForeground)
         }
     }
 }

@@ -19,9 +19,10 @@ let versionHistory: [Version] = [
                 "Indicating waves in maps now for some water sports.",
                 "Added Error Logging for GPS Tracking with iPhone.",
                 "Various bug fixes.",
-                "Updated design for iOS 26."
+                "Updated design for iOS 26.",
+                "Added Speed Chart, Angle Tool, and Foil Stall Analysis to Stats."
             ],
-            releaseDate: "August 2025"
+            releaseDate: "November 2025"
            ),
     
     Version(versionNumber: "1.2",
