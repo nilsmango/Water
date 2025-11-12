@@ -21,11 +21,12 @@ struct GroupedTagsListView: View {
     @State private var chosenTags = [String]()
     @State private var chosenLocation = ""
     @State private var chosenWorkout = ""
+    @State private var showOnlyAngles: Bool = false
     
     @State private var tabSelection: Tab = .tags
     
     private enum Tab {
-        case tags, locations, workouts
+        case tags, locations, workouts, options
         
         var prettyString: String {
             switch self {
@@ -35,11 +36,13 @@ struct GroupedTagsListView: View {
                 return "Locations"
             case .workouts:
                 return "Workouts"
+            case .options:
+                return "Options"
             }
         }
     }
     
-    var filteredGroupedStatistics: [[[RunStatistic]]] { downwindManager.filterGroupedStatistics(tags: chosenTags, location: chosenLocation, workout: chosenWorkout) }
+    var filteredGroupedStatistics: [[[RunStatistic]]] { downwindManager.filterGroupedStatistics(tags: chosenTags, location: chosenLocation, workout: chosenWorkout, onlyAngles: showOnlyAngles) }
     
     let maxHeight = UIScreen.main.bounds.height / 5
     
@@ -87,6 +90,18 @@ struct GroupedTagsListView: View {
                     .frame(maxHeight: maxHeight)
                     .padding([.bottom])
                     .tag(Tab.workouts)
+                
+                
+                List {
+                    Toggle(isOn: $showOnlyAngles) {
+                        Label("Only show sessions w/ angles", systemImage: "angle")
+                    }
+                    .tint(.accent)
+                }
+                .listStyle(.plain)
+                .frame(maxHeight: maxHeight)
+                .padding([.bottom])
+                .tag(Tab.options)
                                
             }
             .frame(maxHeight: maxHeight + 60)
@@ -105,7 +120,7 @@ struct GroupedTagsListView: View {
                                 NavigationLink {
                                     StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
                                 } label: {
-                                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "Surfing", withTags: true, tags: statistic.tags ?? [], withLocation: true, location: statistic.locationString ?? "", withoutLocationSymbol: true)
+                                    RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "Surfing", withTags: true, tags: statistic.tags ?? [], withLocationAndAngle: true, location: statistic.locationString ?? "", withoutLocationSymbol: true, angle: downwindManager.calculateMaxAngle(angles: statistic.angles))
                                 }
                             }
                             

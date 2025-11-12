@@ -1998,8 +1998,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// filter the grouped statistics array
-    func filterGroupedStatistics(tags: [String], location: String, workout: String) -> [[[RunStatistic]]] {
-        if tags.isEmpty && location.isEmpty && workout.isEmpty {
+    func filterGroupedStatistics(tags: [String], location: String, workout: String, onlyAngles: Bool = false) -> [[[RunStatistic]]] {
+        if tags.isEmpty && location.isEmpty && workout.isEmpty && onlyAngles == false {
             return groupedRunStatistics
         } else {
             let filteredGroupedStatistics = groupedRunStatistics.map { group in
@@ -2019,7 +2019,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         let locationMatches = location.isEmpty || statistic.locationString == location
                         let workoutMatches = workout.isEmpty || (statistic.workoutType?.prettyString ?? "") == workout
                         
-                        return tagMatches && locationMatches && workoutMatches
+                        // Filter by saved angles
+                        let angleMatches = !onlyAngles || statistic.angles.count > 0
+                        
+                        return tagMatches && locationMatches && workoutMatches && angleMatches
                     }
                 }
             }
@@ -2180,6 +2183,21 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let totalTime = to.timeIntervalSince(from)
         let prettyTime = makePrettyMinutesString(timeInSeconds: totalTime)
         return prettyTime
+    }
+    
+    
+    func calculateMaxAngle(angles: [MapAngle]) -> String {
+        if angles.isEmpty { return "" }
+        let numericAngles = angles.compactMap { angle -> Double? in
+            let cleanedString = angle.angle.replacingOccurrences(of: "°", with: "").trimmingCharacters(in: .whitespaces)
+            return Double(cleanedString)
+        }
+        
+        guard let maxAngle = numericAngles.max() else {
+            return ""
+        }
+        
+        return String(format: "%.1f°", maxAngle)
     }
         
     /// calculates the new poly line number

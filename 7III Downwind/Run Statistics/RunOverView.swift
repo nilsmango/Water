@@ -17,9 +17,10 @@ struct RunOverView: View {
     let activityType: String
     var withTags: Bool = false
     var tags: [String] = []
-    var withLocation: Bool = false
+    var withLocationAndAngle: Bool = false
     var location: String = ""
     var withoutLocationSymbol: Bool = false
+    var angle: String = ""
     
     var body: some View {
         VStack {
@@ -33,18 +34,29 @@ struct RunOverView: View {
                 Spacer()
             }
             
-            if withLocation, !location.isEmpty {
+            if withLocationAndAngle, !location.isEmpty || !angle.isEmpty {
                     HStack {
-                        if !withoutLocationSymbol {
+                        if !withoutLocationSymbol && !location.isEmpty {
                             Image(systemName: "location.fill")
     //                            .foregroundStyle(.accent)
+                                .fontWeight(.bold)
                         }
                         
-                        Text(location)
+                        if !location.isEmpty {
+                            Text(location)
+                                .fontWeight(.bold)
+                        }
+                        
+                        
+                        if !angle.isEmpty {
+                            Image(systemName: "angle")
+                        }
+                        
+                        Text(angle)
                         
                         Spacer()
                     }
-                    .fontWeight(.bold)
+                    
             }
             
             if distance != "0 m" {
@@ -98,7 +110,7 @@ struct RunOverView: View {
             NavigationLink {
                 Text("Run run run")
             } label: {
-                RunOverView(runDate: "Jan 03 20:30 - 23:00", runName: "Flying Eagles Club", distance: "21 km", time: "43 min 12 s", averageSpeed: "15 km/h", kCal: "1083 kcal", activityType: "DW SUP Foil", withTags: true, tags: ["#swim", "#wakeboard", "#hitIt", "#fuckThis", "#progression"], withLocation: true, location: "Maglingen → Überlingen")
+                RunOverView(runDate: "Jan 03 20:30 - 23:00", runName: "Flying Eagles Club", distance: "21 km", time: "43 min 12 s", averageSpeed: "15 km/h", kCal: "1083 kcal", activityType: "DW SUP Foil", withTags: true, tags: ["#swim", "#wakeboard", "#hitIt", "#fuckThis", "#progression"], withLocationAndAngle: true, location: "Maglingen → Überlingen", angle: "23.4°")
             }
         }
         
