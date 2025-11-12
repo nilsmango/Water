@@ -64,7 +64,7 @@ struct StatisticsView: View {
                                     NavigationLink {
                                         StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
                                     } label: {
-                                        RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil", withLocationAndAngle: true, location: statistic.locationString ?? "", withoutLocationSymbol: true, angle: downwindManager.calculateMaxAngle(angles: statistic.angles))
+                                        RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil", withTags: true, tags: statistic.tags ?? [], withLocationAndAngle: true, location: statistic.locationString ?? "", withoutLocationSymbol: true, angle: downwindManager.calculateMaxAngle(angles: statistic.angles))
                                     }
                                 }
                             } footer: {
