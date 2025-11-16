@@ -83,7 +83,7 @@ struct MapSectionView: View {
             }
             .padding(.bottom, 9)
         } footer: {
-            if statisticsData.workoutType?.angleSport == true && statisticsData.angles.isEmpty {
+            if statisticsData.workoutType?.angleSport == true && statisticsData.angles?.count ?? 0 < 1 {
                 HStack {
                     Spacer()
                     Button {

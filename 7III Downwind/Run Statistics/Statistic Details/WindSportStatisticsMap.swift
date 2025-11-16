@@ -116,33 +116,36 @@ struct WindSportStatisticsMap: View {
                             
                         }
                         
-                        ForEach(statisticsData.angles) { angleTool in
-                            MapPolyline(coordinates: angleTool.coordinates)
-                                .stroke(
-                                    mode == .deleteAngles ? Color.red : Color.green,
-                                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
-                            
-                            Annotation(angleTool.angle, coordinate: angleTool.coordinates[1]) {
-                                ZStack {
-                                    Circle()
-                                        .fill(mode == .deleteAngles ? Color.red : Color.green)
-                                        .frame(width: mode == .deleteAngles ? lineWidth * 10 : lineWidth * 2)
-                                    
-                                    if mode == .deleteAngles {
-                                        Image(systemName: "trash")
-                                            .foregroundColor(.white)
-                                            .font(.system(size: lineWidth * 5))
+                        if let angles = statisticsData.angles {
+                            ForEach(angles) { angleTool in
+                                MapPolyline(coordinates: angleTool.coordinates)
+                                    .stroke(
+                                        mode == .deleteAngles ? Color.red : Color.green,
+                                        style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                                
+                                Annotation(angleTool.angle, coordinate: angleTool.coordinates[1]) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(mode == .deleteAngles ? Color.red : Color.green)
+                                            .frame(width: mode == .deleteAngles ? lineWidth * 10 : lineWidth * 2)
+                                        
+                                        if mode == .deleteAngles {
+                                            Image(systemName: "trash")
+                                                .foregroundColor(.white)
+                                                .font(.system(size: lineWidth * 5))
+                                        }
+                                    }
+                                    .onTapGesture {
+                                        if mode == .deleteAngles {
+                                            angleToolToDelete = angleTool
+                                            showDeleteAlert = true
+                                        }
                                     }
                                 }
-                                .onTapGesture {
-                                    if mode == .deleteAngles {
-                                        angleToolToDelete = angleTool
-                                        showDeleteAlert = true
-                                    }
-                                }
+                                
                             }
-                            
                         }
+                        
                     }
                 }
                 
@@ -155,7 +158,7 @@ struct WindSportStatisticsMap: View {
                         if coordinates.count == 3 {
                             let newTool = MapAngle(coordinates: coordinates)
                             coordinates = []
-                            statisticsData.angles.append(newTool)
+                            statisticsData.angles = (statisticsData.angles ?? []) + [newTool]
                             downwindManager.saveStatisticAngles(statisticsData: statisticsData)
                         }
                     }
@@ -182,7 +185,7 @@ struct WindSportStatisticsMap: View {
                                             .fill(.white)
                                     }
                                     
-                                    if !statisticsData.angles.isEmpty {
+                                    if statisticsData.angles?.count ?? 0 > 0 {
                                         Button {
                                             mode = .deleteAngles
                                         } label: {
@@ -241,7 +244,7 @@ struct WindSportStatisticsMap: View {
             .alert("Remove Angle", isPresented: $showDeleteAlert) {
                 Button("Remove", role: .destructive) {
                     if let toolToDelete = angleToolToDelete {
-                        statisticsData.angles.removeAll { $0.id == toolToDelete.id }
+                        statisticsData.angles?.removeAll { $0.id == toolToDelete.id }
                         angleToolToDelete = nil
                         coordinates = []
                         downwindManager.saveStatisticAngles(statisticsData: statisticsData)

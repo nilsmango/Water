@@ -46,7 +46,7 @@ struct RunStatistic: Identifiable, Codable {
     var startLocation: LocationData?
     var locationString: String?
     
-    var angles: [MapAngle] = []
+    var angles: [MapAngle]?
     
     
     // Parameterless initializer for empty()

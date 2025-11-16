@@ -64,9 +64,9 @@ struct StatisticsRunView: View {
             if !statisticsData.locationData.isEmpty {
                 MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
                 
-                if !statisticsData.angles.isEmpty {
+                if statisticsData.angles?.count ?? 0 > 0 {
                     Section {
-                        AngleSection(angles: statisticsData.angles)
+                        AngleSection(angles: statisticsData.angles!)
                     } header: {
                         
                         HStack {

@@ -1653,6 +1653,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         if let index = runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
             runStatistics[index].angles = angles
         }
+        
         updateGroupedRunArray()
     }
     
@@ -1858,7 +1859,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         print("running location strings update")
         
-        for statistic in runStatistics {
+        for statistic in runStatistics.sorted(by: { ($0.startDate ?? .distantPast) > ($1.startDate ?? .distantPast) }) {
             if statistic.locationString == nil || statistic.locationString == "" {
                 
                 loadWorkoutRouteEndpoints(id: statistic.id) { endpoints in
@@ -2020,7 +2021,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         let workoutMatches = workout.isEmpty || (statistic.workoutType?.prettyString ?? "") == workout
                         
                         // Filter by saved angles
-                        let angleMatches = !onlyAngles || statistic.angles.count > 0
+                        let angleMatches = !onlyAngles || statistic.angles?.count ?? 0 > 0
                         
                         return tagMatches && locationMatches && workoutMatches && angleMatches
                     }
