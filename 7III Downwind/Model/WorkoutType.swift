@@ -165,7 +165,7 @@ enum WorkoutType: String, Codable, CaseIterable {
     
     var angleSport: Bool {
         switch self {
-        case .parawing, .windsurf, .windFoil, .wingFoil, .wingSkate, .windSkate, .kite, .kiteFoil, .sailing, .pwSkate:
+        case .parawing, .dWParawing, .windsurf, .windFoil, .wingFoil, .wingSkate, .windSkate, .kite, .kiteFoil, .sailing, .pwSkate:
             return true
         default:
             return false
