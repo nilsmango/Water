@@ -18,7 +18,7 @@ struct AboutView: View {
                 
                 Text("What can you do with this app?")
                     .font(.headline)
-                Text("Track your water sports sessions from your iPhone or your Apple Watch. All the data will get stored in Health so you will never loose the data.\nWater also imports all the water sport sessions you did save to Health in the past.\nYou can also track a session with your Garmin watch and import it into Water.\nAnd you can edit any session you had. The edits will only get saved in 7III Water.")
+                Text("Track your water sports sessions from your iPhone or your Apple Watch. All the data will get stored in Health so you will never loose the data.\nWater also imports all the water sport sessions you did save to Health in the past.\nYou can also track a session with your Garmin watch and import it into Water.\nAnd you can edit any session you had. The edits will only get saved in 7III Water.\nCreate dashboards to check all your wind feeds in one place.")
                 
 //                Text("Track yourself and your friends during your outdoor activities. You can also save all the location data collected and analyze it later.\nOriginally, this app was made for downwind runs, but you can track the location of any person or group doing any kind of activity.\nPlease note that the GPS data processing has been optimized for outdoor activities and may not perform well indoors.")
                     .font(.body)
