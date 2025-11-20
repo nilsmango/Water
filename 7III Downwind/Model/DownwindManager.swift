@@ -464,6 +464,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         runStatistics = []
         groupedRunStatistics = []
         saveRunStatistics()
+        runEdits = []
+        saveRunEdits(completeWipe: true)
     }
     
     // saving and loading statistics
@@ -650,16 +652,62 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    /// Save runEdits to disk
-    func saveRunEdits() {
-        DispatchQueue.global(qos: .background).async {
+    private let saveQueue = DispatchQueue(label: "runEdits.save.queue")
+
+    /// Save runEdits to disk with safety check.
+    /// If more than 1 RunEdit would be lost, cancel and restore disk version.
+    func saveRunEdits(completeWipe: Bool = false) {
+        if completeWipe {
             do {
-                let data = try JSONEncoder().encode(self.runEdits)
                 let url = try self.getDocumentsDirectory().appendingPathComponent(self.editFileName)
-                try data.write(to: url)
+                let newData = try JSONEncoder().encode(runEdits)
+                try newData.write(to: url, options: .atomicWrite)
             } catch {
-                print("Error saving runStatistics: \(error)")
+                print("Error removing all runEdits: \(error)")
             }
+            
+        } else {
+            let newEdits = self.runEdits  // snapshot
+
+            saveQueue.async {
+                do {
+                    // Load existing edits from disk
+                    let url = try self.getDocumentsDirectory().appendingPathComponent(self.editFileName)
+                    
+                    var oldEdits: [RunEdit] = []
+                    if let oldData = try? Data(contentsOf: url),
+                       let decodedOld = try? JSONDecoder().decode([RunEdit].self, from: oldData) {
+                        oldEdits = decodedOld
+                    }
+
+                    let oldCount = oldEdits.count
+                    let newCount = newEdits.count
+
+                    // Check shrinking
+                    if oldCount > newCount {
+                        let missing = oldCount - newCount
+
+                        // If more than 1 item missing, cancel the save
+                        if missing > 1 {
+                            
+                            self.logError("Prevented runEdits save: \(missing) edits would be lost. Restoring disk version.")
+
+                            DispatchQueue.main.async {
+                                self.runEdits = oldEdits  // restore the safe version
+                            }
+                            return
+                        }
+                    }
+
+                    // All good → proceed with atomic write
+                    let newData = try JSONEncoder().encode(newEdits)
+                    try newData.write(to: url, options: .atomicWrite)
+
+                } catch {
+                    print("Error saving runEdits: \(error)")
+                }
+        }
+        
         }
     }
     
@@ -816,35 +864,38 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// Load runStatistics from disk
     func loadRunStatistics() {
         loadingRunStatistics = true
+        
+        // getting the runStatistics (if no health or for older files)
+        var decodedStatistics = getRunStatisticsFromDisk()
+        // some cleaning up for old data
+        for (index, statistic) in decodedStatistics.enumerated() {
+            if statistic.startDate == nil {
+                decodedStatistics[index].startDate = statistic.locationData.first?.timestamp
+                decodedStatistics[index].endDate = statistic.locationData.last?.timestamp
+            }
+        }
+        DispatchQueue.main.async {
+            // Update UI on the main thread
+            self.runStatistics = decodedStatistics
+        }
+        
+        // getting the backup health from disk
+        loadBackupWorkoutDataFromDisk()
+        
+        do {
+            // getting the runEdits
+            let editURL = try self.getDocumentsDirectory().appendingPathComponent(self.editFileName)
+            let editData = try Data(contentsOf: editURL)
+            let decodedEdits = try JSONDecoder().decode([RunEdit].self, from: editData)
+            
+            runEdits = decodedEdits
+            
+        } catch {
+            logError("Error loading runEdits: \(error)")
+        }
+        
+        
         DispatchQueue.global(qos: .background).async {
-            // getting the runStatistics (if no health or for older files)
-            var decodedStatistics = self.getRunStatisticsFromDisk()
-            // some cleaning up for old data
-            for (index, statistic) in decodedStatistics.enumerated() {
-                if statistic.startDate == nil {
-                    decodedStatistics[index].startDate = statistic.locationData.first?.timestamp
-                    decodedStatistics[index].endDate = statistic.locationData.last?.timestamp
-                }
-            }
-            DispatchQueue.main.async {
-                // Update UI on the main thread
-                self.runStatistics = decodedStatistics
-            }
-            
-            // getting the backup health from disk
-            self.loadBackupWorkoutDataFromDisk()
-            
-            do {
-                // getting the runEdits
-                let editURL = try self.getDocumentsDirectory().appendingPathComponent(self.editFileName)
-                let editData = try Data(contentsOf: editURL)
-                let decodedEdits = try JSONDecoder().decode([RunEdit].self, from: editData)
-                
-                self.runEdits = decodedEdits
-                
-            } catch {
-                print("Error loading runEdits: \(error)")
-            }
             
             self.loadWorkoutsFromHealthKit { workouts in
                 
@@ -3861,7 +3912,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .medium)
         let newEntry = "[\(timestamp)] \(message)\n"
         errorLog += newEntry
-        print("Location Error: \(message)")
+        print("Error: \(message)")
         saveErrorLog()
     }
     
@@ -3874,7 +3925,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func clearLog() {
-        errorLog = ""
+        errorLog = "Errors will show up here.\n"
         saveErrorLog()
     }
     
