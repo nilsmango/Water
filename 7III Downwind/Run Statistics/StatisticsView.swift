@@ -11,6 +11,11 @@ struct StatisticsView: View {
     @ObservedObject var downwindManager: DownwindManager
     
     @State private var showUpgradeSheet = false
+    
+    @State private var showMonths: Bool = true
+    
+    @State private var showYear: [Bool] = Array(repeating: true, count: 100)
+    
     var body: some View {
         List {
                 if downwindManager.loadingRunStatistics {
@@ -33,54 +38,73 @@ struct StatisticsView: View {
                                 Section {
                                     YearlyMonthlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex)
                                 } header: {
-                                    VStack(alignment: .leading) {
+                                    HStack {
                                         Text(yearSectionHeader(yearIndex: yearIndex))
                                             .font(.title)
                                             .fontWeight(.bold)
+                                        
+                                        Spacer()
+                                        
+                                            
+                                            Button {
+                                                showYear[yearIndex].toggle()
+                                            } label: {
+                                                if showYear[yearIndex] {
+                                                    Label("Hide Months", systemImage: "chevron.down")
+                                                } else {
+                                                    Label("Show Months", systemImage: "chevron.right")
+                                                }
+                                            }
+                                            .fontWeight(.semibold)
+                                            .labelStyle(.iconOnly)
+                                            
+                                        
                                     }
                                     .foregroundStyle(.primary)
                                     .textCase(nil)
                                 }
                             }
                             
-                            Section {
-                                YearlyMonthlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex, monthIndex: monthIndex)
-                            } header: {
-                                VStack(alignment: .leading) {
-                                    Text(monthSectionHeader(yearIndex: yearIndex, monthIndex: monthIndex))
-                                        .font(.title2)
-                                        .fontWeight(.bold)
-                                }
-                                .foregroundStyle(.primary)
-                                .textCase(nil)
-                            }
-                            
-                            Section {
-                                ForEach(downwindManager.groupedRunStatistics[yearIndex][monthIndex]) { statistic in
-                                    
-                                    let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
-                                    let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
-                                    
-                                    NavigationLink {
-                                        StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
-                                    } label: {
-                                        RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil", withTags: true, tags: statistic.tags ?? [], withLocationAndAngle: true, location: statistic.locationString ?? "", withoutLocationSymbol: true, angle: downwindManager.calculateMaxAngle(angles: statistic.angles ?? []))
+                            if showMonths && showYear[yearIndex] {
+                                Section {
+                                    YearlyMonthlyStatisticView(downwindManager: downwindManager, yearIndex: yearIndex, monthIndex: monthIndex)
+                                } header: {
+                                    VStack(alignment: .leading) {
+                                        Text(monthSectionHeader(yearIndex: yearIndex, monthIndex: monthIndex))
+                                            .font(.title2)
+                                            .fontWeight(.bold)
                                     }
+                                    .foregroundStyle(.primary)
+                                    .textCase(nil)
                                 }
-                            } footer: {
-                                if downwindManager.statisticsCount > 5, downwindManager.hasPurchasedPremium == false {
-                                    HStack {
-                                        Spacer()
-                                        Button {
-                                            showUpgradeSheet = true
+                                
+                                Section {
+                                    ForEach(downwindManager.groupedRunStatistics[yearIndex][monthIndex]) { statistic in
+                                        
+                                        let averageSpeedString = makePrettySpeed(speed: statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60), system: downwindManager.measurementSystem)
+                                        let runDates = downwindManager.makeTimeIntervalDate(startDate: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.now, endDate: statistic.endDate ?? statistic.locationData.last?.timestamp ?? Date.now)
+                                        
+                                        NavigationLink {
+                                            StatisticsRunView(downwindManager: downwindManager, statisticsData: binding(for: statistic))
                                         } label: {
-                                            Label("Load \(downwindManager.statisticsCount - 5) more Sessions", systemImage: "lock.fill")
+                                            RunOverView(runDate: runDates, runName: statistic.runName, distance: makePrettyDistance(meters: statistic.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statistic.runTime), averageSpeed: averageSpeedString, kCal: "\(Int(statistic.kCalories?.rounded() ?? 0)) kcal", activityType: statistic.workoutType?.prettyString ?? "DW SUP Foil", withTags: true, tags: statistic.tags ?? [], withLocationAndAngle: true, location: statistic.locationString ?? "", withoutLocationSymbol: true, angle: downwindManager.calculateMaxAngle(angles: statistic.angles ?? []))
                                         }
-                                        .buttonStyle(.borderedProminent)
-                                        Spacer()
                                     }
-                                    .padding(.top, 32)
-                                    .padding(.bottom, 32)
+                                } footer: {
+                                    if downwindManager.statisticsCount > 5, downwindManager.hasPurchasedPremium == false {
+                                        HStack {
+                                            Spacer()
+                                            Button {
+                                                showUpgradeSheet = true
+                                            } label: {
+                                                Label("Load \(downwindManager.statisticsCount - 5) more Sessions", systemImage: "lock.fill")
+                                            }
+                                            .buttonStyle(.borderedProminent)
+                                            Spacer()
+                                        }
+                                        .padding(.top, 32)
+                                        .padding(.bottom, 32)
+                                    }
                                 }
                             }
                         }
@@ -110,6 +134,18 @@ struct StatisticsView: View {
             })
         .navigationTitle("Statistics")
         .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showMonths.toggle()
+                } label: {
+                    if showMonths {
+                        Label("Hide Details", systemImage: "chevron.down")
+                    } else {
+                        Label("Show Details", systemImage: "chevron.right")
+                    }
+                }
+            }
+            
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink("Filter") {
                     GroupedTagsListView(downwindManager: downwindManager)
