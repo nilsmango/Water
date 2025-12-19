@@ -27,6 +27,8 @@ struct WindSportStatisticsMap: View {
     @State private var showDeleteAlert = false
     @State private var mode: AngleMode = .menu
     
+    let boxPadding: CGFloat = 10
+    
     var body: some View {
         MapReader { proxy in
                 Map {
@@ -114,6 +116,18 @@ struct WindSportStatisticsMap: View {
                                     .frame(width: lineWidth * 2)
                             }
                             
+                        } else if coordinates.count == 3 {
+                            MapPolyline(coordinates: coordinates)
+                                .stroke(
+                                    .green,
+                                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                            
+                            Annotation("", coordinate: coordinates.last!) {
+                                Circle()
+                                    .fill(Color.green)
+                                    .frame(width: lineWidth * 2)
+                            }
+                            
                         }
                         
                         if let angles = statisticsData.angles {
@@ -150,21 +164,19 @@ struct WindSportStatisticsMap: View {
                 }
                 
             .onTapGestureBugFix { position in
-                if angleTool && mode == .addAngles {
+                if angleTool && mode == .addAngles && coordinates.count < 3 {
                     if let coordinate = proxy.convert(position, from: .local) {
 //                        print("Tapped at \(coordinate)")
                         coordinates.append(coordinate)
                         
-                        if coordinates.count == 3 {
-                            let newTool = MapAngle(coordinates: coordinates)
-                            coordinates = []
-                            statisticsData.angles = (statisticsData.angles ?? []) + [newTool]
-                            downwindManager.saveStatisticAngles(statisticsData: statisticsData)
-                        }
                     }
                 }
             }
-        
+            .conditionalDragToMoveLastCoordinate(
+                    coordinates: $coordinates,
+                    proxy: proxy
+                )
+            
             .overlay {
                 if angleTool {
                     VStack {
@@ -176,13 +188,13 @@ struct WindSportStatisticsMap: View {
                                     Button {
                                         mode = .addAngles
                                     } label: {
-                                        Label("Add Angles", systemImage: "plus")
+                                        Label("Add Angle", systemImage: "plus")
                                     }
-                                    .foregroundStyle(.black)
-                                    .padding(8)
+                                    .foregroundStyle(.white)
+                                    .padding(boxPadding)
                                     .background {
                                         RoundedRectangle(cornerRadius: 32.0)
-                                            .fill(.white)
+                                            .fill(Color.accentColor)
                                     }
                                     
                                     if statisticsData.angles?.count ?? 0 > 0 {
@@ -191,11 +203,11 @@ struct WindSportStatisticsMap: View {
                                         } label: {
                                             Label("Remove Angles", systemImage: "trash")
                                         }
-                                        .foregroundStyle(.black)
-                                        .padding(8)
+                                        .foregroundStyle(.white)
+                                        .padding(boxPadding)
                                         .background {
                                             RoundedRectangle(cornerRadius: 32.0)
-                                                .fill(.white)
+                                                .fill(.red)
                                         }
                                     }
                                 }
@@ -208,31 +220,63 @@ struct WindSportStatisticsMap: View {
                                             if coordinates.count == 0 {
                                                 Text("Tap to add a first leg point")
                                             } else if coordinates.count == 1 {
-                                                Text("Go to center now")
+                                                Text("Tap to add center now, or drag to move first point")
                                             } else if coordinates.count == 2 {
-                                                Text("Add last leg")
+                                                Text("Tap to add last leg, or drag to move center point")
+                                            } else if coordinates.count == 3 {
+                                                Text("Drag to move last leg point")
                                             }
                                         }
                                     }
                                     .foregroundStyle(.black)
-                                    .padding(8)
+                                    .padding(boxPadding)
                                     .background {
-                                        RoundedRectangle(cornerRadius: 32.0)
-                                            .fill(.white)
+                                        RoundedRectangle(cornerRadius: 16.0)
+                                            .fill(.white).opacity(0.6)
                                     }
                                     
-                                    Button {
-                                        mode = .menu
-                                        coordinates = []
-                                    } label: {
-                                        Label("Done", systemImage: "checkmark")
-                                    }
-                                    .foregroundStyle(.white)
-                                    .padding(8)
-                                    .background {
-                                        RoundedRectangle(cornerRadius: 32.0)
-                                            .fill(Color.accentColor)
-                                    }
+                                    VStack {
+                                        Button {
+                                            if coordinates.count == 3 {
+                                                let newTool = MapAngle(coordinates: coordinates)
+                                                coordinates = []
+                                                statisticsData.angles = (statisticsData.angles ?? []) + [newTool]
+                                                downwindManager.saveStatisticAngles(statisticsData: statisticsData)
+                                            }
+                                            mode = .menu
+                                            coordinates = []
+                                        } label: {
+                                            if coordinates.count == 3 {
+                                                Label("Save", systemImage: "checkmark")
+                                            } else if mode == .deleteAngles {
+                                                Label("Done", systemImage: "checkmark")
+                                            } else {
+                                                Label("Cancel", systemImage: "xmark")
+                                            }
+                                        
+                                        }
+                                        .foregroundStyle(.white)
+                                        .padding(boxPadding)
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 32.0)
+                                                .fill(Color.accentColor)
+                                        }
+                                        
+                                        if coordinates.count == 3 {
+                                            Button {
+                                                mode = .menu
+                                                coordinates = []
+                                            } label: {
+                                                Label("Cancel", systemImage: "xmark")
+                                            }
+                                            .foregroundStyle(.white)
+                                            .padding(boxPadding)
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 32.0)
+                                                    .fill(Color.accentColor)
+                                            }
+                                        }
+                                    }                                    
                                 }
                             }
                         }
