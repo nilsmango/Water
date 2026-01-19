@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78056D0A2F1E4568000D9591 /* SpeedGradientMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */; };
+		78056D0C2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */; };
+		78056D0E2F1E4596000D9591 /* SpeedGradientHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */; };
+		78056D102F1E45BB000D9591 /* GradientMapTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */; };
+		78056D122F1E46BB000D9591 /* MapDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D112F1E46BB000D9591 /* MapDebug.swift */; };
 		78096F3D2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
 		781562A32B94D92900E081FC /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
 		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
@@ -273,6 +278,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientMapView.swift; sourceTree = "<group>"; };
+		78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientMapCoordinator.swift; sourceTree = "<group>"; };
+		78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientHelpers.swift; sourceTree = "<group>"; };
+		78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientMapTestView.swift; sourceTree = "<group>"; };
+		78056D112F1E46BB000D9591 /* MapDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDebug.swift; sourceTree = "<group>"; };
 		78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsEditViewStatisticCapture.swift; sourceTree = "<group>"; };
 		781562A22B94D92900E081FC /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
@@ -596,6 +606,8 @@
 				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
 				78EC608C2E0D319E00C55950 /* EditMap.swift */,
 				78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */,
+				78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */,
+				78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */,
 				78B5EF182D539D7D0079B16A /* GPXExportButton.swift */,
 				781A4B9D2C4E45040046AE0E /* SocialSharing */,
 			);
@@ -692,6 +704,9 @@
 				78F047C42D9DA607003E11FA /* GPXStuff.swift */,
 				788382462E8EA63A00C68EF6 /* FoilStallDetector.swift */,
 				785C4AB92B40AF7400EB07F8 /* Member.swift */,
+				78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */,
+				78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */,
+				78056D112F1E46BB000D9591 /* MapDebug.swift */,
 				785CCF232D6B195E0075CA4C /* Version.swift */,
 				785CCF252D6B197E0075CA4C /* VersionHistory.swift */,
 				785C4ABB2B40B04000EB07F8 /* Run.swift */,
@@ -1202,6 +1217,7 @@
 				7898D40D2BBEB490007820DB /* StatisticsRounds.swift in Sources */,
 				788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */,
 				7877E1282BC41DB300776890 /* StatisticsInfoViews.swift in Sources */,
+				78056D0C2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift in Sources */,
 				78C4D2362BA6D3CC00639E65 /* StatisticsControlCenter.swift in Sources */,
 				78F937F02C35816B00D34796 /* WindSportStatisticsMap.swift in Sources */,
 				78EC60932E0EACF600C55950 /* StickerHowToView.swift in Sources */,
@@ -1218,6 +1234,7 @@
 				78DB91372E45EFBA00B222C2 /* UnitType.swift in Sources */,
 				78DB91382E45EFBA00B222C2 /* TrackedElementsManager.swift in Sources */,
 				78DB91392E45EFBA00B222C2 /* Dashboard.swift in Sources */,
+				78056D122F1E46BB000D9591 /* MapDebug.swift in Sources */,
 				785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */,
 				785CCF282D6B1A0A0075CA4C /* VersionHistoryView.swift in Sources */,
 				783A53C72B5DA57C00701D7F /* RunMapView.swift in Sources */,
@@ -1226,6 +1243,7 @@
 				783A53C52B5D9DB000701D7F /* CircleAndText.swift in Sources */,
 				785C4ACF2B4308A800EB07F8 /* RunUITest.swift in Sources */,
 				78EC608D2E0D319E00C55950 /* EditMap.swift in Sources */,
+				78056D0A2F1E4568000D9591 /* SpeedGradientMapView.swift in Sources */,
 				785CCF1A2D6894DB0075CA4C /* ShareOverlayDivider.swift in Sources */,
 				781A4BB12C4FAD5E0046AE0E /* VideoOverlayView.swift in Sources */,
 				7857BF342C57C16600AD7F4F /* VideoPicker.swift in Sources */,
@@ -1276,6 +1294,7 @@
 				785C4A992B358F7B00EB07F8 /* _III_DownwindApp.swift in Sources */,
 				788382242E8BFCD800C68EF6 /* XMarkLabel.swift in Sources */,
 				783A53D52B626BF500701D7F /* HeadingIndicator.swift in Sources */,
+				78056D102F1E45BB000D9591 /* GradientMapTestView.swift in Sources */,
 				78B388E42C18C93F00C75A60 /* WorkoutType.swift in Sources */,
 				781562A32B94D92900E081FC /* QRCodeView.swift in Sources */,
 				78EC60912E0DDBD100C55950 /* RouteSticker.swift in Sources */,
@@ -1291,6 +1310,7 @@
 				78C4D2382BA6D9DE00639E65 /* RunStatistic.swift in Sources */,
 				78F047C52D9DA607003E11FA /* GPXStuff.swift in Sources */,
 				785CCF242D6B195E0075CA4C /* Version.swift in Sources */,
+				78056D0E2F1E4596000D9591 /* SpeedGradientHelpers.swift in Sources */,
 				783A53C32B5D930400701D7F /* MapView.swift in Sources */,
 				782D8E0B2EC0E57C00E2AE43 /* AngleSection.swift in Sources */,
 				781A4BAD2C4E9F310046AE0E /* SharePreviewWrapper.swift in Sources */,
