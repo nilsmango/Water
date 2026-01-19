@@ -13,6 +13,8 @@
 		78056D102F1E45BB000D9591 /* GradientMapTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */; };
 		78056D122F1E46BB000D9591 /* MapDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D112F1E46BB000D9591 /* MapDebug.swift */; };
 		78056D172F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D162F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift */; };
+		78056D192F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */; };
+		78056D1B2F1E901B000D9591 /* WavesHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D1A2F1E901B000D9591 /* WavesHelpers.swift */; };
 		78096F3D2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
 		781562A32B94D92900E081FC /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
 		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
@@ -285,6 +287,8 @@
 		78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientMapTestView.swift; sourceTree = "<group>"; };
 		78056D112F1E46BB000D9591 /* MapDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDebug.swift; sourceTree = "<group>"; };
 		78056D162F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateSmoothingHelpers.swift; sourceTree = "<group>"; };
+		78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientStatisticsMap.swift; sourceTree = "<group>"; };
+		78056D1A2F1E901B000D9591 /* WavesHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavesHelpers.swift; sourceTree = "<group>"; };
 		78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsEditViewStatisticCapture.swift; sourceTree = "<group>"; };
 		781562A22B94D92900E081FC /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
@@ -607,6 +611,7 @@
 				7898D40C2BBEB490007820DB /* StatisticsRounds.swift */,
 				78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */,
 				78EC608C2E0D319E00C55950 /* EditMap.swift */,
+				78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */,
 				78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */,
 				78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */,
 				78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */,
@@ -709,6 +714,7 @@
 				785C4AB92B40AF7400EB07F8 /* Member.swift */,
 				78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */,
 				78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */,
+				78056D1A2F1E901B000D9591 /* WavesHelpers.swift */,
 				78056D112F1E46BB000D9591 /* MapDebug.swift */,
 				785CCF232D6B195E0075CA4C /* Version.swift */,
 				785CCF252D6B197E0075CA4C /* VersionHistory.swift */,
@@ -1209,6 +1215,7 @@
 				7840835A2C2188CF004C0857 /* HeartRateChartView.swift in Sources */,
 				7840835E2C21B279004C0857 /* MapSectionView.swift in Sources */,
 				785C4AAE2B359DAD00EB07F8 /* HTTPClient.swift in Sources */,
+				78056D192F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift in Sources */,
 				78C4D2452BAC8B8A00639E65 /* CrewStatistic.swift in Sources */,
 				7877E1492BC52C9600776890 /* View+readSize.swift in Sources */,
 				78320BC42BB1D8F900D6A772 /* StatisticTestsView.swift in Sources */,
@@ -1322,6 +1329,7 @@
 				785C4AD32B433D4000EB07F8 /* MemberRunData.swift in Sources */,
 				785C4AC92B40BA1600EB07F8 /* FirstTimeUserNameSet.swift in Sources */,
 				781562A72B94DD7500E081FC /* ShareDialog.swift in Sources */,
+				78056D1B2F1E901B000D9591 /* WavesHelpers.swift in Sources */,
 				785C4ACB2B41705C00EB07F8 /* RunView.swift in Sources */,
 				785CCF262D6B197E0075CA4C /* VersionHistory.swift in Sources */,
 				7877E14B2BC5850C00776890 /* TagsFlexiView.swift in Sources */,

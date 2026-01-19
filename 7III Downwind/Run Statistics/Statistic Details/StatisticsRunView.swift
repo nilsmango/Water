@@ -397,7 +397,8 @@ struct StatisticsRunView: View {
                     if let dW = statisticsData.workoutType?.isDWSport, dW == true {
                         StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                     } else {
-                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
+//                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
+                        SpeedGradientStatisticsMap(statisticsData: $statisticsData)
                     }
                 }
                         .navigationTitle(statisticsData.locationString ?? locationName)
