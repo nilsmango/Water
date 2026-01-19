@@ -16,6 +16,7 @@ class CircleAnnotationView: MKAnnotationView {
     }
 
     private let markerType: MarkerType
+    private let circleSize: CGFloat = 18
 
     init(annotation: MKAnnotation?, reuseIdentifier: String?, markerType: MarkerType) {
         self.markerType = markerType
@@ -32,9 +33,9 @@ class CircleAnnotationView: MKAnnotationView {
     private func setupView() {
         canShowCallout = false
 
-        let width = 18.0
-        let circle = UIView(frame: CGRect(x: 0, y: 0, width: width, height: width))
-        circle.layer.cornerRadius = width / 2
+        // --- Circle ---
+        let circle = UIView(frame: CGRect(x: 0, y: 0, width: circleSize, height: circleSize))
+        circle.layer.cornerRadius = circleSize / 2
         circle.layer.borderWidth = 2
         circle.layer.borderColor = UIColor.white.cgColor
         circle.backgroundColor = markerType == .start ? .green : .red
@@ -42,8 +43,61 @@ class CircleAnnotationView: MKAnnotationView {
 
         addSubview(circle)
 
-        bounds = CGRect(x: 0, y: 0, width: width, height: width)
-        centerOffset = CGPoint(x: 0, y: -width / 2)
+        if let title = annotation?.title ?? nil {
+            let label = HaloLabel()
+            label.text = title
+            label.font = .systemFont(ofSize: 10, weight: .medium)
+            label.textColor = .black
+            label.haloColor = .white
+            label.haloWidth = 2
+            label.textAlignment = .center
+            label.backgroundColor = .clear
+            label.numberOfLines = 1
+            label.isUserInteractionEnabled = false
+
+            label.sizeToFit()
+
+                    // Center under the circle without affecting anchor
+                    label.frame.origin = CGPoint(
+                        x: (circleSize - label.bounds.width) / 2,
+                        y: circleSize + 6
+                    )
+
+                    addSubview(label)
+                }
+
+        // IMPORTANT: keep bounds & offset tied to the circle only
+        bounds = CGRect(x: 0, y: 0, width: circleSize, height: circleSize)
+        centerOffset = CGPoint(x: 0, y: -circleSize / 2)
+    }
+}
+
+final class HaloLabel: UILabel {
+
+    var haloColor: UIColor = .white
+    var haloWidth: CGFloat = 1.5
+    override func drawText(in rect: CGRect) {
+        guard let ctx = UIGraphicsGetCurrentContext() else {
+            super.drawText(in: rect)
+            return
+        }
+
+        ctx.saveGState()
+
+        // Draw halo
+        ctx.setLineWidth(haloWidth)
+        ctx.setLineJoin(.round)
+        ctx.setTextDrawingMode(.stroke)
+        let originalColor = textColor
+        textColor = haloColor
+        super.drawText(in: rect)
+
+        // Draw text
+        ctx.setTextDrawingMode(.fill)
+        textColor = originalColor
+        super.drawText(in: rect)
+
+        ctx.restoreGState()
     }
 }
 
