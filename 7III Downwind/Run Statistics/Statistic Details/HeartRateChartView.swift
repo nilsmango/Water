@@ -21,8 +21,8 @@ struct HeartRateChartView: View {
     let measurements: [Date: (Double, Double)]
     let speedData: [SpeedSample]
 
-    var body: some View {
-        let data = measurements
+    private var data: [BarChartData] {
+        measurements
             .sorted { $0.key < $1.key }
             .map { date, span in
                 let (min, max) = span
@@ -33,10 +33,25 @@ struct HeartRateChartView: View {
                     max: max
                 )
             }
+    }
+    
+    private var minYValue: Double {
+        if data.isEmpty {
+            return 0
+        } else {
+            return (data.map { $0.min }.min() ?? 0) - 5
+        }
+    }
+    
+    private var maxYValue: Double {
+        if data.isEmpty {
+            return 200
+        } else {
+            return (data.map { $0.max }.max() ?? 0) + 10
+        }
+    }
 
-        let minYValue = (data.map { $0.min }.min() ?? 0) - 5
-        let maxYValue = (data.map { $0.max }.max() ?? 0) + 10
-
+    var body: some View {
         HeartRateChart(
             data: data,
             minY: minYValue,
@@ -55,25 +70,51 @@ struct HeartRateChart: View {
     @State private var selectedTime: Double?
     
     private var speedMin: Double {
-        (speedData.map { $0.speedKmh }.min() ?? 0) - 1
+        guard !speedData.isEmpty else { return 0 }
+        return (speedData.map { $0.speedKmh }.min() ?? 0) - 1
     }
 
     private var speedMax: Double {
-        (speedData.map { $0.speedKmh }.max() ?? 0) + 1
+        guard !speedData.isEmpty else { return 20 }
+        return (speedData.map { $0.speedKmh }.max() ?? 0) + 1
     }
     
-    // Get the earliest timestamp from both datasets
+    private var hasHeartRateData: Bool {
+        !data.isEmpty
+    }
+
+    private var hasSpeedData: Bool {
+        !speedData.isEmpty
+    }
+
+    // Make startTime safer
     private var startTime: Date {
-        let hrStart = data.first?.date ?? Date()
-        let speedStart = speedData.first?.date ?? Date()
-        return min(hrStart, speedStart)
+        if hasHeartRateData && hasSpeedData {
+            let hrStart = data.first!.date
+            let speedStart = speedData.first!.date
+            return min(hrStart, speedStart)
+        } else if hasHeartRateData {
+            return data.first!.date
+        } else if hasSpeedData {
+            return speedData.first!.date
+        } else {
+            return Date() // Fallback
+        }
     }
-    
-    // Get the latest timestamp from both datasets
+
+    // Make endTime safer
     private var endTime: Date {
-        let hrEnd = data.last?.date ?? Date()
-        let speedEnd = speedData.last?.date ?? Date()
-        return max(hrEnd, speedEnd)
+        if hasHeartRateData && hasSpeedData {
+            let hrEnd = data.last!.date
+            let speedEnd = speedData.last!.date
+            return max(hrEnd, speedEnd)
+        } else if hasHeartRateData {
+            return data.last!.date
+        } else if hasSpeedData {
+            return speedData.last!.date
+        } else {
+            return Date() // Fallback
+        }
     }
     
     // Convert date to seconds from start
@@ -91,19 +132,22 @@ struct HeartRateChart: View {
     
     // Find closest heart rate value to selected time
     private func heartRateAt(time: Double) -> Double? {
+        guard !data.isEmpty else { return nil }
         let closest = data.min(by: { abs(secondsFromStart($0.date) - time) < abs(secondsFromStart($1.date) - time) })
         return closest.map { ($0.min + $0.max) / 2 }
     }
     
     // Find closest speed value to selected time
     private func speedAt(time: Double) -> Double? {
-        speedData.min(by: { abs(secondsFromStart($0.date) - time) < abs(secondsFromStart($1.date) - time) })?.speedKmh
+        guard !speedData.isEmpty else { return nil }
+        return speedData.min(by: { abs(secondsFromStart($0.date) - time) < abs(secondsFromStart($1.date) - time) })?.speedKmh
     }
     
     // Normalize speed to heart rate scale
     private func normalizeSpeed(_ speed: Double) -> Double {
         let speedRange = speedMax - speedMin
         let hrRange = maxY - minY
+        guard hrRange > 0, speedRange > 0 else { return minY }
         return ((speed - speedMin) / speedRange) * hrRange + minY
     }
     
@@ -111,10 +155,32 @@ struct HeartRateChart: View {
     private func denormalizeSpeed(_ normalized: Double) -> Double {
         let speedRange = speedMax - speedMin
         let hrRange = maxY - minY
+        guard hrRange > 0, speedRange > 0 else { return speedMin }
         return ((normalized - minY) / hrRange) * speedRange + speedMin
     }
 
+    // Update speedOnlyEndTime to be safer
+    private var speedOnlyEndTime: Double {
+        guard hasSpeedData, let lastSpeed = speedData.last else { return 1 }
+        return max(1, secondsFromStart(lastSpeed.date))
+    }
+
+    // Update the main body to handle empty data
     var body: some View {
+        if !hasSpeedData {
+            Text("No speed data available")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(height: 200)
+        } else if hasHeartRateData {
+            dualAxisChart
+        } else {
+            speedOnlyChart
+        }
+    }
+    
+    // Chart with both heart rate and speed
+    private var dualAxisChart: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 16) {
                 Text("km/h")
@@ -134,7 +200,7 @@ struct HeartRateChart: View {
                     RuleMark(x: .value("Selected", selectedTime))
                         .foregroundStyle(.gray.opacity(0.5))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
-                        .annotation(position: .top, spacing: 0) {
+                        .annotation(position: .top, spacing: -45) {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(formatTime(selectedTime))
                                     .font(.caption2)
@@ -161,7 +227,6 @@ struct HeartRateChart: View {
                             .padding(8)
                             .background(Color(.systemBackground))
                             .cornerRadius(8)
-                            .shadow(radius: 3)
                         }
                 }
             }
@@ -207,7 +272,94 @@ struct HeartRateChart: View {
                     }
                 }
             })
-            .frame(height: 150)
+            .frame(height: 200)
+        }
+    }
+    
+    // Speed-only chart (when no heart rate data)
+    private var speedOnlyChart: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+               Spacer()
+                
+                Text("km/h")
+                    .foregroundStyle(.blue)
+                    .font(.caption)
+            }
+            
+            
+            if !hasSpeedData {
+                Text("No speed data available")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(height: 200)
+            } else {
+                Chart {
+                    ForEach(speedData, id: \.date) { sample in
+                        LineMark(
+                            x: .value("Time", secondsFromStart(sample.date)),
+                            y: .value("Speed", sample.speedKmh),
+                            series: .value("Metric", "Speed")
+                        )
+                        .foregroundStyle(.blue)
+                        .interpolationMethod(.linear)
+                    }
+                    
+                    if let selectedTime {
+                        RuleMark(x: .value("Selected", selectedTime))
+                            .foregroundStyle(.gray.opacity(0.5))
+                            .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
+                            .annotation(position: .top, spacing: -30) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(formatTime(selectedTime))
+                                        .font(.caption2)
+                                        .fontWeight(.semibold)
+                                    
+                                    if let speed = speedAt(time: selectedTime) {
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "gauge.open.with.lines.needle.33percent")
+                                                .foregroundStyle(.blue)
+                                            Text(String(format: "%.1f km/h", speed))
+                                        }
+                                        .font(.caption2)
+                                    }
+                                }
+                                .padding(8)
+                                .background(Color(.systemBackground))
+                                .cornerRadius(8)
+                            }
+                    }
+                }
+                .chartXScale(domain: 0...speedOnlyEndTime)
+                .chartYScale(domain: speedMin...speedMax)
+                .chartXSelection(value: $selectedTime)
+                .chartXAxis {
+                    AxisMarks(values: .automatic) { value in
+                        if let seconds = value.as(Double.self) {
+                            AxisValueLabel {
+                                Text(formatTime(seconds))
+                                    .font(.caption2)
+                            }
+                            AxisGridLine()
+                            AxisTick()
+                        }
+                    }
+                }
+                .chartYAxis {
+                    AxisMarks(values: .automatic) { value in
+                        if let speed = value.as(Double.self) {
+                            AxisValueLabel {
+                                Text("\(speed, specifier: "%.1f")")
+                                    .foregroundStyle(.blue)
+                                    .font(.caption2)
+                            }
+                            AxisGridLine()
+                            AxisTick()
+                        }
+                    }
+                }
+                .frame(height: 200)
+            }
         }
     }
     
@@ -242,4 +394,6 @@ struct HeartRateChart: View {
 
 #Preview {
     HeartRateChartView(measurements: [Date.now : (140, 150), Date.now.addingTimeInterval(-2000) : (100, 105), Date.now.addingTimeInterval(-6000) : (60, 105)], speedData: [SpeedSample(date: Date.now, speedKmh: 10), SpeedSample(date: Date.now.addingTimeInterval(-2000), speedKmh: 5), SpeedSample(date: Date.now.addingTimeInterval(-6000), speedKmh: 8)])
+    
+    HeartRateChartView(measurements: [:], speedData: [SpeedSample(date: Date.now, speedKmh: 10), SpeedSample(date: Date.now.addingTimeInterval(-2000), speedKmh: 5), SpeedSample(date: Date.now.addingTimeInterval(-6000), speedKmh: 8)].sorted(by: { $0.date < $1.date }))
 }

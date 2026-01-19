@@ -34,7 +34,7 @@ struct HeartRateView: View {
         if (!heartRates.isEmpty && heartRates.values.flatMap({ [$0.0, $0.1] }).reduce(0, +) > 30) || speedData.count > 4 {
                                     
             Section {
-                HeartRateChartView(measurements: heartRates, speedData: [])
+                HeartRateChartView(measurements: heartRates, speedData: speedData)
                 
             } header: {
                 HStack {
