@@ -8,11 +8,36 @@
 import MapKit
 import UIKit
 
+
+
+
 class CircleAnnotationView: MKAnnotationView {
 
     enum MarkerType {
         case start
         case finish
+    }
+    
+    private var markerColor: UIColor {
+        switch markerType {
+        case .start:
+            // Darker green (roughly 2× darker than system green)
+            return UIColor(
+                red: 90/255,
+                green: 190/255,
+                blue: 90/255,
+                alpha: 1.0
+            )
+
+        case .finish:
+            // Slightly lighter red
+            return UIColor(
+                red: 0.95,
+                green: 0.30,
+                blue: 0.30,
+                alpha: 1.0
+            )
+        }
     }
 
     private let markerType: MarkerType
@@ -38,7 +63,7 @@ class CircleAnnotationView: MKAnnotationView {
         circle.layer.cornerRadius = circleSize / 2
         circle.layer.borderWidth = 2
         circle.layer.borderColor = UIColor.white.cgColor
-        circle.backgroundColor = markerType == .start ? .green : .red
+        circle.backgroundColor = markerColor
         circle.isUserInteractionEnabled = false
 
         addSubview(circle)
