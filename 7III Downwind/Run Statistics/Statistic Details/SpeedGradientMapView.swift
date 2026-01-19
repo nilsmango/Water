@@ -36,9 +36,7 @@ struct SpeedGradientMapView: UIViewRepresentable {
         context.coordinator.lineWidth = lineWidth
         context.coordinator.locations = locations
 
-        let coordinates = locations.map {
-            CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)
-        }
+        let coordinates = makeSmoothedCoordinates(from: locations)
 
         let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
 

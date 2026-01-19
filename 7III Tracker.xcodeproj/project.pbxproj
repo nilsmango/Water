@@ -12,6 +12,7 @@
 		78056D0E2F1E4596000D9591 /* SpeedGradientHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */; };
 		78056D102F1E45BB000D9591 /* GradientMapTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */; };
 		78056D122F1E46BB000D9591 /* MapDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D112F1E46BB000D9591 /* MapDebug.swift */; };
+		78056D172F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D162F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift */; };
 		78096F3D2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
 		781562A32B94D92900E081FC /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
 		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
@@ -283,6 +284,7 @@
 		78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientHelpers.swift; sourceTree = "<group>"; };
 		78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientMapTestView.swift; sourceTree = "<group>"; };
 		78056D112F1E46BB000D9591 /* MapDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDebug.swift; sourceTree = "<group>"; };
+		78056D162F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateSmoothingHelpers.swift; sourceTree = "<group>"; };
 		78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsEditViewStatisticCapture.swift; sourceTree = "<group>"; };
 		781562A22B94D92900E081FC /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
@@ -703,6 +705,7 @@
 				78DB91042E45EF5C00B222C2 /* NavDestination.swift */,
 				78F047C42D9DA607003E11FA /* GPXStuff.swift */,
 				788382462E8EA63A00C68EF6 /* FoilStallDetector.swift */,
+				78056D162F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift */,
 				785C4AB92B40AF7400EB07F8 /* Member.swift */,
 				78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */,
 				78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */,
@@ -1258,6 +1261,7 @@
 				7877E13A2BC52BB400776890 /* FlexibleView.swift in Sources */,
 				785CCF222D6B192B0075CA4C /* NewsSection.swift in Sources */,
 				783A53C92B5E667500701D7F /* CoordinatesListView.swift in Sources */,
+				78056D172F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift in Sources */,
 				78DB91452E45FB9D00B222C2 /* Dashboards.swift in Sources */,
 				78DB91472E45FB9D00B222C2 /* TrackedElementRow.swift in Sources */,
 				782D8E092EC0DA2E00E2AE43 /* MapTapGesture26.swift in Sources */,
