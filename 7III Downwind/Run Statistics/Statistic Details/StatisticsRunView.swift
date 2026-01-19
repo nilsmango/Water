@@ -92,23 +92,24 @@ struct StatisticsRunView: View {
                     }
                 }
                 
-                Section {
-                    SpeedChartView(data: statisticsData.locationData, zoom: $zoom)
-                } header: {
-                    HStack {
-                        Text("Speed")
-                            .textCase(nil)
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundColor(.primary)
-                        
-                        Stepper("", value: $zoom, in: 1...20)
-                    }
-                    .padding(.bottom, 9)
-                }
+//                Section {
+//                    SpeedChartView(data: statisticsData.locationData, zoom: $zoom)
+//                        .frame(height: 200)
+//                } header: {
+//                    HStack {
+//                        Text("Speed")
+//                            .textCase(nil)
+//                            .font(.title3)
+//                            .fontWeight(.bold)
+//                            .foregroundColor(.primary)
+//                        
+//                        Stepper("", value: $zoom, in: 1...20)
+//                    }
+//                    .padding(.bottom, 9)
+//                }
             }
             
-                HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate)
+            HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate, locationData: statisticsData.locationData)
             
                     Section {
                         TagsFlexiView(strings: tags)

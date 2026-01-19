@@ -7,12 +7,20 @@
 
 import SwiftUI
 
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
 struct SpeedChartView: View {
     let data: [LocationData]
 
     @State private var selectedIndex: Int? = nil
     @GestureState private var dragLocation: CGPoint? = nil
     @Binding var zoom: CGFloat
+    @State private var scrollOffset: CGFloat = 0
 
     var body: some View {
             
@@ -23,8 +31,9 @@ struct SpeedChartView: View {
                 let maxTime = data.last?.timestamp.timeIntervalSince1970 ?? 1
                 let totalDuration = maxTime - minTime
 
-                ScrollView(.horizontal, showsIndicators: true) {
-                    ZStack {
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: true) {
+                        ZStack {
                         // Line
                         Path { path in
                             for (i, loc) in data.enumerated() {
@@ -137,7 +146,14 @@ struct SpeedChartView: View {
                         }
                     }
                     .frame(width: geo.size.width * zoom, height: geo.size.height)
-                    
+                    .id("chart")
+                    .background(
+                        GeometryReader { geo in
+                            Color.clear
+                                .preference(key: ScrollOffsetPreferenceKey.self, value: -geo.frame(in: .named("scroll")).minX)
+                        }
+                    )
+
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .updating($dragLocation) { value, state, _ in
@@ -152,17 +168,27 @@ struct SpeedChartView: View {
                                 })?.offset {
                                     selectedIndex = idx
                                 }
-                            }
+                        }
                     )
-                    
+                }
+                .coordinateSpace(name: "scroll")
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                    scrollOffset = max(0, value)
+                }
+                .onChange(of: zoom) { oldValue, newValue in
+                    let contentCenter = (scrollOffset + geo.size.width / 2) * (newValue / oldValue)
+                    let newOffset = max(0, contentCenter - geo.size.width / 2)
+                    let newContentWidth = geo.size.width * newValue
+                    let anchor = max(0, min(1, newOffset / newContentWidth))
+                    proxy.scrollTo("chart", anchor: UnitPoint(x: anchor, y: 0))
                 }
             }
             .frame(height: 200)
-            
         }
-        
+    }
 }
 
 #Preview {
     SpeedChartView(data: decodeLocationSampleData() ?? Constants.locationSampleData, zoom: .constant(2))
+        .frame(height: 100)
 }

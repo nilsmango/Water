@@ -1457,50 +1457,25 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 if importedRun.heartRates.count > 0 {
                     // Create comparable heart rates data
                     var heartRateData: [Date: (Double, Double)] = [:]
-                    
-                    // Sort heart rates by date
-                    let sortedHeartRates = importedRun.heartRates.sorted(by: { $0.date < $1.date })
-                    
-                    // Calculate the interval based on time range and desired number of samples
-                    let firstDate = sortedHeartRates.first?.date ?? startTime ?? Date()
-                    let lastDate = sortedHeartRates.last?.date ?? endTime ?? Date()
-                    let interval = DateInterval(start: firstDate, end: lastDate)
-                    let intervalDuration = interval.duration
-                    let samplesCount = 80
-                    let timeInterval = max(Int(intervalDuration / Double(samplesCount)), 1)
-                    
-                    // Group heart rates into time bins
-                    var currentBinStart = firstDate
-                    var currentBinHeartRates: [Double] = []
-                    
+
+                    // Heart rates must be sorted
+                    let sortedHeartRates = importedRun.heartRates
+                        .sorted { $0.date < $1.date }
+
                     for heartRate in sortedHeartRates {
-                        // If this heart rate belongs to a new bin, process the previous bin
-                        if heartRate.date >= currentBinStart.addingTimeInterval(TimeInterval(timeInterval)) {
-                            if !currentBinHeartRates.isEmpty {
-                                let minRate = currentBinHeartRates.min() ?? 0.0
-                                let maxRate = currentBinHeartRates.max() ?? 0.0
-                                if minRate != 0.0 && maxRate != 0.0 {
-                                    heartRateData[currentBinStart] = (minRate, maxRate)
-                                }
-                            }
-                            
-                            // Move to the next bin that contains this heart rate
-                            while heartRate.date >= currentBinStart.addingTimeInterval(TimeInterval(timeInterval)) {
-                                currentBinStart = currentBinStart.addingTimeInterval(TimeInterval(timeInterval))
-                            }
-                            currentBinHeartRates = [heartRate.heartRate]
+                        let second = floor(heartRate.date.timeIntervalSince1970)
+                        let binDate = Date(timeIntervalSince1970: second)
+
+                        if let existing = heartRateData[binDate] {
+                            heartRateData[binDate] = (
+                                min(existing.0, heartRate.heartRate),
+                                max(existing.1, heartRate.heartRate)
+                            )
                         } else {
-                            // Add to current bin
-                            currentBinHeartRates.append(heartRate.heartRate)
-                        }
-                    }
-                    
-                    // Process the last bin if it has data
-                    if !currentBinHeartRates.isEmpty {
-                        let minRate = currentBinHeartRates.min() ?? 0.0
-                        let maxRate = currentBinHeartRates.max() ?? 0.0
-                        if minRate != 0.0 && maxRate != 0.0 {
-                            heartRateData[currentBinStart] = (minRate, maxRate)
+                            heartRateData[binDate] = (
+                                heartRate.heartRate,
+                                heartRate.heartRate
+                            )
                         }
                     }
                     
