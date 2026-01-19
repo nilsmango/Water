@@ -11,6 +11,7 @@ import MapKit
 struct SpeedGradientMapView: UIViewRepresentable {
 
     let locations: [LocationData]
+    var lineWidth = 2.0
 
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
@@ -25,13 +26,14 @@ struct SpeedGradientMapView: UIViewRepresentable {
         debugMap("updateUIView called with \(locations.count) locations")
 
         mapView.removeOverlays(mapView.overlays)
+        mapView.removeAnnotations(mapView.annotations)
 
         guard locations.count > 1 else {
             debugMap("Not enough locations to draw a route")
             return
         }
 
-        // 🔴 FIX: assign FIRST
+        context.coordinator.lineWidth = lineWidth
         context.coordinator.locations = locations
 
         let coordinates = locations.map {
@@ -45,6 +47,16 @@ struct SpeedGradientMapView: UIViewRepresentable {
 
         mapView.addOverlay(polyline)
         debugMap("Overlay added")
+
+        let startAnnotation = MKPointAnnotation()
+        startAnnotation.coordinate = coordinates.first!
+        startAnnotation.title = "Start"
+        mapView.addAnnotation(startAnnotation)
+
+        let finishAnnotation = MKPointAnnotation()
+        finishAnnotation.coordinate = coordinates.last!
+        finishAnnotation.title = "Finish"
+        mapView.addAnnotation(finishAnnotation)
 
         mapView.setVisibleMapRect(
             polyline.boundingMapRect,
