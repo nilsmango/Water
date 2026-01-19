@@ -399,6 +399,7 @@ struct StatisticsRunView: View {
                     } else {
 //                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                         SpeedGradientStatisticsMap(statisticsData: $statisticsData)
+                            .ignoresSafeArea()
                     }
                 }
                         .navigationTitle(statisticsData.locationString ?? locationName)

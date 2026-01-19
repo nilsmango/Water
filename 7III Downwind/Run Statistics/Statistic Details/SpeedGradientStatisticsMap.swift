@@ -26,6 +26,14 @@ struct SpeedGradientStatisticsMap: UIViewRepresentable {
     }
     
     func updateUIView(_ mapView: MKMapView, context: Context) {
+        let currentHash = statisticsData.id.hashValue
+
+        if context.coordinator.dataHash == currentHash {
+            return
+        }
+
+        context.coordinator.dataHash = currentHash
+        
         mapView.removeOverlays(mapView.overlays)
         mapView.removeAnnotations(mapView.annotations)
         
@@ -68,6 +76,7 @@ extension SpeedGradientStatisticsMap {
 
     final class Coordinator: NSObject, MKMapViewDelegate {
 
+        var dataHash: Int = 0
         var polylineData: [MKPolyline: PolylineInfo] = [:]
 
         struct PolylineInfo {

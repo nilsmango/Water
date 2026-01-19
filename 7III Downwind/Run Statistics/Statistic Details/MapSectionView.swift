@@ -58,7 +58,7 @@ struct MapSectionView: View {
                         .cornerRadius(8.0)
                         .disabled(true)
                 } else {
-                    SpeedGradientStatisticsMap(statisticsData: $statisticsData)
+                    SpeedGradientStatisticsMap(statisticsData: $statisticsData, lineWidth: 1.0)
 //                    WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                         .frame(height: 300)
                         .cornerRadius(8.0)
