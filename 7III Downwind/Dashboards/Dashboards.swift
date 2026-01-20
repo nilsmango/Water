@@ -125,7 +125,7 @@ struct Dashboards: View {
                 .onDelete(perform: manager.deleteDashboards)
                 .onMove(perform: manager.moveDashboards)
             } footer: {
-                if showInfo {
+                if showInfo && !manager.dashboards.isEmpty {
                     Label("Long press for context menu (for pinning a Dashboard to Main View etc.)", systemImage: "info.circle")
                 }
             }
