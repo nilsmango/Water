@@ -192,24 +192,43 @@ struct StatisticsRunView: View {
                 }
                 
                 // if foil sport and no % on foil calculate and save the stats
-                if statisticsData.percentageOnFoil ?? 0 == 0 || statisticsData.longestDistanceOnFoil ?? 0 == 0 {
-                    print("Percentage on foil or longest distance on foil is 0")
-                    if let workoutType = statisticsData.workoutType {
-                        var foilStats: (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double, waves: [[LocationData]]) = (0, 0, 0, 0, [[]])
-                            if workoutType.calculateFoilingStats {
-                                foilStats = calculateFoilingStats(from: statisticsData.locationData, thresholdSpeedKmh: workoutType.thresholdSpeedKmhSlowSpeedWithDefault, countTurns: workoutType.countTurns, returnWaves: workoutType.returnWaves)
-                            }
-                        if foilStats != (popUps: 0, timeOnFoilPercentage: 0, turns: 0, longestDistanceOnFoil: 0, waves: [[]]) {
-                            DispatchQueue.main.async {
-                                print("new pop ups: \(foilStats.popUps), percentage on foil: \(foilStats.timeOnFoilPercentage), turns: \(foilStats.turns), longest distance on foil: \(foilStats.longestDistanceOnFoil)")
-                                statisticsData.popUps = foilStats.popUps
-                                statisticsData.percentageOnFoil =  foilStats.timeOnFoilPercentage
-                                statisticsData.turnsCount = foilStats.turns
-                                statisticsData.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
-                                statisticsData.waves = foilStats.waves
-                                
-                                downwindManager.saveOnFoilStats(popUps: foilStats.popUps, percentageOnFoil: foilStats.timeOnFoilPercentage, turns: foilStats.turns, longestDistanceOnFoil: foilStats.longestDistanceOnFoil, statisticsID: statisticsData.id, waves: foilStats.waves)
-                            }
+                if statisticsData.percentageOnFoil ?? 0 == 0 ||
+                   statisticsData.longestDistanceOnFoil ?? 0 == 0 {
+
+                    guard let workoutType = statisticsData.workoutType,
+                          workoutType.calculateFoilingStats else { return }
+
+                    let locationData = statisticsData.locationData
+                    let threshold = workoutType.thresholdSpeedKmhSlowSpeedWithDefault
+                    let countTurns = workoutType.countTurns
+                    let returnWaves = workoutType.returnWaves
+                    let statsID = statisticsData.id
+
+                    Task.detached(priority: .utility) {
+                        let foilStats = calculateFoilingStats(
+                            from: locationData,
+                            thresholdSpeedKmh: threshold,
+                            countTurns: countTurns,
+                            returnWaves: returnWaves
+                        )
+
+                        guard foilStats != (0, 0, 0, 0, [[]]) else { return }
+
+                        await MainActor.run {
+                            statisticsData.popUps = foilStats.popUps
+                            statisticsData.percentageOnFoil = foilStats.timeOnFoilPercentage
+                            statisticsData.turnsCount = foilStats.turns
+                            statisticsData.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
+                            statisticsData.waves = foilStats.waves
+
+                            downwindManager.saveOnFoilStats(
+                                popUps: foilStats.popUps,
+                                percentageOnFoil: foilStats.timeOnFoilPercentage,
+                                turns: foilStats.turns,
+                                longestDistanceOnFoil: foilStats.longestDistanceOnFoil,
+                                statisticsID: statsID,
+                                waves: foilStats.waves
+                            )
                         }
                     }
                 }

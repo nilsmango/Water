@@ -19,22 +19,53 @@ struct HeartRateView: View {
     
     let locationData: [LocationData]
     
+    // adjusting to 1/5sec
     var speedData: [SpeedSample] {
-        locationData.compactMap { data in
-            guard let speed = data.speed else { return nil } // skip if speed is nil
-            let speedKmh = speed * 3.6 // convert m/s to km/h
-            return SpeedSample(date: data.timestamp, speedKmh: speedKmh)
+        guard locationData.count > 1 else { return [] }
+
+        let targetSamples = 300
+
+        let startTime = locationData.first!.timestamp
+        let endTime   = locationData.last!.timestamp
+        let duration  = endTime.timeIntervalSince(startTime)
+
+        // Minimum bucket size to avoid silly small values
+        let bucketSize = max(duration / Double(targetSamples), 1)
+
+        let grouped = Dictionary(grouping: locationData) { data in
+            floor(data.timestamp.timeIntervalSince(startTime) / bucketSize)
         }
+
+        return grouped.compactMap { (_, values) in
+            let speeds = values.compactMap { $0.speed }
+            guard !speeds.isEmpty else { return nil }
+
+            let avgSpeed = speeds.reduce(0, +) / Double(speeds.count)
+
+            // Middle of the bucket looks nicest on charts
+            let midTime = values[0].timestamp.addingTimeInterval(bucketSize / 2)
+
+            return SpeedSample(
+                date: midTime,
+                speedKmh: avgSpeed * 3.6
+            )
+        }
+        .sorted { $0.date < $1.date }
     }
     
-    @State private var rotation = Angle(degrees: 0)
+    @State private var selectedTime: Double?
     
     var body: some View {
         
         if (!heartRates.isEmpty && heartRates.values.flatMap({ [$0.0, $0.1] }).reduce(0, +) > 30) || speedData.count > 4 {
                                     
             Section {
-                HeartRateChartView(measurements: heartRates, speedData: speedData)
+                VStack {
+                    Spacer(minLength: 0.0)
+                    HeartRateChartView(measurements: heartRates, speedData: speedData, selectedTime: $selectedTime)
+
+                }
+                .frame(height: selectedTime != nil ? 252 : 230)
                 
             } header: {
                 HStack {

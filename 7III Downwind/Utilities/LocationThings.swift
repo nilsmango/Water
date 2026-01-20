@@ -313,9 +313,10 @@ private func calculateFastestDistance(in data: [LocationData], fromIndex index: 
         distance += fromLocation.distance(from: toLocation)
         lastPoint = point
         
-        if distance >= targetDistance * 0.99 {
+        // Accept distances within 1.5% tolerance of target
+        if distance >= targetDistance * 0.985 {
             let timeElapsed = lastPoint.timestamp.timeIntervalSince(start.timestamp)
-            // Accept distances within 2% tolerance of target (98-102%)
+            
             return (timeElapsed, i)
         }
     }
@@ -372,78 +373,103 @@ private func bearingDifference(newBearing: Double, oldBearing: Double, oldDirect
 }
 
 /// returns how many times you got below threshold speed (not counting the first non flight and the last (falls)), and also the % of not flying (time) and also the longest distance on foil in n
-func calculateFoilingStats(from data: [LocationData], thresholdSpeedKmh: Double = 8.0, countTurns: Bool = false, returnWaves: Bool = false) -> (popUps: Int, timeOnFoilPercentage: Double, turns: Int, longestDistanceOnFoil: Double, waves: [[LocationData]]) {
-    let indexes = findAboveThresholdIndexes(in: data, thresholdKmh: thresholdSpeedKmh)
-//    print(indexes)
-    
-//    for index in indexes {
-//        let time = data[index].timestamp.timeIntervalSince(data.first!.timestamp)
-//        let speed = (data[index].speed ?? 0) * 3.6
-//        print("Time: " + makePrettyTime(timeInMinutes: time / 60) + ", Speed: " + String(speed))
-//    }
-    
-    var popUps = 0
-    popUps = Int(indexes.count / 2)
-    
-    // removing one pop up if we are flying from the start
-    if indexes.first == 0 && popUps > 0 {
-        popUps -= 1
+func calculateFoilingStats(
+    from data: [LocationData],
+    thresholdSpeedKmh: Double = 8.0,
+    countTurns: Bool = false,
+    returnWaves: Bool = false
+) -> (
+    popUps: Int,
+    timeOnFoilPercentage: Double,
+    turns: Int,
+    longestDistanceOnFoil: Double,
+    waves: [[LocationData]]
+) {
+    guard data.count > 1 else {
+        return (0, 0, 0, 0, [])
     }
-    
-    var timeOnFoil = 0.0
-    var turnsData = [[LocationData]]()
-    var longestFlightIndexes: (Int, Int) = (0, 0)
-    var longestTime = 0.0
-    
-    for i in stride(from: 1, to: indexes.count, by: 2) {
-        let dataIndex1 = indexes[i - 1]
-        let dataIndex2 = indexes[i]
-        let time = data[dataIndex2].timestamp.timeIntervalSince(data[dataIndex1].timestamp)
-        
-        if time > longestTime {
-            longestTime = time
-            longestFlightIndexes = (dataIndex1, dataIndex2)
-        }
-        
-        timeOnFoil += time
-        
-        turnsData.append(Array(data[dataIndex1...dataIndex2]))
+
+    let indexes = findAboveThresholdIndexes(
+        in: data,
+        thresholdKmh: thresholdSpeedKmh
+    )
+
+    guard indexes.count >= 2 else {
+        return (0, 0, 0, 0, [])
     }
-    
+
+    // Pop-ups = number of flight segments
+    var popUps = indexes.count / 2
+    if indexes.first == 0 {
+        popUps = max(0, popUps - 1)
+    }
+
+    let needsSegmentData = countTurns || returnWaves
+    var segments: [[LocationData]] = needsSegmentData ? [] : []
+
+    var timeOnFoil: TimeInterval = 0
     var longestDistanceOnFoil = 0.0
-    
-    if longestTime > 0 {
-        for index in longestFlightIndexes.0...longestFlightIndexes.1 {
-            if index == longestFlightIndexes.0 { continue }
-            let distance = calculateDistances(fromLatitude: data[index-1].latitude, fromLongitude: data[index-1].longitude, toLatitude: data[index].latitude, toLongitude: data[index].longitude)
-            longestDistanceOnFoil += distance.directDistance
+    var turns = 0
+
+    // Walk each flight segment once
+    for i in stride(from: 1, to: indexes.count, by: 2) {
+        let start = indexes[i - 1]
+        let end = indexes[i]
+
+        guard end > start else { continue }
+
+        // Time
+        let flightTime = data[end].timestamp.timeIntervalSince(data[start].timestamp)
+        timeOnFoil += flightTime
+
+        // Distance (single pass)
+        var flightDistance = 0.0
+        var segmentSlice: [LocationData]? = needsSegmentData ? [] : nil
+
+        for j in (start + 1)...end {
+            flightDistance += calculateDistances(
+                fromLatitude: data[j - 1].latitude,
+                fromLongitude: data[j - 1].longitude,
+                toLatitude: data[j].latitude,
+                toLongitude: data[j].longitude
+            ).directDistance
+
+            if needsSegmentData {
+                segmentSlice?.append(data[j - 1])
+            }
         }
+
+        if needsSegmentData {
+            segmentSlice?.append(data[end])
+            if let segment = segmentSlice {
+                segments.append(segment)
+
+                if countTurns {
+                    turns += findTurns(in: segment)
+                }
+            }
+        }
+
+        longestDistanceOnFoil = max(longestDistanceOnFoil, flightDistance)
     }
-    
-    var totalTime: TimeInterval = 0
-    if data.count > 0 {
-        totalTime = data.last!.timestamp.timeIntervalSince(data.first!.timestamp)
-    }
-    
-    var timeOnFoilPercentage = (timeOnFoil / totalTime) * 100
-    if timeOnFoilPercentage.isNaN {
+
+    // Total workout time
+    let totalTime = data.last!.timestamp.timeIntervalSince(data.first!.timestamp)
+
+    let timeOnFoilPercentage: Double
+    if totalTime > 0 {
+        timeOnFoilPercentage = (timeOnFoil / totalTime) * 100
+    } else {
         timeOnFoilPercentage = 0
     }
-    
-    var turns = 0
-    if countTurns {
-        for data in turnsData {
-            turns += findTurns(in: data)
-        }
-//        print("Turns: \(turns)")
-    }
-    
-    var waves = [[LocationData]]()
-    if returnWaves {
-        waves = turnsData
-    }
-    
-    return (popUps, timeOnFoilPercentage, turns, longestDistanceOnFoil, waves)
+
+    return (
+        popUps,
+        timeOnFoilPercentage,
+        turns,
+        longestDistanceOnFoil,
+        returnWaves ? segments : []
+    )
 }
 
 

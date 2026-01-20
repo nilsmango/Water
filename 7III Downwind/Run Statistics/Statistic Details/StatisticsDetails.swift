@@ -73,7 +73,7 @@ struct StatisticsDetails: View {
             HStack {
                 
                 if let fastestKm = fastestKm {
-                    StatisticsInfoViews(header: "Fastest km", bodyText: fastestKm)
+                    StatisticsInfoViews(header: "Fastest km (min)", bodyText: fastestKm)
                         .frame(width: width, alignment: .leading)
                 }
                 

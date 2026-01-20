@@ -96,6 +96,7 @@ struct MapSectionView: View {
                     .padding(.top)
                     Spacer()
                 }
+                .padding(.bottom, 9)
             }
         }
     }

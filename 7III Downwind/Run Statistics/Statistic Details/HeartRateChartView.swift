@@ -20,7 +20,8 @@ struct BarChartData: Identifiable {
 struct HeartRateChartView: View {
     let measurements: [Date: (Double, Double)]
     let speedData: [SpeedSample]
-
+    @Binding var selectedTime: Double?
+    
     private var data: [BarChartData] {
         measurements
             .sorted { $0.key < $1.key }
@@ -56,7 +57,7 @@ struct HeartRateChartView: View {
             data: data,
             minY: minYValue,
             maxY: maxYValue,
-            speedData: speedData
+            speedData: speedData, selectedTime: $selectedTime
         )
     }
 }
@@ -67,7 +68,7 @@ struct HeartRateChart: View {
     let maxY: Double
     let speedData: [SpeedSample]
 
-    @State private var selectedTime: Double?
+    @Binding var selectedTime: Double?
     
     private var speedMin: Double {
         guard !speedData.isEmpty else { return 0 }
@@ -184,7 +185,7 @@ struct HeartRateChart: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 16) {
                 Text("km/h")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.accentColor)
                     .font(.caption)
                 Spacer()
                 Text("bpm")
@@ -193,24 +194,33 @@ struct HeartRateChart: View {
             }
             
             Chart {
-                heartRateMarks
                 speedMarks
+                heartRateMarks
                 
                 if let selectedTime {
                     RuleMark(x: .value("Selected", selectedTime))
                         .foregroundStyle(.gray.opacity(0.5))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
-                        .annotation(position: .top, spacing: -45) {
+                        .annotation(position: .top, spacing: 0) {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(formatTime(selectedTime))
-                                    .font(.caption2)
-                                    .fontWeight(.semibold)
+                                HStack(spacing: 4) {
+                                    Image(systemName: "stopwatch")
+                                    Text(formatTime(selectedTime))
+                                        .fontWeight(.semibold)
+                                        .monospacedDigit()
+                                        .lineLimit(1)
+                                        .fixedSize(horizontal: true, vertical: false)
+                                }
+                                .font(.caption2)
                                 
                                 if let hr = heartRateAt(time: selectedTime) {
                                     HStack(spacing: 4) {
                                         Image(systemName: "heart.fill")
                                             .foregroundStyle(.red)
                                         Text("\(Int(hr)) bpm")
+                                            .monospacedDigit()
+                                            .lineLimit(1)
+                                            .fixedSize(horizontal: true, vertical: false)
                                     }
                                     .font(.caption2)
                                 }
@@ -218,8 +228,11 @@ struct HeartRateChart: View {
                                 if let speed = speedAt(time: selectedTime) {
                                     HStack(spacing: 4) {
                                         Image(systemName: "gauge.open.with.lines.needle.33percent")
-                                            .foregroundStyle(.blue)
+                                            .foregroundStyle(Color.accentColor)
                                         Text(String(format: "%.1f km/h", speed))
+                                            .monospacedDigit()
+                                            .lineLimit(1)
+                                            .fixedSize(horizontal: true, vertical: false)
                                     }
                                     .font(.caption2)
                                 }
@@ -252,7 +265,7 @@ struct HeartRateChart: View {
                         let speedValue = denormalizeSpeed(normalized)
                         AxisValueLabel {
                             Text("\(speedValue, specifier: "%.1f")")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.accentColor)
                                 .font(.caption2)
                         }
                         AxisTick()
@@ -283,13 +296,13 @@ struct HeartRateChart: View {
                Spacer()
                 
                 Text("km/h")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.accentColor)
                     .font(.caption)
             }
             
             
             if !hasSpeedData {
-                Text("No speed data available")
+                Text("No data available")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .frame(height: 200)
@@ -301,7 +314,7 @@ struct HeartRateChart: View {
                             y: .value("Speed", sample.speedKmh),
                             series: .value("Metric", "Speed")
                         )
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.accentColor)
                         .interpolationMethod(.linear)
                     }
                     
@@ -309,17 +322,26 @@ struct HeartRateChart: View {
                         RuleMark(x: .value("Selected", selectedTime))
                             .foregroundStyle(.gray.opacity(0.5))
                             .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
-                            .annotation(position: .top, spacing: -30) {
+                            .annotation(position: .top, spacing: 0) {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(formatTime(selectedTime))
-                                        .font(.caption2)
-                                        .fontWeight(.semibold)
-                                    
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "stopwatch")
+                                        Text(formatTime(selectedTime))
+                                            .fontWeight(.semibold)
+                                            .monospacedDigit()
+                                            .lineLimit(1)
+                                            .fixedSize(horizontal: true, vertical: false)
+                                    }
+                                    .font(.caption2)
+
                                     if let speed = speedAt(time: selectedTime) {
                                         HStack(spacing: 4) {
                                             Image(systemName: "gauge.open.with.lines.needle.33percent")
-                                                .foregroundStyle(.blue)
+                                                .foregroundStyle(Color.accentColor)
                                             Text(String(format: "%.1f km/h", speed))
+                                                .monospacedDigit()
+                                                .lineLimit(1)
+                                                .fixedSize(horizontal: true, vertical: false)
                                         }
                                         .font(.caption2)
                                     }
@@ -350,7 +372,7 @@ struct HeartRateChart: View {
                         if let speed = value.as(Double.self) {
                             AxisValueLabel {
                                 Text("\(speed, specifier: "%.1f")")
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(Color.accentColor)
                                     .font(.caption2)
                             }
                             AxisGridLine()
@@ -384,7 +406,7 @@ struct HeartRateChart: View {
                 y: .value("Speed", normalizeSpeed(sample.speedKmh)),
                 series: .value("Metric", "Speed")
             )
-            .foregroundStyle(.blue)
+            .foregroundStyle(Color.accentColor)
             .interpolationMethod(.linear)
         }
     }
@@ -393,7 +415,7 @@ struct HeartRateChart: View {
 
 
 #Preview {
-    HeartRateChartView(measurements: [Date.now : (140, 150), Date.now.addingTimeInterval(-2000) : (100, 105), Date.now.addingTimeInterval(-6000) : (60, 105)], speedData: [SpeedSample(date: Date.now, speedKmh: 10), SpeedSample(date: Date.now.addingTimeInterval(-2000), speedKmh: 5), SpeedSample(date: Date.now.addingTimeInterval(-6000), speedKmh: 8)])
+    HeartRateChartView(measurements: [Date.now : (140, 150), Date.now.addingTimeInterval(-2000) : (100, 105), Date.now.addingTimeInterval(-6000) : (60, 105)], speedData: [SpeedSample(date: Date.now, speedKmh: 10), SpeedSample(date: Date.now.addingTimeInterval(-2000), speedKmh: 5), SpeedSample(date: Date.now.addingTimeInterval(-6000), speedKmh: 8)], selectedTime: .constant(3084.4))
     
-    HeartRateChartView(measurements: [:], speedData: [SpeedSample(date: Date.now, speedKmh: 10), SpeedSample(date: Date.now.addingTimeInterval(-2000), speedKmh: 5), SpeedSample(date: Date.now.addingTimeInterval(-6000), speedKmh: 8)].sorted(by: { $0.date < $1.date }))
+    HeartRateChartView(measurements: [:], speedData: [SpeedSample(date: Date.now, speedKmh: 10), SpeedSample(date: Date.now.addingTimeInterval(-2000), speedKmh: 5), SpeedSample(date: Date.now.addingTimeInterval(-6000), speedKmh: 8)].sorted(by: { $0.date < $1.date }), selectedTime: .constant(3044.4))
 }
