@@ -22,6 +22,7 @@ struct StatisticsDetails: View {
     let percentageOnFoil: Double
     let turns: Int
     let longestDistanceOnFoil: String
+    let fastestKm: String?
     
     let width = UIScreen.main.bounds.width / 3
     var body: some View {
@@ -68,8 +69,13 @@ struct StatisticsDetails: View {
             }
         }
         
-        if topSpeed != "0.0 km/h" && turns != 0 {
+        if topSpeed != "0.0 km/h" || fastestKm != nil {
             HStack {
+                
+                if let fastestKm = fastestKm {
+                    StatisticsInfoViews(header: "Fastest km", bodyText: fastestKm)
+                        .frame(width: width, alignment: .leading)
+                }
                 
                 // we can use 0.0 km/h because we get that if speed is zero
                 if topSpeed != "0.0 km/h" {
@@ -110,7 +116,7 @@ struct StatisticsDetails: View {
 #Preview {
     List {
         Section {
-            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134, longestDistanceOnFoil: "15 km")
+            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134, longestDistanceOnFoil: "15 km", fastestKm: "3:45 (km: 5.23)")
         }
     }
 }

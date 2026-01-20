@@ -248,6 +248,33 @@ func calculateTopSpeeds(from data: [LocationData]) -> (topSpeed1Sec: Double?, to
     return (topSpeed1Sec * 3.6, topSpeed10Sec * 3.6)
 }
 
+/// returns formatted string of fastest km time in minutes:seconds with start position in km, or nil if not found
+func calculateFastestKm(from data: [LocationData]) -> String? {
+    var fastestKmSeconds: Double = Double.infinity
+    var fastestKmStartIndex = 0
+    
+    for i in 0..<data.count {
+        if let (kmTime, _) = calculateFastestDistance(in: data, fromIndex: i, targetDistance: 1000.0) {
+            if kmTime < fastestKmSeconds {
+                fastestKmSeconds = kmTime
+                fastestKmStartIndex = i
+            }
+        }
+    }
+    
+    if fastestKmSeconds == Double.infinity {
+        return nil
+    }
+    
+    let cumulativeDistances = calculateCumulativeDistances(from: data)
+    let startKm = cumulativeDistances[fastestKmStartIndex] / 1000
+    
+    let minutes = Int(fastestKmSeconds) / 60
+    let seconds = Int(fastestKmSeconds.rounded()) % 60
+    
+    return "\(minutes):\(String(format: "%02d", seconds)) (km: \(String(format: "%.2f", startKm)))"
+}
+
 private func calculateSpeed(in data: [LocationData], fromIndex index: Int, duration: TimeInterval) -> Double? {
     let start = data[index]
     let endTime = start.timestamp.addingTimeInterval(duration)
@@ -268,8 +295,47 @@ private func calculateSpeed(in data: [LocationData], fromIndex index: Int, durat
     
     let timeElapsed = lastPoint.timestamp.timeIntervalSince(start.timestamp)
     
-    // Using all speeds that are within a 10% window
+    // Using all speeds that are within a 2% window
     return timeElapsed >= duration * 0.98 ? distance / timeElapsed : nil
+}
+
+private func calculateFastestDistance(in data: [LocationData], fromIndex index: Int, targetDistance: Double) -> (Double, Int)? {
+    let start = data[index]
+    var distance: Double = 0
+    var lastPoint = start
+    
+    for i in index+1..<data.count {
+        let point = data[i]
+        
+        let fromLocation = CLLocation(latitude: lastPoint.latitude, longitude: lastPoint.longitude)
+        let toLocation = CLLocation(latitude: point.latitude, longitude: point.longitude)
+        
+        distance += fromLocation.distance(from: toLocation)
+        lastPoint = point
+        
+        if distance >= targetDistance * 0.99 {
+            let timeElapsed = lastPoint.timestamp.timeIntervalSince(start.timestamp)
+            // Accept distances within 2% tolerance of target (98-102%)
+            return (timeElapsed, i)
+        }
+    }
+    
+    return nil
+}
+
+private func calculateCumulativeDistances(from data: [LocationData]) -> [Double] {
+    var cumulativeDistances = [Double](repeating: 0.0, count: data.count)
+    
+    guard data.count > 0 else { return cumulativeDistances }
+    
+    for i in 1..<data.count {
+        let fromLocation = CLLocation(latitude: data[i-1].latitude, longitude: data[i-1].longitude)
+        let toLocation = CLLocation(latitude: data[i].latitude, longitude: data[i].longitude)
+        let distance = fromLocation.distance(from: toLocation)
+        cumulativeDistances[i] = cumulativeDistances[i-1] + distance
+    }
+    
+    return cumulativeDistances
 }
 
 private enum TurnDirection {
