@@ -484,7 +484,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     // Helper method to get documents directory
     private func getDocumentsDirectory() throws -> URL {
         do {
-            return try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            return try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         } catch {
             fatalError("Can't find documents directory.")
         }
