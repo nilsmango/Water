@@ -94,7 +94,7 @@ struct StatisticsRunView: View {
                 }
                 
                 Task.detached(priority: .background) {
-                    downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
+                    await downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
                         Task { @MainActor in
                             await performBackgroundCalculations()
                         }
@@ -141,9 +141,7 @@ struct StatisticsRunView: View {
                             )
                         }
                     }
-                    
-                    
-                    
+                                        
                     downwindManager.fetchHeartRatesOverTime(statisticID: statisticsData.id, startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
                         if let heartRateData = heartRateData {
                             heartRates = heartRateData
@@ -595,11 +593,11 @@ struct StatisticsRunView: View {
             calculationProgress = "Loading heart rate..."
         }
         
-        let topSpeedsCalculated = await calculateTopSpeedsAsync()
+        let _ = await calculateTopSpeedsAsync()
         await MainActor.run {
             calculationProgress = "Analyzing foiling stats..."
         }
-        let foilStatsCalculated = await calculateFoilStatsAsync()
+        let _ = await calculateFoilStatsAsync()
         await MainActor.run {
             calculationProgress = "Loading heart rates over time..."
         }
