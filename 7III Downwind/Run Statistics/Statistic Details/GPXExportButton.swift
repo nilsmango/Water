@@ -15,10 +15,8 @@ extension WorkoutType {
             return "surfing"
         case .wingFoil:
             return "wingfoiling"
-        case .parawing:
+        case .parawing, .paraUpDown, .dWParawing:
             return "parawinging"
-        case .dWParawing:
-            return "surfing"
         case .windFoil, .windsurf:
             return "windsurfing"
         case .kiteFoil, .kite:

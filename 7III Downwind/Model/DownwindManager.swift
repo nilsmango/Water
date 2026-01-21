@@ -601,6 +601,35 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
         return (totalString, workoutDistances)
     }
+    
+    func calculateUpDownwindDistance(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: Double]) {
+        var totalDistance = 0.0
+        var workoutDistances: [WorkoutType: Double] = [:]
+
+        if groupedRunStatistics.count > yearIndex {
+            if month == nil {
+                for runs in groupedRunStatistics[yearIndex] {
+                    for run in runs {
+                        if let type = run.workoutType, type.isUpDownwindSport {
+                            totalDistance += run.runDistance
+                            workoutDistances[type, default: 0] += run.runDistance
+                        }
+                    }
+                }
+            } else {
+                for run in groupedRunStatistics[yearIndex][month!] {
+                    if let type = run.workoutType, type.isUpDownwindSport {
+                        totalDistance += run.runDistance
+                        workoutDistances[type, default: 0] += run.runDistance
+                    }
+                }
+            }
+        }
+
+        let totalString = totalDistance == 0 ? "" : makePrettyDistance(meters: totalDistance, system: measurementSystem)
+
+        return (totalString, workoutDistances)
+    }
 
     func calculateTimeOnWater(for yearIndex: Int, month: Int? = nil) -> (total: String, types: [WorkoutType: Double]) {
         var totalTime = 0.0

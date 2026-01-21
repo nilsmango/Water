@@ -16,6 +16,7 @@ enum WorkoutType: String, Codable, CaseIterable {
     case downwindProneFoil = "DWProneFoil"
     case wingFoil = "WingFoil"
     case parawing = "Parawing"
+    case paraUpDown = "ParaUpDown"
     case dWParawing = "DWParawing"
     case windFoil = "WindFoil"
     case kiteFoil = "KiteFoil"
@@ -112,11 +113,13 @@ enum WorkoutType: String, Codable, CaseIterable {
             return "E-Foil"
         case .eAssist:
             return "E-Assist"
+        case .paraUpDown:
+            return "UDW Parawing"
         }
     }
     var activityType: HKWorkoutActivityType {
             switch self {
-            case .foilSurf, .supFoil, .downwindSUPFoil, .downwindSUP, .wingFoil, .windFoil, .kiteFoil, .kite, .surf, .windsurf, .pumpFoil, .wakeThief, .wakeFoil, .surfingSport, .supSurf, .not7IIISurfingSport, .wakeSurf, .downwindProneFoil, .parawing, .dWParawing, .eFoil, .eAssist:
+            case .foilSurf, .supFoil, .downwindSUPFoil, .downwindSUP, .wingFoil, .windFoil, .kiteFoil, .kite, .surf, .windsurf, .pumpFoil, .wakeThief, .wakeFoil, .surfingSport, .supSurf, .not7IIISurfingSport, .wakeSurf, .downwindProneFoil, .parawing, .dWParawing, .eFoil, .eAssist, .paraUpDown:
                 return .surfingSports
             case .paddleSport, .sup, .kayak, .canoe, .not7IIIPaddleSport:
                 return .paddleSports
@@ -136,9 +139,18 @@ enum WorkoutType: String, Codable, CaseIterable {
         }
     }
     
+    var isUpDownwindSport: Bool {
+        switch self {
+        case .paraUpDown:
+            return true
+        default:
+            return false
+        }
+    }
+    
     var countTurns: Bool {
         switch self {
-        case .downwindSUP, .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .eFoil, .eAssist, .surf, .supSurf, .foilSurf, .supFoil, .wakeFoil, .wakeSurf:
+        case .downwindSUP, .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .eFoil, .eAssist, .surf, .supSurf, .foilSurf, .supFoil, .wakeFoil, .wakeSurf, .paraUpDown:
             return true
         default:
             return false
@@ -147,7 +159,7 @@ enum WorkoutType: String, Codable, CaseIterable {
     
     var calculateFoilingStats: Bool {
         switch self {
-        case .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .pumpFoil, .eFoil, .eAssist, .surf, .supSurf, .foilSurf, .supFoil, .wakeFoil, .wakeSurf, .wakeThief:
+        case .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .pumpFoil, .eFoil, .eAssist, .surf, .supSurf, .foilSurf, .supFoil, .wakeFoil, .wakeSurf, .wakeThief, .paraUpDown:
             return true
         default:
             return false
@@ -165,7 +177,7 @@ enum WorkoutType: String, Codable, CaseIterable {
     
     var angleSport: Bool {
         switch self {
-        case .parawing, .dWParawing, .windsurf, .windFoil, .wingFoil, .wingSkate, .windSkate, .kite, .kiteFoil, .sailing, .pwSkate:
+        case .parawing, .dWParawing, .windsurf, .windFoil, .wingFoil, .wingSkate, .windSkate, .kite, .kiteFoil, .sailing, .pwSkate, .paraUpDown:
             return true
         default:
             return false
@@ -191,7 +203,7 @@ extension WorkoutType {
     var defaultThresholdSpeed: Double {
         switch self {
         case .surf, .supSurf, .foilSurf, .supFoil, .wakeFoil, .wakeSurf, .wakeThief: return 11.2
-        case .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .pumpFoil, .eFoil, .eAssist: return 8.0
+        case .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .pumpFoil, .eFoil, .eAssist, .paraUpDown: return 8.0
         default: return 10.0
         }
     }

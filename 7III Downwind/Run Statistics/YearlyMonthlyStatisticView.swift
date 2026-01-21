@@ -70,6 +70,20 @@ struct YearlyMonthlyStatisticView: View {
                 Label("\(dwDistanceData.total) of Downwind", systemImage: "point.topleft.down.to.point.bottomright.curvepath.fill")
             }
         }
+        
+        // UpDW distance
+        let upDWDistanceData = downwindManager.calculateUpDownwindDistance(for: yearIndex, month: monthIndex)
+        if !upDWDistanceData.total.isEmpty {
+            DisclosureGroup {
+                ForEach(upDWDistanceData.types.sorted(by: { $0.value > $1.value }), id: \.key) { distance in
+                    let prettyString = formatActivityName(distance.key.prettyString)
+                    
+                    Text("\(makePrettyDistance(meters: distance.value, system: downwindManager.measurementSystem)) of \(prettyString)")
+                }
+            } label: {
+                Label("\(upDWDistanceData.total) of Up/Downwind", systemImage: "arrow.up.arrow.down")
+            }
+        }
     }
 }
 
