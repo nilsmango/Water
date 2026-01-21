@@ -48,6 +48,10 @@ struct StatisticsRunView: View {
     
     @State private var zoom: CGFloat = 1.0
     @State private var showAngleMap = false
+
+    @State private var isCalculating = false
+    @State private var calculationProgress = ""
+    @State private var hasLoadedInitialData = false
     
     var body: some View {
         
@@ -57,9 +61,112 @@ struct StatisticsRunView: View {
         
         List {
             Section {
+                
                 StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm", popUps: statisticsData.popUps ?? 0, percentageOnFoil: statisticsData.percentageOnFoil ?? 0, turns: statisticsData.turnsCount ?? 0, longestDistanceOnFoil: makePrettyDistance(meters: statisticsData.longestDistanceOnFoil ?? 0, system: downwindManager.measurementSystem, statistics: true), fastestKm: fastestKm)
             } header: {
-                StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
+                VStack(spacing: 0) {
+                    StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
+                    
+                    if isCalculating {
+                        HStack {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                            Text(calculationProgress)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                        }
+                        .padding(.vertical, 8)
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+            .onAppear {
+                
+                if statisticsData.tags != nil {
+                    tags = statisticsData.tags!
+                }
+                locationName = statisticsData.locationString ?? ""
+                editLocationName = locationName
+                
+                guard !hasLoadedInitialData else {
+                    return
+                }
+                
+                Task.detached(priority: .background) {
+                    downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
+                        Task { @MainActor in
+                            await performBackgroundCalculations()
+                        }
+                    }
+                }
+                
+                // if foil sport and no % on foil calculate and save the stats
+                if statisticsData.percentageOnFoil ?? 0 == 0 ||
+                    statisticsData.longestDistanceOnFoil ?? 0 == 0 {
+                    
+                    guard let workoutType = statisticsData.workoutType,
+                          workoutType.calculateFoilingStats else { return }
+                    
+                    let locationData = statisticsData.locationData
+                    let threshold = workoutType.thresholdSpeedKmhSlowSpeedWithDefault
+                    let countTurns = workoutType.countTurns
+                    let returnWaves = workoutType.returnWaves
+                    let statsID = statisticsData.id
+                    
+                    Task.detached(priority: .utility) {
+                        let foilStats = calculateFoilingStats(
+                            from: locationData,
+                            thresholdSpeedKmh: threshold,
+                            countTurns: countTurns,
+                            returnWaves: returnWaves
+                        )
+                        
+                        guard foilStats != (0, 0, 0, 0, [[]]) else { return }
+                        
+                        await MainActor.run {
+                            statisticsData.popUps = foilStats.popUps
+                            statisticsData.percentageOnFoil = foilStats.timeOnFoilPercentage
+                            statisticsData.turnsCount = foilStats.turns
+                            statisticsData.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
+                            statisticsData.waves = foilStats.waves
+                            
+                            downwindManager.saveOnFoilStats(
+                                popUps: foilStats.popUps,
+                                percentageOnFoil: foilStats.timeOnFoilPercentage,
+                                turns: foilStats.turns,
+                                longestDistanceOnFoil: foilStats.longestDistanceOnFoil,
+                                statisticsID: statsID,
+                                waves: foilStats.waves
+                            )
+                        }
+                    }
+                    
+                    
+                    
+                    downwindManager.fetchHeartRatesOverTime(statisticID: statisticsData.id, startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
+                        if let heartRateData = heartRateData {
+                            heartRates = heartRateData
+                        }
+                    }
+                    
+                    // update some things if we have location data but no distance
+                    if !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 {
+                        DispatchQueue.main.async {
+                            downwindManager.saveEditedRoute(newStatistic: statisticsData, updatingExternal: true)
+                        }
+                    }
+                }
+                
+                if downwindManager.showPromptForReview {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.73) {
+                        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                            SKStoreReviewController.requestReview(in: scene)
+                        }
+                        downwindManager.showPromptForReview = false
+                        
+                    }
+                }
             }
             
             if !statisticsData.locationData.isEmpty {
@@ -69,7 +176,6 @@ struct StatisticsRunView: View {
                     Section {
                         AngleSection(angles: statisticsData.angles!)
                     } header: {
-                        
                         HStack {
                             Text("Angles")
                                 .textCase(nil)
@@ -93,170 +199,53 @@ struct StatisticsRunView: View {
                     }
                 }
                 
-//                Section {
-//                    SpeedChartView(data: statisticsData.locationData, zoom: $zoom)
-//                        .frame(height: 200)
-//                } header: {
-//                    HStack {
-//                        Text("Speed")
-//                            .textCase(nil)
-//                            .font(.title3)
-//                            .fontWeight(.bold)
-//                            .foregroundColor(.primary)
-//                        
-//                        Stepper("", value: $zoom, in: 1...20)
-//                    }
-//                    .padding(.bottom, 9)
-//                }
-            }
-            
-            HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate, locationData: statisticsData.locationData)
-            
-                    Section {
-                        TagsFlexiView(strings: tags)
-                        
-                    } header: {
-                        HStack {
-                            Text("Tags")
-                                .textCase(nil)
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .foregroundColor(.primary)
-                            
-                            Spacer()
-                            
-                            Button() {
-                                    editTags = tags
-                                    showTagsEditView = true
-                                
-                            } label: {
-                                tags.isEmpty ? Label("Add Tags", systemImage: "") : Label("Edit Tags", systemImage: "")
-                            }
-                            .textCase(nil)
-                            .font(.body)
-                            
-                        }
-                        .padding(.bottom, 9)
-                        
-                    } footer: {
-                        HStack {
-                            Spacer()
-                            Button(role: .destructive) {
-                                    showAlert = true
-
-                            } label: {
-                                Label("Delete Run", systemImage: "trash")
-                            }
-                            .buttonStyle(.bordered)
-                            Spacer()
-                        }
-                        .padding(.top, 32)
-                    }
+                HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate, locationData: statisticsData.locationData)
                 
-        }
-
-        .onAppear {
-            if statisticsData.tags != nil {
-                tags = statisticsData.tags!
-            }
-            locationName = statisticsData.locationString ?? ""
-            editLocationName = locationName
-            print("on appear")
-            downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
-                print("got something from load route and heart from helth")
-                // if empty create location start and end names after loading route
-                if statisticsData.locationString == nil || statisticsData.locationString == "" || statisticsData.locationString == "Unknown Location" {
-                    downwindManager.createLocationNames(statisticsData: statisticsData) { location in
-                        locationName = location
-                        DispatchQueue.main.async {
-                            downwindManager.saveLocationString(string: locationName, statisticsID: statisticsData.id)
-                            statisticsData.locationString = locationName
-                            if let index = downwindManager.runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
-                                downwindManager.runStatistics[index].locationString = locationName
-                                // update grouped array
-                                downwindManager.updateGroupedRunArray()
-                            }
-                            // updating the locationStrings
-                            downwindManager.updateAndSortLocationStrings(location: location)
-                        }
-                    }
-                }
-                // if no 10 s and 1 s top speed calculate and save those
-                if (statisticsData.topSpeed1s ?? 0.0) == 0.0 || (statisticsData.topSpeed10s ?? 0.0) == 0.0 {
-                    let topSpeeds = calculateTopSpeeds(from: statisticsData.locationData)
-                    DispatchQueue.main.async {
-                        statisticsData.topSpeed1s = topSpeeds.topSpeed1Sec
-                        statisticsData.topSpeed10s = topSpeeds.topSpeed10Sec
-                        downwindManager.saveTopSpeeds(speed1s: topSpeeds.topSpeed1Sec, speed10s: topSpeeds.topSpeed10Sec, statisticsID: statisticsData.id)
-                    }
-                }
-                
-                // if foil sport and no % on foil calculate and save the stats
-                if statisticsData.percentageOnFoil ?? 0 == 0 ||
-                   statisticsData.longestDistanceOnFoil ?? 0 == 0 {
-
-                    guard let workoutType = statisticsData.workoutType,
-                          workoutType.calculateFoilingStats else { return }
-
-                    let locationData = statisticsData.locationData
-                    let threshold = workoutType.thresholdSpeedKmhSlowSpeedWithDefault
-                    let countTurns = workoutType.countTurns
-                    let returnWaves = workoutType.returnWaves
-                    let statsID = statisticsData.id
-
-                    Task.detached(priority: .utility) {
-                        let foilStats = calculateFoilingStats(
-                            from: locationData,
-                            thresholdSpeedKmh: threshold,
-                            countTurns: countTurns,
-                            returnWaves: returnWaves
-                        )
-
-                        guard foilStats != (0, 0, 0, 0, [[]]) else { return }
-
-                        await MainActor.run {
-                            statisticsData.popUps = foilStats.popUps
-                            statisticsData.percentageOnFoil = foilStats.timeOnFoilPercentage
-                            statisticsData.turnsCount = foilStats.turns
-                            statisticsData.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
-                            statisticsData.waves = foilStats.waves
-
-                            downwindManager.saveOnFoilStats(
-                                popUps: foilStats.popUps,
-                                percentageOnFoil: foilStats.timeOnFoilPercentage,
-                                turns: foilStats.turns,
-                                longestDistanceOnFoil: foilStats.longestDistanceOnFoil,
-                                statisticsID: statsID,
-                                waves: foilStats.waves
-                            )
-                        }
-                    }
-                }
-                
-                
-                downwindManager.fetchHeartRatesOverTime(statisticID: statisticsData.id, startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
-                    if let heartRateData = heartRateData {
-                        heartRates = heartRateData
-                    }
-                }
-                
-                // update some things if we have location data but no distance
-                if !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 {
-                    DispatchQueue.main.async {
-                        downwindManager.saveEditedRoute(newStatistic: statisticsData, updatingExternal: true)
-                    }
-                }
-            }
-            
-        if downwindManager.showPromptForReview {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.73) {
-                        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-                                    SKStoreReviewController.requestReview(in: scene)
-                                }
-                        downwindManager.showPromptForReview = false
+                Section {
+                    TagsFlexiView(strings: tags)
                     
+                } header: {
+                    HStack {
+                        Text("Tags")
+                            .textCase(nil)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                        
+                        Button() {
+                            editTags = tags
+                            showTagsEditView = true
+                            
+                        } label: {
+                            tags.isEmpty ? Label("Add Tags", systemImage: "") : Label("Edit Tags", systemImage: "")
+                        }
+                        .textCase(nil)
+                        .font(.body)
+                        
+                    }
+                    .padding(.bottom, 9)
+                    
+                } footer: {
+                    HStack {
+                        Spacer()
+                        Button(role: .destructive) {
+                            showAlert = true
+                            
+                        } label: {
+                            Label("Delete Run", systemImage: "trash")
+                        }
+                        .buttonStyle(.bordered)
+                        Spacer()
+                    }
+                    .padding(.top, 32)
                 }
+                
             }
+            
+                
+                
         }
         .navigationTitle(statisticsData.runName)
         .navigationBarTitleDisplayMode(.inline)
@@ -322,13 +311,13 @@ struct StatisticsRunView: View {
                             })
                             
                             Button(action: {
-                                    // update the edit data
-                                    editTags = tags
-                                    editType = statisticsData.workoutType ?? .surf
-                                    showEditData = true
+                                // update the edit data
+                                editTags = tags
+                                editType = statisticsData.workoutType ?? .surf
+                                showEditData = true
                                 
                             }, label: {
-                                    Text("Edit Data")
+                                Text("Edit Data")
                             })
                             
                             if let workout = statisticsData.workoutType, workout.calculateFoilingStats {
@@ -340,7 +329,7 @@ struct StatisticsRunView: View {
                             if statisticsData.locationData.isEmpty == false {
                                 Button {
                                     stallEvents = FoilStallDetector.detectAllStallSpeeds(from: statisticsData.locationData)
-                                                        showStallStats = true
+                                    showStallStats = true
                                 } label: {
                                     Text("Calculate Stall Speeds")
                                 }
@@ -353,32 +342,32 @@ struct StatisticsRunView: View {
                         }
                     } else {
                         Button(action: {
-                                // update the edit data
-                                editTags = tags
-                                editType = statisticsData.workoutType ?? .surf
-                                showEditData = true
-                           
+                            // update the edit data
+                            editTags = tags
+                            editType = statisticsData.workoutType ?? .surf
+                            showEditData = true
+                            
                         }, label: {
-                                Text("Edit")
+                            Text("Edit")
                         })
                     }
                 }
                 
             }
         }
-        
+    
         .alert(isPresented: $showAlert) {
-                        Alert(
-                            title: Text("Are you sure?"),
-                            message: Text("This will also delete the workout from Health."),
-                            primaryButton: .destructive(Text("Delete")) {
-                                dismiss()
-                                downwindManager.deleteWorkout(id: statisticsData.id)
-                            },
-                            secondaryButton: .cancel()
-                        )
-                    }
-        
+            Alert(
+                title: Text("Are you sure?"),
+                message: Text("This will also delete the workout from Health."),
+                primaryButton: .destructive(Text("Delete")) {
+                    dismiss()
+                    downwindManager.deleteWorkout(id: statisticsData.id)
+                },
+                secondaryButton: .cancel()
+            )
+        }
+    
         .sheet(isPresented: $showUpgradeSheet, content: {
             NavigationStack {
                 UpgradeView(downwindManager: downwindManager, showUpgradeView: $showUpgradeSheet)
@@ -393,7 +382,7 @@ struct StatisticsRunView: View {
                     }
             }
         })
-        
+    
         .sheet(isPresented: $showRounds, content: {
             NavigationStack {
                 List {
@@ -418,43 +407,43 @@ struct StatisticsRunView: View {
                     if let dW = statisticsData.workoutType?.isDWSport, dW == true {
                         StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                     } else {
-//                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
+                        //                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                         SpeedGradientStatisticsMap(statisticsData: $statisticsData)
                             .ignoresSafeArea()
                     }
                 }
-                        .navigationTitle(statisticsData.locationString ?? locationName)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button(action: {
-                                    showMapSheet = false
-                                }, label: {
-                                    XMarkLabel()
-                                })
-                            }
+                .navigationTitle(statisticsData.locationString ?? locationName)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            showMapSheet = false
+                        }, label: {
+                            XMarkLabel()
+                        })
+                    }
                 }
             }
             
         })
-        
+    
         .sheet(isPresented: $showAngleMap, content: {
             NavigationStack {
-                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, angleTool: true)
-                        .navigationTitle(statisticsData.locationString ?? locationName)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button(action: {
-                                    showAngleMap = false
-                                }, label: {
-                                    XMarkLabel()
-                                })
-                            }
-                }
+                WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, angleTool: true)
+                    .navigationTitle(statisticsData.locationString ?? locationName)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                showAngleMap = false
+                            }, label: {
+                                XMarkLabel()
+                            })
+                        }
+                    }
             }
         })
-        
+    
         .sheet(isPresented: $showTagsEditView, content: {
             NavigationStack {
                 List {
@@ -516,7 +505,7 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showRunEditView, content: {
             NavigationStack {
-                    EditMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit)
+                EditMap(downwindManager: downwindManager, statisticsData: $statisticsDataEdit)
                     .navigationTitle("Edit Route")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
@@ -544,7 +533,7 @@ struct StatisticsRunView: View {
                     }
             }
         })
-        
+    
         .fullScreenCover(isPresented: $showShareSheet, content: {
             NavigationStack {
                 Group {
@@ -555,24 +544,24 @@ struct StatisticsRunView: View {
                     }
                 }
                 .navigationTitle(videoSharing ? "Share Video" : "Share Photo")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button(action: {
-                                showShareSheet = false
-                            }, label: {
-                                XMarkLabel()
-                            })
-                        }
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: {
+                            showShareSheet = false
+                        }, label: {
+                            XMarkLabel()
+                        })
                     }
+                }
             }
         })
-        
+    
         .fullScreenCover(isPresented: $showStickerSheet, content: {
             NavigationStack {
-                    RouteSticker(downwindManager: downwindManager, statisticsData: statisticsData)
+                RouteSticker(downwindManager: downwindManager, statisticsData: statisticsData)
                 
-                .navigationTitle("Create Sticker")
+                    .navigationTitle("Create Sticker")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
@@ -585,12 +574,151 @@ struct StatisticsRunView: View {
                     }
             }
         })
-        
+    
         .overlay {
             if showStallStats {
                 StallStatsOverlay(events: stallEvents, isPresented: $showStallStats)
-                                .transition(.opacity)
-                        }
+                    .transition(.opacity)
+            }
+        }
+        
+    }
+    
+    private func performBackgroundCalculations() async {
+        await MainActor.run {
+            isCalculating = true
+            calculationProgress = "Loading route data..."
+            hasLoadedInitialData = true
+        }
+        
+        await MainActor.run {
+            calculationProgress = "Loading heart rate..."
+        }
+        
+        let topSpeedsCalculated = await calculateTopSpeedsAsync()
+        await MainActor.run {
+            calculationProgress = "Analyzing foiling stats..."
+        }
+        let foilStatsCalculated = await calculateFoilStatsAsync()
+        await MainActor.run {
+            calculationProgress = "Loading heart rates over time..."
+        }
+        await loadHeartRatesAsync()
+        
+        await MainActor.run {
+            calculationProgress = "Creating location names..."
+        }
+        await createLocationNamesAsync()
+        
+        await MainActor.run {
+            calculationProgress = "Fixing distance data..."
+        }
+        await fixDistanceAsync()
+        
+        await MainActor.run {
+            isCalculating = false
+            calculationProgress = ""
+        }
+    }
+    
+    private func calculateTopSpeedsAsync() async {
+        guard (statisticsData.topSpeed1s ?? 0.0) == 0.0 || (statisticsData.topSpeed10s ?? 0.0) == 0.0 else {
+            return
+        }
+        
+        let topSpeeds = calculateTopSpeeds(from: statisticsData.locationData)
+        await MainActor.run {
+            statisticsData.topSpeed1s = topSpeeds.topSpeed1Sec
+            statisticsData.topSpeed10s = topSpeeds.topSpeed10Sec
+            downwindManager.saveTopSpeeds(speed1s: topSpeeds.topSpeed1Sec, speed10s: topSpeeds.topSpeed10Sec, statisticsID: statisticsData.id)
+        }
+    }
+    
+    private func calculateFoilStatsAsync() async {
+        guard statisticsData.percentageOnFoil ?? 0 == 0 || statisticsData.longestDistanceOnFoil ?? 0 == 0 else {
+            return
+        }
+        
+        guard let workoutType = statisticsData.workoutType,
+              workoutType.calculateFoilingStats else { return }
+        
+        let locationData = statisticsData.locationData
+        let threshold = workoutType.thresholdSpeedKmhSlowSpeedWithDefault
+        let countTurns = workoutType.countTurns
+        let returnWaves = workoutType.returnWaves
+        let statsID = statisticsData.id
+        
+        let foilStats = await Task.detached(priority: .utility) {
+            calculateFoilingStats(
+                from: locationData,
+                thresholdSpeedKmh: threshold,
+                countTurns: countTurns,
+                returnWaves: returnWaves
+            )
+        }.value
+        
+        guard foilStats != (0, 0, 0, 0, [[]]) else { return }
+        
+        await MainActor.run {
+            statisticsData.popUps = foilStats.popUps
+            statisticsData.percentageOnFoil = foilStats.timeOnFoilPercentage
+            statisticsData.turnsCount = foilStats.turns
+            statisticsData.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
+            statisticsData.waves = foilStats.waves
+            
+            downwindManager.saveOnFoilStats(
+                popUps: foilStats.popUps,
+                percentageOnFoil: foilStats.timeOnFoilPercentage,
+                turns: foilStats.turns,
+                longestDistanceOnFoil: foilStats.longestDistanceOnFoil,
+                statisticsID: statsID,
+                waves: foilStats.waves
+            )
+        }
+    }
+    
+    private func loadHeartRatesAsync() async {
+        await withCheckedContinuation { continuation in
+            downwindManager.fetchHeartRatesOverTime(statisticID: statisticsData.id, startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _ in
+                if let heartRateData = heartRateData {
+                    Task { @MainActor in
+                        heartRates = heartRateData
+                    }
+                }
+                continuation.resume()
+            }
+        }
+    }
+    
+    private func createLocationNamesAsync() async {
+        guard statisticsData.locationString == nil || statisticsData.locationString == "" || statisticsData.locationString == "Unknown Location" else {
+            return
+        }
+        
+        await withCheckedContinuation { continuation in
+            downwindManager.createLocationNames(statisticsData: statisticsData) { location in
+                Task { @MainActor in
+                    locationName = location
+                    downwindManager.saveLocationString(string: locationName, statisticsID: statisticsData.id)
+                    statisticsData.locationString = locationName
+                    if let index = downwindManager.runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
+                        downwindManager.runStatistics[index].locationString = locationName
+                        downwindManager.updateGroupedRunArray()
+                    }
+                    downwindManager.updateAndSortLocationStrings(location: location)
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    private func fixDistanceAsync() async {
+        guard !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 else {
+            return
+        }
+        
+        await MainActor.run {
+            downwindManager.saveEditedRoute(newStatistic: statisticsData, updatingExternal: true)
         }
     }
 }
