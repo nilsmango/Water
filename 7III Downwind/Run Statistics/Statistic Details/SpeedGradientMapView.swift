@@ -25,6 +25,9 @@ struct SpeedGradientMapView: UIViewRepresentable {
     func updateUIView(_ mapView: MKMapView, context: Context) {
         debugMap("updateUIView called with \(locations.count) locations")
 
+        context.coordinator.mapViewRef = mapView
+        context.coordinator.fullLocationData = locations
+
         mapView.removeOverlays(mapView.overlays)
         mapView.removeAnnotations(mapView.annotations)
 
@@ -34,9 +37,12 @@ struct SpeedGradientMapView: UIViewRepresentable {
         }
 
         context.coordinator.lineWidth = lineWidth
-        context.coordinator.locations = locations
 
-        let coordinates = makeSmoothedCoordinates(from: locations)
+        let downsampledForPolyline = downsamplePolylineCoordinates(locations)
+        let downsampledForGradient = downsampleLocations(locations)
+        context.coordinator.locations = downsampledForGradient
+
+        let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)
 
         let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
 

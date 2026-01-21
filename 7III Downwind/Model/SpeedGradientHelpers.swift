@@ -8,6 +8,71 @@
 import MapKit
 import UIKit
 
+func downsampleLocations(
+    _ locations: [LocationData],
+    targetCount: Int = 273
+) -> [LocationData] {
+    guard locations.count > targetCount else { return locations }
+
+    var selectedIndices: Set<Int> = [0, locations.count - 1]
+    let step = Double(locations.count - 1) / Double(targetCount - 1)
+
+    for i in 1..<(targetCount - 1) {
+        let index = Int(round(Double(i) * step))
+        selectedIndices.insert(min(max(index, 0), locations.count - 1))
+    }
+
+    let finalIndices = Array(selectedIndices).sorted()
+
+    var result: [LocationData] = []
+    for i in 0..<finalIndices.count {
+        let index = finalIndices[i]
+        var avgSpeed: Double = 0
+        var count = 0
+
+        let startIndex = i > 0 ? finalIndices[i - 1] : 0
+        let endIndex = index
+
+        for j in startIndex..<endIndex {
+            if let speed = locations[j].speed {
+                avgSpeed += speed
+                count += 1
+            }
+        }
+
+        if let speed = locations[index].speed {
+            avgSpeed += speed
+            count += 1
+        }
+
+        avgSpeed = count > 0 ? avgSpeed / Double(count) : 0
+
+        var locationData = locations[index]
+        locationData.speed = avgSpeed
+        result.append(locationData)
+    }
+
+    return result
+}
+
+func downsamplePolylineCoordinates(
+    _ locations: [LocationData],
+    targetCount: Int = 3600
+) -> [LocationData] {
+    guard locations.count > targetCount else { return locations }
+
+    var selectedIndices: Set<Int> = [0, locations.count - 1]
+    let step = Double(locations.count - 1) / Double(targetCount - 1)
+
+    for i in 1..<(targetCount - 1) {
+        let index = Int(round(Double(i) * step))
+        selectedIndices.insert(min(max(index, 0), locations.count - 1))
+    }
+
+    let finalIndices = Array(selectedIndices).sorted()
+    return finalIndices.map { locations[$0] }
+}
+
 func makeGradientStops(
     from data: [LocationData]
 ) -> ([UIColor], [CGFloat]) {

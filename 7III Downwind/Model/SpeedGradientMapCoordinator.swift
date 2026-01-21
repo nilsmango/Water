@@ -131,7 +131,10 @@ extension SpeedGradientMapView {
     final class Coordinator: NSObject, MKMapViewDelegate {
 
         var locations: [LocationData] = []
+        var fullLocationData: [LocationData] = []
         var lineWidth: CGFloat = 9.0
+        var debounceTimer: Timer?
+        var mapViewRef: MKMapView?
 
         func mapView(
             _ mapView: MKMapView,
@@ -189,6 +192,46 @@ extension SpeedGradientMapView {
             }
 
             return annotationView
+        }
+
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            debounceTimer?.invalidate()
+            debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { [weak self] _ in
+                self?.updateVisiblePolylines(mapView)
+            }
+        }
+
+        func updateVisiblePolylines(_ mapView: MKMapView) {
+            guard !fullLocationData.isEmpty else { return }
+
+            let visibleRect = mapView.visibleMapRect
+            let paddedRect = MKMapRect(
+                x: visibleRect.origin.x - visibleRect.width * 0.3,
+                y: visibleRect.origin.y - visibleRect.height * 0.3,
+                width: visibleRect.width * 1.6,
+                height: visibleRect.height * 1.6
+            )
+
+            let visibleLocations = filterVisibleLocations(fullLocationData, in: paddedRect)
+
+            guard visibleLocations.count > 1 else { return }
+
+            let downsampledForPolyline = downsamplePolylineCoordinates(visibleLocations)
+            let downsampledForGradient = downsampleLocations(visibleLocations)
+            self.locations = downsampledForGradient
+
+            let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)
+            let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+
+            mapView.removeOverlays(mapView.overlays)
+            mapView.addOverlay(polyline)
+        }
+
+        func filterVisibleLocations(_ locations: [LocationData], in rect: MKMapRect) -> [LocationData] {
+            return locations.filter { location in
+                let point = MKMapPoint(CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude))
+                return rect.contains(point)
+            }
         }
     }
 }
