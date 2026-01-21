@@ -17,6 +17,7 @@ struct RouteSticker: View {
     @State private var showRoute = true
     @State private var routeInYellow = true
     @State private var showLocation = true
+    @State private var showTags = true
     
     enum SecondStat: String, CaseIterable, Identifiable {
         case pace = "Pace"
@@ -88,6 +89,10 @@ struct RouteSticker: View {
                         if showRoute {
                             if statisticsData.locationString != nil && statisticsData.locationString != "" {
                                 Toggle("Show Location", isOn: $showLocation)
+                            }
+                            
+                            if statisticsData.tags != nil && !statisticsData.tags!.isEmpty {
+                                Toggle("Show Tags", isOn: $showTags)
                             }
                             
                             Toggle("Route in Yellow", isOn: $routeInYellow)
@@ -278,19 +283,26 @@ struct RouteSticker: View {
     
     @ViewBuilder
     private var location: some View {
-            
+
                 if statisticsData.locationString != nil && statisticsData.locationString != "" && showLocation && showRoute {
-                    HStack {
+                    VStack(spacing: 4) {
+                        HStack {
 //                        Image(systemName: "location.fill")
-                        Text(statisticsData.locationString!)
+                            Text(statisticsData.locationString!)
+                        }
+//                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.white)
+//                        .shadow(color: .black.opacity(0.4),radius: 5)
+
+                        if let tags = statisticsData.tags, !tags.isEmpty && showTags {
+                            Text(tags.joined(separator: " "))
+                                .fontWeight(.bold)
+                                .foregroundStyle(.white)
+                        }
                     }
-//                    .font(.title3)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.white)
-//                    .shadow(color: .black.opacity(0.4),radius: 5)
-                    
                 }
-               
+
     }
     
     // Helper functions
@@ -521,5 +533,5 @@ struct StatisticRow: View {
 
 
 #Preview {
-    RouteSticker(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 20000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [], locationString: "Concise → St Blaise"))
+    RouteSticker(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 20000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#swim", "#wakeboard", "#fun"], locationString: "Concise → St Blaise"))
 }

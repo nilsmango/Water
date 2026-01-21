@@ -33,6 +33,8 @@ struct ShareOverlay: View {
     var turnsTitle: String?
     var turnsText: String
     let fullScreen: Bool
+    var tags: [String] = []
+    var showTags: Bool = true
         
     var body: some View {
         VStack(alignment: fullScreen ? .center : .trailing, spacing: 0.0) {
@@ -57,6 +59,20 @@ struct ShareOverlay: View {
                     .shadow(color: .black.opacity(0.4),radius: 5)
                     .padding(.trailing, fullScreen ? 0 : 8)
                     .padding(.bottom, fullScreen ? 16 : 8)
+                }
+                
+                if !tags.isEmpty && showTags {
+                    HStack {
+                        Text(tags.joined(separator: " "))
+                    }
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .fontDesign(.rounded)
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.4),radius: 5)
+                    .padding(.trailing, fullScreen ? 0 : 8)
+                    .padding(.bottom, fullScreen ? 16 : 8)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
             HStack {
                 
@@ -135,7 +151,7 @@ struct ShareOverlay: View {
         VStack(alignment: .trailing) {
             Spacer()
             HStack {
-                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h",  topSpeedString: "10s Top Speed", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true, caloriesTitle: "Calories", caloriesText: "23 kcal", heartTitle: "long her", heartText: "23", popUpsTitle: nil, popUpsText: "", timeOnFoilTitle: nil, timeOnFoilText: "", maxDistanceOnFoilText: "", turnsTitle: nil, turnsText: "", fullScreen: false)
+                ShareOverlay(sport: "DW SUP Foil", distance: "12.4 km", time: "3:31", extraTitle: "∅-Pace", extraValue: "3:00 /km", topSpeedValue: "23 km/h",  topSpeedString: "10s Top Speed", showAverageSpeed: true, locationName: "Ipsach → Neuenburg", showLocation: true, caloriesTitle: "Calories", caloriesText: "23 kcal", heartTitle: "long her", heartText: "23", popUpsTitle: nil, popUpsText: "", timeOnFoilTitle: nil, timeOnFoilText: "", maxDistanceOnFoilText: "", turnsTitle: nil, turnsText: "", fullScreen: false, tags: ["#swim", "#wakeboard", "#fun"])
                     .scaleEffect(1, anchor: UnitPoint(x: 1, y: 1))
             }
             

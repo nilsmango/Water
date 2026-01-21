@@ -42,12 +42,13 @@ struct ShareStatisticsView: View {
     
     @State private var showCalories = false
     @State private var showHeartRate = false
+    @State private var showTags = true
     @State private var offset = -8.0
     let fullScreen = true
     
     var body: some View {
         ScrollView {
-            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, offset: $offset) { view in
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, showTags: showTags, offset: $offset) { view in
                 self.previewUIView = view
             }
             .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
@@ -87,6 +88,7 @@ struct ShareStatisticsView: View {
                         showTurns: $showTurns,
                         showCalories: $showCalories,
                         showHeartRate: $showHeartRate,
+                        showTags: $showTags,
                         useMap: $useMap,
                         showImagePicker: $showImagePicker,
                         showCamera: $showCamera,
@@ -202,5 +204,5 @@ struct ImagePicker: UIViewControllerRepresentable {
 }
 
 #Preview {
-    ShareStatisticsView(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []))
+    ShareStatisticsView(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#swim", "#wakeboard", "#fun"]))
 }

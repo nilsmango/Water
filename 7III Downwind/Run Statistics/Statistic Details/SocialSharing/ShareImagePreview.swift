@@ -26,6 +26,7 @@ struct ShareImagePreview: View {
     var showMaxDistanceOnFoil: Bool
     var showTurns: Bool
     var fullScreen: Bool
+    var showTags: Bool
     
     @Binding var offset: Double
     
@@ -96,7 +97,9 @@ struct ShareImagePreview: View {
                             maxDistanceOnFoilText:  String(format: "%.1f", (statisticsData.longestDistanceOnFoil ?? 0) / 1000) +  " km",
                             turnsTitle: showTurns ? "Turns" : nil,
                             turnsText: String(statisticsData.turnsCount ?? 0),
-                            fullScreen: fullScreen
+                            fullScreen: fullScreen,
+                            tags: statisticsData.tags ?? [],
+                            showTags: showTags
                         )
                         .scaleEffect(scale, anchor: fullScreen ? UnitPoint(x: 0.5, y: 1) : UnitPoint(x: 1, y: 1))
 
@@ -143,5 +146,5 @@ struct ShareImagePreview: View {
 
 
 #Preview {
-    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: []), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showMaxDistanceOnFoil: true, showTurns: true, fullScreen: true, offset: .constant(-8.0))
+    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#swim", "#wakeboard", "#fun"]), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showMaxDistanceOnFoil: true, showTurns: true, fullScreen: true, showTags: true, offset: .constant(-8.0))
 }

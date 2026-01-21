@@ -20,6 +20,7 @@ struct OverlaySettingsView: View {
     @Binding var showTurns: Bool
     @Binding var showCalories: Bool
     @Binding var showHeartRate: Bool
+    @Binding var showTags: Bool
     @Binding var useMap: Bool
     @Binding var showImagePicker: Bool
     @Binding var showCamera: Bool
@@ -42,6 +43,11 @@ struct OverlaySettingsView: View {
             }
             Toggle("Show Location", isOn: $showLocation)
                 .tint(.accent)
+            
+            if statisticsData.tags != nil && !statisticsData.tags!.isEmpty {
+                Toggle("Show Tags", isOn: $showTags)
+                    .tint(.accent)
+            }
                 
                 let hasDistance = statisticsData.runDistance > 0
                 
