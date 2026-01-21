@@ -37,7 +37,7 @@ struct ShareImagePreview: View {
                         .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
                         .allowsHitTesting(!fullScreen)
                 } else {
-                    WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
+                    SpeedGradientStatisticsMap(statisticsData: .constant(statisticsData))
                         .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
                         .allowsHitTesting(!fullScreen)
                 }
