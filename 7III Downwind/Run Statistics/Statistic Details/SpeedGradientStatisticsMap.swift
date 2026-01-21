@@ -67,16 +67,18 @@ struct SpeedGradientStatisticsMap: UIViewRepresentable {
         }
 
         let startAnnotation = MKPointAnnotation()
-        let startData = statisticsData.locationData.first!
-        startAnnotation.coordinate = CLLocationCoordinate2D(latitude: startData.latitude, longitude: startData.longitude)
-        startAnnotation.title = "Start"
-        mapView.addAnnotation(startAnnotation)
+        if let startData = statisticsData.locationData.first {
+            startAnnotation.coordinate = CLLocationCoordinate2D(latitude: startData.latitude, longitude: startData.longitude)
+            startAnnotation.title = "Start"
+            mapView.addAnnotation(startAnnotation)
+        }
 
         let finishAnnotation = MKPointAnnotation()
-        let finishData = statisticsData.locationData.last!
-        finishAnnotation.coordinate = CLLocationCoordinate2D(latitude: finishData.latitude, longitude: finishData.longitude)
-        finishAnnotation.title = "Finish"
-        mapView.addAnnotation(finishAnnotation)
+        if let finishData = statisticsData.locationData.last {
+            finishAnnotation.coordinate = CLLocationCoordinate2D(latitude: finishData.latitude, longitude: finishData.longitude)
+            finishAnnotation.title = "Finish"
+            mapView.addAnnotation(finishAnnotation)
+        }
 
         context.coordinator.fitMap(to: mapView, locationData: statisticsData.locationData)
     }
@@ -105,6 +107,11 @@ extension SpeedGradientStatisticsMap {
             let gradientLocations: [LocationData]
             let lineWidth: CGFloat
             let opacity: CGFloat
+        }
+
+        deinit {
+            debounceTimer?.invalidate()
+            debounceTimer = nil
         }
 
         func addWavePolylines(to mapView: MKMapView, waves: [[LocationData]], lineWidth: CGFloat, opacity: CGFloat) {
@@ -168,8 +175,9 @@ extension SpeedGradientStatisticsMap {
 
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
             debounceTimer?.invalidate()
-            debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { [weak self] _ in
-                self?.updateVisiblePolylines(mapView)
+            debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { [weak self, weak mapView] _ in
+                guard let self = self, let mapView = mapView else { return }
+                self.updateVisiblePolylines(mapView)
             }
         }
 

@@ -136,6 +136,11 @@ extension SpeedGradientMapView {
         var debounceTimer: Timer?
         var mapViewRef: MKMapView?
 
+        deinit {
+            debounceTimer?.invalidate()
+            debounceTimer = nil
+        }
+
         func mapView(
             _ mapView: MKMapView,
             rendererFor overlay: MKOverlay
@@ -196,8 +201,9 @@ extension SpeedGradientMapView {
 
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
             debounceTimer?.invalidate()
-            debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { [weak self] _ in
-                self?.updateVisiblePolylines(mapView)
+            debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { [weak self, weak mapView] _ in
+                guard let self = self, let mapView = mapView else { return }
+                self.updateVisiblePolylines(mapView)
             }
         }
 

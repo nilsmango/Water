@@ -8,13 +8,32 @@
 import MapKit
 import UIKit
 
+struct DownsamplingCacheKey: Hashable {
+    let locationHash: Int
+    let targetCount: Int
+}
+
+var downsamplingCache: [DownsamplingCacheKey: [LocationData]] = [:]
+
 func downsampleLocations(
     _ locations: [LocationData],
-    targetCount: Int = 273
+    targetCount: Int = 450
 ) -> [LocationData] {
-    guard locations.count > targetCount else { return locations }
+    let locationHash = locations.hashValue
+    let cacheKey = DownsamplingCacheKey(locationHash: locationHash, targetCount: targetCount)
+
+    if let cached = downsamplingCache[cacheKey] {
+        debugMap("Cache hit for downsampled locations")
+        return cached
+    }
+
+    guard locations.count > targetCount else {
+        downsamplingCache[cacheKey] = locations
+        return locations
+    }
 
     var selectedIndices: Set<Int> = [0, locations.count - 1]
+    selectedIndices.reserveCapacity(targetCount)
     let step = Double(locations.count - 1) / Double(targetCount - 1)
 
     for i in 1..<(targetCount - 1) {
@@ -25,6 +44,8 @@ func downsampleLocations(
     let finalIndices = Array(selectedIndices).sorted()
 
     var result: [LocationData] = []
+    result.reserveCapacity(finalIndices.count)
+
     for i in 0..<finalIndices.count {
         let index = finalIndices[i]
         var avgSpeed: Double = 0
@@ -52,6 +73,7 @@ func downsampleLocations(
         result.append(locationData)
     }
 
+    downsamplingCache[cacheKey] = result
     return result
 }
 
@@ -59,9 +81,21 @@ func downsamplePolylineCoordinates(
     _ locations: [LocationData],
     targetCount: Int = 3600
 ) -> [LocationData] {
-    guard locations.count > targetCount else { return locations }
+    let locationHash = locations.hashValue
+    let cacheKey = DownsamplingCacheKey(locationHash: locationHash, targetCount: targetCount)
+
+    if let cached = downsamplingCache[cacheKey] {
+        debugMap("Cache hit for polyline coordinates")
+        return cached
+    }
+
+    guard locations.count > targetCount else {
+        downsamplingCache[cacheKey] = locations
+        return locations
+    }
 
     var selectedIndices: Set<Int> = [0, locations.count - 1]
+    selectedIndices.reserveCapacity(targetCount)
     let step = Double(locations.count - 1) / Double(targetCount - 1)
 
     for i in 1..<(targetCount - 1) {
@@ -70,7 +104,15 @@ func downsamplePolylineCoordinates(
     }
 
     let finalIndices = Array(selectedIndices).sorted()
-    return finalIndices.map { locations[$0] }
+    var result = [LocationData]()
+    result.reserveCapacity(finalIndices.count)
+
+    for index in finalIndices {
+        result.append(locations[index])
+    }
+
+    downsamplingCache[cacheKey] = result
+    return result
 }
 
 func makeGradientStops(
