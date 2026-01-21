@@ -96,6 +96,7 @@ struct OptionsView: View {
                     } label: {
                         Label("Show the latest Version News again", systemImage: "newspaper")
                     }
+                    .buttonStyle(.borderedProminent)
                     
                 }
                 

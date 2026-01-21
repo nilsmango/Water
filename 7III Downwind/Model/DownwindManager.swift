@@ -1396,7 +1396,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     
-    private func loadWorkoutRouteHeartFromHealth(id: UUID, completion: @escaping (HKWorkoutRoute?, Double?) -> Void) {
+    private func loadWorkoutRouteHeartFromHealth(id: UUID, loadHeartRates: Bool = true, completion: @escaping (HKWorkoutRoute?, Double?) -> Void) {
         // Create a predicate to fetch the workout with the given UUID
         let workoutPredicate = HKQuery.predicateForObject(with: id)
         
@@ -1418,9 +1418,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             // Once the workout is fetched, load its associated route and heart rates
             self.loadWorkoutRoute(workout: workout) { route in
                 
-                self.getAVGHeartRate(for: workout) { averageHeartRate in
-                    completion(route, averageHeartRate)
+                if loadHeartRates {
+                    self.getAVGHeartRate(for: workout) { averageHeartRate in
+                        completion(route, averageHeartRate)
+                    }
+                } else {
+                    completion(route, nil)
                 }
+                
             }
         }
         
@@ -1981,7 +1986,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         
         // Load the workout route
-        loadWorkoutRouteHeartFromHealth(id: id) { route, _ in
+        loadWorkoutRouteHeartFromHealth(id: id, loadHeartRates: false) { route, _ in
             guard let route = route else {
                 completion(nil)
                 return
