@@ -38,10 +38,12 @@ struct StartView: View {
                             .padding(.horizontal)
                     }
                     
-                    NavigationBar(showGPX: downwindManager.showGPXImport, isLoadingImportedRuns: isLoadingImportedRuns, isImporting: $isImporting, navigateToStats: {
+                    NavigationBar(showGPX: downwindManager.showGPXImport, showMaps: downwindManager.showMaps, isLoadingImportedRuns: isLoadingImportedRuns, isImporting: $isImporting, navigateToStats: {
                         navPath.append(NavDestination.statistics)
                     }, navigateToDashboard: {
                         navPath.append(NavDestination.dashboards)
+                    }, navigateToMaps: {
+                        navPath.append(NavDestination.maps)
                     }, removeGPXButton: {
                         downwindManager.showGPXImport.toggle()
                     })
@@ -273,6 +275,8 @@ struct StartView: View {
                     }
                 case .statistics:
                     StatisticsView(downwindManager: downwindManager)
+                case .maps:
+                    SpotsView()
                 }
             }
             .navigationTitle(downwindManager.user.name.isEmpty ? "Aloha!" : "Aloha \(downwindManager.user.name)!")

@@ -16,6 +16,10 @@
 		78056D192F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */; };
 		78056D1B2F1E901B000D9591 /* WavesHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D1A2F1E901B000D9591 /* WavesHelpers.swift */; };
 		78056D1F2F1EC16A000D9591 /* HeartSpeedSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D1E2F1EC16A000D9591 /* HeartSpeedSamples.swift */; };
+		78056FC52F217F66000D9591 /* SpotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC22F217F66000D9591 /* SpotDetailView.swift */; };
+		78056FC62F217F66000D9591 /* SpotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC02F217F66000D9591 /* SpotManager.swift */; };
+		78056FC72F217F66000D9591 /* SpotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC32F217F66000D9591 /* SpotsView.swift */; };
+		78056FC82F217F66000D9591 /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FBF2F217F66000D9591 /* Spot.swift */; };
 		78096F3D2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
 		781562A32B94D92900E081FC /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
 		781562A52B94DA0E00E081FC /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
@@ -291,6 +295,10 @@
 		78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientStatisticsMap.swift; sourceTree = "<group>"; };
 		78056D1A2F1E901B000D9591 /* WavesHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavesHelpers.swift; sourceTree = "<group>"; };
 		78056D1E2F1EC16A000D9591 /* HeartSpeedSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartSpeedSamples.swift; sourceTree = "<group>"; };
+		78056FBF2F217F66000D9591 /* Spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot.swift; sourceTree = "<group>"; };
+		78056FC02F217F66000D9591 /* SpotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotManager.swift; sourceTree = "<group>"; };
+		78056FC22F217F66000D9591 /* SpotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailView.swift; sourceTree = "<group>"; };
+		78056FC32F217F66000D9591 /* SpotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotsView.swift; sourceTree = "<group>"; };
 		78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsEditViewStatisticCapture.swift; sourceTree = "<group>"; };
 		781562A22B94D92900E081FC /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		781562A42B94DA0E00E081FC /* OutsideTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideTap.swift; sourceTree = "<group>"; };
@@ -525,6 +533,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		78056FC12F217F66000D9591 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				78056FBF2F217F66000D9591 /* Spot.swift */,
+				78056FC02F217F66000D9591 /* SpotManager.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		78056FC42F217F66000D9591 /* Maps */ = {
+			isa = PBXGroup;
+			children = (
+				78056FC12F217F66000D9591 /* Models */,
+				78056FC22F217F66000D9591 /* SpotDetailView.swift */,
+				78056FC32F217F66000D9591 /* SpotsView.swift */,
+			);
+			path = Maps;
+			sourceTree = "<group>";
+		};
 		781A4B9D2C4E45040046AE0E /* SocialSharing */ = {
 			isa = PBXGroup;
 			children = (
@@ -679,6 +706,7 @@
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				7840468E2C342160009F8733 /* SummaryView.swift */,
 				784046902C342363009F8733 /* StatisticMetricsView.swift */,
+				78056FC42F217F66000D9591 /* Maps */,
 				782B67572C3A78E600B90578 /* In App Purchases */,
 				78DB913D2E45FB8D00B222C2 /* Dashboards */,
 				785CF9562B4FE85100528B6D /* Options */,
@@ -1355,6 +1383,10 @@
 				785C0C2B2C3C171A005CCE87 /* HelpView.swift in Sources */,
 				7840835C2C218985004C0857 /* ChartStrideBy.swift in Sources */,
 				782D8E072EC0B99900E2AE43 /* MapAngle.swift in Sources */,
+				78056FC52F217F66000D9591 /* SpotDetailView.swift in Sources */,
+				78056FC62F217F66000D9591 /* SpotManager.swift in Sources */,
+				78056FC72F217F66000D9591 /* SpotsView.swift in Sources */,
+				78056FC82F217F66000D9591 /* Spot.swift in Sources */,
 				788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */,
 				785C4ABA2B40AF7400EB07F8 /* Member.swift in Sources */,
 				781A4BAF2C4EE64B0046AE0E /* ActivityViewController.swift in Sources */,

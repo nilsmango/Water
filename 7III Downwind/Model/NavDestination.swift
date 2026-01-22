@@ -11,4 +11,5 @@ enum NavDestination: Hashable {
     case dashboards
     case dashboard(Dashboard)
     case statistics
+    case maps
 }

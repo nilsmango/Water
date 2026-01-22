@@ -28,6 +28,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @AppStorage("runListSorting") var runListSorting: RunListSorting = .distanceAscending
     @AppStorage("showListDetail") var showListDetail: Bool = true
     @AppStorage("showGPXImport") var showGPXImport: Bool = true
+    @AppStorage("showMaps") var showMaps: Bool = true
     @AppStorage("showTracker") var showTracker: Bool = true
     @AppStorage("measurementSystem") var measurementSystem: MeasurementSystem = .metric
     @AppStorage("workoutType") var workoutType: WorkoutType = .downwindSUPFoil

@@ -61,7 +61,7 @@ struct OptionsView: View {
                             
                         }, label: {
                             Label("Cancel", systemImage: "xmark.circle")
-                                
+                            
                         })
                         .buttonStyle(.bordered)
                         
@@ -74,6 +74,9 @@ struct OptionsView: View {
             
             Section {
                 Toggle("GPX Run Import Button", isOn: $downwindManager.showGPXImport)
+                    .tint(.accent)
+                
+                Toggle("Maps Button", isOn: $downwindManager.showMaps)
                     .tint(.accent)
                 
                 Toggle("GPS Tracker", isOn: $downwindManager.showTracker)
@@ -94,10 +97,8 @@ struct OptionsView: View {
                     Button {
                         downwindManager.lastVersionNewsClosed = ""
                     } label: {
-                        Label("Show the latest Version News again", systemImage: "newspaper")
+                        Label("Show latest Version News again", systemImage: "newspaper")
                     }
-                    .buttonStyle(.borderedProminent)
-                    
                 }
                 
             } header: {
@@ -114,7 +115,7 @@ struct OptionsView: View {
                 NavigationLink(destination: FoilingThresholds()) {
                     Text("Foiling Threshold Speeds")
                 }
-                                
+                
             } header: {
                 Text("Tracker Options")
             }
@@ -134,7 +135,7 @@ struct OptionsView: View {
             } header: {
                 Text("Dashboard Units")
             }
-                        
+            
             Section {
                 
                 Toggle("Auto Grouping Info", isOn: $dashboards.showGroupInfo)
@@ -159,62 +160,61 @@ struct OptionsView: View {
             } header: {
                 Text("Dashboard Element Wait Times")
             } footer: {
-                    Text("After Placeholder specifies the time to wait after a placeholder element (no value or a leading dash) is found, to give the website a chance to change it to a real value. Increase this time if you find that you get placeholders even though on the website the real values are displayed.")
-                                    
+                Text("After Placeholder specifies the time to wait after a placeholder element (no value or a leading dash) is found, to give the website a chance to change it to a real value. Increase this time if you find that you get placeholders even though on the website the real values are displayed.")
+                
             }
-                Section {
-                    Button {
-                        showingErrorList = true
-                    } label: {
-                        Label("View Error Log", systemImage: "text.page.badge.magnifyingglass")
-                    }
-                    .sheet(isPresented: $showingErrorList) {
-                        ErrorListView(downwindManager: downwindManager)
-                    }
+            Section {
+                Button {
+                    showingErrorList = true
+                } label: {
+                    Label("View Error Log", systemImage: "text.page.badge.magnifyingglass")
+                }
+                .sheet(isPresented: $showingErrorList) {
+                    ErrorListView(downwindManager: downwindManager)
+                }
+                
+                Button {
+                    showingShareSheet = true
+                } label: {
+                    Label("Share Error Log", systemImage: "square.and.arrow.up")
+                }
+                .sheet(isPresented: $showingShareSheet) {
+                    ShareSheet(items: [downwindManager.getErrorLog()])
+                }
+                
+                Button() {
+                    downwindManager.clearLog()
+                } label: {
+                    Label("Clear Error Log", systemImage: "trash")
+                        .foregroundStyle(.red)
+                }
+                
+                
+            } header: {
+                Text("Error Log")
+            } footer: {
+                VStack(alignment: .leading) {
                     
-                    Button {
-                        showingShareSheet = true
-                    } label: {
-                        Label("Share Error Log", systemImage: "square.and.arrow.up")
-                    }
-                    .sheet(isPresented: $showingShareSheet) {
-                        ShareSheet(items: [downwindManager.getErrorLog()])
-                    }
-                    
-                    Button() {
-                        downwindManager.clearLog()
-                    } label: {
-                        Label("Clear Error Log", systemImage: "trash")
-                            .foregroundStyle(.red)
-                    }
-                    
-                    
-                } header: {
-                    Text("Error Log")
-                } footer: {
-                    VStack(alignment: .leading) {
+                    HStack {
                         
-                        HStack {
+                        Spacer()
+                        
+                        Button(role: .destructive, action: {
+                            isShowingAlert = true
                             
-                            Spacer()
-                            
-                            Button(role: .destructive, action: {
-                                isShowingAlert = true
-                                
-                            }, label: {
-                                Label("Delete All My Data", systemImage: "xmark.circle")
-                            })
-                            .buttonStyle(.bordered)
-                            
-                            Spacer()
-                        }
-                        .padding()
+                        }, label: {
+                            Label("Delete All My Data", systemImage: "xmark.circle")
+                        })
+                        .buttonStyle(.bordered)
+                        
+                        Spacer()
                     }
-
+                    .padding()
+                }
+                
                 
             }
             
-                                    
             Section {
                 Text("Find your next wake to thieve in Switzerland with [Next Wave](https://apps.apple.com/ch/app/next-wave/id6739363035).")
             } header: {
