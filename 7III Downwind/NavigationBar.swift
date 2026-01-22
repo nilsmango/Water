@@ -16,6 +16,7 @@ struct NavigationBar: View {
     let navigateToDashboard: () -> Void
     let navigateToMaps: () -> Void
     let removeGPXButton: () -> Void
+    let removeMapsButton: () -> Void
     
     private var buttonCount: Int {
         var count = 2
@@ -67,7 +68,8 @@ struct NavigationBar: View {
                     } label: {
                         Label("Remove", systemImage: "eye.slash.fill")
                     }
-                    Label("You can add the button back in Settings", systemImage: "info.circle")
+                    Label("You can add it back in Settings", systemImage: "info.circle")
+                        .font(.caption)
                 }
                 .disabled(isLoadingImportedRuns)
             }
@@ -81,6 +83,15 @@ struct NavigationBar: View {
             
             if showMaps {
                 NavigationButton(title: "Maps", systemImage: "map", color: .accent, action: navigateToMaps)
+                    .contextMenu {
+                        Button {
+                            removeMapsButton()
+                        } label: {
+                            Label("Remove", systemImage: "eye.slash.fill")
+                        }
+                        Label("You can add it back in Settings", systemImage: "info.circle")
+                            .font(.caption)
+                    }
             }
             
             if showGPX {
@@ -95,7 +106,8 @@ struct NavigationBar: View {
                     } label: {
                         Label("Remove", systemImage: "eye.slash.fill")
                     }
-                    Label("You can add the button back in Settings", systemImage: "info.circle")
+                    Label("You can add it back in Settings", systemImage: "info.circle")
+                        .font(.caption)
                 }
                 .disabled(isLoadingImportedRuns)
             }
@@ -104,5 +116,5 @@ struct NavigationBar: View {
 }
 
 #Preview {
-    NavigationBar(showGPX: true, showMaps: true, isLoadingImportedRuns: false, isImporting: .constant(false), navigateToStats: {}, navigateToDashboard: {}, navigateToMaps: {}, removeGPXButton: {})
+    NavigationBar(showGPX: true, showMaps: true, isLoadingImportedRuns: false, isImporting: .constant(false), navigateToStats: {}, navigateToDashboard: {}, navigateToMaps: {}, removeGPXButton: {}, removeMapsButton: {})
 }

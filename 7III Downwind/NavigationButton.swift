@@ -12,10 +12,7 @@ struct NavigationButton: View {
     let systemImage: String
     let color: Color
     let action: () -> Void
-    var onHideRequest: (() -> Void)?
-    
-    @State private var isLongPressing = false
-    
+        
     var body: some View {
         Button {
             action()
@@ -58,25 +55,7 @@ struct NavigationButton: View {
                 }
   
             }
-            .opacity(isLongPressing ? 0.5 : 1.0)
         }
-        .simultaneousGesture(
-            LongPressGesture(minimumDuration: 1.0)
-                .onChanged { pressing in
-                    withAnimation {
-                        isLongPressing = pressing
-                    }
-                    if pressing {
-                        if let onHideRequest = onHideRequest {
-                            #if os(iOS)
-                            let impact = UIImpactFeedbackGenerator(style: .medium)
-                            impact.impactOccurred()
-                            #endif
-                            onHideRequest()
-                        }
-                    }
-                }
-        )
     }
 }
 

@@ -46,6 +46,8 @@ struct StartView: View {
                         navPath.append(NavDestination.maps)
                     }, removeGPXButton: {
                         downwindManager.showGPXImport.toggle()
+                    }, removeMapsButton: {
+                        downwindManager.showMaps.toggle()
                     })
                     .padding(.top)
                     .fileImporter(

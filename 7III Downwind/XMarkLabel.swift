@@ -11,8 +11,6 @@ struct XMarkLabel: View {
     var body: some View {
         if #available(iOS 26, *) {
             Label("Close", systemImage: "xmark")
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.black, .gray)
         } else {
             Label("Close", systemImage: "xmark.circle.fill")
                 .symbolRenderingMode(.palette)
