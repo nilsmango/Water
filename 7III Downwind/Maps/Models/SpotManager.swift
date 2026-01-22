@@ -117,6 +117,104 @@ class SpotManager: ObservableObject {
         
         return spots.filter { kinds.contains($0.kind) }
     }
+    
+    func validateSpot(_ request: SubmitSpotRequest) throws {
+        guard !request.name.trimmingCharacters(in: .whitespaces).isEmpty else {
+            throw ValidationError.nameRequired
+        }
+        
+        guard !request.country.isEmpty else {
+            throw ValidationError.countryRequired
+        }
+        
+        guard !request.kind.isEmpty else {
+            throw ValidationError.kindRequired
+        }
+        
+        guard !request.locations.isEmpty else {
+            throw ValidationError.locationsRequired
+        }
+        
+        for loc in request.locations {
+            guard let lat = loc["lat"], let lng = loc["lng"] else {
+                throw ValidationError.invalidLocation
+            }
+            guard lat >= -90 && lat <= 90 else {
+                throw ValidationError.invalidLatitude
+            }
+            guard lng >= -180 && lng <= 180 else {
+                throw ValidationError.invalidLongitude
+            }
+        }
+        
+        guard request.locations.count == 1 || !request.locations.filter({ $0["lat"] != nil && $0["lng"] != nil }).isEmpty else {
+            throw ValidationError.invalidLocationsFormat
+        }
+        
+        if request.kind == "downwind-run" || request.kind == "paddle-tour" {
+            guard request.distance != nil && request.distance! > 0 else {
+                throw ValidationError.distanceRequired
+            }
+        }
+        
+        if request.country == "US" && request.usState == nil {
+            throw ValidationError.stateRequiredForUS
+        }
+        
+        for info in request.infos {
+            guard !info.text.trimmingCharacters(in: .whitespaces).isEmpty else {
+                throw ValidationError.infoTextRequired
+            }
+            guard !info.userName.trimmingCharacters(in: .whitespaces).isEmpty else {
+                throw ValidationError.userNameRequired
+            }
+        }
+        
+        for video in request.videos {
+            guard let url = URL(string: video.url), url.scheme == "http" || url.scheme == "https" else {
+                throw ValidationError.invalidVideoURL
+            }
+        }
+    }
+    
+    func submitSpot(_ request: SubmitSpotRequest) async throws -> SubmitSpotResponse {
+        try validateSpot(request)
+        return try await APIService.shared.submitSpot(request)
+    }
+}
+
+enum ValidationError: LocalizedError {
+    case nameRequired
+    case countryRequired
+    case kindRequired
+    case locationsRequired
+    case invalidLocation
+    case invalidLatitude
+    case invalidLongitude
+    case invalidLocationsFormat
+    case distanceRequired
+    case stateRequiredForUS
+    case infoTextRequired
+    case userNameRequired
+    case invalidVideoURL
+    
+    var errorDescription: String? {
+        switch self {
+        case .nameRequired: return "Spot name is required"
+        case .countryRequired: return "Country is required"
+        case .kindRequired: return "Spot type is required"
+        case .locationsRequired: return "At least one location is required"
+        case .invalidLocation: return "Invalid location data"
+        case .invalidLatitude: return "Latitude must be between -90 and 90"
+        case .invalidLongitude: return "Longitude must be between -180 and 180"
+        case .invalidLocationsFormat: return "Invalid locations format"
+        case .distanceRequired: return "Distance is required for routes"
+        case .stateRequiredForUS: return "State is required for US locations"
+        case .infoTextRequired: return "Info text is required"
+        case .userNameRequired: return "Username is required"
+        case .invalidVideoURL: return "Invalid video URL"
+        }
+    }
 }
 
 enum SpotError: Error, LocalizedError {

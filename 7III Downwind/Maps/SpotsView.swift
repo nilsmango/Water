@@ -13,6 +13,7 @@ struct SpotsView: View {
     
     @State private var selectedSpot: Spot?
     @State private var showFilters = false
+    @State private var showAddSpot = false
     @State private var selectedKinds: Set<Spot.Kind> = Set(Spot.Kind.allCases)
     @State private var mapPosition: MapCameraPosition = .region(
         MKCoordinateRegion(
@@ -101,6 +102,20 @@ struct SpotsView: View {
                 .padding(.trailing, showFilters ? 50 : 0)
 
                 Button {
+                    showAddSpot = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                        .padding(10)
+                        .background {
+                            Circle()
+                                .fill(Color.accentColor)
+                        }
+                }
+                .padding()
+
+                Button {
                     showFilters.toggle()
                 } label: {
                     Image(systemName: showFilters ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
@@ -127,6 +142,9 @@ struct SpotsView: View {
         }
         .sheet(item: $selectedSpot) { spot in
             SpotDetailView(spot: spot)
+        }
+        .sheet(isPresented: $showAddSpot) {
+            AddSpotView()
         }
         .sheet(isPresented: $showFilters) {
             FiltersView(

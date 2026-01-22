@@ -56,10 +56,12 @@
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to save stickers to your photo library.</string>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>API_KEY</key>
+	<string>sjw203ffjls-233jffs08u7w-svnwoe73</string>
 </dict>
 </plist>

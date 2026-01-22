@@ -22,7 +22,7 @@ struct Spot: Codable, Identifiable, Equatable {
     let id: String
     let name: String
     let country: String
-    let state: String?
+    let usState: String?
     let kind: Kind
     let distance: Double?
     var pending: Bool?
@@ -131,12 +131,44 @@ extension Spot {
 struct SpotInfo: Codable, Identifiable, Equatable {
     let id: String
     let spotId: String?
-    let tag: String
-    let text: String
+    var tag: InfoTag
+    var text: String
     let date: String
-    let userName: String
-    let userUrl: String?
+    var userName: String
+    var userUrl: String?
     let votes: Int?
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.spotId = try container.decodeIfPresent(String.self, forKey: .spotId)
+        
+        if let tagValue = try? container.decode(InfoTag.self, forKey: .tag) {
+            self.tag = tagValue
+        } else if let tagString = try? container.decode(String.self, forKey: .tag),
+                  let tagValue = InfoTag(rawValue: tagString) {
+            self.tag = tagValue
+        } else {
+            self.tag = .description
+        }
+        
+        self.text = try container.decode(String.self, forKey: .text)
+        self.date = try container.decode(String.self, forKey: .date)
+        self.userName = try container.decode(String.self, forKey: .userName)
+        self.userUrl = try container.decodeIfPresent(String.self, forKey: .userUrl)
+        self.votes = try container.decodeIfPresent(Int.self, forKey: .votes)
+    }
+    
+    init(id: String, spotId: String? = nil, tag: InfoTag, text: String, date: String, userName: String, userUrl: String? = nil, votes: Int? = nil) {
+        self.id = id
+        self.spotId = spotId
+        self.tag = tag
+        self.text = text
+        self.date = date
+        self.userName = userName
+        self.userUrl = userUrl
+        self.votes = votes
+    }
 }
 
 struct Video: Codable, Identifiable, Equatable {
@@ -158,11 +190,22 @@ struct Video: Codable, Identifiable, Equatable {
         self.id = UUID().uuidString
     }
     
+    init(id: String, url: String, date: String, kind: VideoKind? = nil) {
+        self.id = id
+        self.url = url
+        self.date = date
+        self.kind = kind ?? VideoKind.from(url: url)
+    }
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(url, forKey: .url)
         try container.encode(date, forKey: .date)
         try container.encode(kind, forKey: .kind)
+    }
+    
+    func encodeForAPI() throws -> String {
+        return url
     }
 }
 
@@ -170,4 +213,41 @@ enum VideoKind: String, Codable {
     case youtube = "YouTube"
     case insta = "Insta"
     case video = "Video"
+    case other = "Other"
+    
+    static func from(url: String) -> VideoKind {
+        let lowercased = url.lowercased()
+        if lowercased.contains("youtube.com") || lowercased.contains("youtu.be") {
+            return .youtube
+        } else if lowercased.contains("instagram.com") || lowercased.contains("instagr.am") {
+            return .insta
+        } else if lowercased.hasSuffix(".mp4") || lowercased.hasSuffix(".mov") || lowercased.hasSuffix(".avi") || lowercased.hasSuffix(".webm") {
+            return .video
+        }
+        return .other
+    }
+}
+
+enum InfoTag: String, Codable, CaseIterable {
+    case description = "description"
+    case windDirection = "wind-direction"
+    case windMeasurements = "wind-measurements"
+    case windPredictions = "wind-predictions"
+    case conditions = "conditions"
+    case logistics = "logistics"
+    case localContact = "local-contact"
+    case localRules = "local-rules"
+    
+    var displayName: String {
+        switch self {
+        case .description: return "Description"
+        case .windDirection: return "Wind Direction"
+        case .windMeasurements: return "Wind Measurements"
+        case .windPredictions: return "Wind Predictions"
+        case .conditions: return "Conditions"
+        case .logistics: return "Logistics"
+        case .localContact: return "Local Legends & Groups"
+        case .localRules: return "Local Rules"
+        }
+    }
 }

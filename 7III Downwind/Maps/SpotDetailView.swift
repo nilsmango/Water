@@ -67,7 +67,7 @@ struct SpotDetailView: View {
                     Text(spot.kind.label)
                         .font(.headline)
 
-                    Text([spot.country, spot.state].compactMap { $0 }.joined(separator: ", "))
+                    Text([spot.country, spot.usState].compactMap { $0 }.joined(separator: ", "))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -338,7 +338,7 @@ extension YouTubePlayerViewController: WKNavigationDelegate {}
         id: "test",
         name: "Test Spot",
         country: "CH",
-        state: nil,
+        usState: nil,
         kind: .windSpot,
         distance: nil,
         pending: false,
