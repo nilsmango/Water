@@ -7,6 +7,12 @@
 
 import CoreLocation
 
+struct GeocodedLocationInfo {
+    let name: String?
+    let countryCode: String?
+    let state: String?
+}
+
 class GeocodingManager {
     static let shared = GeocodingManager()
     private let geocoder = CLGeocoder()
@@ -93,6 +99,48 @@ class GeocodingManager {
                 }
                 
                 completion(locationName)
+            }
+        }
+    }
+    
+    func getDetailsOfLocation(location: LocationData, completion: @escaping (GeocodedLocationInfo) -> Void) {
+        let key = cacheKey(latitude: location.latitude, longitude: location.longitude)
+        
+        // Check cache first - only name is cached, but we need details
+        if let cachedName = locationCache[key] {
+            completion(GeocodedLocationInfo(name: cachedName, countryCode: nil, state: nil))
+            return
+        }
+        
+        queue.async {
+            // Wait for semaphore
+            self.semaphore.wait()
+            
+            // Add 1.2 second delay between requests to stay under rate limit
+            Thread.sleep(forTimeInterval: 1.2)
+            
+            let location = CLLocation(latitude: location.latitude, longitude: location.longitude)
+            self.geocoder.reverseGeocodeLocation(location) { placemarks, error in
+                defer {
+                    self.semaphore.signal()
+                }
+                
+                guard let placemark = placemarks?.first, error == nil else {
+                    completion(GeocodedLocationInfo(name: nil, countryCode: nil, state: nil))
+                    return
+                }
+                
+                let locationName = placemark.locality
+                let countryCode = placemark.isoCountryCode
+                let state = placemark.administrativeArea
+                
+                // Cache the name and persist to disk
+                if let name = locationName {
+                    self.locationCache[key] = name
+                    self.saveCacheToDisk()
+                }
+                
+                completion(GeocodedLocationInfo(name: locationName, countryCode: countryCode, state: state))
             }
         }
     }

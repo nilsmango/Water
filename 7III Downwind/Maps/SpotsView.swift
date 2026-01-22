@@ -15,6 +15,8 @@ struct SpotsView: View {
     @State private var showFilters = false
     @State private var showAddSpot = false
     @State private var selectedKinds: Set<Spot.Kind> = Set(Spot.Kind.allCases)
+    @State private var showPendingOnly = false
+    @State private var hidePending = false
     @State private var mapPosition: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 46.8, longitude: 8.2),
@@ -28,21 +30,29 @@ struct SpotsView: View {
     private var lineWidth = 2.0
     
     var filteredSpots: [Spot] {
-        spotManager.filteredSpots(kinds: selectedKinds)
+        let spotsByKind = spotManager.filteredSpots(kinds: selectedKinds)
+        
+        if showPendingOnly {
+            return spotsByKind.filter { $0.pending == true }
+        } else if hidePending {
+            return spotsByKind.filter { $0.pending != true }
+        } else {
+            return spotsByKind
+        }
     }
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
             MapReader { proxy in
                 Map(position: $mapPosition) {
-
+    
                     ForEach(filteredSpots) { spot in
                         if spot.isDownwindRun {
                             let coordinates = spot.locations.compactMap { $0.coordinate }
                             if coordinates.count >= 2 {
                             MapPolyline(coordinates: coordinates)
                                 .stroke(
-                                    .neonYellow,
+                                    spot.kind != .downwindRun ? .green : .neonYellow,
                                     style: StrokeStyle(
                                         lineWidth: lineWidth,
                                         lineCap: .round,
@@ -51,7 +61,7 @@ struct SpotsView: View {
                                 )
 
                             if let startCoord = coordinates.first {
-                                Annotation("Start", coordinate: startCoord) {
+                                Annotation("", coordinate: startCoord) {
                                     Circle()
                                         .fill(Color.green)
                                         .stroke(.white, lineWidth: 2)
@@ -60,7 +70,7 @@ struct SpotsView: View {
                             }
 
                             if let endCoord = coordinates.last {
-                                Annotation("Finish", coordinate: endCoord) {
+                                Annotation("", coordinate: endCoord) {
                                     Circle()
                                         .fill(Color.red)
                                         .stroke(.white, lineWidth: 2)
@@ -70,10 +80,16 @@ struct SpotsView: View {
                             }
                         } else if let location = spot.primaryLocation {
                             Annotation(spot.name, coordinate: location.coordinate) {
-                                Circle()
-                                    .fill(spot.pending == true ? Color.gray : Color.accentColor)
-                                    .stroke(.white, lineWidth: 2)
-                                    .frame(width: 15.0)
+                                ZStack {
+                                    Circle()
+                                        .fill(spot.pending == true ? Color.gray : Color.accentColor)
+                                        .stroke(.white, lineWidth: 1)
+                                        .frame(width: 18.0)
+                                    
+                                    Image(systemName: spot.kind.iconName)
+                                        .foregroundStyle(.black)
+                                        .font(.system(size: 10))
+                                }
                             }
                         }
                     }
@@ -96,12 +112,14 @@ struct SpotsView: View {
                                 )
                         }
                         
-                        ForEach(Array(tempCoordinates.enumerated()), id: \.offset) { _, coord in
-                            Annotation("", coordinate: coord) {
-                                Circle()
-                                    .fill(Color.gray)
-                                    .stroke(.white, lineWidth: 2)
-                                    .frame(width: 12.0)
+                        ForEach(Array(tempCoordinates.enumerated()), id: \.offset) { index, coord in
+                            if index == 0 || index == tempCoordinates.count - 1 {
+                                Annotation("", coordinate: coord) {
+                                    Circle()
+                                        .fill(Color.gray)
+                                        .stroke(.white, lineWidth: 2)
+                                        .frame(width: 12.0)
+                                }
                             }
                         }
                     }
@@ -113,7 +131,7 @@ struct SpotsView: View {
                     }
                 }
             }
-
+    
             VStack(spacing: 8) {
                 Button {
                     Task {
@@ -131,7 +149,7 @@ struct SpotsView: View {
                 }
                 .padding()
                 .padding(.trailing, showFilters ? 50 : 0)
-
+    
                 Button {
                     isAddingSpot = true
                 } label: {
@@ -145,7 +163,7 @@ struct SpotsView: View {
                         }
                 }
                 .padding()
-
+    
                 Button {
                     showFilters.toggle()
                 } label: {
@@ -159,7 +177,7 @@ struct SpotsView: View {
                         }
                 }
                 .padding()
-
+    
                 if spotManager.isLoading {
                     ProgressView()
                         .padding()
@@ -170,7 +188,7 @@ struct SpotsView: View {
                         .padding()
                 }
             }
-            
+    
             if isAddingSpot {
                 VStack(spacing: 16) {
                     Text("Mark the spot")
@@ -216,6 +234,8 @@ struct SpotsView: View {
         .sheet(isPresented: $showFilters) {
             FiltersView(
                 selectedKinds: $selectedKinds,
+                showPendingOnly: $showPendingOnly,
+                hidePending: $hidePending,
                 allKinds: Spot.Kind.allCases
             )
         }
@@ -252,6 +272,8 @@ struct SpotsView: View {
 
 struct FiltersView: View {
     @Binding var selectedKinds: Set<Spot.Kind>
+    @Binding var showPendingOnly: Bool
+    @Binding var hidePending: Bool
     let allKinds: [Spot.Kind]
     
     @Environment(\.dismiss) private var dismiss
@@ -259,25 +281,75 @@ struct FiltersView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(allKinds, id: \.self) { kind in
+                Section {
                     Button {
-                        if selectedKinds.contains(kind) {
-                            selectedKinds.remove(kind)
+                        if showPendingOnly {
+                            showPendingOnly = false
                         } else {
-                            selectedKinds.insert(kind)
+                            showPendingOnly = true
+                            hidePending = false
                         }
                     } label: {
                         HStack {
-                            Image(systemName: kind.iconName)
+                            Image(systemName: "clock")
                                 .frame(width: 30)
                             
-                            Text(kind.label)
+                            Text("Pending spots only")
                             
                             Spacer()
                             
-                            if selectedKinds.contains(kind) {
+                            if showPendingOnly {
                                 Image(systemName: "checkmark")
                                     .foregroundStyle(Color.accentColor)
+                            }
+                        }
+                    }
+                }
+                
+                Button {
+                    if hidePending {
+                        hidePending = false
+                    } else {
+                        hidePending = true
+                        showPendingOnly = false
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                                .frame(width: 30)
+                            
+                            Text("Hide pending spots")
+                            
+                            Spacer()
+                            
+                            if hidePending {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(Color.accentColor)
+                            }
+                        }
+                    }
+                
+                Section {
+                    ForEach(allKinds, id: \.self) { kind in
+                        Button {
+                            if selectedKinds.contains(kind) {
+                                selectedKinds.remove(kind)
+                            } else {
+                                selectedKinds.insert(kind)
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: kind.iconName)
+                                    .frame(width: 30)
+                                    
+                                Text(kind.label)
+                                    
+                                Spacer()
+                                    
+                                if selectedKinds.contains(kind) {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(Color.accentColor)
+                                }
                             }
                         }
                     }

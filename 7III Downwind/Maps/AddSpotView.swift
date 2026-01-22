@@ -135,8 +135,29 @@ struct AddSpotView: View {
             }
             .onAppear {
                 reverseGeocode()
+                calculateRouteDistance()
             }
         }
+    }
+    
+    private func calculateRouteDistance() {
+        guard isRoute else { return }
+        
+        var totalDistance = 0.0
+        
+        for i in 0..<locations.count - 1 {
+            guard let lat1 = locations[i]["lat"], let lng1 = locations[i]["lng"],
+                  let lat2 = locations[i + 1]["lat"], let lng2 = locations[i + 1]["lng"] else {
+                continue
+            }
+            
+            let loc1 = CLLocation(latitude: lat1, longitude: lng1)
+            let loc2 = CLLocation(latitude: lat2, longitude: lng2)
+            let distance = loc1.distance(from: loc2)
+            totalDistance += distance
+        }
+        
+        distance = String(format: "%.1f", totalDistance / 1000)
     }
     
     private func addInfo() {
@@ -203,18 +224,22 @@ struct AddSpotView: View {
         guard !locations.isEmpty else { return }
         
         let locationNames = NSMutableArray()
+        var firstLocationDetails: GeocodedLocationInfo?
         let group = DispatchGroup()
         
+        // Get details for first location (for country/state AND name)
         if let firstLoc = locations.first, let lat = firstLoc["lat"], let lng = firstLoc["lng"] {
             group.enter()
-            GeocodingManager.shared.getNameOfLocation(location: LocationData(timestamp: Date(), latitude: lat, longitude: lng)) { name in
-                if let name = name {
+            GeocodingManager.shared.getDetailsOfLocation(location: LocationData(timestamp: Date(), latitude: lat, longitude: lng)) { details in
+                if let name = details.name {
                     locationNames.add(name)
                 }
+                firstLocationDetails = details
                 group.leave()
             }
         }
         
+        // Get name for last location only (country/state already from first)
         if locations.count > 1, let lastLoc = locations.last, let lat = lastLoc["lat"], let lng = lastLoc["lng"] {
             group.enter()
             GeocodingManager.shared.getNameOfLocation(location: LocationData(timestamp: Date(), latitude: lat, longitude: lng)) { name in
@@ -226,6 +251,17 @@ struct AddSpotView: View {
         }
         
         group.notify(queue: .main) {
+            // Set country and state from first location
+            if let details = firstLocationDetails, let countryCode = details.countryCode {
+                country = countryCode.uppercased()
+                if country == "US", let state = details.state {
+                    usState = state
+                } else {
+                    usState = nil
+                }
+            }
+            
+            // Set name
             if locationNames.count == 1, let firstName = locationNames.first as? String {
                 name = firstName
             } else if locationNames.count >= 2 {
