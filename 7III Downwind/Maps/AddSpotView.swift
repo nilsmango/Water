@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct AddSpotView: View {
     @Environment(\.dismiss) var dismiss
@@ -26,10 +27,12 @@ struct AddSpotView: View {
     init(initialLocations: [[String: Double]] = []) {
         self.initialLocations = initialLocations
         _locations = State(initialValue: initialLocations)
+        let isRoute = initialLocations.count > 1
+        _kind = State(initialValue: isRoute ? .downwindRun : .pumpFoilDock)
     }
     
     var isRoute: Bool {
-        kind == .downwindRun || kind == .paddleTour
+        locations.count > 1
     }
     
     var body: some View {
@@ -38,7 +41,10 @@ struct AddSpotView: View {
                 Section {
                     TextField("Spot Name", text: $name)
                     
-                    SpotKindPicker(kind: $kind)
+                    SpotKindPicker(
+                        kind: $kind,
+                        availableKinds: isRoute ? [.downwindRun, .paddleTour] : Spot.Kind.allCases.filter { $0 != .downwindRun && $0 != .paddleTour }
+                    )
                     
                     CountryPicker(country: $country, state: $usState)
                     
@@ -50,13 +56,6 @@ struct AddSpotView: View {
                         }
                     }
                     
-                    if locations.isEmpty {
-                        Text("No locations selected")
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text("\(locations.count) location(s) selected")
-                            .foregroundColor(.secondary)
-                    }
                 } header: {
                     Text("Basic Information")
                 }
@@ -134,6 +133,9 @@ struct AddSpotView: View {
             } message: {
                 Text("Spot submitted successfully! It will appear as pending until reviewed.")
             }
+            .onAppear {
+                reverseGeocode()
+            }
         }
     }
     
@@ -193,6 +195,43 @@ struct AddSpotView: View {
                     errorMessage = error.localizedDescription
                     isSubmitting = false
                 }
+            }
+        }
+    }
+    
+    private func reverseGeocode() {
+        guard !locations.isEmpty else { return }
+        
+        let locationNames = NSMutableArray()
+        let group = DispatchGroup()
+        
+        if let firstLoc = locations.first, let lat = firstLoc["lat"], let lng = firstLoc["lng"] {
+            group.enter()
+            GeocodingManager.shared.getNameOfLocation(location: LocationData(timestamp: Date(), latitude: lat, longitude: lng)) { name in
+                if let name = name {
+                    locationNames.add(name)
+                }
+                group.leave()
+            }
+        }
+        
+        if locations.count > 1, let lastLoc = locations.last, let lat = lastLoc["lat"], let lng = lastLoc["lng"] {
+            group.enter()
+            GeocodingManager.shared.getNameOfLocation(location: LocationData(timestamp: Date(), latitude: lat, longitude: lng)) { name in
+                if let name = name {
+                    locationNames.add(name)
+                }
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            if locationNames.count == 1, let firstName = locationNames.first as? String {
+                name = firstName
+            } else if locationNames.count >= 2 {
+                let firstName = locationNames[0] as? String ?? ""
+                let lastName = locationNames[locationNames.count - 1] as? String ?? ""
+                name = "\(firstName) → \(lastName)"
             }
         }
     }

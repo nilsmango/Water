@@ -9,10 +9,11 @@ import SwiftUI
 
 struct SpotKindPicker: View {
     @Binding var kind: Spot.Kind
+    var availableKinds: [Spot.Kind]? = nil
     
     var body: some View {
         Picker("Spot Type", selection: $kind) {
-            ForEach(Spot.Kind.allCases, id: \.self) { kind in
+            ForEach(availableKinds ?? Spot.Kind.allCases, id: \.self) { kind in
                 Label(kind.label, systemImage: kind.iconName)
                     .tag(kind)
             }

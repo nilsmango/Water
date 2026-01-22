@@ -22,6 +22,9 @@ struct SpotsView: View {
         )
     )
     
+    @State private var isAddingSpot = false
+    @State private var newSpotLocations: [[String: Double]] = []
+    
     private var lineWidth = 2.0
     
     var filteredSpots: [Spot] {
@@ -74,6 +77,34 @@ struct SpotsView: View {
                             }
                         }
                     }
+                    
+                    if isAddingSpot {
+                        let tempCoordinates = newSpotLocations.compactMap { loc -> CLLocationCoordinate2D? in
+                            guard let lat = loc["lat"], let lng = loc["lng"] else { return nil }
+                            return CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                        }
+                        
+                        if tempCoordinates.count >= 2 {
+                            MapPolyline(coordinates: tempCoordinates)
+                                .stroke(
+                                    .neonYellow,
+                                    style: StrokeStyle(
+                                        lineWidth: lineWidth,
+                                        lineCap: .round,
+                                        lineJoin: .round
+                                    )
+                                )
+                        }
+                        
+                        ForEach(Array(tempCoordinates.enumerated()), id: \.offset) { _, coord in
+                            Annotation("", coordinate: coord) {
+                                Circle()
+                                    .fill(Color.gray)
+                                    .stroke(.white, lineWidth: 2)
+                                    .frame(width: 12.0)
+                            }
+                        }
+                    }
                 }
                 .mapStyle(.standard(elevation: .realistic))
                 .onTapGesture { position in
@@ -102,7 +133,7 @@ struct SpotsView: View {
                 .padding(.trailing, showFilters ? 50 : 0)
 
                 Button {
-                    showAddSpot = true
+                    isAddingSpot = true
                 } label: {
                     Image(systemName: "plus")
                         .font(.title2)
@@ -139,12 +170,48 @@ struct SpotsView: View {
                         .padding()
                 }
             }
+            
+            if isAddingSpot {
+                VStack(spacing: 16) {
+                    Text("Mark the spot")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    Text("For downwind runs or paddle tours, mark the route with as many spots as you need.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    
+                    HStack(spacing: 20) {
+                        Button("Cancel") {
+                            isAddingSpot = false
+                            newSpotLocations.removeAll()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Done") {
+                            isAddingSpot = false
+                            showAddSpot = true
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(newSpotLocations.isEmpty)
+                    }
+                }
+                .padding()
+                .background {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(.ultraThinMaterial)
+                        .shadow(radius: 10)
+                }
+                .padding()
+            }
         }
         .sheet(item: $selectedSpot) { spot in
             SpotDetailView(spot: spot)
         }
         .sheet(isPresented: $showAddSpot) {
-            AddSpotView()
+            AddSpotView(initialLocations: newSpotLocations)
         }
         .sheet(isPresented: $showFilters) {
             FiltersView(
@@ -163,7 +230,12 @@ struct SpotsView: View {
     }
     
     private func handleTap(at coordinate: CLLocationCoordinate2D) {
-        let threshold = 0.001
+        if isAddingSpot {
+            newSpotLocations.append(["lat": coordinate.latitude, "lng": coordinate.longitude])
+            return
+        }
+        
+        let threshold = 0.005
         
         if let tappedSpot = filteredSpots.first(where: { spot in
             if let location = spot.primaryLocation {
