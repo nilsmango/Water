@@ -44,9 +44,7 @@ struct SpotDetailView: View {
                     Button {
                         dismiss()
                     } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(.secondary)
+                        Label("Close", systemImage: "xmark")
                     }
                 }
             }
@@ -98,7 +96,6 @@ struct SpotDetailView: View {
                 } else {
                     Text(info.userName)
                         .font(.subheadline)
-                        .foregroundStyle(Color.accentColor)
                 }
                 
                 Spacer()

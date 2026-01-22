@@ -67,6 +67,11 @@ struct SpotsView: View {
                                         .fill(Color.green)
                                         .stroke(.white, lineWidth: 2)
                                         .frame(width: 15.0)
+                                        .onTapGesture {
+                                            if !isAddingSpot {
+                                                selectedSpot = spot
+                                            }
+                                        }
                                 }
                                 
                             }
@@ -77,6 +82,11 @@ struct SpotsView: View {
                                         .fill(Color.red)
                                         .stroke(.white, lineWidth: 2)
                                         .frame(width: 15.0)
+                                        .onTapGesture {
+                                            if !isAddingSpot {
+                                                selectedSpot = spot
+                                            }
+                                        }
                                 }
                                 
                             }
@@ -92,6 +102,11 @@ struct SpotsView: View {
                                     Image(systemName: spot.kind.iconName)
                                         .foregroundStyle(.black)
                                         .font(.system(size: 10))
+                                }
+                                .onTapGesture {
+                                    if !isAddingSpot {
+                                        selectedSpot = spot
+                                    }
                                 }
 
                             }
@@ -123,6 +138,11 @@ struct SpotsView: View {
                                         .fill(Color.gray)
                                         .stroke(.white, lineWidth: 2)
                                         .frame(width: 12.0)
+//                                        .onTapGesture {
+//                                            if index == tempCoordinates.count - 1 {
+//                                                tempCoordinates.remove(at: index)
+//                                            }
+//                                        }
                                 }
                             }
                         }
@@ -258,31 +278,49 @@ struct SpotsView: View {
             newSpotLocations.append(["lat": coordinate.latitude, "lng": coordinate.longitude])
             return
         }
-        
-        let threshold = 0.0024
-        
-        if let tappedSpot = filteredSpots.first(where: { spot in
-            if let location = spot.primaryLocation {
-                let latDiff = abs(location.lat - coordinate.latitude)
-                let lngDiff = abs(location.lng - coordinate.longitude)
-                if latDiff < threshold && lngDiff < threshold {
-                    return true
-                }
-            }
+        if selectedSpot == nil {
+            let threshold = 0.01
+            var closestSpot: Spot?
+            var minDistance = Double.infinity
             
-            let coordinates = spot.locations.compactMap { $0.coordinate }
-            if coordinates.count >= 2 {
-                for i in 0..<coordinates.count - 1 {
-                    if distanceToLineSegment(point: coordinate, start: coordinates[i], end: coordinates[i + 1]) < threshold {
-                        return true
+            for spot in filteredSpots {
+                if let location = spot.primaryLocation {
+                    let latDiff = abs(location.lat - coordinate.latitude)
+                    let lngDiff = abs(location.lng - coordinate.longitude)
+                    let distance = sqrt(latDiff * latDiff + lngDiff * lngDiff)
+                    if distance < threshold && distance < minDistance {
+                        minDistance = distance
+                        closestSpot = spot
+                    }
+                }
+                
+                let coordinates = spot.locations.compactMap { $0.coordinate }
+                for coord in coordinates {
+                    let latDiff = abs(coord.latitude - coordinate.latitude)
+                    let lngDiff = abs(coord.longitude - coordinate.longitude)
+                    let distance = sqrt(latDiff * latDiff + lngDiff * lngDiff)
+                    if distance < threshold && distance < minDistance {
+                        minDistance = distance
+                        closestSpot = spot
+                    }
+                }
+                
+                if coordinates.count >= 2 {
+                    for i in 0..<coordinates.count - 1 {
+                        let distance = distanceToLineSegment(point: coordinate, start: coordinates[i], end: coordinates[i + 1])
+                        if distance < threshold && distance < minDistance {
+                            minDistance = distance
+                            closestSpot = spot
+                        }
                     }
                 }
             }
             
-            return false
-        }) {
-            selectedSpot = tappedSpot
+            if let tappedSpot = closestSpot {
+                selectedSpot = tappedSpot
+            }
         }
+        
     }
     
     private func distanceToLineSegment(point: CLLocationCoordinate2D, start: CLLocationCoordinate2D, end: CLLocationCoordinate2D) -> Double {
