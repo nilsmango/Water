@@ -83,25 +83,26 @@ extension Spot {
         var iconName: String {
             switch self {
             case .pumpFoilDock:
-                return "figure.pool.swim"
+                return "table.furniture.fill"
             case .wakeThiefSpot:
-                return "water.waves"
+                return "ferry.fill"
             case .waveWindSpot:
+                // TODO: make
                 return "wind"
             case .windSpot:
-                return "wind.snow"
+                return "wind"
             case .waveSpot:
-                return "wave.3.right"
+                return "water.waves"
             case .rentalStation:
                 return "building.2"
             case .shop:
                 return "storefront"
             case .school:
-                return "book.closed"
+                return "graduationcap.fill"
             case .wakeBoat:
-                return "sailboat"
+                return "ferry"
             case .downwindRun:
-                return "arrow.right"
+                return "point.topleft.down.to.point.bottomright.curvepath.fill"
             case .paddleTour:
                 return "figure.rowing"
             }

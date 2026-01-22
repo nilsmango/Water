@@ -27,6 +27,7 @@ struct SpotDetailView: View {
                     
                     mapSection
                     
+                    
                     if let distance = spot.distance {
                         distanceSection(distance: distance)
                     }
@@ -80,20 +81,12 @@ struct SpotDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: spot.kind.iconName)
-                    .font(.title)
                     .foregroundStyle(spot.pending == true ? Color.gray : Color.accentColor)
 
-                VStack(alignment: .leading) {
                     Text(spot.kind.label)
-                        .font(.headline)
 
-                    Text([spot.country, spot.usState].compactMap { $0 }.joined(separator: ", "))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
             }
 
-            Divider()
         }
     }
     
@@ -164,8 +157,8 @@ struct SpotDetailView: View {
                 let coordinates = spot.locations.compactMap { $0.coordinate }
                 VStack(alignment: .leading, spacing: 8) {
                     if let startCoord = coordinates.first {
-                        HStack(spacing: 12) {
-                            Text("Start:")
+                        HStack(spacing: 0) {
+                            Text("Start: ")
                             Button {
                                 copyCoordinate("\(startCoord.latitude),\(startCoord.longitude)")
                             } label: {
@@ -173,21 +166,22 @@ struct SpotDetailView: View {
                                     .foregroundColor(.accentColor)
                             }
                             .buttonStyle(.plain)
-                            Text("|")
-                            Button {
-                                if let url = URL(string: "http://maps.apple.com/?ll=\(startCoord.latitude),\(startCoord.longitude)&q=\(startCoord.latitude),\(startCoord.longitude)") {
-                                    UIApplication.shared.open(url)
-                                }
-                            } label: {
-                                Label("Open in Maps", systemImage: "map")
-                                    .foregroundColor(.accentColor)
+                            
+                        }
+                        
+                        Button {
+                            if let url = URL(string: "http://maps.apple.com/?ll=\(startCoord.latitude),\(startCoord.longitude)&q=\(startCoord.latitude),\(startCoord.longitude)") {
+                                UIApplication.shared.open(url)
                             }
+                        } label: {
+                            Label("Open in Maps", systemImage: "map")
+                                .foregroundColor(.accentColor)
                         }
                     }
                     
                     if let endCoord = coordinates.last {
-                        HStack(spacing: 12) {
-                            Text("End:")
+                        HStack(spacing: 0) {
+                            Text("End: ")
                             Button {
                                 copyCoordinate("\(endCoord.latitude),\(endCoord.longitude)")
                             } label: {
@@ -195,21 +189,22 @@ struct SpotDetailView: View {
                                     .foregroundStyle(Color.accentColor)
                             }
                             .buttonStyle(.plain)
-                            Text("|")
-                            Button {
-                                if let url = URL(string: "http://maps.apple.com/?ll=\(endCoord.latitude),\(endCoord.longitude)&q=\(endCoord.latitude),\(endCoord.longitude)") {
-                                    UIApplication.shared.open(url)
-                                }
-                            } label: {
-                                Label("Open in Maps", systemImage: "map")
-                                    .foregroundColor(.accentColor)
+                            
+                            
+                        }
+                        Button {
+                            if let url = URL(string: "http://maps.apple.com/?ll=\(endCoord.latitude),\(endCoord.longitude)&q=\(endCoord.latitude),\(endCoord.longitude)") {
+                                UIApplication.shared.open(url)
                             }
+                        } label: {
+                            Label("Open in Maps", systemImage: "map")
+                                .foregroundColor(.accentColor)
                         }
                     }
                 }
             } else if let location = spot.primaryLocation {
-                HStack(spacing: 12) {
-                    Text("Spot:")
+                HStack(spacing: 0) {
+                    Text("Coordinates: ")
                     Button {
                         copyCoordinate("\(location.lat),\(location.lng)")
                     } label: {
@@ -217,14 +212,14 @@ struct SpotDetailView: View {
                             .foregroundStyle(Color.accentColor)
                     }
                     .buttonStyle(.plain)
-                    Text("|")
-                    Button {
-                        if let url = URL(string: "http://maps.apple.com/?ll=\(location.lat),\(location.lng)&q=\(location.lat),\(location.lng)") {
-                            UIApplication.shared.open(url)
-                        }
-                    } label: {
-                        Label("Open in Maps", systemImage: "map")
+                    
+                }
+                Button {
+                    if let url = URL(string: "http://maps.apple.com/?ll=\(location.lat),\(location.lng)&q=\(location.lat),\(location.lng)") {
+                        UIApplication.shared.open(url)
                     }
+                } label: {
+                    Label("Open in Maps", systemImage: "map")
                 }
             }
         }
@@ -337,7 +332,7 @@ struct SpotDetailView: View {
                 .font(.headline)
             
             HStack {
-                Image(systemName: "ruler")
+                Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill")
                 Text("\(distance, specifier: "%.1f") km")
                     .font(.body)
             }
