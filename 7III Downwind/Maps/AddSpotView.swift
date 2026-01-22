@@ -36,7 +36,7 @@ struct AddSpotView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section {
                     TextField("Spot Name", text: $name)

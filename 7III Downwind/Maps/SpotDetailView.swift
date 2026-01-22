@@ -8,6 +8,7 @@
 import SwiftUI
 import SafariServices
 import WebKit
+import MapKit
 
 #if os(iOS)
 
@@ -23,6 +24,8 @@ struct SpotDetailView: View {
                     
                     headerSection
                     
+                    mapSection
+                    
                     if !spot.infos.isEmpty {
                         infosSection
                     }
@@ -36,15 +39,15 @@ struct SpotDetailView: View {
                     }
                 }
                 .padding()
-            }
-            .navigationTitle(spot.name)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Label("Close", systemImage: "xmark")
+                .navigationTitle(spot.name)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Label("Close", systemImage: "xmark")
+                        }
                     }
                 }
             }
@@ -72,6 +75,97 @@ struct SpotDetailView: View {
             }
 
             Divider()
+        }
+    }
+    
+    private var mapSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            
+            
+            Map(position: .constant(.automatic)) {
+                if spot.isDownwindRun {
+                    let coordinates = spot.locations.compactMap { $0.coordinate }
+                    if coordinates.count >= 2 {
+                        MapPolyline(coordinates: coordinates)
+                            .stroke(
+                                spot.kind != .downwindRun ? .green : .neonYellow,
+                                style: StrokeStyle(
+                                    lineWidth: 2.0,
+                                    lineCap: .round,
+                                    lineJoin: .round
+                                )
+                            )
+                        
+                        if let startCoord = coordinates.first {
+                            Annotation("", coordinate: startCoord) {
+                                Circle()
+                                    .fill(Color.green)
+                                    .stroke(.white, lineWidth: 2)
+                                    .frame(width: 15.0)
+                            }
+                        }
+                        
+                        if let endCoord = coordinates.last {
+                            Annotation("", coordinate: endCoord) {
+                                Circle()
+                                    .fill(Color.red)
+                                    .stroke(.white, lineWidth: 2)
+                                    .frame(width: 15.0)
+                            }
+                        }
+                    }
+                } else if let location = spot.primaryLocation {
+                    Annotation("", coordinate: location.coordinate) {
+                        ZStack {
+                            Circle()
+                                .fill(spot.pending == true ? Color.gray : Color.accentColor)
+                                .stroke(.white, lineWidth: 1)
+                                .frame(width: 18.0)
+                            
+                            Image(systemName: spot.kind.iconName)
+                                .foregroundStyle(.black)
+                                .font(.system(size: 10))
+                        }
+                    }
+                }
+            }
+            .frame(height: 200)
+            .cornerRadius(12)
+            
+            if spot.isDownwindRun {
+                let coordinates = spot.locations.compactMap { $0.coordinate }
+                HStack(spacing: 12) {
+                    if let startCoord = coordinates.first {
+                        Button {
+                            if let url = URL(string: "http://maps.apple.com/?ll=\(startCoord.latitude),\(startCoord.longitude)&q=\(startCoord.latitude),\(startCoord.longitude)") {
+                                UIApplication.shared.open(url)
+                            }
+                        } label: {
+                            Label("Start", systemImage: "map")
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+                    
+                    if let endCoord = coordinates.last {
+                        Button {
+                            if let url = URL(string: "http://maps.apple.com/?ll=\(endCoord.latitude),\(endCoord.longitude)&q=\(endCoord.latitude),\(endCoord.longitude)") {
+                                UIApplication.shared.open(url)
+                            }
+                        } label: {
+                            Label("End", systemImage: "map")
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+                }
+            } else if let location = spot.primaryLocation {
+                Button {
+                    if let url = URL(string: "http://maps.apple.com/?ll=\(location.lat),\(location.lng)&q=\(location.lat),\(location.lng)") {
+                        UIApplication.shared.open(url)
+                    }
+                } label: {
+                    Label("Open in Maps", systemImage: "map")
+                }
+            }
         }
     }
     
@@ -331,18 +425,20 @@ class YouTubePlayerViewController: UIViewController {
 extension YouTubePlayerViewController: WKNavigationDelegate {}
 
 #Preview {
-    SpotDetailView(spot: Spot(
-        id: "test",
-        name: "Test Spot",
-        country: "CH",
-        usState: nil,
-        kind: .windSpot,
-        distance: nil,
-        pending: false,
-        locations: [Spot.Location(lat: 47.0, lng: 8.0)],
-        infos: [],
-        videos: nil
-    ))
+    NavigationStack {
+        SpotDetailView(spot: Spot(
+            id: "test",
+            name: "Test Spot",
+            country: "CH",
+            usState: nil,
+            kind: .windSpot,
+            distance: nil,
+            pending: false,
+            locations: [Spot.Location(lat: 47.0, lng: 8.0)],
+            infos: [],
+            videos: nil
+        ))
+    }
 }
 
 #endif
