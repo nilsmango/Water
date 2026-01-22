@@ -59,6 +59,7 @@ struct SpotsView: View {
                                         lineJoin: .round
                                     )
                                 )
+                                
 
                             if let startCoord = coordinates.first {
                                 Annotation("", coordinate: startCoord) {
@@ -67,6 +68,7 @@ struct SpotsView: View {
                                         .stroke(.white, lineWidth: 2)
                                         .frame(width: 15.0)
                                 }
+                                
                             }
 
                             if let endCoord = coordinates.last {
@@ -76,6 +78,7 @@ struct SpotsView: View {
                                         .stroke(.white, lineWidth: 2)
                                         .frame(width: 15.0)
                                 }
+                                
                             }
                             }
                         } else if let location = spot.primaryLocation {
@@ -90,6 +93,7 @@ struct SpotsView: View {
                                         .foregroundStyle(.black)
                                         .font(.system(size: 10))
                                 }
+
                             }
                         }
                     }
@@ -255,18 +259,64 @@ struct SpotsView: View {
             return
         }
         
-        let threshold = 0.005
+        let threshold = 0.0024
         
         if let tappedSpot = filteredSpots.first(where: { spot in
             if let location = spot.primaryLocation {
                 let latDiff = abs(location.lat - coordinate.latitude)
                 let lngDiff = abs(location.lng - coordinate.longitude)
-                return latDiff < threshold && lngDiff < threshold
+                if latDiff < threshold && lngDiff < threshold {
+                    return true
+                }
             }
+            
+            let coordinates = spot.locations.compactMap { $0.coordinate }
+            if coordinates.count >= 2 {
+                for i in 0..<coordinates.count - 1 {
+                    if distanceToLineSegment(point: coordinate, start: coordinates[i], end: coordinates[i + 1]) < threshold {
+                        return true
+                    }
+                }
+            }
+            
             return false
         }) {
             selectedSpot = tappedSpot
         }
+    }
+    
+    private func distanceToLineSegment(point: CLLocationCoordinate2D, start: CLLocationCoordinate2D, end: CLLocationCoordinate2D) -> Double {
+        let A = point.latitude - start.latitude
+        let B = point.longitude - start.longitude
+        let C = end.latitude - start.latitude
+        let D = end.longitude - start.longitude
+        
+        let dot = A * C + B * D
+        let lenSq = C * C + D * D
+        
+        var param = -1.0
+        if lenSq != 0 {
+            param = dot / lenSq
+        }
+        
+        var closestLatitude: Double
+        var closestLongitude: Double
+        
+        if param < 0 {
+            closestLatitude = start.latitude
+            closestLongitude = start.longitude
+        } else if param > 1 {
+            closestLatitude = end.latitude
+            closestLongitude = end.longitude
+        } else {
+            closestLatitude = start.latitude + param * C
+            closestLongitude = start.longitude + param * D
+        }
+        
+        let latDiff = point.latitude - closestLatitude
+        let lonDiff = point.longitude - closestLongitude
+        
+        return sqrt(latDiff * latDiff + lonDiff * lonDiff)
     }
 }
 
