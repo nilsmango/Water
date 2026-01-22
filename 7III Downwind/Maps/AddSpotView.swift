@@ -40,14 +40,14 @@ struct AddSpotView: View {
             Form {
                 Section {
                     TextField("Spot Name", text: $name)
-                    
+
                     SpotKindPicker(
                         kind: $kind,
                         availableKinds: isRoute ? [.downwindRun, .paddleTour] : Spot.Kind.allCases.filter { $0 != .downwindRun && $0 != .paddleTour }
                     )
-                    
+
                     CountryPicker(country: $country, state: $usState)
-                    
+
                     if isRoute {
                         HStack {
                             Text("Distance (km)")
@@ -55,11 +55,11 @@ struct AddSpotView: View {
                                 .keyboardType(.decimalPad)
                         }
                     }
-                    
+
                 } header: {
                     Text("Basic Information")
                 }
-                
+
                 Section {
                     ForEach(infos.indices, id: \.self) { index in
                         InfoSectionView(info: $infos[index]) {
@@ -68,7 +68,7 @@ struct AddSpotView: View {
                             }
                         }
                     }
-                    
+
                     Button(action: addInfo) {
                         Label("Add Info", systemImage: "plus.circle.fill")
                     }
@@ -76,7 +76,7 @@ struct AddSpotView: View {
                 } header: {
                     Text("Information")
                 }
-                
+
                 Section {
                     ForEach(videos.indices, id: \.self) { index in
                         VideoSectionView(video: $videos[index]) {
@@ -85,7 +85,7 @@ struct AddSpotView: View {
                             }
                         }
                     }
-                    
+
                     Button(action: addVideo) {
                         Label("Add Video", systemImage: "plus.circle.fill")
                     }
@@ -93,31 +93,28 @@ struct AddSpotView: View {
                 } header: {
                     Text("Videos")
                 }
-                
-                .toolbar(content: {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            dismiss()
-                        }
-                    }
-                    
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(action: submit) {
-                            if isSubmitting {
-                                ProgressView()
-                                    .progressViewStyle(.circular)
-                            } else {
-                                Text("Submit")
-                            }
-                        }
-                        .disabled(isSubmitting || name.isEmpty || country.isEmpty || locations.isEmpty)
-                    }
-                })
             }
             .navigationTitle("Add Spot")
             .navigationBarTitleDisplayMode(.inline)
-            
-            
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: submit) {
+                        if isSubmitting {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                        } else {
+                            Text("Submit")
+                        }
+                    }
+                    .disabled(isSubmitting || name.isEmpty || country.isEmpty || locations.isEmpty)
+                }
+            })
             .alert("Error", isPresented: .constant(errorMessage != nil)) {
                 Button("OK") {
                     errorMessage = nil

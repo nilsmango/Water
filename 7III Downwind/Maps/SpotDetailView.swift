@@ -16,6 +16,7 @@ struct SpotDetailView: View {
     let spot: Spot
     @Environment(\.dismiss) private var dismiss
     @State private var selectedVideo: Video?
+    @State private var copiedMessage: String?
     
     var body: some View {
         NavigationStack {
@@ -26,6 +27,10 @@ struct SpotDetailView: View {
                     
                     mapSection
                     
+                    if let distance = spot.distance {
+                        distanceSection(distance: distance)
+                    }
+                    
                     if !spot.infos.isEmpty {
                         infosSection
                     }
@@ -34,9 +39,7 @@ struct SpotDetailView: View {
                         videosSection
                     }
                     
-                    if let distance = spot.distance {
-                        distanceSection(distance: distance)
-                    }
+                    
                 }
                 .padding()
                 .navigationTitle(spot.name)
@@ -54,6 +57,22 @@ struct SpotDetailView: View {
         }
         .sheet(item: $selectedVideo) { video in
             VideoPlayerView(video: video)
+        }
+        .overlay {
+            if let message = copiedMessage {
+                VStack {
+                    Spacer()
+                    
+                    Text(message)
+                        .font(.caption)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(Color.gray.opacity(0.8))
+                        .foregroundColor(.white)
+                        .cornerRadius(16)
+                        .padding(.bottom, 20)
+                }
+            }
         }
     }
     
@@ -80,9 +99,18 @@ struct SpotDetailView: View {
     
     private var mapSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            
-            
-            Map(position: .constant(.automatic)) {
+            let mapPosition: MapCameraPosition = {
+                        if spot.isDownwindRun {
+                            return .automatic
+                        } else if let location = spot.primaryLocation {
+                            return .camera(MapCamera(
+                                centerCoordinate: location.coordinate,
+                                distance: 500
+                            ))
+                        }
+                        return .automatic
+                    }()
+            Map(position: .constant(mapPosition)) {
                 if spot.isDownwindRun {
                     let coordinates = spot.locations.compactMap { $0.coordinate }
                     if coordinates.count >= 2 {
@@ -134,36 +162,69 @@ struct SpotDetailView: View {
             
             if spot.isDownwindRun {
                 let coordinates = spot.locations.compactMap { $0.coordinate }
-                HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
                     if let startCoord = coordinates.first {
-                        Button {
-                            if let url = URL(string: "http://maps.apple.com/?ll=\(startCoord.latitude),\(startCoord.longitude)&q=\(startCoord.latitude),\(startCoord.longitude)") {
-                                UIApplication.shared.open(url)
+                        HStack(spacing: 12) {
+                            Text("Start:")
+                            Button {
+                                copyCoordinate("\(startCoord.latitude),\(startCoord.longitude)")
+                            } label: {
+                                Text("\(startCoord.latitude), \(startCoord.longitude)")
+                                    .foregroundColor(.accentColor)
                             }
-                        } label: {
-                            Label("Start", systemImage: "map")
-                                .foregroundColor(.accentColor)
+                            .buttonStyle(.plain)
+                            Text("|")
+                            Button {
+                                if let url = URL(string: "http://maps.apple.com/?ll=\(startCoord.latitude),\(startCoord.longitude)&q=\(startCoord.latitude),\(startCoord.longitude)") {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                Label("Open in Maps", systemImage: "map")
+                                    .foregroundColor(.accentColor)
+                            }
                         }
                     }
                     
                     if let endCoord = coordinates.last {
-                        Button {
-                            if let url = URL(string: "http://maps.apple.com/?ll=\(endCoord.latitude),\(endCoord.longitude)&q=\(endCoord.latitude),\(endCoord.longitude)") {
-                                UIApplication.shared.open(url)
+                        HStack(spacing: 12) {
+                            Text("End:")
+                            Button {
+                                copyCoordinate("\(endCoord.latitude),\(endCoord.longitude)")
+                            } label: {
+                                Text("\(endCoord.latitude), \(endCoord.longitude)")
+                                    .foregroundStyle(Color.accentColor)
                             }
-                        } label: {
-                            Label("End", systemImage: "map")
-                                .foregroundColor(.accentColor)
+                            .buttonStyle(.plain)
+                            Text("|")
+                            Button {
+                                if let url = URL(string: "http://maps.apple.com/?ll=\(endCoord.latitude),\(endCoord.longitude)&q=\(endCoord.latitude),\(endCoord.longitude)") {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                Label("Open in Maps", systemImage: "map")
+                                    .foregroundColor(.accentColor)
+                            }
                         }
                     }
                 }
             } else if let location = spot.primaryLocation {
-                Button {
-                    if let url = URL(string: "http://maps.apple.com/?ll=\(location.lat),\(location.lng)&q=\(location.lat),\(location.lng)") {
-                        UIApplication.shared.open(url)
+                HStack(spacing: 12) {
+                    Text("Spot:")
+                    Button {
+                        copyCoordinate("\(location.lat),\(location.lng)")
+                    } label: {
+                        Text("\(location.lat), \(location.lng)")
+                            .foregroundStyle(Color.accentColor)
                     }
-                } label: {
-                    Label("Open in Maps", systemImage: "map")
+                    .buttonStyle(.plain)
+                    Text("|")
+                    Button {
+                        if let url = URL(string: "http://maps.apple.com/?ll=\(location.lat),\(location.lng)&q=\(location.lat),\(location.lng)") {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        Label("Open in Maps", systemImage: "map")
+                    }
                 }
             }
         }
@@ -312,6 +373,15 @@ struct SpotDetailView: View {
         }
         
         return attributedString
+    }
+    
+    private func copyCoordinate(_ coordinate: String) {
+        UIPasteboard.general.string = coordinate
+        copiedMessage = "Copied: \(coordinate)"
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            copiedMessage = nil
+        }
     }
 }
 

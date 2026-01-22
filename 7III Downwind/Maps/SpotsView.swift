@@ -156,97 +156,99 @@ struct SpotsView: View {
                 }
             }
     
-            VStack(spacing: 8) {
-                Button {
-                    Task {
-                        await spotManager.refreshSpots()
+            VStack(spacing: 16) {
+                Spacer()
+                if !isAddingSpot {
+                    
+                    Button {
+                        isAddingSpot = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .padding(10)
+                            .background {
+                                Circle()
+                                    .fill(Color.accentColor)
+                            }
                     }
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.title2)
-                        .foregroundStyle(.white)
-                        .padding(10)
-                        .background {
-                            Circle()
-                                .fill(Color.accentColor)
+                    .padding(.horizontal)
+                    
+                    Button {
+                        showFilters.toggle()
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .padding(10)
+                            .background {
+                                Circle()
+                                    .fill(Color.accentColor)
+                            }
+                    }
+                    .padding(.horizontal)
+                    
+                    Button {
+                        Task {
+                            await spotManager.refreshSpots()
                         }
-                }
-                .padding()
-                .padding(.trailing, showFilters ? 50 : 0)
-    
-                Button {
-                    isAddingSpot = true
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.title2)
-                        .foregroundStyle(.white)
-                        .padding(10)
-                        .background {
-                            Circle()
-                                .fill(Color.accentColor)
-                        }
-                }
-                .padding()
-    
-                Button {
-                    showFilters.toggle()
-                } label: {
-                    Image(systemName: showFilters ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-                        .font(.title2)
-                        .foregroundStyle(.white)
-                        .padding(10)
-                        .background {
-                            Circle()
-                                .fill(Color.accentColor)
-                        }
-                }
-                .padding()
-    
-                if spotManager.isLoading {
-                    ProgressView()
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 16.0)
-                                .fill(.white.opacity(0.6))
-                        }
-                        .padding()
+                    } label: {
+                        Image(systemName: spotManager.isLoading ? "hourglass" : "arrow.clockwise")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .padding(10)
+                            .background {
+                                Circle()
+                                    .fill(Color.accentColor)
+                            }
+                    }
+                    .disabled(spotManager.isLoading)
+                    .padding(.horizontal)
+        
+                    
+        
+                    
                 }
             }
     
             if isAddingSpot {
-                VStack(spacing: 16) {
-                    Text("Mark the spot")
-                        .font(.headline)
-                        .padding(.horizontal)
+                VStack(spacing: 0) {
+                    Spacer()
                     
-                    Text("For downwind runs or paddle tours, mark the route with as many spots as you need.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                    
-                    HStack(spacing: 20) {
-                        Button("Cancel") {
-                            isAddingSpot = false
-                            newSpotLocations.removeAll()
-                        }
-                        .buttonStyle(.borderedProminent)
+                    VStack(spacing: 12) {
+                        Text("Mark the Spot")
+                            .font(.headline)
+                            .padding(.horizontal)
                         
-                        Button("Done") {
-                            isAddingSpot = false
-                            showAddSpot = true
+                        Label("For downwind runs or paddle tours, mark the route (more points is better).", systemImage: "info.circle")
+                            .font(.caption)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        HStack(spacing: 20) {
+                            Button("Cancel") {
+                                isAddingSpot = false
+                                newSpotLocations.removeAll()
+                            }
+                            .buttonStyle(.borderedProminent)
+                            
+                            Button("Done") {
+                                isAddingSpot = false
+                                showAddSpot = true
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .disabled(newSpotLocations.isEmpty)
                         }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(newSpotLocations.isEmpty)
                     }
+                    .padding()
+                    .background {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(.ultraThinMaterial)
+                            .shadow(radius: 10)
+                    }
+                    .padding()
                 }
-                .padding()
-                .background {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(.ultraThinMaterial)
-                        .shadow(radius: 10)
-                }
-                .padding()
+                
             }
         }
         .sheet(item: $selectedSpot) { spot in
