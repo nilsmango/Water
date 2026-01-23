@@ -18,7 +18,7 @@ class SpotManager: ObservableObject {
     private init() {}
     
     @AppStorage("spotsData") private var spotsData: Data = Data()
-    @AppStorage("refreshInterval") private var refreshInterval: TimeInterval = 6 * 60 * 60
+    @AppStorage("refreshInterval") private var refreshInterval: TimeInterval = 60 * 60
     
     private var spotsLastUpdated: Date? {
         get {

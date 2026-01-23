@@ -260,7 +260,24 @@ struct AddSpotView: View {
             
             // Set name
             if locationNames.count == 1, let firstName = locationNames.first as? String {
-                name = firstName
+                if let details = firstLocationDetails {
+                    if let placeName = details.name {
+                        name = placeName
+                    } else if let street = details.thoroughfare {
+                        let streetName = street.components(separatedBy: CharacterSet.decimalDigits).joined().trimmingCharacters(in: .whitespaces)
+                        if let locality = details.locality {
+                            name = "\(streetName), \(locality)"
+                        } else {
+                            name = streetName
+                        }
+                    } else if let locality = details.locality {
+                        name = locality
+                    } else {
+                        name = firstName
+                    }
+                } else {
+                    name = firstName
+                }
             } else if locationNames.count >= 2 {
                 let firstName = locationNames[0] as? String ?? ""
                 let lastName = locationNames[locationNames.count - 1] as? String ?? ""

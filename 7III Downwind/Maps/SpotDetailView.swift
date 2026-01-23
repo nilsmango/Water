@@ -175,8 +175,8 @@ struct SpotDetailView: View {
                             }
                         } label: {
                             Label("Open in Maps", systemImage: "map")
-                                .foregroundColor(.accentColor)
                         }
+                        .buttonStyle(.bordered)
                     }
                     
                     if let endCoord = coordinates.last {
@@ -198,8 +198,8 @@ struct SpotDetailView: View {
                             }
                         } label: {
                             Label("Open in Maps", systemImage: "map")
-                                .foregroundColor(.accentColor)
                         }
+                        .buttonStyle(.bordered)
                     }
                 }
             } else if let location = spot.primaryLocation {
@@ -221,6 +221,7 @@ struct SpotDetailView: View {
                 } label: {
                     Label("Open in Maps", systemImage: "map")
                 }
+                .buttonStyle(.bordered)
             }
         }
     }

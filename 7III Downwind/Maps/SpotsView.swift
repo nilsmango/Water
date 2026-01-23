@@ -187,27 +187,6 @@ struct SpotsView: View {
                             }
                     }
                     .padding(.horizontal)
-                    
-                    Button {
-                        Task {
-                            await spotManager.refreshSpots()
-                        }
-                    } label: {
-                        Image(systemName: spotManager.isLoading ? "hourglass" : "arrow.clockwise")
-                            .font(.title2)
-                            .foregroundStyle(.white)
-                            .padding(10)
-                            .background {
-                                Circle()
-                                    .fill(Color.accentColor)
-                            }
-                    }
-                    .disabled(spotManager.isLoading)
-                    .padding(.horizontal)
-        
-                    
-        
-                    
                 }
             }
     

@@ -9,6 +9,8 @@ import CoreLocation
 
 struct GeocodedLocationInfo {
     let name: String?
+    let thoroughfare: String?
+    let locality: String?
     let countryCode: String?
     let state: String?
 }
@@ -108,7 +110,7 @@ class GeocodingManager {
         
         // Check cache first - only name is cached, but we need details
         if let cachedName = locationCache[key] {
-            completion(GeocodedLocationInfo(name: cachedName, countryCode: nil, state: nil))
+            completion(GeocodedLocationInfo(name: cachedName, thoroughfare: nil, locality: cachedName, countryCode: nil, state: nil))
             return
         }
         
@@ -126,21 +128,23 @@ class GeocodingManager {
                 }
                 
                 guard let placemark = placemarks?.first, error == nil else {
-                    completion(GeocodedLocationInfo(name: nil, countryCode: nil, state: nil))
+                    completion(GeocodedLocationInfo(name: nil, thoroughfare: nil, locality: nil, countryCode: nil, state: nil))
                     return
                 }
                 
-                let locationName = placemark.locality
+                let locationName = placemark.name
+                let thoroughfare = placemark.thoroughfare
+                let locality = placemark.locality
                 let countryCode = placemark.isoCountryCode
                 let state = placemark.administrativeArea
                 
-                // Cache the name and persist to disk
-                if let name = locationName {
-                    self.locationCache[key] = name
+                // Cache the locality and persist to disk
+                if let loc = locality {
+                    self.locationCache[key] = loc
                     self.saveCacheToDisk()
                 }
                 
-                completion(GeocodedLocationInfo(name: locationName, countryCode: countryCode, state: state))
+                completion(GeocodedLocationInfo(name: locationName, thoroughfare: thoroughfare, locality: locality, countryCode: countryCode, state: state))
             }
         }
     }
