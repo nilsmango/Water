@@ -214,6 +214,9 @@ struct SpotsView: View {
                             Button("Done") {
                                 isAddingSpot = false
                                 showAddSpot = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    newSpotLocations = []
+                                }
                             }
                             .buttonStyle(.borderedProminent)
                             .disabled(newSpotLocations.isEmpty)

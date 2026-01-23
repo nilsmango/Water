@@ -103,7 +103,7 @@ extension Spot {
             case .downwindRun:
                 return "point.bottomleft.forward.to.point.topright.scurvepath.fill"
             case .paddleTour:
-                return "figure.rowing"
+                return "figure.outdoor.rowing"
             }
         }
         

@@ -220,68 +220,77 @@ struct AddSpotView: View {
     private func reverseGeocode() {
         guard !locations.isEmpty else { return }
         
-        let locationNames = NSMutableArray()
         var firstLocationDetails: GeocodedLocationInfo?
         let group = DispatchGroup()
         
-        // Get details for first location (for country/state AND name)
+        // Get details for first location (for country/state and name)
         if let firstLoc = locations.first, let lat = firstLoc["lat"], let lng = firstLoc["lng"] {
             group.enter()
+            print("🔍 Fetching details for first location: \(lat), \(lng)")
             GeocodingManager.shared.getDetailsOfLocation(location: LocationData(timestamp: Date(), latitude: lat, longitude: lng)) { details in
-                if let name = details.name {
-                    locationNames.add(name)
-                }
+                print("✅ Received first location details: \(details.countryCode ?? "nil")")
                 firstLocationDetails = details
                 group.leave()
             }
         }
         
-        // Get name for last location only (country/state already from first)
+        // Get name for last location if route
+        var lastName: String?
         if locations.count > 1, let lastLoc = locations.last, let lat = lastLoc["lat"], let lng = lastLoc["lng"] {
             group.enter()
+            print("🔍 Fetching name for last location: \(lat), \(lng)")
             GeocodingManager.shared.getNameOfLocation(location: LocationData(timestamp: Date(), latitude: lat, longitude: lng)) { name in
-                if let name = name {
-                    locationNames.add(name)
-                }
+                print("✅ Received last location name: \(name ?? "nil")")
+                lastName = name
                 group.leave()
             }
         }
         
         group.notify(queue: .main) {
-            // Set country and state from first location
+            print("🎯 Group notify fired - firstLocationDetails: \(firstLocationDetails != nil)")
+            
+            // ALWAYS set country from first location
             if let details = firstLocationDetails, let countryCode = details.countryCode {
-                country = countryCode.uppercased()
-                if country == "US", let state = details.state {
-                    usState = state
+                self.country = countryCode.uppercased()
+                print("✅ Country set to: \(self.country)")
+                if self.country == "US", let state = details.state {
+                    self.usState = state
                 } else {
-                    usState = nil
+                    self.usState = nil
                 }
+            } else {
+                print("❌ Failed to set country - details: \(firstLocationDetails != nil), countryCode: \(firstLocationDetails?.countryCode ?? "nil")")
             }
             
             // Set name
-            if locationNames.count == 1, let firstName = locationNames.first as? String {
-                if let details = firstLocationDetails {
-                    if let placeName = details.name {
-                        name = placeName
-                    } else if let street = details.thoroughfare {
-                        let streetName = street.components(separatedBy: CharacterSet.decimalDigits).joined().trimmingCharacters(in: .whitespaces)
-                        if let locality = details.locality {
-                            name = "\(streetName), \(locality)"
-                        } else {
-                            name = streetName
-                        }
-                    } else if let locality = details.locality {
-                        name = locality
-                    } else {
-                        name = firstName
-                    }
+            if let details = firstLocationDetails {
+                if self.locations.count > 1 {
+                    // Multiple locations (route): firstName → lastName
+                    let firstName = details.locality ?? "Start"
+                    let safeLastName = lastName ?? "End"
+                    self.name = "\(firstName) → \(safeLastName)"
                 } else {
-                    name = firstName
+                    // Single location: (local thing OR street without number OR nothing), (locality)
+                    var components: [String] = []
+                    
+                    // First part: local name OR street without number
+                    if let placeName = details.name {
+                        components.append(placeName)
+                    } else if let street = details.thoroughfare {
+                        let streetName = street.replacingOccurrences(of: "\\d+", with: "", options: .regularExpression)
+                            .trimmingCharacters(in: .whitespaces)
+                        if !streetName.isEmpty {
+                            components.append(streetName)
+                        }
+                    }
+                    
+                    // Second part: locality (village or city)
+                    if let locality = details.locality {
+                        components.append(locality)
+                    }
+                    
+                    self.name = components.joined(separator: ", ")
                 }
-            } else if locationNames.count >= 2 {
-                let firstName = locationNames[0] as? String ?? ""
-                let lastName = locationNames[locationNames.count - 1] as? String ?? ""
-                name = "\(firstName) → \(lastName)"
             }
         }
     }
