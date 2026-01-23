@@ -87,22 +87,21 @@ extension Spot {
             case .wakeThiefSpot:
                 return "ferry.fill"
             case .waveWindSpot:
-                // TODO: make
-                return "wind"
+                return "wind.snow"
             case .windSpot:
                 return "wind"
             case .waveSpot:
                 return "water.waves"
             case .rentalStation:
-                return "building.2"
-            case .shop:
                 return "storefront"
+            case .shop:
+                return "cart.fill"
             case .school:
                 return "graduationcap.fill"
             case .wakeBoat:
                 return "ferry"
             case .downwindRun:
-                return "point.topleft.down.to.point.bottomright.curvepath.fill"
+                return "point.bottomleft.forward.to.point.topright.scurvepath.fill"
             case .paddleTour:
                 return "figure.rowing"
             }
