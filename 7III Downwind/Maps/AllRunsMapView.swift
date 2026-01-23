@@ -11,7 +11,7 @@ import MapKit
 struct AllRunsMapView: View {
     @ObservedObject var downwindManager: DownwindManager
     
-    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    @AppStorage("selectedYear") private var selectedYear: Int = Calendar.current.component(.year, from: Date())
     @State private var isLoading = false
     @State private var loadingProgress = ""
     @State private var loadedRuns: [RunStatistic] = []
@@ -37,35 +37,17 @@ struct AllRunsMapView: View {
             Map {
                 ForEach(loadedRuns) { run in
                     if !run.locationData.isEmpty {
-                        if let waves = run.waves, !waves.isEmpty {
-                            let nonWaves = partsBetweenWaves(locationData: run.locationData, waves: waves)
-                            
-                            ForEach(nonWaves.indices, id: \.self) { waveIndex in
-                                MapPolyline(coordinates: makeSmoothedCoordinates(from: nonWaves[waveIndex]))
-                                    .stroke(
-                                        .gray.opacity(0.3),
-                                        style: StrokeStyle(lineWidth: 2.0, lineCap: .round, lineJoin: .round)
-                                    )
-                            }
-                            
-                            ForEach(waves.indices, id: \.self) { waveIndex in
-                                MapPolyline(coordinates: makeSmoothedCoordinates(from: waves[waveIndex]))
-                                    .stroke(
-                                        .neonYellow,
-                                        style: StrokeStyle(lineWidth: 2.0, lineCap: .round, lineJoin: .round)
-                                    )
-                            }
-                        } else {
-                            MapPolyline(coordinates: makeSmoothedCoordinates(from: run.locationData))
+                        
+                            MapPolyline(coordinates: makeSmoothedCoordinates(from: run.locationData, removeGpsMistakes: true))
                                 .stroke(
-                                    Color.yellow,
+                                    .neonYellow,
                                     style: StrokeStyle(lineWidth: 2.0, lineCap: .round, lineJoin: .round)
                                 )
-                        }
+                        
                         
                         if let startData = run.locationData.first {
                             let startCoordinate = CLLocationCoordinate2D(latitude: startData.latitude, longitude: startData.longitude)
-                            Annotation("Start", coordinate: startCoordinate) {
+                            Annotation("", coordinate: startCoordinate) {
                                 Circle()
                                     .fill(Color.green)
                                     .stroke(.white, lineWidth: 2)
@@ -75,7 +57,7 @@ struct AllRunsMapView: View {
                         
                         if let endData = run.locationData.last {
                             let endCoordinate = CLLocationCoordinate2D(latitude: endData.latitude, longitude: endData.longitude)
-                            Annotation("Finish", coordinate: endCoordinate) {
+                            Annotation("", coordinate: endCoordinate) {
                                 Circle()
                                     .fill(Color.red)
                                     .stroke(.white, lineWidth: 2)
@@ -107,6 +89,7 @@ struct AllRunsMapView: View {
                         ProgressView()
                             .scaleEffect(1.2)
                         Text(loadingProgress)
+                            .multilineTextAlignment(.center)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -142,7 +125,7 @@ struct AllRunsMapView: View {
                 }
                 
                 await withCheckedContinuation { continuation in
-                    downwindManager.loadRouteAndHeartFromHealth(statistic: run) { _ in
+                    downwindManager.loadRouteAndHeartFromHealth(statistic: run, withHeartRates: false) { _ in
                         loadedCount += 1
                         continuation.resume()
                     }

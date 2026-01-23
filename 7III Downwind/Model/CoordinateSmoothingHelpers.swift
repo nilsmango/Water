@@ -8,12 +8,17 @@
 import CoreLocation
 import MapKit
 
-internal func makeSmoothedCoordinates(from statistic: [LocationData]) -> [CLLocationCoordinate2D] {
+internal func makeSmoothedCoordinates(from statistic: [LocationData], removeGpsMistakes: Bool = false) -> [CLLocationCoordinate2D] {
     let rawCoordinates = makeCoordinates(from: statistic)
 
     guard rawCoordinates.count > 2 else { return rawCoordinates }
 
-    return applyAngleSmoothing(coordinates: rawCoordinates)
+    var coordinates = rawCoordinates
+    if removeGpsMistakes {
+        coordinates = filterGpsMistakes(from: rawCoordinates)
+    }
+
+    return applyAngleSmoothing(coordinates: coordinates)
 }
 
 internal func makeCoordinates(from statistic: [LocationData]) -> [CLLocationCoordinate2D] {
@@ -23,6 +28,24 @@ internal func makeCoordinates(from statistic: [LocationData]) -> [CLLocationCoor
         coordinates.append(locationCoordinates)
     }
     return coordinates
+}
+
+internal func filterGpsMistakes(from coordinates: [CLLocationCoordinate2D]) -> [CLLocationCoordinate2D] {
+    guard coordinates.count > 1 else { return coordinates }
+
+    var filtered = [CLLocationCoordinate2D]()
+    filtered.append(coordinates[0])
+
+    for i in 1..<coordinates.count {
+        let prevLoc = CLLocation(latitude: filtered.last!.latitude, longitude: filtered.last!.longitude)
+        let currentLoc = CLLocation(latitude: coordinates[i].latitude, longitude: coordinates[i].longitude)
+
+        if prevLoc.distance(from: currentLoc) <= 21.0 {
+            filtered.append(coordinates[i])
+        }
+    }
+
+    return filtered
 }
 
 internal func applyAngleSmoothing(coordinates: [CLLocationCoordinate2D]) -> [CLLocationCoordinate2D] {

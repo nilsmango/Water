@@ -1183,7 +1183,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     // TODO: fetch everything from importedRuns if the run is found there in this func
-    func loadRouteAndHeartFromHealth(statistic: RunStatistic, completion: @escaping (Bool) -> Void) {
+    func loadRouteAndHeartFromHealth(statistic: RunStatistic, withHeartRates: Bool = true, completion: @escaping (Bool) -> Void) {
         let id = statistic.id
         
         // skip everything if we have an imported run
@@ -1205,7 +1205,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
                 
                 // heart rate
-                if importedRun.heartRates.count > 0 {
+                if importedRun.heartRates.count > 0 && withHeartRates {
                     self.runStatistics[runIndex].averageHeartRate = importedRun.averageHeartRate
                 }
                 completion(true)
@@ -1218,7 +1218,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if HKHealthStore.isHealthDataAvailable() {
                 
                 // load the route and average heart rate
-                self.loadWorkoutRouteHeartFromHealth(id: id) { route, averageHeartRate in
+                self.loadWorkoutRouteHeartFromHealth(id: id, loadHeartRates: withHeartRates) { route, averageHeartRate in
                     if let route = route {
                         self.locationDataFromWorkoutRoute(route: route) { locationData in
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
