@@ -176,7 +176,7 @@ struct SpotDetailView: View {
                         } label: {
                             Label("Open in Maps", systemImage: "map")
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.borderedProminent)
                     }
                     
                     if let endCoord = coordinates.last {
@@ -199,7 +199,7 @@ struct SpotDetailView: View {
                         } label: {
                             Label("Open in Maps", systemImage: "map")
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.borderedProminent)
                     }
                 }
             } else if let location = spot.primaryLocation {
@@ -221,7 +221,7 @@ struct SpotDetailView: View {
                 } label: {
                     Label("Open in Maps", systemImage: "map")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderedProminent)
             }
         }
     }
@@ -278,7 +278,7 @@ struct SpotDetailView: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 12)
-                .fill(.uiGray)
+                .fill(Color(.listBackground))
         }
     }
     
@@ -288,40 +288,75 @@ struct SpotDetailView: View {
                 .font(.headline)
             
             if let videos = spot.videos {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(videos) { video in
+                let youtubeVideos = videos.filter { $0.kind == .youtube }
+                let instaVideos = videos.filter { $0.kind != .youtube }
+                
+                if !youtubeVideos.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "play.circle.fill")
+                                .foregroundStyle(.red)
+                            Text("YouTube")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                        }
+                        
+                        ForEach(youtubeVideos) { video in
                             Button {
-                                selectedVideo = video
-                            } label: {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color.accentColor.opacity(0.2))
-                                        .frame(width: 160, height: 90)
-                                        .overlay {
-                                            Image(systemName: "play.fill")
-                                                .font(.largeTitle)
-                                                .foregroundStyle(.red)
-                                        }
-                                    
-                                    HStack {
-                                        Text(video.kind.rawValue)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                        
-                                        Spacer()
-                                        
-                                        Image(systemName: "chevron.right")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    .padding(.horizontal, 4)
+                                if let url = URL(string: video.url) {
+                                    UIApplication.shared.open(url)
                                 }
+                            } label: {
+                                HStack {
+                                    Text(video.url)
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                        .font(.caption)
+                                }
+                                .foregroundStyle(Color.accentColor)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color(.listBackground))
+                                .cornerRadius(10)
                             }
-                            .buttonStyle(.plain)
                         }
                     }
-                    .padding(.horizontal)
+                }
+                
+                if !instaVideos.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "camera.circle.fill")
+                                .foregroundStyle(Color.purple)
+                            Text("Instagram")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                        }
+                        
+                        ForEach(instaVideos) { video in
+                            Button {
+                                if let url = URL(string: video.url) {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                HStack {
+                                    Text(video.url)
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                        .font(.caption)
+                                }
+                                .foregroundStyle(Color.accentColor)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color(.listBackground))
+                                .cornerRadius(10)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -355,13 +390,12 @@ struct SpotDetailView: View {
     private func attributedText(_ text: String) -> AttributedString? {
         var attributedString = AttributedString(text)
         
-        // Example: detecting URLs with NSDataDetector or regex
         let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
         let matches = detector?.matches(in: text, range: NSRange(text.startIndex..., in: text))
         
         for match in matches ?? [] {
             if let urlString = match.url?.absoluteString,
-               let range = Range(match.range, in: attributedString) {  // Convert here!
+               let range = Range(match.range, in: attributedString) {
                 attributedString[range].link = URL(string: urlString)
                 attributedString[range].foregroundColor = .accentColor
                 attributedString[range].font = .body.bold()
@@ -490,6 +524,7 @@ class YouTubePlayerViewController: UIViewController {
 
 extension YouTubePlayerViewController: WKNavigationDelegate {}
 
+#endif
 #Preview {
     NavigationStack {
         SpotDetailView(spot: Spot(
@@ -507,4 +542,3 @@ extension YouTubePlayerViewController: WKNavigationDelegate {}
     }
 }
 
-#endif
