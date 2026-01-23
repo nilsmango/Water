@@ -16,6 +16,12 @@ struct AllRunsMapView: View {
     @State private var loadingProgress = ""
     @State private var loadedRuns: [RunStatistic] = []
     @State private var hasLoadedCoordinates = false
+    @State private var mapPosition: MapCameraPosition = .region(
+        MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
+        )
+    )
     
     private var availableYears: [Int] {
         let years = Set(downwindManager.runStatistics.compactMap { statistic -> Int? in
@@ -34,7 +40,7 @@ struct AllRunsMapView: View {
     
     var body: some View {
         ZStack {
-            Map {
+            Map(position: $mapPosition) {
                 ForEach(loadedRuns) { run in
                     if !run.locationData.isEmpty {
                         
@@ -114,14 +120,23 @@ struct AllRunsMapView: View {
         guard !hasLoadedCoordinates else { return }
         
         isLoading = true
-        let runsToLoad = runsForYear
+        let runsToLoad = runsForYear.sorted { run1, run2 in
+            let date1 = run1.startDate ?? run1.locationData.first?.timestamp ?? Date.distantFuture
+            let date2 = run2.startDate ?? run2.locationData.first?.timestamp ?? Date.distantFuture
+            return date1 < date2
+        }
         let totalRuns = runsToLoad.count
         var loadedCount = 0
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
         
         Task {
             for (index, run) in runsToLoad.enumerated() {
+                let runDate = run.startDate ?? run.locationData.first?.timestamp
+                let dateString = runDate.map { dateFormatter.string(from: $0) } ?? "Unknown date"
+                
                 await MainActor.run {
-                    loadingProgress = "Loading route \(index + 1)/\(totalRuns)..."
+                    loadingProgress = "Loading route \(index + 1)/\(totalRuns): \(dateString)"
                 }
                 
                 await withCheckedContinuation { continuation in
@@ -132,7 +147,31 @@ struct AllRunsMapView: View {
                 }
                 
                 await MainActor.run {
-                    loadedRuns.append(run)
+                    if let updatedRun = downwindManager.runStatistics.first(where: { $0.id == run.id }) {
+                        loadedRuns.append(updatedRun)
+                        
+                        if !updatedRun.locationData.isEmpty {
+                            let coordinates = makeSmoothedCoordinates(from: updatedRun.locationData, removeGpsMistakes: true)
+                            if !coordinates.isEmpty {
+                                let minLat = coordinates.map { $0.latitude }.min() ?? 0
+                                let maxLat = coordinates.map { $0.latitude }.max() ?? 0
+                                let minLon = coordinates.map { $0.longitude }.min() ?? 0
+                                let maxLon = coordinates.map { $0.longitude }.max() ?? 0
+                                
+                                let center = CLLocationCoordinate2D(
+                                    latitude: (minLat + maxLat) / 2,
+                                    longitude: (minLon + maxLon) / 2
+                                )
+                                
+                                let span = MKCoordinateSpan(
+                                    latitudeDelta: (maxLat - minLat) * 2.0,
+                                    longitudeDelta: (maxLon - minLon) * 2.0
+                                )
+                                
+                                mapPosition = .region(MKCoordinateRegion(center: center, span: span))
+                            }
+                        }
+                    }
                 }
             }
             
