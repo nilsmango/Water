@@ -40,10 +40,8 @@ struct StatisticsInfoViewsInteractive: View {
                 .foregroundColor(.primary)
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    withAnimation {
                         showAlternate.toggle()
                         onTap?()
-                    }
                 }
         }
     }
