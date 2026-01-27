@@ -40,7 +40,7 @@ internal func filterGpsMistakes(from coordinates: [CLLocationCoordinate2D]) -> [
         let prevLoc = CLLocation(latitude: filtered.last!.latitude, longitude: filtered.last!.longitude)
         let currentLoc = CLLocation(latitude: coordinates[i].latitude, longitude: coordinates[i].longitude)
 
-        if prevLoc.distance(from: currentLoc) <= 61.0 {
+        if prevLoc.distance(from: currentLoc) <= 100.0 {
             filtered.append(coordinates[i])
         }
     }

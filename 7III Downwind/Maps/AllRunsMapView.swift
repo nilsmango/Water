@@ -88,22 +88,20 @@ struct AllRunsMapView: View {
                     .padding(.horizontal)
                 }
                 
-                Spacer()
-                
                 if isLoading {
                     HStack {
-                        ProgressView()
-                            .scaleEffect(1.2)
                         Text(loadingProgress)
                             .multilineTextAlignment(.center)
-                            .font(.caption)
+                            .font(.footnote)
                             .foregroundColor(.secondary)
+                            .monospacedDigit()
                     }
                     .padding()
                     .background(.ultraThinMaterial)
                     .cornerRadius(10)
                     .padding()
                 }
+                Spacer()
             }
         }
         .onChange(of: selectedYear) { _, _ in
