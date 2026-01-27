@@ -248,6 +248,13 @@ func calculateTopSpeeds(from data: [LocationData]) -> (topSpeed1Sec: Double?, to
     return (topSpeed1Sec * 3.6, topSpeed10Sec * 3.6)
 }
 
+struct FastestDistanceResult {
+    let distanceLabel: String
+    let timeString: String
+    let speedString: String
+    let rawSpeed: Double
+}
+
 /// returns formatted string of fastest km time in minutes:seconds with start position in km, or nil if not found
 func calculateFastestKm(from data: [LocationData]) -> String? {
     var fastestKmSeconds: Double = Double.infinity
@@ -273,6 +280,50 @@ func calculateFastestKm(from data: [LocationData]) -> String? {
     let seconds = Int(fastestKmSeconds.rounded()) % 60
     
     return "\(minutes):\(String(format: "%02d", seconds)) (km: \(String(format: "%.2f", startKm)))"
+}
+
+/// returns array of fastest distances (50m, 100m, 1km) with time and speed strings
+func calculateFastestDistances(from data: [LocationData], system: MeasurementSystem) -> [FastestDistanceResult] {
+    var results: [FastestDistanceResult] = []
+    let distancesToCheck = [(50.0, "50 m"), (100.0, "100 m"), (1000.0, "1 km")]
+    
+    for (distanceInMeters, label) in distancesToCheck {
+        var fastestSeconds: Double = Double.infinity
+        var fastestStartIndex = 0
+        
+        for i in 0..<data.count {
+            if let (time, _) = calculateFastestDistance(in: data, fromIndex: i, targetDistance: distanceInMeters) {
+                if time < fastestSeconds {
+                    fastestSeconds = time
+                    fastestStartIndex = i
+                }
+            }
+        }
+        
+        if fastestSeconds != Double.infinity {
+            let cumulativeDistances = calculateCumulativeDistances(from: data)
+            let startKm = cumulativeDistances[fastestStartIndex] / 1000
+            
+            let distanceInKm = distanceInMeters / 1000.0
+            let rawSpeed = distanceInKm / (fastestSeconds / 3600.0)
+            
+            let minutes = Int(fastestSeconds) / 60
+            let seconds = Int(fastestSeconds.rounded()) % 60
+            let milliseconds = Int((fastestSeconds.truncatingRemainder(dividingBy: 1) * 100).rounded())
+            let timeString = "\(minutes):\(String(format: "%02d", seconds)).\(String(format: "%02d", milliseconds))"
+            
+            let speedString = makePrettySpeed(speed: rawSpeed, system: system)
+            
+            results.append(FastestDistanceResult(
+                distanceLabel: label,
+                timeString: timeString,
+                speedString: speedString,
+                rawSpeed: rawSpeed
+            ))
+        }
+    }
+    
+    return results
 }
 
 private func calculateSpeed(in data: [LocationData], fromIndex index: Int, duration: TimeInterval) -> Double? {

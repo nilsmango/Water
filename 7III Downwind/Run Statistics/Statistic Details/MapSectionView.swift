@@ -17,8 +17,6 @@ struct MapSectionView: View {
     let rounds: [(String, String, String)]
     @Binding var statisticsData: RunStatistic
     
-    var refreshPolyLines: Bool = false
-    
     var body: some View {
         if statisticsData.runDistance > 1999 {
             Section {
@@ -53,7 +51,7 @@ struct MapSectionView: View {
                 showMapSheet = true
             } label: {
                 if let dW = statisticsData.workoutType?.isDWSport, dW == true {
-                    StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
+                    StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                         .frame(height: 300)
                         .cornerRadius(8.0)
                         .disabled(true)

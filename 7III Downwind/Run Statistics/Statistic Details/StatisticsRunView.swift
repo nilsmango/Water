@@ -40,9 +40,6 @@ struct StatisticsRunView: View {
 
     @State private var heartRates: [Date: (Double, Double)] = [:]
     
-    // trick for updating the map
-    @State private var refreshPolyLines = false
-    
     @State private var showStallStats = false
     @State private var stallEvents: [StallEvent] = []
     
@@ -53,16 +50,18 @@ struct StatisticsRunView: View {
     @State private var calculationProgress = ""
     @State private var hasLoadedInitialData = false
     
+    @State private var fastestDistances: [FastestDistanceResult]? = []
+    @State private var rounds: [(String, String, String)] = []
+    @State private var heartRateSpeedData: [SpeedSample] = []
+    
     var body: some View {
         
         let cutDate = runDates.components(separatedBy: " ")
-        let rounds = downwindManager.createRounds(for: statisticsData.locationData)
-        let fastestKm = calculateFastestKm(from: statisticsData.locationData)
         
         List {
             Section {
                 
-                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm", popUps: statisticsData.popUps ?? 0, percentageOnFoil: statisticsData.percentageOnFoil ?? 0, turns: statisticsData.turnsCount ?? 0, longestDistanceOnFoil: makePrettyDistance(meters: statisticsData.longestDistanceOnFoil ?? 0, system: downwindManager.measurementSystem, statistics: true), fastestKm: fastestKm)
+                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm", popUps: statisticsData.popUps ?? 0, percentageOnFoil: statisticsData.percentageOnFoil ?? 0, turns: statisticsData.turnsCount ?? 0, longestDistanceOnFoil: makePrettyDistance(meters: statisticsData.longestDistanceOnFoil ?? 0, system: downwindManager.measurementSystem, statistics: true), fastestDistances: fastestDistances)
             } header: {
                 VStack(spacing: 0) {
                     StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
@@ -168,7 +167,7 @@ struct StatisticsRunView: View {
             }
             
             if !statisticsData.locationData.isEmpty {
-                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, statisticsData: $statisticsData, refreshPolyLines: refreshPolyLines)
+                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, statisticsData: $statisticsData)
                 
                 if statisticsData.angles?.count ?? 0 > 0 {
                     Section {
@@ -197,7 +196,7 @@ struct StatisticsRunView: View {
                     }
                 }
                 
-                HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate, locationData: statisticsData.locationData)
+                HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate, speedData: heartRateSpeedData)
                 
                 Section {
                     TagsFlexiView(strings: tags)
@@ -522,8 +521,6 @@ struct StatisticsRunView: View {
                                 
                                 downwindManager.saveEditedRoute(newStatistic: statisticsDataEdit)
                                 
-                                refreshPolyLines.toggle()
-                                
                             }, label: {
                                 Text("Save")
                             })
@@ -612,6 +609,21 @@ struct StatisticsRunView: View {
             calculationProgress = "Fixing distance data..."
         }
         await fixDistanceAsync()
+        
+        await MainActor.run {
+            calculationProgress = "Calculating fastest distances..."
+        }
+        await calculateFastestDistancesAsync()
+        
+        await MainActor.run {
+            calculationProgress = "Calculating rounds..."
+        }
+        await calculateRoundsAsync()
+        
+        await MainActor.run {
+            calculationProgress = "Processing speed data..."
+        }
+        await calculateSpeedDataAsync()
         
         await MainActor.run {
             isCalculating = false
@@ -718,6 +730,79 @@ struct StatisticsRunView: View {
         await MainActor.run {
             downwindManager.saveEditedRoute(newStatistic: statisticsData, updatingExternal: true)
         }
+    }
+    
+    private func calculateFastestDistancesAsync() async {
+        guard statisticsData.locationData.count > 2 else {
+            return
+        }
+        
+        let distances = await Task.detached(priority: .utility) {
+            calculateFastestDistances(from: statisticsData.locationData, system: downwindManager.measurementSystem)
+        }.value
+        
+        await MainActor.run {
+            fastestDistances = distances
+        }
+    }
+    
+    private func calculateRoundsAsync() async {
+        guard statisticsData.locationData.count > 2 else {
+            return
+        }
+        
+        let roundsResult = await Task.detached(priority: .utility) {
+            downwindManager.createRounds(for: statisticsData.locationData)
+        }.value
+        
+        await MainActor.run {
+            rounds = roundsResult
+        }
+    }
+    
+    private func calculateSpeedDataAsync() async {
+        guard statisticsData.locationData.count > 1 else {
+            return
+        }
+        
+        let speedDataResult = await Task.detached(priority: .utility) {
+            createSpeedData(from: statisticsData.locationData)
+        }.value
+        
+        await MainActor.run {
+            heartRateSpeedData = speedDataResult
+        }
+    }
+    
+    private func createSpeedData(from locationData: [LocationData]) -> [SpeedSample] {
+        guard locationData.count > 1 else { return [] }
+
+        let targetSamples = 300
+
+        let startTime = locationData.first!.timestamp
+        let endTime   = locationData.last!.timestamp
+        let duration  = endTime.timeIntervalSince(startTime)
+
+        let bucketSize = max(duration / Double(targetSamples), 1)
+
+        let grouped = Dictionary(grouping: locationData) { data in
+            floor(data.timestamp.timeIntervalSince(startTime) / bucketSize)
+        }
+
+        return grouped.compactMap { (_, values) in
+            let speeds = values.compactMap { $0.speed }
+            guard !speeds.isEmpty else { return nil }
+
+            let avgSpeed = speeds.reduce(0, +) / Double(speeds.count)
+
+            let midTime = values[0].timestamp.addingTimeInterval(bucketSize / 2)
+
+            return SpeedSample(
+                date: midTime,
+                speedKmh: avgSpeed * 3.6
+            )
+        }
+        .sorted { $0.date < $1.date }
     }
 }
 

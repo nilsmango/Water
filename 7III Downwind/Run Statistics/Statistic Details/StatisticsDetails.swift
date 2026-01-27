@@ -22,7 +22,7 @@ struct StatisticsDetails: View {
     let percentageOnFoil: Double
     let turns: Int
     let longestDistanceOnFoil: String
-    let fastestKm: String?
+    let fastestDistances: [FastestDistanceResult]?
     
     let width = UIScreen.main.bounds.width / 3
     var body: some View {
@@ -69,11 +69,24 @@ struct StatisticsDetails: View {
             }
         }
         
-        if topSpeed != "0.0 km/h" || fastestKm != nil {
-            HStack {
+        if topSpeed != "0.0 km/h" || (fastestDistances != nil && !fastestDistances!.isEmpty) {
+            
+            if let fastestDistances = fastestDistances, !fastestDistances.isEmpty {
+                let shortDistances = fastestDistances.filter { $0.distanceLabel != "1 km" }
                 
-                if let fastestKm = fastestKm {
-                    StatisticsInfoViews(header: "Fastest km (min)", bodyText: fastestKm)
+                if !shortDistances.isEmpty {
+                    HStack(spacing: 8) {
+                        ForEach(shortDistances.prefix(2), id: \.distanceLabel) { distance in
+                            StatisticsInfoViewsInteractive(header: "Fastest \(distance.distanceLabel)", bodyText: distance.timeString, alternateText: distance.speedString)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }
+            }
+            
+            HStack {
+                if let fastestKm = fastestDistances?.first(where: { $0.distanceLabel == "1 km" }) {
+                    StatisticsInfoViewsInteractive(header: "Fastest km (min)", bodyText: fastestKm.timeString, alternateText: fastestKm.speedString)
                         .frame(width: width, alignment: .leading)
                 }
                 
@@ -116,7 +129,7 @@ struct StatisticsDetails: View {
 #Preview {
     List {
         Section {
-            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134, longestDistanceOnFoil: "15 km", fastestKm: "3:45 (km: 5.23)")
+            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134, longestDistanceOnFoil: "15 km", fastestDistances: [FastestDistanceResult(distanceLabel: "50 m", timeString: "0:18.45", speedString: "9.7 km/h", rawSpeed: 9.7), FastestDistanceResult(distanceLabel: "100 m", timeString: "0:35.23", speedString: "10.2 km/h", rawSpeed: 10.2), FastestDistanceResult(distanceLabel: "1 km", timeString: "3:45.12", speedString: "16.0 km/h", rawSpeed: 16.0)])
         }
     }
 }
