@@ -354,26 +354,40 @@ private func calculateSpeed(in data: [LocationData], fromIndex index: Int, durat
     return timeElapsed >= duration * 0.98 ? distance / timeElapsed : nil
 }
 
-private func calculateFastestDistance(in data: [LocationData], fromIndex index: Int, targetDistance: Double) -> (Double, Int)? {
-    let start = data[index]
-    var distance: Double = 0
-    var lastPoint = start
+private func calculateFastestDistance(
+    in data: [LocationData],
+    fromIndex index: Int,
+    targetDistance: Double
+) -> (Double, Int)? {
     
-    for i in index+1..<data.count {
-        let point = data[i]
+    let start = data[index]
+    var accumulatedDistance: Double = 0
+    
+    for i in index + 1..<data.count {
+        let prev = data[i - 1]
+        let curr = data[i]
         
-        let fromLocation = CLLocation(latitude: lastPoint.latitude, longitude: lastPoint.longitude)
-        let toLocation = CLLocation(latitude: point.latitude, longitude: point.longitude)
+        let fromLocation = CLLocation(latitude: prev.latitude, longitude: prev.longitude)
+        let toLocation = CLLocation(latitude: curr.latitude, longitude: curr.longitude)
         
-        distance += fromLocation.distance(from: toLocation)
-        lastPoint = point
+        let segmentDistance = fromLocation.distance(from: toLocation)
         
-        // Accept distances within 1.5% tolerance of target
-        if distance >= targetDistance * 0.985 {
-            let timeElapsed = lastPoint.timestamp.timeIntervalSince(start.timestamp)
+        // Will we cross the target on this segment?
+        if accumulatedDistance + segmentDistance >= targetDistance {
+            
+            let remainingDistance = targetDistance - accumulatedDistance
+            let fraction = remainingDistance / segmentDistance
+            
+            // Interpolate time
+            let segmentTime = curr.timestamp.timeIntervalSince(prev.timestamp)
+            let interpolatedTime = prev.timestamp.addingTimeInterval(segmentTime * fraction)
+            
+            let timeElapsed = interpolatedTime.timeIntervalSince(start.timestamp)
             
             return (timeElapsed, i)
         }
+        
+        accumulatedDistance += segmentDistance
     }
     
     return nil
