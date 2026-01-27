@@ -302,15 +302,19 @@ func calculateFastestDistances(from data: [LocationData], system: MeasurementSys
         
         if fastestSeconds != Double.infinity {
             let cumulativeDistances = calculateCumulativeDistances(from: data)
-            let startKm = cumulativeDistances[fastestStartIndex] / 1000
+            _ = cumulativeDistances[fastestStartIndex] / 1000
             
             let distanceInKm = distanceInMeters / 1000.0
             let rawSpeed = distanceInKm / (fastestSeconds / 3600.0)
             
-            let minutes = Int(fastestSeconds) / 60
-            let seconds = Int(fastestSeconds.rounded()) % 60
-            let milliseconds = Int((fastestSeconds.truncatingRemainder(dividingBy: 1) * 100).rounded())
-            let timeString = "\(minutes):\(String(format: "%02d", seconds)).\(String(format: "%02d", milliseconds))"
+            let timeString: String
+            if distanceInMeters == 1000.0 {
+                let minutes = Int(fastestSeconds) / 60
+                let seconds = Int(fastestSeconds.rounded()) % 60
+                timeString = "\(minutes):\(String(format: "%02d", seconds)) min"
+            } else {
+                timeString = String(format: "%.1f s", fastestSeconds)
+            }
             
             let speedString = makePrettySpeed(speed: rawSpeed, system: system)
             

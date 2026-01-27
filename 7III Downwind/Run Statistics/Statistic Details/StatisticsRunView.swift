@@ -54,6 +54,8 @@ struct StatisticsRunView: View {
     @State private var rounds: [(String, String, String)] = []
     @State private var heartRateSpeedData: [SpeedSample] = []
     
+    @AppStorage("hasTappedFastestDistance") var hasTappedDistance = false
+    
     var body: some View {
         
         let cutDate = runDates.components(separatedBy: " ")
@@ -61,7 +63,7 @@ struct StatisticsRunView: View {
         List {
             Section {
                 
-                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm", popUps: statisticsData.popUps ?? 0, percentageOnFoil: statisticsData.percentageOnFoil ?? 0, turns: statisticsData.turnsCount ?? 0, longestDistanceOnFoil: makePrettyDistance(meters: statisticsData.longestDistanceOnFoil ?? 0, system: downwindManager.measurementSystem, statistics: true), fastestDistances: fastestDistances)
+                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm", popUps: statisticsData.popUps ?? 0, percentageOnFoil: statisticsData.percentageOnFoil ?? 0, turns: statisticsData.turnsCount ?? 0, longestDistanceOnFoil: makePrettyDistance(meters: statisticsData.longestDistanceOnFoil ?? 0, system: downwindManager.measurementSystem, statistics: true), fastestDistances: fastestDistances, hasTappedDistance: $hasTappedDistance)
             } header: {
                 VStack(spacing: 0) {
                     StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
@@ -79,6 +81,13 @@ struct StatisticsRunView: View {
                     }
                 }
                 .foregroundStyle(.primary)
+            } footer: {
+                if !hasTappedDistance {
+                    HStack(alignment: .firstTextBaseline) {
+                        Image(systemName: "info.circle")
+                        Text("Tap any fastest distance to toggle between time and speed")
+                    }
+                }
             }
             .onAppear {
                 

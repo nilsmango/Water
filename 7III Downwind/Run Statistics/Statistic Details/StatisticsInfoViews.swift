@@ -27,6 +27,7 @@ struct StatisticsInfoViewsInteractive: View {
     let header: String
     let bodyText: String
     let alternateText: String
+    let onTap: (() -> Void)?
     @State private var showAlternate = false
     
     var body: some View {
@@ -41,6 +42,7 @@ struct StatisticsInfoViewsInteractive: View {
                 .onTapGesture {
                     withAnimation {
                         showAlternate.toggle()
+                        onTap?()
                     }
                 }
         }
@@ -50,6 +52,6 @@ struct StatisticsInfoViewsInteractive: View {
 #Preview {
     VStack {
         StatisticsInfoViews(header: "Time", bodyText: "2:02")
-        StatisticsInfoViewsInteractive(header: "Fastest", bodyText: "3:45", alternateText: "20.1 km/h")
+        StatisticsInfoViewsInteractive(header: "Fastest", bodyText: "3:45", alternateText: "20.1 km/h", onTap: nil)
     }
 }
