@@ -278,8 +278,11 @@ struct StartView: View {
                 case .statistics:
                     StatisticsView(downwindManager: downwindManager)
                 case .maps:
-//                    SpotsView()
+                    MapsMenuView(navPath: $navPath)
+                case .allRunsMap:
                     AllRunsMapView(downwindManager: downwindManager)
+                case .spots:
+                    SpotsView()
                 }
             }
             .navigationTitle(downwindManager.user.name.isEmpty ? "Aloha!" : "Aloha \(downwindManager.user.name)!")

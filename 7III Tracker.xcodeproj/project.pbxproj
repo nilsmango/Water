@@ -119,6 +119,7 @@
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
+		78682D1F2F46132C0032D0B1 /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
 		7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
 		7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
 		7877E1262BC3F7A800776890 /* StatisticsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1252BC3F7A800776890 /* StatisticsDetails.swift */; };
@@ -402,6 +403,7 @@
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
+		78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsMenuView.swift; sourceTree = "<group>"; };
 		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
 		7877E1232BC3D87C00776890 /* PolylineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineData.swift; sourceTree = "<group>"; };
 		7877E1252BC3F7A800776890 /* StatisticsDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsDetails.swift; sourceTree = "<group>"; };
@@ -572,6 +574,7 @@
 				780570772F225E22000D9591 /* VideoSectionView.swift */,
 				780571AC2F23BEEC000D9591 /* AllRunsMapView.swift */,
 				78056FC32F217F66000D9591 /* SpotsView.swift */,
+				78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */,
 			);
 			path = Maps;
 			sourceTree = "<group>";
@@ -1316,6 +1319,7 @@
 				78EC608D2E0D319E00C55950 /* EditMap.swift in Sources */,
 				78056D0A2F1E4568000D9591 /* SpeedGradientMapView.swift in Sources */,
 				785CCF1A2D6894DB0075CA4C /* ShareOverlayDivider.swift in Sources */,
+				78682D1F2F46132C0032D0B1 /* MapsMenuView.swift in Sources */,
 				781A4BB12C4FAD5E0046AE0E /* VideoOverlayView.swift in Sources */,
 				7857BF342C57C16600AD7F4F /* VideoPicker.swift in Sources */,
 				7877E12C2BC52A0900776890 /* TagsEditView.swift in Sources */,
