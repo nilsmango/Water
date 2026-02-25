@@ -7,8 +7,10 @@
 
 import SwiftUI
 import MapKit
+import Combine
 
 struct SpotsView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var spotManager = SpotManager.shared
     
     @State private var selectedSpot: Spot?
@@ -26,8 +28,10 @@ struct SpotsView: View {
     
     @State private var isAddingSpot = false
     @State private var newSpotLocations: [[String: Double]] = []
+    @State private var cancellables = Set<AnyCancellable>()
     
     private var lineWidth = 2.0
+    private let refreshTimerInterval: TimeInterval = 10 * 60
     
     var filteredSpots: [Spot] {
         let spotsByKind = spotManager.filteredSpots(kinds: selectedKinds)
@@ -35,7 +39,7 @@ struct SpotsView: View {
         if showPendingOnly {
             return spotsByKind.filter { $0.pending == true }
         } else if hidePending {
-            return spotsByKind.filter { $0.pending != true }
+            return spotsByKind.filter { $0.pending == nil || $0.pending == false }
         } else {
             return spotsByKind
         }
@@ -237,7 +241,16 @@ struct SpotsView: View {
             SpotDetailView(spot: spot)
         }
         .sheet(isPresented: $showAddSpot) {
-            AddSpotView(initialLocations: newSpotLocations)
+            AddSpotView(initialLocations: newSpotLocations) {
+                Task {
+                    showAddSpot = false
+                    try? await Task.sleep(nanoseconds: UInt64(2.0 * 1_000_000_000))
+                    await spotManager.refreshSpots()
+                }
+            }
+            .presentationDetents([.large, .medium, .fraction(0.3)])
+            .presentationDragIndicator(.visible)
+            .interactiveDismissDisabled(true)
         }
         .sheet(isPresented: $showFilters) {
             FiltersView(
@@ -251,6 +264,14 @@ struct SpotsView: View {
             Task {
                 await spotManager.loadSpots()
             }
+            Timer.publish(every: refreshTimerInterval, on: .main, in: .common)
+                .autoconnect()
+                .sink { _ in
+                    Task {
+                        await spotManager.refreshSpots()
+                    }
+                }
+                .store(in: &cancellables)
         }
         .refreshable {
             await spotManager.refreshSpots()

@@ -23,9 +23,11 @@ struct AddSpotView: View {
     @State private var showingSuccess = false
     
     var initialLocations: [[String: Double]]
+    var onSuccess: (() -> Void)?
     
-    init(initialLocations: [[String: Double]] = []) {
+    init(initialLocations: [[String: Double]] = [], onSuccess: (() -> Void)? = nil) {
         self.initialLocations = initialLocations
+        self.onSuccess = onSuccess
         _locations = State(initialValue: initialLocations)
         let isRoute = initialLocations.count > 1
         _kind = State(initialValue: isRoute ? .downwindRun : .pumpFoilDock)
@@ -33,6 +35,10 @@ struct AddSpotView: View {
     
     var isRoute: Bool {
         locations.count > 1
+    }
+    
+    var hasInfoWithAuthor: Bool {
+        infos.contains { !$0.userName.trimmingCharacters(in: .whitespaces).isEmpty }
     }
     
     var body: some View {
@@ -61,6 +67,16 @@ struct AddSpotView: View {
                 }
 
                 Section {
+                    if !hasInfoWithAuthor {
+                        HStack {
+                            Image(systemName: "info.circle.fill")
+                                .foregroundStyle(.orange)
+                            Text("Add at least one info with an author name to submit")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    
                     ForEach(infos.indices, id: \.self) { index in
                         InfoSectionView(info: $infos[index]) {
                             withAnimation {
@@ -112,7 +128,7 @@ struct AddSpotView: View {
                             Text("Submit")
                         }
                     }
-                    .disabled(isSubmitting || name.isEmpty || country.isEmpty || locations.isEmpty)
+                    .disabled(isSubmitting || name.isEmpty || country.isEmpty || locations.isEmpty || !hasInfoWithAuthor)
                 }
             })
             .alert("Error", isPresented: .constant(errorMessage != nil)) {
@@ -125,7 +141,7 @@ struct AddSpotView: View {
             .alert("Success", isPresented: $showingSuccess) {
                 Button("OK") {
                     showingSuccess = false
-                    dismiss()
+                    onSuccess?()
                 }
             } message: {
                 Text("Spot submitted successfully! It will appear as pending until reviewed.")
@@ -180,6 +196,11 @@ struct AddSpotView: View {
     }
     
     private func submit() {
+        guard hasInfoWithAuthor else {
+            errorMessage = "Please add at least one info with an author name before submitting"
+            return
+        }
+        
         isSubmitting = true
         errorMessage = nil
         

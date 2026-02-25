@@ -40,12 +40,30 @@ class SpotManager: ObservableObject {
     private let spotsURL = URL(string: "https://project7iii.com/foildata/map/spots.json")!
     
     func loadSpots() async {
-        if let cachedSpots = loadFromCache() {
-            self.spots = cachedSpots
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                await self.loadFromCacheAsync()
+            }
+            group.addTask {
+                await self.fetchSpotsFromServer()
+            }
         }
+    }
+    
+    private func loadFromCacheAsync() async {
+        guard !spotsData.isEmpty else { return }
         
-        if shouldRefresh() {
-            await fetchSpotsFromServer()
+        let data = spotsData
+        
+        let spots = await Task.detached {
+            guard let decodedSpots = try? JSONDecoder().decode([Spot].self, from: data) else {
+                return [Spot]()
+            }
+            return decodedSpots
+        }.value
+        
+        if !spots.isEmpty {
+            self.spots = spots
         }
     }
     
@@ -58,7 +76,10 @@ class SpotManager: ObservableObject {
         errorMessage = nil
         
         do {
-            let (data, response) = try await URLSession.shared.data(from: spotsURL)
+            var request = URLRequest(url: spotsURL)
+            request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode == 200 else {
@@ -78,18 +99,6 @@ class SpotManager: ObservableObject {
         }
         
         isLoading = false
-    }
-    
-    private func loadFromCache() -> [Spot]? {
-        guard !spotsData.isEmpty else { return nil }
-        
-        do {
-            let decoder = JSONDecoder()
-            return try decoder.decode([Spot].self, from: spotsData)
-        } catch {
-            print("Failed to decode cached spots: \(error)")
-            return nil
-        }
     }
     
     private func saveToCache(_ spots: [Spot]) {

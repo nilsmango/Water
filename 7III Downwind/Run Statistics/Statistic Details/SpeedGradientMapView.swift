@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 
+
 struct SpeedGradientMapView: UIViewRepresentable {
 
     let locations: [LocationData]
@@ -38,8 +39,8 @@ struct SpeedGradientMapView: UIViewRepresentable {
 
         context.coordinator.lineWidth = lineWidth
 
-        let downsampledForPolyline = downsamplePolylineCoordinates(locations)
-        let downsampledForGradient = downsampleLocations(locations)
+        let downsampledForPolyline = downsamplePolylineCoordinates(locations, targetCount: MAX_POLYLINE_POINTS)
+        let downsampledForGradient = downsampleLocations(locations, targetCount: MAX_POLYLINE_POINTS)
         context.coordinator.locations = downsampledForGradient
 
         let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)

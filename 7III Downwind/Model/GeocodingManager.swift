@@ -7,7 +7,7 @@
 
 import CoreLocation
 
-struct GeocodedLocationInfo {
+struct GeocodedLocationInfo: Codable {
     let name: String?
     let thoroughfare: String?
     let locality: String?
@@ -18,7 +18,7 @@ struct GeocodedLocationInfo {
 class GeocodingManager {
     static let shared = GeocodingManager()
     private let geocoder = CLGeocoder()
-    private var locationCache: [String: String] = [:]
+    private var locationCache: [String: GeocodedLocationInfo] = [:]
     private let queue = DispatchQueue(label: "com.geocoding.queue", qos: .utility)
     private let semaphore = DispatchSemaphore(value: 1)
     private let cacheFileName = "geocodingCache.json"
@@ -46,7 +46,7 @@ class GeocodingManager {
         do {
             let url = try getDocumentsDirectory().appendingPathComponent(cacheFileName)
             let data = try Data(contentsOf: url)
-            let decodedCache = try JSONDecoder().decode([String: String].self, from: data)
+            let decodedCache = try JSONDecoder().decode([String: GeocodedLocationInfo].self, from: data)
             locationCache = decodedCache
         } catch {
             print("Error loading geocoding cache: \(error)")
@@ -69,7 +69,7 @@ class GeocodingManager {
         let key = cacheKey(latitude: location.latitude, longitude: location.longitude)
         
         // Check cache first
-        if let cachedName = locationCache[key] {
+        if let cachedInfo = locationCache[key], let cachedName = cachedInfo.locality {
             completion(cachedName)
             return
         }
@@ -96,7 +96,8 @@ class GeocodingManager {
                 
                 // Cache the result and persist to disk
                 if let name = locationName {
-                    self.locationCache[key] = name
+                    let info = GeocodedLocationInfo(name: nil, thoroughfare: nil, locality: name, countryCode: nil, state: nil)
+                    self.locationCache[key] = info
                     self.saveCacheToDisk()
                 }
                 
@@ -108,9 +109,9 @@ class GeocodingManager {
     func getDetailsOfLocation(location: LocationData, completion: @escaping (GeocodedLocationInfo) -> Void) {
         let key = cacheKey(latitude: location.latitude, longitude: location.longitude)
         
-        // Check cache first - only name is cached, but we need details
-        if let cachedName = locationCache[key] {
-            completion(GeocodedLocationInfo(name: cachedName, thoroughfare: nil, locality: cachedName, countryCode: nil, state: nil))
+        // Check cache first - return full details if cached
+        if let cachedInfo = locationCache[key] {
+            completion(cachedInfo)
             return
         }
         
@@ -138,13 +139,12 @@ class GeocodingManager {
                 let countryCode = placemark.isoCountryCode
                 let state = placemark.administrativeArea
                 
-                // Cache the locality and persist to disk
-                if let loc = locality {
-                    self.locationCache[key] = loc
-                    self.saveCacheToDisk()
-                }
+                // Cache all details and persist to disk
+                let info = GeocodedLocationInfo(name: locationName, thoroughfare: thoroughfare, locality: locality, countryCode: countryCode, state: state)
+                self.locationCache[key] = info
+                self.saveCacheToDisk()
                 
-                completion(GeocodedLocationInfo(name: locationName, thoroughfare: thoroughfare, locality: locality, countryCode: countryCode, state: state))
+                completion(info)
             }
         }
     }

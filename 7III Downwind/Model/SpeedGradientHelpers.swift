@@ -13,7 +13,12 @@ struct DownsamplingCacheKey: Hashable {
     let targetCount: Int
 }
 
+struct GradientCacheKey: Hashable {
+    let locationHash: Int
+}
+
 var downsamplingCache: [DownsamplingCacheKey: [LocationData]] = [:]
+var gradientStopsCache: [GradientCacheKey: ([UIColor], [CGFloat])] = [:]
 
 func downsampleLocations(
     _ locations: [LocationData],
@@ -119,16 +124,34 @@ func makeGradientStops(
     from data: [LocationData]
 ) -> ([UIColor], [CGFloat]) {
 
-    debugMap("Creating gradient stops")
+    let locationHash = data.hashValue
+    let cacheKey = GradientCacheKey(locationHash: locationHash)
 
-    let clLocations = data.map {
-        CLLocation(latitude: $0.latitude, longitude: $0.longitude)
+    if let cached = gradientStopsCache[cacheKey] {
+        debugMap("Cache hit for gradient stops")
+        return cached
     }
 
+    debugMap("Creating gradient stops")
+
     var distances: [CLLocationDistance] = [0]
-    for i in 1..<clLocations.count {
-        let d = clLocations[i].distance(from: clLocations[i - 1])
-        distances.append(distances.last! + d)
+    for i in 1..<data.count {
+        let lat1 = data[i - 1].latitude * .pi / 180
+        let lon1 = data[i - 1].longitude * .pi / 180
+        let lat2 = data[i].latitude * .pi / 180
+        let lon2 = data[i].longitude * .pi / 180
+
+        let dlat = lat2 - lat1
+        let dlon = lon2 - lon1
+
+        let a = sin(dlat / 2) * sin(dlat / 2) +
+                cos(lat1) * cos(lat2) *
+                sin(dlon / 2) * sin(dlon / 2)
+
+        let c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        let distance = 6371000 * c
+
+        distances.append(distances.last! + distance)
     }
 
     let totalDistance = distances.last ?? 0
@@ -143,27 +166,24 @@ func makeGradientStops(
     debugMap("Max speed: \(maxSpeed)m/s")
 
     var colors: [UIColor] = []
-    var locations: [CGFloat] = []
+    var stops: [CGFloat] = []
+
+    colors.reserveCapacity(data.count)
+    stops.reserveCapacity(data.count)
 
     for i in data.indices {
         let unitDistance = totalDistance > 0 ? distances[i] / totalDistance : 0
         let speed = data[i].speed ?? 0
         let t = maxSpeed > 0 ? speed / maxSpeed : 0
 
-        debugMap("Point \(i): unitDistance=\(unitDistance), speed=\(speed)")
-
         colors.append(colorForSpeed(t))
-        locations.append(CGFloat(unitDistance))
+        stops.append(CGFloat(unitDistance))
     }
 
-    // 🔴 CRITICAL: ensure monotonic increasing locations
-    let zipped = zip(locations, colors)
-        .sorted { $0.0 < $1.0 }
+    let result = (colors, stops)
+    gradientStopsCache[cacheKey] = result
 
-    let finalLocations = zipped.map { $0.0 }
-    let finalColors = zipped.map { $0.1 }
-
-    return (finalColors, finalLocations)
+    return result
 }
 
 func colorForSpeed(_ t: Double) -> UIColor {

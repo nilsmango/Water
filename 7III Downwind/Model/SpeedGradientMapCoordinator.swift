@@ -8,6 +8,8 @@
 import MapKit
 import UIKit
 
+let MAX_POLYLINE_POINTS = 400
+
 
 
 
@@ -222,11 +224,14 @@ extension SpeedGradientMapView {
 
             guard visibleLocations.count > 1 else { return }
 
-            let downsampledForPolyline = downsamplePolylineCoordinates(visibleLocations)
-            let downsampledForGradient = downsampleLocations(visibleLocations)
+            let targetCount = min(MAX_POLYLINE_POINTS, visibleLocations.count)
+            let downsampledForPolyline = downsamplePolylineCoordinates(visibleLocations, targetCount: targetCount)
+            let downsampledForGradient = downsampleLocations(visibleLocations, targetCount: targetCount)
             self.locations = downsampledForGradient
 
             let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)
+            guard coordinates.count > 1 else { return }
+
             let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
 
             mapView.removeOverlays(mapView.overlays)
