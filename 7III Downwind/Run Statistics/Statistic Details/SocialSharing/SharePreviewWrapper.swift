@@ -31,33 +31,46 @@ struct SharePreviewWrapper: UIViewRepresentable {
 
     @Binding var offset: Double
 
-    
+
     let onRendered: (UIView) -> Void
-    
+
 
     func makeUIView(context: Context) -> UIView {
-        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, mapType: mapType, gradientPoints: gradientPoints, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, showTags: showTags, offset: $offset))
-        controller.view.backgroundColor = .clear
+        context.coordinator.hostingController.rootView = AnyView(EmptyView())
+        context.coordinator.updateRootView(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, mapType: mapType, gradientPoints: gradientPoints, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, showTags: showTags, offset: $offset)
+        context.coordinator.hostingController.view.backgroundColor = .clear
         DispatchQueue.main.async {
-            self.onRendered(controller.view)
+            self.onRendered(context.coordinator.hostingController.view)
         }
-        return controller.view
+        return context.coordinator.hostingController.view
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
-        let controller = UIHostingController(rootView: ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, mapType: mapType, gradientPoints: gradientPoints, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, showTags: showTags, offset: $offset))
-        controller.view.backgroundColor = .clear
+        context.coordinator.updateRootView(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, mapType: mapType, gradientPoints: gradientPoints, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, showTags: showTags, offset: $offset)
+
+        context.coordinator.hostingController.view.backgroundColor = .clear
         DispatchQueue.main.async {
-            self.onRendered(controller.view)
+            self.onRendered(context.coordinator.hostingController.view)
         }
-        uiView.subviews.forEach { $0.removeFromSuperview() }
-        uiView.addSubview(controller.view)
-        controller.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            controller.view.leadingAnchor.constraint(equalTo: uiView.leadingAnchor),
-            controller.view.trailingAnchor.constraint(equalTo: uiView.trailingAnchor),
-            controller.view.topAnchor.constraint(equalTo: uiView.topAnchor),
-            controller.view.bottomAnchor.constraint(equalTo: uiView.bottomAnchor)
-        ])
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    struct MapSettings: Equatable {
+        let useMap: Bool
+        let mapType: ShareMapType
+        let gradientPoints: Double
+    }
+
+    class Coordinator {
+        let hostingController = UIHostingController<AnyView>(rootView: AnyView(EmptyView()))
+        var lastMapSettings: MapSettings?
+
+        func updateRootView(downwindManager: DownwindManager, statisticsData: RunStatistic, useMap: Bool, mapType: ShareMapType, gradientPoints: Double, showingSpeedInsteadPace: Bool, showTopSpeed: Bool, topSpeedSelection: TopSpeedOption, showAverageSpeed: Bool, scale: Double, locationName: String?, showLocation: Bool, showCalories: Bool, showHeart: Bool, showPopUps: Bool, showTimeOnFoil: Bool, showMaxDistanceOnFoil: Bool, showTurns: Bool, fullScreen: Bool, showTags: Bool, offset: Binding<Double>) {
+            hostingController.rootView = AnyView(ShareImagePreview(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, mapType: mapType, gradientPoints: gradientPoints, showingSpeedInsteadPace: showingSpeedInsteadPace, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: locationName, showLocation: showLocation, showCalories: showCalories, showHeart: showHeart, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, showTags: showTags, offset: offset))
+        }
     }
 }
+

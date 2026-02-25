@@ -7,6 +7,37 @@
 
 import SwiftUI
 
+struct ShareMapComponent: View {
+    var downwindManager: DownwindManager
+    var statisticsData: RunStatistic
+    var mapType: ShareMapType
+    var gradientPoints: Double
+    var fullScreen: Bool
+
+    var body: some View {
+        Group {
+            if mapType == .downwind {
+                StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
+                    .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
+                    .allowsHitTesting(!fullScreen)
+            } else if mapType == .yellow {
+                WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
+                    .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
+                    .allowsHitTesting(!fullScreen)
+            } else {
+                SpeedGradientStatisticsMap(statisticsData: .constant(statisticsData), maxPolylinePoints: Int(gradientPoints), maxGradientStops: Int(gradientPoints / 2))
+                    .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
+                    .allowsHitTesting(!fullScreen)
+            }
+        }
+        .id(mapId)
+    }
+
+    private var mapId: String {
+        "\(mapType.rawValue)_\(Int(gradientPoints))_\(statisticsData.id)"
+    }
+}
+
 struct ShareImagePreview: View {
     @ObservedObject var downwindManager: DownwindManager
     var statisticsData: RunStatistic
@@ -31,31 +62,19 @@ struct ShareImagePreview: View {
     var showTags: Bool
 
     @Binding var offset: Double
-    
+
     var body: some View {
         ZStack {
             if useMap {
-                if mapType == .downwind {
-                    StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
-                        .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
-                        .allowsHitTesting(!fullScreen)
-                } else if mapType == .yellow {
-                    WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
-                        .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
-                        .allowsHitTesting(!fullScreen)
-                } else {
-                    SpeedGradientStatisticsMap(statisticsData: .constant(statisticsData), maxPolylinePoints: Int(gradientPoints), maxGradientStops: Int(gradientPoints / 2))
-                        .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
-                        .allowsHitTesting(!fullScreen)
-                }
+                ShareMapComponent(downwindManager: downwindManager, statisticsData: statisticsData, mapType: mapType, gradientPoints: gradientPoints, fullScreen: fullScreen)
 
             } else if let image = selectedImage {
-                    
+
                 Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.25 : UIScreen.main.bounds.width)
-                
+
             } else {
                 Image("Icon")
                     .resizable()
@@ -64,20 +83,20 @@ struct ShareImagePreview: View {
             }
             VStack {
                     Spacer()
-                
+
                 HStack {
-                    
+
                     if !fullScreen {
                         Spacer(minLength: 0.0)
                     }
-                    
+
                     Group {
                         let hasDistance = statisticsData.runDistance > 0
-                                                
+
                         let topSpeedValue = getTopSpeedValue()
-                        
+
                         let topSpeedString = topSpeedSelection.rawValue
-                        
+
                         ShareOverlay(
                             sport: statisticsData.workoutType?.prettyString ?? "Surfing",
                             distance: hasDistance ? makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true) : String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal",
@@ -110,7 +129,7 @@ struct ShareImagePreview: View {
                         .scaleEffect(scale, anchor: fullScreen ? UnitPoint(x: 0.5, y: 1) : UnitPoint(x: 1, y: 1))
 
                     }
-                    
+
                 }
                 .background {
                     GeometryReader { geo in
@@ -124,19 +143,19 @@ struct ShareImagePreview: View {
                                         offset = -8.0
                                     }
                                 }
-                                
+
                             }
                     }
                 }
                 .offset(CGSize(width: offset, height: 0))
-                
-                
+
+
             }
             .padding(.bottom, fullScreen ? 32 : 8)
             .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
         }
     }
-    
+
     private func getTopSpeedValue() -> String {
         switch topSpeedSelection {
         case .gps:
