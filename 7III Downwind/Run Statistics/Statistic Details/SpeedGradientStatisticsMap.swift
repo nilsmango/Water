@@ -9,12 +9,15 @@ import SwiftUI
 import MapKit
 
 struct SpeedGradientStatisticsMap: UIViewRepresentable {
-    
+
     @Binding var statisticsData: RunStatistic
-    
+
     var lineWidth = 2.0
     let waveOpacity: CGFloat = 1.0
     let nonWaveOpacity: CGFloat = 0.3
+
+    var maxPolylinePoints: Int = MAX_POLYLINE_POINTS
+    var maxGradientStops: Int = MAX_GRADIENT_STOPS
     
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
@@ -37,6 +40,8 @@ struct SpeedGradientStatisticsMap: UIViewRepresentable {
         context.coordinator.currentLineWidth = lineWidth
         context.coordinator.currentWaveOpacity = waveOpacity
         context.coordinator.currentNonWaveOpacity = nonWaveOpacity
+        context.coordinator.currentMaxPolylinePoints = maxPolylinePoints
+        context.coordinator.currentMaxGradientStops = maxGradientStops
 
         context.coordinator.fullLocationData = statisticsData.locationData
         context.coordinator.fullWaves = statisticsData.waves ?? []
@@ -56,11 +61,11 @@ struct SpeedGradientStatisticsMap: UIViewRepresentable {
         if let waves = statisticsData.waves, !waves.isEmpty {
             let nonWaves = partsBetweenWaves(locationData: statisticsData.locationData, waves: waves)
 
-            context.coordinator.addWavePolylines(to: mapView, waves: waves, lineWidth: lineWidth, opacity: waveOpacity)
-            context.coordinator.addNonWavePolylines(to: mapView, nonWaves: nonWaves, lineWidth: lineWidth, opacity: nonWaveOpacity)
+            context.coordinator.addWavePolylines(to: mapView, waves: waves, lineWidth: lineWidth, opacity: waveOpacity, maxPolylinePoints: maxPolylinePoints, maxGradientStops: maxGradientStops)
+            context.coordinator.addNonWavePolylines(to: mapView, nonWaves: nonWaves, lineWidth: lineWidth, opacity: nonWaveOpacity, maxPolylinePoints: maxPolylinePoints, maxGradientStops: maxGradientStops)
         } else {
-            let downsampledForPolyline = downsamplePolylineCoordinates(statisticsData.locationData)
-            let downsampledForGradient = downsampleLocations(statisticsData.locationData)
+            let downsampledForPolyline = downsamplePolylineCoordinates(statisticsData.locationData, targetCount: maxPolylinePoints)
+            let downsampledForGradient = downsampleLocations(statisticsData.locationData, targetCount: maxGradientStops)
             let coordinates = makeCoordinates(from: downsampledForPolyline)
             let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
             context.coordinator.addPolyline(to: mapView, polyline: polyline, gradientLocations: downsampledForGradient, lineWidth: lineWidth, opacity: waveOpacity)
@@ -100,6 +105,8 @@ extension SpeedGradientStatisticsMap {
         var currentLineWidth: CGFloat = 0
         var currentWaveOpacity: CGFloat = 1.0
         var currentNonWaveOpacity: CGFloat = 0.3
+        var currentMaxPolylinePoints: Int = MAX_POLYLINE_POINTS
+        var currentMaxGradientStops: Int = MAX_GRADIENT_STOPS
         var debounceTimer: Timer?
         var mapViewRef: MKMapView?
 
@@ -114,22 +121,22 @@ extension SpeedGradientStatisticsMap {
             debounceTimer = nil
         }
 
-        func addWavePolylines(to mapView: MKMapView, waves: [[LocationData]], lineWidth: CGFloat, opacity: CGFloat) {
+        func addWavePolylines(to mapView: MKMapView, waves: [[LocationData]], lineWidth: CGFloat, opacity: CGFloat, maxPolylinePoints: Int = MAX_POLYLINE_POINTS, maxGradientStops: Int = MAX_GRADIENT_STOPS) {
             for wave in waves {
                 guard wave.count > 1 else { continue }
-                let downsampledForPolyline = downsamplePolylineCoordinates(wave)
-                let downsampledForGradient = downsampleLocations(wave)
+                let downsampledForPolyline = downsamplePolylineCoordinates(wave, targetCount: maxPolylinePoints)
+                let downsampledForGradient = downsampleLocations(wave, targetCount: maxGradientStops)
                 let coordinates = makeCoordinates(from: downsampledForPolyline)
                 let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
                 addPolyline(to: mapView, polyline: polyline, gradientLocations: downsampledForGradient, lineWidth: lineWidth, opacity: opacity)
             }
         }
 
-        func addNonWavePolylines(to mapView: MKMapView, nonWaves: [[LocationData]], lineWidth: CGFloat, opacity: CGFloat) {
+        func addNonWavePolylines(to mapView: MKMapView, nonWaves: [[LocationData]], lineWidth: CGFloat, opacity: CGFloat, maxPolylinePoints: Int = MAX_POLYLINE_POINTS, maxGradientStops: Int = MAX_GRADIENT_STOPS) {
             for nonWave in nonWaves {
                 guard nonWave.count > 1 else { continue }
-                let downsampledForPolyline = downsamplePolylineCoordinates(nonWave)
-                let downsampledForGradient = downsampleLocations(nonWave)
+                let downsampledForPolyline = downsamplePolylineCoordinates(nonWave, targetCount: maxPolylinePoints)
+                let downsampledForGradient = downsampleLocations(nonWave, targetCount: maxGradientStops)
                 let coordinates = makeCoordinates(from: downsampledForPolyline)
                 let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
                 addPolyline(to: mapView, polyline: polyline, gradientLocations: downsampledForGradient, lineWidth: lineWidth, opacity: opacity)
@@ -196,8 +203,8 @@ extension SpeedGradientStatisticsMap {
 
             guard visibleLocations.count > 1 else { return }
 
-            let downsampledForPolyline = downsamplePolylineCoordinates(visibleLocations)
-            let downsampledForGradient = downsampleLocations(visibleLocations)
+            let downsampledForPolyline = downsamplePolylineCoordinates(visibleLocations, targetCount: currentMaxPolylinePoints)
+            let downsampledForGradient = downsampleLocations(visibleLocations, targetCount: currentMaxGradientStops)
 
             mapView.removeOverlays(mapView.overlays)
 
@@ -210,8 +217,8 @@ extension SpeedGradientStatisticsMap {
                     let visibleNonWave = filterVisibleLocations(nonWave, in: paddedRect)
                     return visibleNonWave.count > 1 ? visibleNonWave : nil
                 }
-                addWavePolylines(to: mapView, waves: visibleWaves, lineWidth: currentLineWidth, opacity: currentWaveOpacity)
-                addNonWavePolylines(to: mapView, nonWaves: visibleNonWaves, lineWidth: currentLineWidth, opacity: currentNonWaveOpacity)
+                addWavePolylines(to: mapView, waves: visibleWaves, lineWidth: currentLineWidth, opacity: currentWaveOpacity, maxPolylinePoints: currentMaxPolylinePoints, maxGradientStops: currentMaxGradientStops)
+                addNonWavePolylines(to: mapView, nonWaves: visibleNonWaves, lineWidth: currentLineWidth, opacity: currentNonWaveOpacity, maxPolylinePoints: currentMaxPolylinePoints, maxGradientStops: currentMaxGradientStops)
             } else {
                 let coordinates = makeCoordinates(from: downsampledForPolyline)
                 let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)

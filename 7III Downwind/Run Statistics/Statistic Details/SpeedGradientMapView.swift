@@ -40,7 +40,7 @@ struct SpeedGradientMapView: UIViewRepresentable {
         context.coordinator.lineWidth = lineWidth
 
         let downsampledForPolyline = downsamplePolylineCoordinates(locations, targetCount: MAX_POLYLINE_POINTS)
-        let downsampledForGradient = downsampleLocations(locations, targetCount: MAX_POLYLINE_POINTS)
+        let downsampledForGradient = downsampleLocations(locations, targetCount: MAX_GRADIENT_STOPS)
         context.coordinator.locations = downsampledForGradient
 
         let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)

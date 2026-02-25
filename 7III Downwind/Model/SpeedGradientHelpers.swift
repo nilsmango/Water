@@ -20,9 +20,12 @@ struct GradientCacheKey: Hashable {
 var downsamplingCache: [DownsamplingCacheKey: [LocationData]] = [:]
 var gradientStopsCache: [GradientCacheKey: ([UIColor], [CGFloat])] = [:]
 
+let MAX_POLYLINE_POINTS = 1000
+let MAX_GRADIENT_STOPS = 500
+
 func downsampleLocations(
     _ locations: [LocationData],
-    targetCount: Int = 450
+    targetCount: Int = MAX_GRADIENT_STOPS
 ) -> [LocationData] {
     let locationHash = locations.hashValue
     let cacheKey = DownsamplingCacheKey(locationHash: locationHash, targetCount: targetCount)

@@ -22,12 +22,22 @@ struct OverlaySettingsView: View {
     @Binding var showHeartRate: Bool
     @Binding var showTags: Bool
     @Binding var useMap: Bool
+    @Binding var mapType: ShareMapType
+    @Binding var gradientPoints: Double
     @Binding var showImagePicker: Bool
     @Binding var showCamera: Bool
 //    @Binding var fullScreen: Bool
-    
+
     var statisticsData: RunStatistic
-    
+
+    var availableMapTypes: [ShareMapType] {
+        if statisticsData.workoutType?.isDWSport == true {
+            return ShareMapType.allCases
+        } else {
+            return [.gradient, .yellow]
+        }
+    }
+
     var body: some View {
         Group {
 //            Toggle("Insta Story", isOn: $fullScreen)
@@ -47,6 +57,27 @@ struct OverlaySettingsView: View {
             if statisticsData.tags != nil && !statisticsData.tags!.isEmpty {
                 Toggle("Show Tags", isOn: $showTags)
                     .tint(.accent)
+            }
+
+            if useMap {
+                Picker("Map Type", selection: $mapType) {
+                    ForEach(availableMapTypes, id: \.self) { option in
+                        Text(option.rawValue).tag(option)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+
+                if mapType == .gradient {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Gradient Points")
+                            Spacer()
+                            Text("\(Int(gradientPoints))")
+                                .monospacedDigit()
+                        }
+                        Slider(value: $gradientPoints, in: 1000...3000, step: 100)
+                    }
+                }
             }
                 
                 let hasDistance = statisticsData.runDistance > 0

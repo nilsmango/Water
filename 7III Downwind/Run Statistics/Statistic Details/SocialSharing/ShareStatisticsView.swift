@@ -8,6 +8,12 @@
 import SwiftUI
 import PhotosUI
 
+enum ShareMapType: String, CaseIterable {
+    case downwind = "Downwind"
+    case gradient = "Gradient"
+    case yellow = "Yellow"
+}
+
 struct IdentifiableImage: Identifiable {
     let id = UUID()
     let image: UIImage
@@ -15,10 +21,12 @@ struct IdentifiableImage: Identifiable {
 
 struct ShareStatisticsView: View {
     @ObservedObject var downwindManager: DownwindManager
-    
+
     var statisticsData: RunStatistic
-    
+
     @State private var useMap = true
+    @State private var mapType: ShareMapType = .gradient
+    @State private var gradientPoints: Double = 1000
     @State private var showAverageSpeed = true
     @State private var speedSelection: SpeedOption = .speed
     @State private var topSpeedSelection: TopSpeedOption = .top1
@@ -48,7 +56,7 @@ struct ShareStatisticsView: View {
     
     var body: some View {
         ScrollView {
-            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, showTags: showTags, offset: $offset) { view in
+            SharePreviewWrapper(downwindManager: downwindManager, statisticsData: statisticsData, useMap: useMap, mapType: mapType, gradientPoints: gradientPoints, showingSpeedInsteadPace: speedSelection == .speed ? true : false, showTopSpeed: showTopSpeed, topSpeedSelection: topSpeedSelection, showAverageSpeed: showAverageSpeed, scale: scale, locationName: statisticsData.locationString, showLocation: showLocation, showCalories: showCalories, showHeartRate: showHeartRate, showPopUps: showPopUps, showTimeOnFoil: showTimeOnFoil, showMaxDistanceOnFoil: showMaxDistanceOnFoil, showTurns: showTurns, fullScreen: fullScreen, showTags: showTags, offset: $offset) { view in
                 self.previewUIView = view
             }
             .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
@@ -90,6 +98,8 @@ struct ShareStatisticsView: View {
                         showHeartRate: $showHeartRate,
                         showTags: $showTags,
                         useMap: $useMap,
+                        mapType: $mapType,
+                        gradientPoints: $gradientPoints,
                         showImagePicker: $showImagePicker,
                         showCamera: $showCamera,
                         statisticsData: statisticsData
@@ -114,8 +124,13 @@ struct ShareStatisticsView: View {
                 if fullScreen {
                     offset = 0.0
                 }
+                if statisticsData.workoutType?.isDWSport == true {
+                    mapType = .downwind
+                } else {
+                    mapType = .gradient
+                }
             }
-            
+
         }
         
         .sheet(isPresented: $showImagePicker) {

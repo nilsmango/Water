@@ -11,6 +11,8 @@ struct ShareImagePreview: View {
     @ObservedObject var downwindManager: DownwindManager
     var statisticsData: RunStatistic
     var useMap: Bool
+    var mapType: ShareMapType
+    var gradientPoints: Double
     var showingSpeedInsteadPace: Bool
     var showTopSpeed: Bool
     var topSpeedSelection: TopSpeedOption
@@ -27,22 +29,26 @@ struct ShareImagePreview: View {
     var showTurns: Bool
     var fullScreen: Bool
     var showTags: Bool
-    
+
     @Binding var offset: Double
     
     var body: some View {
         ZStack {
             if useMap {
-                if let dW = statisticsData.workoutType?.isDWSport, dW == true {
+                if mapType == .downwind {
                     StatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
                         .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
                         .allowsHitTesting(!fullScreen)
+                } else if mapType == .yellow {
+                    WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: .constant(statisticsData))
+                        .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
+                        .allowsHitTesting(!fullScreen)
                 } else {
-                    SpeedGradientStatisticsMap(statisticsData: .constant(statisticsData))
+                    SpeedGradientStatisticsMap(statisticsData: .constant(statisticsData), maxPolylinePoints: Int(gradientPoints), maxGradientStops: Int(gradientPoints / 2))
                         .frame(width: UIScreen.main.bounds.width, height: fullScreen ? UIScreen.main.bounds.width * 1.7777777777777777 : UIScreen.main.bounds.width)
                         .allowsHitTesting(!fullScreen)
                 }
-                    
+
             } else if let image = selectedImage {
                     
                 Image(uiImage: image)
@@ -146,5 +152,5 @@ struct ShareImagePreview: View {
 
 
 #Preview {
-    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#swim", "#wakeboard", "#fun"]), useMap: true, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showMaxDistanceOnFoil: true, showTurns: true, fullScreen: true, showTags: true, offset: .constant(-8.0))
+    ShareImagePreview(downwindManager: DownwindManager(), statisticsData: RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: ["#swim", "#wakeboard", "#fun"]), useMap: true, mapType: .gradient, gradientPoints: 1000, showingSpeedInsteadPace: true, showTopSpeed: true, topSpeedSelection: .top1, showAverageSpeed: true, scale: 1.0, locationName: "Ipsach", showLocation: true, showCalories: true, showHeart: true, showPopUps: true, showTimeOnFoil: true, showMaxDistanceOnFoil: true, showTurns: true, fullScreen: true, showTags: true, offset: .constant(-8.0))
 }
