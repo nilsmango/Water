@@ -70,12 +70,15 @@ struct OverlaySettingsView: View {
                 if mapType == .gradient {
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("Gradient Points")
+                            Text("Max Points")
                             Spacer()
                             Text("\(Int(gradientPoints))")
                                 .monospacedDigit()
                         }
                         Slider(value: $gradientPoints, in: 1000...3000, step: 100)
+                        Text("More points = smoother route, heavier rendering")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
