@@ -56,7 +56,7 @@ struct SpotsView: View {
                             if coordinates.count >= 2 {
                             MapPolyline(coordinates: coordinates)
                                 .stroke(
-                                    spot.kind != .downwindRun ? .green : .neonYellow,
+                                    spot.pending == true ? Color.gray : (spot.kind != .downwindRun ? .green : .neonYellow),
                                     style: StrokeStyle(
                                         lineWidth: lineWidth,
                                         lineCap: .round,
@@ -68,7 +68,7 @@ struct SpotsView: View {
                             if let startCoord = coordinates.first {
                                 Annotation("", coordinate: startCoord) {
                                     Circle()
-                                        .fill(Color.green)
+                                        .fill(spot.pending == true ? Color.gray : Color.green)
                                         .stroke(.white, lineWidth: 2)
                                         .frame(width: 15.0)
                                         .onTapGesture {
@@ -83,7 +83,7 @@ struct SpotsView: View {
                             if let endCoord = coordinates.last {
                                 Annotation("", coordinate: endCoord) {
                                     Circle()
-                                        .fill(Color.red)
+                                        .fill(spot.pending == true ? Color.gray : Color.red)
                                         .stroke(.white, lineWidth: 2)
                                         .frame(width: 15.0)
                                         .onTapGesture {
