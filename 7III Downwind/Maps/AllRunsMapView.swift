@@ -16,6 +16,7 @@ struct AllRunsMapView: View {
     @State private var loadingProgress = ""
     @State private var loadedRuns: [RunStatistic] = []
     @State private var hasLoadedCoordinates = false
+    @State private var currentLoadTask: Task<Void, Never>?
     @State private var mapPosition: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -75,19 +76,6 @@ struct AllRunsMapView: View {
             }
             
             VStack {
-                if !availableYears.isEmpty {
-                    Picker("Year", selection: $selectedYear) {
-                        ForEach(availableYears, id: \.self) { year in
-                            Text(String(year)).tag(year)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding()
-                    .background(.ultraThinMaterial)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
-                }
-                
                 if isLoading {
                     HStack {
                         Text(loadingProgress)
@@ -96,7 +84,8 @@ struct AllRunsMapView: View {
                             .foregroundColor(.secondary)
                             .monospacedDigit()
                     }
-                    .padding()
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
                     .background(.ultraThinMaterial)
                     .cornerRadius(10)
                     .padding()
@@ -104,7 +93,35 @@ struct AllRunsMapView: View {
                 Spacer()
             }
         }
+        .toolbar {
+            if !availableYears.isEmpty {
+                ToolbarItem(placement: .principal) {
+                    Menu {
+                        ForEach(availableYears, id: \.self) { year in
+                            Button {
+                                selectedYear = year
+                            } label: {
+                                HStack {
+                                    Text(String(year))
+                                    if year == selectedYear {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                            }
+                        }
+                    } label: {
+                        Text(String(selectedYear))
+                            .bold()
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(10)
+                    }
+                }
+            }
+        }
         .onChange(of: selectedYear) { _, _ in
+            currentLoadTask?.cancel()
             hasLoadedCoordinates = false
             loadedRuns = []
             loadCoordinates()
@@ -128,8 +145,10 @@ struct AllRunsMapView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .short
         
-        Task {
+        currentLoadTask = Task {
             for (index, run) in runsToLoad.enumerated() {
+                guard !Task.isCancelled else { return }
+                
                 let runDate = run.startDate ?? run.locationData.first?.timestamp
                 let dateString = runDate.map { dateFormatter.string(from: $0) } ?? "Unknown date"
                 
@@ -137,10 +156,13 @@ struct AllRunsMapView: View {
                     loadingProgress = "Loading route \(index + 1)/\(totalRuns): \(dateString)"
                 }
                 
-                await withCheckedContinuation { continuation in
-                    downwindManager.loadRouteAndHeartFromHealth(statistic: run, withHeartRates: false) { _ in
-                        loadedCount += 1
-                        continuation.resume()
+                let needsLoading = run.locationData.isEmpty
+                if needsLoading {
+                    await withCheckedContinuation { continuation in
+                        downwindManager.loadRouteAndHeartFromHealth(statistic: run, withHeartRates: false) { _ in
+                            loadedCount += 1
+                            continuation.resume()
+                        }
                     }
                 }
                 
@@ -177,6 +199,7 @@ struct AllRunsMapView: View {
                 isLoading = false
                 loadingProgress = ""
                 hasLoadedCoordinates = true
+                currentLoadTask = nil
             }
         }
     }
