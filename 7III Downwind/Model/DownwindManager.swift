@@ -117,6 +117,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// backup to health
     var backupWorkoutData = [RunStatistic]()
+    private var latestStatisticLocationData: LocationData?
     
     /// Activates the run statistic tracking (only tracking)
     func startStatistic(tags: [String] = []) {
@@ -147,9 +148,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             // make the first data entry if there is a location
+            let currentLocationData = currentStatisticLocationData()
             var newStatistic: RunStatistic
-            if user.latitude != nil && user.longitude != nil {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: (user.speed ?? 0.0) * 3.6, locationData: [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)], tags: tags)
+            if let currentLocationData {
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: (user.speed ?? 0.0) * 3.6, locationData: [currentLocationData], tags: tags)
             } else {
                 newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: (user.speed ?? 0.0) * 3.6, locationData: [], tags: tags)
             }
@@ -177,8 +179,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 runStatistics[currentRunStatisticIndex].runTime = 0.0
                 runStatistics[currentRunStatisticIndex].runDistance = 0.0
                 runStatistics[currentRunStatisticIndex].topSpeed = (user.speed ?? 0.0) * 3.6
-                if user.latitude != nil && user.longitude != nil {
-                    runStatistics[currentRunStatisticIndex].locationData = [LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)]
+                if let currentLocationData = currentStatisticLocationData() {
+                    runStatistics[currentRunStatisticIndex].locationData = [currentLocationData]
                 } else {
                     runStatistics[currentRunStatisticIndex].locationData = []
                 }
@@ -391,14 +393,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// Updates the run statistic
-    private func updateStatistic() {
+    private func updateStatistic(with locationData: LocationData? = nil) {
         if activeStatistics {
             
             // only count if we have some accuracy
             if locationAccuracy <= Constants.minHorizontalAccuracy {
                 
                 // only update if we have valid data
-                if user.latitude != nil && user.longitude != nil {
+                if let newData = locationData ?? currentStatisticLocationData(refreshTimestamp: true) {
                     
                     // updating the show vars
                     let currentStatistic = runStatistics[currentRunStatisticIndex]
@@ -416,22 +418,44 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         // calculate distance from location
                         let lastLatitude = lastData.latitude
                         let lastLongitude = lastData.longitude
-                        let addedDistance = calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: user) ?? 0.0
+                        let addedDistance = calculateDirectDistance(
+                            from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude),
+                            to: Member(name: "newLocation", latitude: newData.latitude, longitude: newData.longitude)
+                        ) ?? 0.0
                         
                         runStatistics[currentRunStatisticIndex].runDistance += addedDistance
                     }
                     
                     // updating the top speed
-                    if (user.speed ?? 0.0) * 3.6 > currentStatistic.topSpeed {
-                        runStatistics[currentRunStatisticIndex].topSpeed = user.speed! * 3.6
+                    if (newData.speed ?? 0.0) * 3.6 > currentStatistic.topSpeed {
+                        runStatistics[currentRunStatisticIndex].topSpeed = (newData.speed ?? 0.0) * 3.6
                     }
                     
                     // updating the data
-                    let newData = LocationData(timestamp: Date.now, latitude: user.latitude!, longitude: user.longitude!, speed: user.speed ?? 0.0)
                     runStatistics[currentRunStatisticIndex].locationData.append(newData)
                 }
             }
         }
+    }
+    
+    private func currentStatisticLocationData(refreshTimestamp: Bool = false) -> LocationData? {
+        if var locationData = latestStatisticLocationData {
+            if refreshTimestamp {
+                locationData.timestamp = Date.now
+            }
+            return locationData
+        }
+        
+        guard let latitude = user.latitude, let longitude = user.longitude else {
+            return nil
+        }
+        
+        return LocationData(
+            timestamp: Date.now,
+            latitude: latitude,
+            longitude: longitude,
+            speed: user.speed ?? 0.0
+        )
     }
     
     /// updating the member locations in the statistics
@@ -1617,7 +1641,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // Do something with this batch of location data.
             for location in locations {
-                let locationData = LocationData(timestamp: location.timestamp, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, speed: location.speed)
+                let locationData = LocationData(
+                    timestamp: location.timestamp,
+                    latitude: location.coordinate.latitude,
+                    longitude: location.coordinate.longitude,
+                    altitude: location.altitude.isFinite ? location.altitude : nil,
+                    speed: location.speed,
+                    verticalAccuracy: location.verticalAccuracy >= 0 && location.verticalAccuracy.isFinite ? location.verticalAccuracy : nil
+                )
                 allLocations.append(locationData)
             }
             
@@ -2860,6 +2891,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         ignoreFirstFewLocations = true
         resetKalmanFilter = true
         isUpdatingLocation = false
+        lastAcceptedCollectionLocation = nil
+        latestStatisticLocationData = nil
         
         // set location of user to nil
         self.user.latitude = nil
@@ -2877,6 +2910,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 self.locationManager?.startUpdatingHeading()
                 locationManagerStartTime = Date.now
                 isUpdatingLocation = true
+                lastAcceptedCollectionLocation = nil
             }
             
             if cloudService {
@@ -3155,6 +3189,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var ignoreFirstFewLocations = true
     private let secondsWeIgnoreLocations = 5.0
     private var locationManagerStartTime = Date.distantPast
+    private var lastAcceptedCollectionLocation: CLLocation?
     
     // Kalman Filter
     var resetKalmanFilter: Bool = false
@@ -3211,9 +3246,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
         } else {
-            
-            guard let newLocation = locations.last else {
-                logError("Failed to get last location from locations array")
+            let acceptedLocations = filterObviousGPSJumps(from: locations)
+            guard let newLocation = acceptedLocations.last else {
                 return
             }
             
@@ -3234,7 +3268,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             if collectRawGPS {
-                routeBuilder?.insertRouteData(locations) { (success, error) in
+                routeBuilder?.insertRouteData(acceptedLocations) { (success, error) in
                     if !success {
                         let errorMessage = error?.localizedDescription ?? "Unknown error"
                         self.logError("Failed to insert raw GPS route data: \(errorMessage)")
@@ -3242,20 +3276,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
                 
                 DispatchQueue.main.async {
-                    // Check for invalid speed
-                    var speed = newLocation.speed
-                    if speed < 0.0 {
-                        self.logError("Received negative speed value: \(speed) m/s, setting to 0.0")
-                        speed = 0.0
-                    }
+                    let locationData = self.makeLocationData(from: newLocation)
+                    let speed = locationData.speed ?? 0.0
                     
                     self.user.latitude = newLocation.coordinate.latitude
                     self.user.longitude = newLocation.coordinate.longitude
                     self.user.speed = speed
+                    self.latestStatisticLocationData = locationData
                     
                     self.locationAccuracy = newLocation.horizontalAccuracy
                     
-                    self.updateStatistic()
+                    self.updateStatistic(with: locationData)
                 }
                 
             } else {
@@ -3301,20 +3332,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                     
                         DispatchQueue.main.async {
-                            // Check for invalid speed
-                            var speed = newLocation.speed
-                            if speed < 0.0 {
-                                self.logError("Received negative speed value: \(speed) m/s, setting to 0.0")
-                                speed = 0.0
-                            }
+                            let locationData = self.makeLocationData(from: newLocation)
+                            let speed = locationData.speed ?? 0.0
                             
                             self.user.latitude = newLocation.coordinate.latitude
                             self.user.longitude = newLocation.coordinate.longitude
                             self.user.speed = speed
+                            self.latestStatisticLocationData = locationData
                             
                             self.locationAccuracy = newLocation.horizontalAccuracy
                             
-                            self.updateStatistic()
+                            self.updateStatistic(with: locationData)
                         }
                     } else {
                         logError("Cannot initialize Kalman filter - accuracy too poor: \(newLocation.horizontalAccuracy)m")
@@ -3374,20 +3402,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             }
                         
                             DispatchQueue.main.async {
-                                // Check for invalid speed
-                                var speed = newLocation.speed
-                                if speed < 0.0 {
-                                    self.logError("Received negative speed value: \(speed) m/s, setting to 0.0")
-                                    speed = 0.0
-                                }
+                                let locationData = self.makeLocationData(from: kalmanLocation, speed: newLocation.speed)
+                                let speed = locationData.speed ?? 0.0
                                 
                                 self.user.latitude = kalmanLocation.coordinate.latitude
                                 self.user.longitude = kalmanLocation.coordinate.longitude
                                 self.user.speed = speed
+                                self.latestStatisticLocationData = locationData
                                 
                                 self.locationAccuracy = newLocation.horizontalAccuracy
                                 
-                                self.updateStatistic()
+                                self.updateStatistic(with: locationData)
                             }
                         } else {
                             logError("Skipping location update - accuracy too poor for Kalman processing: \(newLocation.horizontalAccuracy)m")
@@ -3396,6 +3421,57 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
             }
         }
+    }
+    
+    private func filterObviousGPSJumps(from locations: [CLLocation]) -> [CLLocation] {
+        var acceptedLocations = [CLLocation]()
+        
+        for location in locations {
+            guard !shouldDiscardObviousGPSJump(location) else {
+                continue
+            }
+            
+            acceptedLocations.append(location)
+            lastAcceptedCollectionLocation = location
+        }
+        
+        return acceptedLocations
+    }
+    
+    private func shouldDiscardObviousGPSJump(_ location: CLLocation) -> Bool {
+        guard let lastAcceptedCollectionLocation else {
+            return false
+        }
+        
+        let timeInterval = location.timestamp.timeIntervalSince(lastAcceptedCollectionLocation.timestamp)
+        if timeInterval > Constants.maxObviousGPSJumpTimeInterval {
+            return false
+        }
+        
+        let distance = location.distance(from: lastAcceptedCollectionLocation)
+        if distance > Constants.maxObviousGPSJumpDistance {
+            logError("Discarding obvious GPS jump of \(Int(distance.rounded()))m")
+            return true
+        }
+        
+        return false
+    }
+    
+    private func makeLocationData(from location: CLLocation, speed: Double? = nil) -> LocationData {
+        let resolvedSpeed = speed ?? location.speed
+        let normalizedSpeed = max(resolvedSpeed, 0.0)
+        if resolvedSpeed < 0.0 {
+            logError("Received negative speed value: \(resolvedSpeed) m/s, setting to 0.0")
+        }
+        
+        return LocationData(
+            timestamp: location.timestamp,
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude,
+            altitude: location.altitude.isFinite ? location.altitude : nil,
+            speed: normalizedSpeed,
+            verticalAccuracy: location.verticalAccuracy >= 0 && location.verticalAccuracy.isFinite ? location.verticalAccuracy : nil
+        )
     }
     
     // MARK: - Kalman Filter Tests (Developer Mode)
@@ -3436,7 +3512,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     
                     else {
                         let kalmanLocation = kalmanFilter.processState(currentLocation: CLLocation(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude), altitude: 440, horizontalAccuracy: 4.7, verticalAccuracy: 3.5, timestamp: location.timestamp))
-                        let newLocation = LocationData(timestamp: location.timestamp, latitude: kalmanLocation.coordinate.latitude, longitude: kalmanLocation.coordinate.longitude)
+                        let newLocation = LocationData(timestamp: location.timestamp, latitude: kalmanLocation.coordinate.latitude, longitude: kalmanLocation.coordinate.longitude, altitude: kalmanLocation.altitude)
                         
                         if let lastData = updatedStatistics.locationData.last {
                             
@@ -3853,7 +3929,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         continue
                     }
 
-                    let locationData = LocationData(timestamp: time, latitude: latitude, longitude: longitude, speed: point.speed)
+                    let locationData = LocationData(timestamp: time, latitude: latitude, longitude: longitude, altitude: Double(point.ele ?? ""), speed: point.speed)
                     locations.append(locationData)
 
                     if let hr = point.extensions?.trackPointExtension?.hr, let hrValue = Double(hr) {

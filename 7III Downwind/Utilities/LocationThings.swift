@@ -39,6 +39,7 @@ func calculateDirectDistance(from myself: Member, to member: Member) -> CLLocati
 
 
 private let metersPerYard = 0.9144
+private let metersPerFoot = 0.3048
 private let yardsPerMile = 1760.0
 private let metersPerMile = 1609.344
 
@@ -92,6 +93,18 @@ func makePrettyDistance(meters: Double, system: MeasurementSystem, statistics: B
     }
 }
 
+func makePrettyElevation(meters: Double, system: MeasurementSystem) -> String {
+    guard meters.isFinite else { return "" }
+    
+    switch system {
+    case .metric:
+        return "\(Int(meters.rounded())) m"
+    case .imperial:
+        let feet = meters / metersPerFoot
+        return "\(Int(feet.rounded())) ft"
+    }
+}
+
 private func formatWithSeparator(_ number: Int, separator: String) -> String {
     let numberFormatter = NumberFormatter()
     numberFormatter.groupingSeparator = separator
@@ -122,6 +135,145 @@ func makePrettySpeed(speed: Double?, system: MeasurementSystem) -> String {
         }
     }
     
+}
+
+func calculateJumpMetrics(from locations: [LocationData], minimumJumpHeight: Double = Constants.minimumJumpHeight) -> (jumpCount: Int, highestJump: Double)? {
+    let samples = usableAltitudeSamples(from: locations)
+    guard samples.count >= 5 else { return nil }
+    
+    let smoothedSamples = smoothAltitudes(samples)
+    let jumpHeights = detectJumpHeights(in: smoothedSamples, minimumJumpHeight: minimumJumpHeight)
+    guard let highestJump = jumpHeights.max() else { return nil }
+    
+    return (jumpCount: jumpHeights.count, highestJump: highestJump)
+}
+
+private struct AltitudeSample {
+    let timestamp: Date
+    let altitude: Double
+}
+
+private func usableAltitudeSamples(from locations: [LocationData]) -> [AltitudeSample] {
+    locations.compactMap { location in
+        guard let altitude = location.altitude, altitude.isFinite else {
+            return nil
+        }
+        
+        if let verticalAccuracy = location.verticalAccuracy,
+           (!verticalAccuracy.isFinite || verticalAccuracy < 0 || verticalAccuracy > 12) {
+            return nil
+        }
+        
+        return AltitudeSample(timestamp: location.timestamp, altitude: altitude)
+    }
+}
+
+private func smoothAltitudes(_ samples: [AltitudeSample], radius: Int = 1) -> [AltitudeSample] {
+    let _ = radius
+    return samples
+}
+
+private func detectJumpHeights(in samples: [AltitudeSample], minimumJumpHeight: Double) -> [Double] {
+    guard samples.count >= 5 else { return [] }
+    
+    // Approximate a jump from altitude-only route data by finding a short takeoff-peak-landing event.
+    let searchWindow: TimeInterval = 3.5
+    let minimumDuration: TimeInterval = 0.6
+    let maximumDuration: TimeInterval = 5.5
+    let minimumVerticalRate = 0.55
+    let minimumProminence = minimumJumpHeight * 0.65
+    
+    var jumpHeights = [Double]()
+    var lastAcceptedLandingIndex = -1
+    
+    for peakIndex in 1..<(samples.count - 1) {
+        if peakIndex <= lastAcceptedLandingIndex { continue }
+        
+        let peakSample = samples[peakIndex]
+        let previousAltitude = samples[peakIndex - 1].altitude
+        let nextAltitude = samples[peakIndex + 1].altitude
+        
+        guard peakSample.altitude >= previousAltitude,
+              peakSample.altitude > nextAltitude else {
+            continue
+        }
+        
+        guard let takeoffIndex = localTakeoffIndex(forPeakAt: peakIndex, in: samples, searchWindow: searchWindow),
+              let landingIndex = localLandingIndex(forPeakAt: peakIndex, in: samples, searchWindow: searchWindow) else {
+            continue
+        }
+        
+        if landingIndex <= takeoffIndex || landingIndex <= peakIndex { continue }
+        
+        let takeoffSample = samples[takeoffIndex]
+        let landingSample = samples[landingIndex]
+        let duration = landingSample.timestamp.timeIntervalSince(takeoffSample.timestamp)
+        if duration < minimumDuration || duration > maximumDuration { continue }
+        
+        let totalTime = landingSample.timestamp.timeIntervalSince(takeoffSample.timestamp)
+        guard totalTime > 0 else { continue }
+        
+        let peakTime = peakSample.timestamp.timeIntervalSince(takeoffSample.timestamp)
+        let baselineAtPeak = takeoffSample.altitude + (landingSample.altitude - takeoffSample.altitude) * (peakTime / totalTime)
+        let jumpHeight = peakSample.altitude - baselineAtPeak
+        let peakSupportHeight = max(previousAltitude, nextAltitude) - baselineAtPeak
+        
+        let ascentTime = peakSample.timestamp.timeIntervalSince(takeoffSample.timestamp)
+        let descentTime = landingSample.timestamp.timeIntervalSince(peakSample.timestamp)
+        guard ascentTime > 0, descentTime > 0 else { continue }
+        
+        let ascentRate = (peakSample.altitude - takeoffSample.altitude) / ascentTime
+        let descentRate = (peakSample.altitude - landingSample.altitude) / descentTime
+        let prominence = peakSample.altitude - max(takeoffSample.altitude, landingSample.altitude)
+        
+        guard jumpHeight >= minimumJumpHeight,
+              peakSupportHeight >= minimumJumpHeight * 0.25,
+              ascentRate >= minimumVerticalRate,
+              descentRate >= minimumVerticalRate,
+              prominence >= minimumProminence else {
+            continue
+        }
+        
+        jumpHeights.append(jumpHeight)
+        lastAcceptedLandingIndex = landingIndex
+    }
+    
+    return jumpHeights
+}
+
+private func localTakeoffIndex(forPeakAt peakIndex: Int, in samples: [AltitudeSample], searchWindow: TimeInterval) -> Int? {
+    guard peakIndex > 0 else { return nil }
+    
+    var index = peakIndex - 1
+    while index > 0,
+          peakIndex > index,
+          samples[peakIndex].timestamp.timeIntervalSince(samples[index - 1].timestamp) <= searchWindow,
+          samples[index - 1].altitude <= samples[index].altitude {
+        index -= 1
+    }
+    
+    guard samples[peakIndex].timestamp.timeIntervalSince(samples[index].timestamp) <= searchWindow else {
+        return nil
+    }
+    
+    return index
+}
+
+private func localLandingIndex(forPeakAt peakIndex: Int, in samples: [AltitudeSample], searchWindow: TimeInterval) -> Int? {
+    guard peakIndex < samples.count - 1 else { return nil }
+    
+    var index = peakIndex + 1
+    while index < samples.count - 1,
+          samples[index + 1].timestamp.timeIntervalSince(samples[peakIndex].timestamp) <= searchWindow,
+          samples[index + 1].altitude <= samples[index].altitude {
+        index += 1
+    }
+    
+    guard samples[index].timestamp.timeIntervalSince(samples[peakIndex].timestamp) <= searchWindow else {
+        return nil
+    }
+    
+    return index
 }
 
 /// Takes a time in minutes, returns a pretty time in d, h, min, s

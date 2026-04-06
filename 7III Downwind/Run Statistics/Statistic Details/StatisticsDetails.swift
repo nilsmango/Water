@@ -23,8 +23,48 @@ struct StatisticsDetails: View {
     let turns: Int
     let longestDistanceOnFoil: String
     let fastestDistances: [FastestDistanceResult]?
+    let jumpCount: Int?
+    let highestJump: String?
     
     @Binding var hasTappedDistance: Bool
+    
+    init(
+        distance: String,
+        time: String,
+        averageSpeed: String,
+        averagePace: String,
+        topSpeed: String,
+        topsSpeed1s: String,
+        topsSpeed10s: String,
+        kCal: String,
+        heartRate: String,
+        popUps: Int,
+        percentageOnFoil: Double,
+        turns: Int,
+        longestDistanceOnFoil: String,
+        fastestDistances: [FastestDistanceResult]?,
+        jumpCount: Int? = nil,
+        highestJump: String? = nil,
+        hasTappedDistance: Binding<Bool>
+    ) {
+        self.distance = distance
+        self.time = time
+        self.averageSpeed = averageSpeed
+        self.averagePace = averagePace
+        self.topSpeed = topSpeed
+        self.topsSpeed1s = topsSpeed1s
+        self.topsSpeed10s = topsSpeed10s
+        self.kCal = kCal
+        self.heartRate = heartRate
+        self.popUps = popUps
+        self.percentageOnFoil = percentageOnFoil
+        self.turns = turns
+        self.longestDistanceOnFoil = longestDistanceOnFoil
+        self.fastestDistances = fastestDistances
+        self.jumpCount = jumpCount
+        self.highestJump = highestJump
+        self._hasTappedDistance = hasTappedDistance
+    }
     
     let width = UIScreen.main.bounds.width / 3
     var body: some View {
@@ -114,6 +154,20 @@ struct StatisticsDetails: View {
             }
         }
         
+        if jumpCount != nil || highestJump != nil {
+            HStack {
+                if let jumpCount {
+                    StatisticsInfoViews(header: "Jumps", bodyText: String(jumpCount), headerBadgeText: "BETA")
+                        .frame(width: width, alignment: .leading)
+                }
+                
+                if let highestJump {
+                    StatisticsInfoViews(header: "Highest Jump", bodyText: highestJump, headerBadgeText: "BETA")
+                        .frame(width: width, alignment: .leading)
+                }
+            }
+        }
+        
         if heartRate != "0 bpm" || kCal != "0 kcal" {
             HStack {
                 if heartRate != "0 bpm" {
@@ -133,7 +187,7 @@ struct StatisticsDetails: View {
 #Preview {
     List {
         Section {
-            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134, longestDistanceOnFoil: "15 km", fastestDistances: [FastestDistanceResult(distanceLabel: "50 m", timeString: "7.1 s", speedString: "9.7 km/h", rawSpeed: 9.7), FastestDistanceResult(distanceLabel: "100 m", timeString: "14.2 s", speedString: "10.2 km/h", rawSpeed: 10.2), FastestDistanceResult(distanceLabel: "1 km", timeString: "3:45 min", speedString: "16.0 km/h", rawSpeed: 16.0)], hasTappedDistance: .constant(false))
+            StatisticsDetails(distance: "7.5 km", time: "23:30", averageSpeed: "13.4 km/h", averagePace: "2'23\" /km", topSpeed: "30.2 km/h", topsSpeed1s: "23.2 km/h", topsSpeed10s: "12.2 km/h", kCal: "84 kcal", heartRate: "120 bpm", popUps: 3, percentageOnFoil: 94.2, turns: 134, longestDistanceOnFoil: "15 km", fastestDistances: [FastestDistanceResult(distanceLabel: "50 m", timeString: "7.1 s", speedString: "9.7 km/h", rawSpeed: 9.7), FastestDistanceResult(distanceLabel: "100 m", timeString: "14.2 s", speedString: "10.2 km/h", rawSpeed: 10.2), FastestDistanceResult(distanceLabel: "1 km", timeString: "3:45 min", speedString: "16.0 km/h", rawSpeed: 16.0)], jumpCount: 6, highestJump: "1.8 m", hasTappedDistance: .constant(false))
         }
     }
 }

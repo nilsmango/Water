@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78F0A1012F6A6D1100A1B2C3 /* BetaBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */; };
 		78056D0A2F1E4568000D9591 /* SpeedGradientMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */; };
 		78056D0C2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */; };
 		78056D0E2F1E4596000D9591 /* SpeedGradientHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */; };
@@ -295,6 +296,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetaBadgeView.swift; sourceTree = "<group>"; };
 		78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientMapView.swift; sourceTree = "<group>"; };
 		78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientMapCoordinator.swift; sourceTree = "<group>"; };
 		78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientHelpers.swift; sourceTree = "<group>"; };
@@ -551,6 +553,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		78F0A1032F6A6D1100A1B2C3 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		78056FC12F217F66000D9591 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -730,6 +740,7 @@
 				78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */,
 				783886462DA2DB5F00B12FE9 /* ReviewRequestView.swift */,
 				785CCF1F2D6B182E0075CA4C /* ListBackground.swift */,
+				78F0A1032F6A6D1100A1B2C3 /* UI */,
 				78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */,
 				7840468E2C342160009F8733 /* SummaryView.swift */,
 				784046902C342363009F8733 /* StatisticMetricsView.swift */,
@@ -1269,6 +1280,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78F0A1012F6A6D1100A1B2C3 /* BetaBadgeView.swift in Sources */,
 				781A4BAB2C4E912F0046AE0E /* ShareImagePreview.swift in Sources */,
 				7840835A2C2188CF004C0857 /* HeartRateChartView.swift in Sources */,
 				7840835E2C21B279004C0857 /* MapSectionView.swift in Sources */,

@@ -9,6 +9,24 @@ import SwiftUI
 import StoreKit
 
 struct StatisticsRunView: View {
+    private struct DetailsSummary {
+        var distance = ""
+        var time = ""
+        var averageSpeed = ""
+        var averagePace = ""
+        var topSpeed = ""
+        var topsSpeed1s = ""
+        var topsSpeed10s = ""
+        var kCal = "0 kcal"
+        var heartRate = "0 bpm"
+        var popUps = 0
+        var percentageOnFoil = 0.0
+        var turns = 0
+        var longestDistanceOnFoil = "0 m"
+        var jumpCount: Int?
+        var highestJump: String?
+    }
+    
     @ObservedObject var downwindManager: DownwindManager
     
     @Binding var statisticsData: RunStatistic
@@ -53,6 +71,7 @@ struct StatisticsRunView: View {
     @State private var fastestDistances: [FastestDistanceResult]? = []
     @State private var rounds: [(String, String, String)] = []
     @State private var heartRateSpeedData: [SpeedSample] = []
+    @State private var detailsSummary = DetailsSummary()
     
     @AppStorage("hasTappedFastestDistance") var hasTappedDistance = false
     
@@ -63,7 +82,7 @@ struct StatisticsRunView: View {
         List {
             Section {
                 
-                StatisticsDetails(distance: makePrettyDistance(meters: statisticsData.runDistance, system: downwindManager.measurementSystem, statistics: true), time: makePrettyTime(timeInMinutes: statisticsData.runTime), averageSpeed: makePrettySpeed(speed: statisticsData.averageSpeed ?? (statisticsData.runDistance / 1000) / (statisticsData.runTime / 60), system: downwindManager.measurementSystem), averagePace: downwindManager.calculateAveragePace(statistic: statisticsData), topSpeed: makePrettySpeed(speed: statisticsData.topSpeed, system: downwindManager.measurementSystem), topsSpeed1s: makePrettySpeed(speed: statisticsData.topSpeed1s, system: downwindManager.measurementSystem), topsSpeed10s: makePrettySpeed(speed: statisticsData.topSpeed10s, system: downwindManager.measurementSystem), kCal: String(Int(statisticsData.kCalories?.rounded() ?? 0)) + " kcal", heartRate: String(Int(statisticsData.averageHeartRate?.rounded() ?? 0)) + " bpm", popUps: statisticsData.popUps ?? 0, percentageOnFoil: statisticsData.percentageOnFoil ?? 0, turns: statisticsData.turnsCount ?? 0, longestDistanceOnFoil: makePrettyDistance(meters: statisticsData.longestDistanceOnFoil ?? 0, system: downwindManager.measurementSystem, statistics: true), fastestDistances: fastestDistances, hasTappedDistance: $hasTappedDistance)
+                StatisticsDetails(distance: detailsSummary.distance, time: detailsSummary.time, averageSpeed: detailsSummary.averageSpeed, averagePace: detailsSummary.averagePace, topSpeed: detailsSummary.topSpeed, topsSpeed1s: detailsSummary.topsSpeed1s, topsSpeed10s: detailsSummary.topsSpeed10s, kCal: detailsSummary.kCal, heartRate: detailsSummary.heartRate, popUps: detailsSummary.popUps, percentageOnFoil: detailsSummary.percentageOnFoil, turns: detailsSummary.turns, longestDistanceOnFoil: detailsSummary.longestDistanceOnFoil, fastestDistances: fastestDistances, jumpCount: detailsSummary.jumpCount, highestJump: detailsSummary.highestJump, hasTappedDistance: $hasTappedDistance)
             } header: {
                 VStack(spacing: 0) {
                     StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
@@ -94,6 +113,7 @@ struct StatisticsRunView: View {
                 }
                 locationName = statisticsData.locationString ?? ""
                 editLocationName = locationName
+                detailsSummary = Self.makeDetailsSummary(from: statisticsData, measurementSystem: downwindManager.measurementSystem)
                 
                 guard !hasLoadedInitialData else {
                     return
@@ -103,61 +123,6 @@ struct StatisticsRunView: View {
                     await downwindManager.loadRouteAndHeartFromHealth(statistic: statisticsData) { _ in
                         Task { @MainActor in
                             await performBackgroundCalculations()
-                        }
-                    }
-                }
-                
-                // if foil sport and no % on foil calculate and save the stats
-                if statisticsData.percentageOnFoil ?? 0 == 0 ||
-                    statisticsData.longestDistanceOnFoil ?? 0 == 0 {
-                    
-                    guard let workoutType = statisticsData.workoutType,
-                          workoutType.calculateFoilingStats else { return }
-                    
-                    let locationData = statisticsData.locationData
-                    let threshold = workoutType.thresholdSpeedKmhSlowSpeedWithDefault
-                    let countTurns = workoutType.countTurns
-                    let returnWaves = workoutType.returnWaves
-                    let statsID = statisticsData.id
-                    
-                    Task.detached(priority: .utility) {
-                        let foilStats = calculateFoilingStats(
-                            from: locationData,
-                            thresholdSpeedKmh: threshold,
-                            countTurns: countTurns,
-                            returnWaves: returnWaves
-                        )
-                        
-                        guard foilStats != (0, 0, 0, 0, [[]]) else { return }
-                        
-                        await MainActor.run {
-                            statisticsData.popUps = foilStats.popUps
-                            statisticsData.percentageOnFoil = foilStats.timeOnFoilPercentage
-                            statisticsData.turnsCount = foilStats.turns
-                            statisticsData.longestDistanceOnFoil = foilStats.longestDistanceOnFoil
-                            statisticsData.waves = foilStats.waves
-                            
-                            downwindManager.saveOnFoilStats(
-                                popUps: foilStats.popUps,
-                                percentageOnFoil: foilStats.timeOnFoilPercentage,
-                                turns: foilStats.turns,
-                                longestDistanceOnFoil: foilStats.longestDistanceOnFoil,
-                                statisticsID: statsID,
-                                waves: foilStats.waves
-                            )
-                        }
-                    }
-                                        
-                    downwindManager.fetchHeartRatesOverTime(statisticID: statisticsData.id, startTime: statisticsData.startDate, endTime: statisticsData.endDate) { heartRateData, _  in
-                        if let heartRateData = heartRateData {
-                            heartRates = heartRateData
-                        }
-                    }
-                    
-                    // update some things if we have location data but no distance
-                    if !statisticsData.locationData.isEmpty && statisticsData.runDistance == 0.0 {
-                        DispatchQueue.main.async {
-                            downwindManager.saveEditedRoute(newStatistic: statisticsData, updatingExternal: true)
                         }
                     }
                 }
@@ -594,6 +559,8 @@ struct StatisticsRunView: View {
             hasLoadedInitialData = true
         }
         
+        await refreshDetailsSummaryAsync()
+        
         await MainActor.run {
             calculationProgress = "Loading heart rate..."
         }
@@ -632,6 +599,11 @@ struct StatisticsRunView: View {
             calculationProgress = "Processing speed data..."
         }
         await calculateSpeedDataAsync()
+        
+        await MainActor.run {
+            calculationProgress = "Finalizing details..."
+        }
+        await refreshDetailsSummaryAsync()
         
         await MainActor.run {
             isCalculating = false
@@ -787,6 +759,50 @@ struct StatisticsRunView: View {
         await MainActor.run {
             heartRateSpeedData = speedDataResult
         }
+    }
+    
+    private func refreshDetailsSummaryAsync() async {
+        let statistic = statisticsData
+        let measurementSystem = downwindManager.measurementSystem
+        
+        let summary = await Task.detached(priority: .utility) {
+            Self.makeDetailsSummary(from: statistic, measurementSystem: measurementSystem)
+        }.value
+        
+        await MainActor.run {
+            detailsSummary = summary
+        }
+    }
+    
+    private nonisolated static func makeDetailsSummary(from statistic: RunStatistic, measurementSystem: MeasurementSystem) -> DetailsSummary {
+        let averageSpeedValue = statistic.averageSpeed ?? (statistic.runDistance / 1000) / (statistic.runTime / 60)
+        let averagePace = makeAveragePaceString(for: statistic)
+        let jumpMetrics = calculateJumpMetrics(from: statistic.locationData)
+        
+        return DetailsSummary(
+            distance: makePrettyDistance(meters: statistic.runDistance, system: measurementSystem, statistics: true),
+            time: makePrettyTime(timeInMinutes: statistic.runTime),
+            averageSpeed: makePrettySpeed(speed: averageSpeedValue, system: measurementSystem),
+            averagePace: averagePace,
+            topSpeed: makePrettySpeed(speed: statistic.topSpeed, system: measurementSystem),
+            topsSpeed1s: makePrettySpeed(speed: statistic.topSpeed1s, system: measurementSystem),
+            topsSpeed10s: makePrettySpeed(speed: statistic.topSpeed10s, system: measurementSystem),
+            kCal: String(Int(statistic.kCalories?.rounded() ?? 0)) + " kcal",
+            heartRate: String(Int(statistic.averageHeartRate?.rounded() ?? 0)) + " bpm",
+            popUps: statistic.popUps ?? 0,
+            percentageOnFoil: statistic.percentageOnFoil ?? 0,
+            turns: statistic.turnsCount ?? 0,
+            longestDistanceOnFoil: makePrettyDistance(meters: statistic.longestDistanceOnFoil ?? 0, system: measurementSystem, statistics: true),
+            jumpCount: jumpMetrics?.jumpCount,
+            highestJump: jumpMetrics.map { makePrettyElevation(meters: $0.highestJump, system: measurementSystem) }
+        )
+    }
+    
+    private nonisolated static func makeAveragePaceString(for statistic: RunStatistic) -> String {
+        let totalCalculatedTime = (statistic.locationData.last?.timestamp ?? Date.now).timeIntervalSince(statistic.locationData.first?.timestamp ?? Date.now)
+        let pace = totalCalculatedTime / (statistic.runDistance / 1000)
+        let prettyPace = makePrettyMinutesString(timeInSeconds: pace, paceFormat: true)
+        return prettyPace + " /km"
     }
     
     private nonisolated static func createRounds(from locations: [LocationData]) -> [(String, String, String)] {

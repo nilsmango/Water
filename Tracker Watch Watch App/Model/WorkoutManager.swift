@@ -198,6 +198,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         averageSpeed = 0
         userLocation = nil
         previousUserLocation = nil
+        lastAcceptedCollectionLocation = nil
         
         // update the workout usage count
         incrementWorkoutCount(for: workoutType)
@@ -304,6 +305,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var ignoreFirstFewLocations = true
     private let secondsWeIgnoreLocations = 5.0
     private var locationManagerStartTime = Date.distantPast
+    private var lastAcceptedCollectionLocation: CLLocation?
     
     // Kalman Filter
     var resetKalmanFilter: Bool = false
@@ -343,6 +345,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 self.locationManager?.startUpdatingHeading()
                 locationManagerStartTime = Date.now
                 isUpdatingLocation = true
+                lastAcceptedCollectionLocation = nil
             }
         } else {
             // show location authorization request again
@@ -361,6 +364,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         ignoreFirstFewLocations = true
         resetKalmanFilter = true
         isUpdatingLocation = false
+        lastAcceptedCollectionLocation = nil
         
         // reset locations
         DispatchQueue.main.async {
@@ -380,15 +384,15 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
         } else {
-            
-            if !withGPS {
-                startLocation = locations.last
-                stopLocationService()
+            let acceptedLocations = filterObviousGPSJumps(from: locations)
+            guard let newLocation = acceptedLocations.last else {
+                return
             }
             
-            guard let newLocation = locations.last else {
-                print("Something wrong with locationManager")
-                return }
+            if !withGPS {
+                startLocation = newLocation
+                stopLocationService()
+            }
             
             if kalmanFilter == nil {
                 if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
@@ -468,6 +472,40 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
             }
         }
+    }
+    
+    private func filterObviousGPSJumps(from locations: [CLLocation]) -> [CLLocation] {
+        var acceptedLocations = [CLLocation]()
+        
+        for location in locations {
+            guard !shouldDiscardObviousGPSJump(location) else {
+                continue
+            }
+            
+            acceptedLocations.append(location)
+            lastAcceptedCollectionLocation = location
+        }
+        
+        return acceptedLocations
+    }
+    
+    private func shouldDiscardObviousGPSJump(_ location: CLLocation) -> Bool {
+        guard let lastAcceptedCollectionLocation else {
+            return false
+        }
+        
+        let timeInterval = location.timestamp.timeIntervalSince(lastAcceptedCollectionLocation.timestamp)
+        if timeInterval > Constants.maxObviousGPSJumpTimeInterval {
+            return false
+        }
+        
+        let distance = location.distance(from: lastAcceptedCollectionLocation)
+        if distance > Constants.maxObviousGPSJumpDistance {
+            print("Discarding obvious GPS jump of \(Int(distance.rounded()))m")
+            return true
+        }
+        
+        return false
     }
     
     /// Updates the run statistic
@@ -909,5 +947,4 @@ extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
         }
     }
 }
-
 

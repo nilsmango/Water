@@ -245,14 +245,13 @@ struct HeartRateChart: View {
                                 }
                             }
                             .padding(8)
-                            .background(Color(.systemBackground))
+                            .background(Color(.systemBackground).opacity(0.8))
                             .cornerRadius(8)
                         }
                 }
             }
             .chartXScale(domain: 0...secondsFromStart(endTime))
             .chartYScale(domain: minY...maxY)
-            .chartXSelection(value: $selectedTime)
             .chartXAxis {
                 AxisMarks(values: .automatic) { value in
                     if let seconds = value.as(Double.self) {
@@ -292,6 +291,9 @@ struct HeartRateChart: View {
                     }
                 }
             })
+            .chartOverlay { chartProxy in
+                selectionOverlay(chartProxy: chartProxy, upperBound: secondsFromStart(endTime))
+            }
             .frame(height: 200)
             
             Text("min")
@@ -367,14 +369,13 @@ struct HeartRateChart: View {
                                     }
                                 }
                                 .padding(8)
-                                .background(Color(.systemBackground))
+                                .background(Color(.systemBackground).opacity(0.8))
                                 .cornerRadius(8)
                             }
                     }
                 }
                 .chartXScale(domain: 0...speedOnlyEndTime)
                 .chartYScale(domain: speedMin...speedMax)
-                .chartXSelection(value: $selectedTime)
                 .chartXAxis {
                     AxisMarks(values: .automatic) { value in
                         if let seconds = value.as(Double.self) {
@@ -386,6 +387,9 @@ struct HeartRateChart: View {
                             AxisTick()
                         }
                     }
+                }
+                .chartOverlay { chartProxy in
+                    selectionOverlay(chartProxy: chartProxy, upperBound: speedOnlyEndTime)
                 }
                 .chartYAxis {
                     AxisMarks(values: .automatic) { value in
@@ -434,6 +438,38 @@ struct HeartRateChart: View {
             )
             .foregroundStyle(Color.accentColor)
             .interpolationMethod(.linear)
+        }
+    }
+    
+    private func selectionOverlay(chartProxy: ChartProxy, upperBound: Double) -> some View {
+        GeometryReader { geometry in
+            let plotFrame = geometry[chartProxy.plotAreaFrame]
+            
+            Rectangle()
+                .fill(.clear)
+                .contentShape(Rectangle())
+                .gesture(
+                    DragGesture(minimumDistance: 3)
+                        .onChanged { value in
+                            let relativeX = min(max(0, value.location.x - plotFrame.origin.x), plotFrame.size.width)
+                            
+                            if let selectedValue = chartProxy.value(atX: relativeX, as: Double.self) {
+                                selectedTime = min(max(0, selectedValue), upperBound)
+                            }
+                        }
+                )
+                .simultaneousGesture(
+                    SpatialTapGesture()
+                        .onEnded { value in
+                            let relativeX = min(max(0, value.location.x - plotFrame.origin.x), plotFrame.size.width)
+                            
+                            if selectedTime != nil {
+                                selectedTime = nil
+                            } else if let selectedValue = chartProxy.value(atX: relativeX, as: Double.self) {
+                                selectedTime = min(max(0, selectedValue), upperBound)
+                            }
+                        }
+                )
         }
     }
 }

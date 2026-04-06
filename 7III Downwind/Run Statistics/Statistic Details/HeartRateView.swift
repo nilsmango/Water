@@ -32,7 +32,7 @@ struct HeartRateView: View {
                     HeartRateChartView(measurements: heartRates, speedData: speedData, selectedTime: $selectedTime)
 
                 }
-                .frame(height: selectedTime != nil ? 265 : 253)
+                .frame(height: selectedTime != nil ? 274 : 253)
                 
             } header: {
                 HStack {
@@ -50,7 +50,7 @@ struct HeartRateView: View {
             } footer: {
                 HStack(alignment: .firstTextBaseline) {
                     Image(systemName: "info.circle")
-                    Text("Drag the chart for exact values")
+                    Text("Drag the chart for exact values. Tap to dismiss.")
                 }
             }
         }
@@ -144,14 +144,13 @@ struct SpeedDistributionView: View {
                                                 .font(.caption2)
                                             }
                                             .padding(8)
-                                            .background(Color(.systemBackground))
+                                            .background(Color(.systemBackground).opacity(0.8))
                                             .cornerRadius(8)
                                         }
                                 }
                             }
                             .chartXScale(domain: chartDomain)
                             .chartYScale(domain: 0...maxPercentage)
-                            .chartXSelection(value: $selectedSpeed)
                             .chartXAxis {
                                 AxisMarks(values: .automatic(desiredCount: 7)) { value in
                                     if let speed = value.as(Double.self) {
@@ -163,6 +162,9 @@ struct SpeedDistributionView: View {
                                         AxisTick()
                                     }
                                 }
+                            }
+                            .chartOverlay { chartProxy in
+                                speedDistributionSelectionOverlay(chartProxy: chartProxy)
                             }
                             .chartYAxis {
                                 AxisMarks(position: .leading, values: .automatic) { value in
@@ -209,7 +211,7 @@ struct SpeedDistributionView: View {
             } footer: {
                 HStack(alignment: .firstTextBaseline) {
                     Image(systemName: "info.circle")
-                    Text("Drag the chart for exact values")
+                    Text("Drag the chart for exact values. Tap to dismiss.")
                 }
             }
         }
@@ -239,6 +241,38 @@ struct SpeedDistributionView: View {
             return "\(Int(speed.rounded()))"
         } else {
             return String(format: "%.1f", speed)
+        }
+    }
+    
+    private func speedDistributionSelectionOverlay(chartProxy: ChartProxy) -> some View {
+        GeometryReader { geometry in
+            let plotFrame = geometry[chartProxy.plotAreaFrame]
+            
+            Rectangle()
+                .fill(.clear)
+                .contentShape(Rectangle())
+                .gesture(
+                    DragGesture(minimumDistance: 3)
+                        .onChanged { value in
+                            let relativeX = min(max(0, value.location.x - plotFrame.origin.x), plotFrame.size.width)
+                            
+                            if let selectedValue = chartProxy.value(atX: relativeX, as: Double.self) {
+                                selectedSpeed = min(max(chartDomain.lowerBound, selectedValue), chartDomain.upperBound)
+                            }
+                        }
+                )
+                .simultaneousGesture(
+                    SpatialTapGesture()
+                        .onEnded { value in
+                            let relativeX = min(max(0, value.location.x - plotFrame.origin.x), plotFrame.size.width)
+                            
+                            if selectedSpeed != nil {
+                                selectedSpeed = nil
+                            } else if let selectedValue = chartProxy.value(atX: relativeX, as: Double.self) {
+                                selectedSpeed = min(max(chartDomain.lowerBound, selectedValue), chartDomain.upperBound)
+                            }
+                        }
+                )
         }
     }
     
