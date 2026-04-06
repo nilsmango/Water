@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		78F0A1012F6A6D1100A1B2C3 /* BetaBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */; };
 		78056D0A2F1E4568000D9591 /* SpeedGradientMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */; };
 		78056D0C2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */; };
 		78056D0E2F1E4596000D9591 /* SpeedGradientHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */; };
@@ -210,6 +209,7 @@
 		78F047C32D9DA417003E11FA /* ImportRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C22D9DA417003E11FA /* ImportRun.swift */; };
 		78F047C52D9DA607003E11FA /* GPXStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C42D9DA607003E11FA /* GPXStuff.swift */; };
 		78F047C82D9DA655003E11FA /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
+		78F0A1012F6A6D1100A1B2C3 /* BetaBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */; };
 		78F36B2C2D9AB1160079F20B /* CrownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2B2D9AB1160079F20B /* CrownButton.swift */; };
 		78F36B2E2D9AB9C10079F20B /* OptionsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */; };
 		78F937F02C35816B00D34796 /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
@@ -296,7 +296,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetaBadgeView.swift; sourceTree = "<group>"; };
 		78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientMapView.swift; sourceTree = "<group>"; };
 		78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientMapCoordinator.swift; sourceTree = "<group>"; };
 		78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientHelpers.swift; sourceTree = "<group>"; };
@@ -489,6 +488,7 @@
 		78EC60922E0EACF600C55950 /* StickerHowToView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerHowToView.swift; sourceTree = "<group>"; };
 		78F047C22D9DA417003E11FA /* ImportRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRun.swift; sourceTree = "<group>"; };
 		78F047C42D9DA607003E11FA /* GPXStuff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXStuff.swift; sourceTree = "<group>"; };
+		78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetaBadgeView.swift; sourceTree = "<group>"; };
 		78F36B2B2D9AB1160079F20B /* CrownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrownButton.swift; sourceTree = "<group>"; };
 		78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsSheetView.swift; sourceTree = "<group>"; };
 		78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindSportStatisticsMap.swift; sourceTree = "<group>"; };
@@ -553,14 +553,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		78F0A1032F6A6D1100A1B2C3 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */,
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
 		78056FC12F217F66000D9591 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -1017,6 +1009,14 @@
 				78A2836F2C3E8D6C0052AA52 /* StoreKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		78F0A1032F6A6D1100A1B2C3 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1669,7 +1669,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
@@ -1719,7 +1719,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
@@ -1769,7 +1769,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1806,7 +1806,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1841,7 +1841,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
@@ -1861,7 +1861,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
