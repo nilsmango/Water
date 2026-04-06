@@ -19,7 +19,7 @@ struct BetaBadgeView: View {
             .padding(.vertical, 3)
             .background(
                 Capsule()
-                    .fill(Color.blue)
+                    .fill(Color.accentColor)
             )
     }
 }

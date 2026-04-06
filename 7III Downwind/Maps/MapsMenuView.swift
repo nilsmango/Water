@@ -26,8 +26,17 @@ struct MapsMenuView: View {
             
             Spacer()
         }
-        .navigationTitle("Maps")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                HStack(spacing: 8) {
+                    Text("Maps")
+                        .font(.headline)
+                    
+                    BetaBadgeView()
+                }
+            }
+        }
     }
 }
 

@@ -568,6 +568,7 @@
 			isa = PBXGroup;
 			children = (
 				78056FC12F217F66000D9591 /* Models */,
+				78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */,
 				78056FC22F217F66000D9591 /* SpotDetailView.swift */,
 				780570732F225E22000D9591 /* AddSpotView.swift */,
 				780570742F225E22000D9591 /* CountryPicker.swift */,
@@ -576,7 +577,6 @@
 				780570772F225E22000D9591 /* VideoSectionView.swift */,
 				780571AC2F23BEEC000D9591 /* AllRunsMapView.swift */,
 				78056FC32F217F66000D9591 /* SpotsView.swift */,
-				78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */,
 			);
 			path = Maps;
 			sourceTree = "<group>";
