@@ -82,11 +82,9 @@ struct StatisticsRunView: View {
                 }
                 .foregroundStyle(.primary)
             } footer: {
-                if !hasTappedDistance {
-                    HStack(alignment: .firstTextBaseline) {
-                        Image(systemName: "info.circle")
-                        Text("Tap any fastest distance to toggle between time and speed")
-                    }
+                HStack(alignment: .firstTextBaseline) {
+                    Image(systemName: "info.circle")
+                    Text("Tap any fastest distance to toggle between time and speed")
                 }
             }
             .onAppear {
@@ -206,6 +204,7 @@ struct StatisticsRunView: View {
                 }
                 
                 HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate, speedData: heartRateSpeedData)
+                SpeedDistributionView(downwindManager: downwindManager, speedData: heartRateSpeedData)
                 
                 Section {
                     TagsFlexiView(strings: tags)
@@ -909,8 +908,36 @@ struct StatisticsRunView: View {
     }
 }
 
+private func makeStatisticsRunPreviewData() -> [LocationData] {
+    let speedCorrectionFactor = 3.2
+    
+    return (decodeLocationSampleData() ?? Constants.locationSampleData).map { location in
+        var adjustedLocation = location
+        
+        if let speed = adjustedLocation.speed, speed > 0 {
+            adjustedLocation.speed = speed / speedCorrectionFactor
+        }
+        
+        return adjustedLocation
+    }
+}
+
 #Preview {
     NavigationStack {
-        StatisticsRunView(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
+        StatisticsRunView(
+            downwindManager: DownwindManager(),
+            statisticsData: .constant(
+                RunStatistic(
+                    id: UUID(),
+                    runName: "Testrun",
+                    crewStatistics: [],
+                    runTime: 81.1,
+                    runDistance: 2000,
+                    topSpeed: 26,
+                    locationData: makeStatisticsRunPreviewData(),
+                    tags: []
+                )
+            )
+        )
     }
 }

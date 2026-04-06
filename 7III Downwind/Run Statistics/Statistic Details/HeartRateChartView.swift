@@ -201,7 +201,14 @@ struct HeartRateChart: View {
                     RuleMark(x: .value("Selected", selectedTime))
                         .foregroundStyle(.gray.opacity(0.5))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
-                        .annotation(position: .top, spacing: 0) {
+                        .annotation(
+                            position: .top,
+                            spacing: 0,
+                            overflowResolution: .init(
+                                x: .fit(to: .chart),
+                                y: .disabled
+                            )
+                        ) {
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack(spacing: 4) {
                                     Image(systemName: "stopwatch")
@@ -286,6 +293,12 @@ struct HeartRateChart: View {
                 }
             })
             .frame(height: 200)
+            
+            Text("min")
+                .font(.caption)
+                .foregroundStyle(.primary)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 3)
         }
     }
     
@@ -322,7 +335,14 @@ struct HeartRateChart: View {
                         RuleMark(x: .value("Selected", selectedTime))
                             .foregroundStyle(.gray.opacity(0.5))
                             .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
-                            .annotation(position: .top, spacing: 0) {
+                            .annotation(
+                                position: .top,
+                                spacing: 0,
+                                overflowResolution: .init(
+                                    x: .fit(to: .chart),
+                                    y: .disabled
+                                )
+                            ) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     HStack(spacing: 4) {
                                         Image(systemName: "stopwatch")
@@ -381,6 +401,12 @@ struct HeartRateChart: View {
                     }
                 }
                 .frame(height: 200)
+                
+                Text("min")
+                    .font(.caption)
+                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 3)
             }
         }
     }
