@@ -491,22 +491,38 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    /// Calculating all sessions in the for the year or month of the year. Returns the total and each session in a dict
-    func calculateSessions(for yearIndex: Int, month: Int? = nil) -> (total: Int, types: [WorkoutType: Int]) {
+    /// Calculating all sessions in the for the year or month of the year. Returns totals plus distinct session days overall and per activity.
+    func calculateSessions(for yearIndex: Int, month: Int? = nil) -> (total: Int, totalDays: Int, types: [WorkoutType: Int], typeDays: [WorkoutType: Int]) {
         var totalSessions = 0
         var workoutCounts: [WorkoutType: Int] = [:]
+        var sessionDays = Set<Date>()
+        var workoutSessionDays: [WorkoutType: Set<Date>] = [:]
         
         // Ensure year index is valid
         guard yearIndex >= 0 && yearIndex < groupedRunStatistics.count else {
-            return (0, [:])
+            return (0, 0, [:], [:])
         }
         
         let yearData = groupedRunStatistics[yearIndex]
+        let calendar = Calendar.current
+        
+        func addSessionDay(for run: RunStatistic) {
+            guard let sessionDate = run.startDate ?? run.locationData.first?.timestamp else {
+                return
+            }
+            
+            let day = calendar.startOfDay(for: sessionDate)
+            sessionDays.insert(day)
+            
+            if let type = run.workoutType {
+                workoutSessionDays[type, default: []].insert(day)
+            }
+        }
         
         if let month = month {
             // Ensure month index is valid
             guard month >= 0 && month < yearData.count else {
-                return (0, [:])
+                return (0, 0, [:], [:])
             }
             
             for run in yearData[month] {
@@ -514,6 +530,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 if let type = run.workoutType {
                     workoutCounts[type, default: 0] += 1
                 }
+                addSessionDay(for: run)
             }
             
         } else {
@@ -524,11 +541,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     if let type = run.workoutType {
                         workoutCounts[type, default: 0] += 1
                     }
+                    addSessionDay(for: run)
                 }
             }
         }
         
-        return (totalSessions, workoutCounts)
+        let workoutDayCounts = workoutSessionDays.mapValues(\.count)
+        return (totalSessions, sessionDays.count, workoutCounts, workoutDayCounts)
     }
     
     func getWorkoutsOfList() -> [String] {

@@ -15,17 +15,19 @@ struct YearlyMonthlyStatisticView: View {
     var body: some View {
         // Sessions count
         let sessions = downwindManager.calculateSessions(for: yearIndex, month: monthIndex)
+        let sessionSummary = "\(sessions.total) \(sessions.total == 1 ? "Session" : "Sessions") on \(sessions.totalDays) \(sessions.totalDays == 1 ? "Day" : "Days")"
         if sessions.total == 0 {
-            Label(sessions.total == 1 ? "\(sessions.total) Session" : "\(sessions.total) Sessions", systemImage: "trophy.fill")
+            Label(sessionSummary, systemImage: "trophy.fill")
         } else {
             DisclosureGroup {
                 ForEach(sessions.types.sorted(by: { $0.value > $1.value }), id: \.key) { session in
                     if session.value > 0 {
-                        Text("\(session.value) x \(session.key.prettyString)")
+                        let daysWithSessions = sessions.typeDays[session.key, default: 0]
+                        Text("\(session.value) x \(session.key.prettyString) • \(daysWithSessions) \(daysWithSessions == 1 ? "day" : "days")")
                     }
                 }
             } label: {
-                Label(sessions.total == 1 ? "\(sessions.total) Session" : "\(sessions.total) Sessions", systemImage: "trophy.fill")
+                Label(sessionSummary, systemImage: "trophy.fill")
             }
         }
 
@@ -88,8 +90,13 @@ struct YearlyMonthlyStatisticView: View {
 }
 
 class MockDownwindManager: DownwindManager {
-    override func calculateSessions(for yearIndex: Int, month: Int?) -> (total: Int, types: [WorkoutType: Int]) {
-        return (15, [.dWParawing: 1, .parawing: 4, .pumpFoil: 5, .foilSurf: 2, .wingFoil: 3])
+    override func calculateSessions(for yearIndex: Int, month: Int?) -> (total: Int, totalDays: Int, types: [WorkoutType: Int], typeDays: [WorkoutType: Int]) {
+        return (
+            15,
+            9,
+            [.dWParawing: 1, .parawing: 4, .pumpFoil: 5, .foilSurf: 2, .wingFoil: 3],
+            [.dWParawing: 1, .parawing: 3, .pumpFoil: 4, .foilSurf: 2, .wingFoil: 2]
+        )
     }
 
     override func calculateTimeOnWater(for yearIndex: Int, month: Int?) -> (total: String, types: [WorkoutType: Double]) {
