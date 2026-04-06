@@ -1964,7 +1964,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 }
                                 let dateString = statistic.startDate?.formatted(date: .abbreviated, time: .omitted) ?? "unknown"
 
-                                print("updating location string of: \(location), date: \(dateString)")
+                                // print("updating location string of: \(location), date: \(dateString)")
 //                                dispatchGroup.leave()
                                 self.updateGroupedRunArray()
                                 
@@ -1972,7 +1972,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         }
                         
                     } else {
-                        print("Could not load route endpoints nor startLocation found for run")
+                        // print("Could not load route endpoints nor startLocation found for run")
                     }
                 }
             }
