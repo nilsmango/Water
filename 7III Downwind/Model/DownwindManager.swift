@@ -1962,7 +1962,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                     // updating the locationStrings
                                     self.updateAndSortLocationStrings(location: location)
                                 }
-                                let dateString = statistic.startDate?.formatted(date: .abbreviated, time: .omitted) ?? "unknown"
+                                // let dateString = statistic.startDate?.formatted(date: .abbreviated, time: .omitted) ?? "unknown"
 
                                 // print("updating location string of: \(location), date: \(dateString)")
 //                                dispatchGroup.leave()
