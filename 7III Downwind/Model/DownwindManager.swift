@@ -2893,6 +2893,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         isUpdatingLocation = false
         lastAcceptedCollectionLocation = nil
         latestStatisticLocationData = nil
+        resetPoorAccuracyFailOpen()
         
         // set location of user to nil
         self.user.latitude = nil
@@ -2911,6 +2912,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 locationManagerStartTime = Date.now
                 isUpdatingLocation = true
                 lastAcceptedCollectionLocation = nil
+                resetPoorAccuracyFailOpen()
             }
             
             if cloudService {
@@ -3190,6 +3192,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let secondsWeIgnoreLocations = 5.0
     private var locationManagerStartTime = Date.distantPast
     private var lastAcceptedCollectionLocation: CLLocation?
+    private var poorAccuracyStreakStartTime: Date?
+    private var isFailingOpenForPoorAccuracy = false
     
     // Kalman Filter
     var resetKalmanFilter: Bool = false
@@ -3268,6 +3272,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             if collectRawGPS {
+                resetPoorAccuracyFailOpen()
+                
                 routeBuilder?.insertRouteData(acceptedLocations) { (success, error) in
                     if !success {
                         let errorMessage = error?.localizedDescription ?? "Unknown error"
@@ -3290,6 +3296,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 }
                 
             } else {
+                let canFailOpenForPoorAccuracy = shouldFailOpenForPoorAccuracy(newLocation)
                 
                 if kalmanFilter == nil {
                     if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
@@ -3344,6 +3351,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                             
                             self.updateStatistic(with: locationData)
                         }
+                    } else if canFailOpenForPoorAccuracy {
+                        publishRawLocationFallback(newLocation)
                     } else {
                         logError("Cannot initialize Kalman filter - accuracy too poor: \(newLocation.horizontalAccuracy)m")
                     }
@@ -3354,24 +3363,28 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     
                     if resetKalmanFilter == true {
-                        
-                        // Check parameter validity before reset
-                        if rValue <= 0 {
-                            logError("Invalid rValue for Kalman filter reset: \(rValue)")
+                        if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                            
+                            // Check parameter validity before reset
+                            if rValue <= 0 {
+                                logError("Invalid rValue for Kalman filter reset: \(rValue)")
+                            }
+                            if sigma <= 0 {
+                                logError("Invalid sigma for Kalman filter reset: \(sigma)")
+                            }
+                            
+                            // two of these four are not needed, but save is save
+                            self.kalmanFilter?.rValue = rValue
+                            self.kalmanFilter?.sigma = sigma
+                            kalmanFilter.rValue = rValue
+                            kalmanFilter.sigma = sigma
+                            
+                            kalmanFilter.resetKalman(newStartLocation: newLocation)
+                            
+                            resetKalmanFilter = false
+                        } else if canFailOpenForPoorAccuracy {
+                            publishRawLocationFallback(newLocation)
                         }
-                        if sigma <= 0 {
-                            logError("Invalid sigma for Kalman filter reset: \(sigma)")
-                        }
-                        
-                        // two of these four are not needed, but save is save
-                        self.kalmanFilter?.rValue = rValue
-                        self.kalmanFilter?.sigma = sigma
-                        kalmanFilter.rValue = rValue
-                        kalmanFilter.sigma = sigma
-                        
-                        kalmanFilter.resetKalman(newStartLocation: newLocation)
-                        
-                        resetKalmanFilter = false
                         
                     } else {
                         if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
@@ -3414,6 +3427,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 
                                 self.updateStatistic(with: locationData)
                             }
+                        } else if canFailOpenForPoorAccuracy {
+                            publishRawLocationFallback(newLocation)
                         } else {
                             logError("Skipping location update - accuracy too poor for Kalman processing: \(newLocation.horizontalAccuracy)m")
                         }
@@ -3455,6 +3470,58 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         
         return false
+    }
+
+    private func shouldFailOpenForPoorAccuracy(_ location: CLLocation) -> Bool {
+        guard location.horizontalAccuracy > Constants.minHorizontalAccuracy else {
+            resetPoorAccuracyFailOpen()
+            return false
+        }
+        
+        if isFailingOpenForPoorAccuracy {
+            return true
+        }
+        
+        if poorAccuracyStreakStartTime == nil {
+            poorAccuracyStreakStartTime = location.timestamp
+        }
+        
+        let poorAccuracyDuration = location.timestamp.timeIntervalSince(poorAccuracyStreakStartTime ?? location.timestamp)
+        if poorAccuracyDuration >= Constants.poorAccuracyFailOpenTimeInterval {
+            isFailingOpenForPoorAccuracy = true
+            logError("Failing open for poor GPS accuracy at \(Int(location.horizontalAccuracy.rounded()))m")
+            return true
+        }
+        
+        return false
+    }
+
+    private func resetPoorAccuracyFailOpen() {
+        poorAccuracyStreakStartTime = nil
+        isFailingOpenForPoorAccuracy = false
+    }
+
+    private func publishRawLocationFallback(_ location: CLLocation) {
+        routeBuilder?.insertRouteData([location]) { (success, error) in
+            if !success {
+                let errorMessage = error?.localizedDescription ?? "Unknown error"
+                self.logError("Failed to insert fail-open location: \(errorMessage)")
+            }
+        }
+        
+        DispatchQueue.main.async {
+            let locationData = self.makeLocationData(from: location)
+            let speed = locationData.speed ?? 0.0
+            
+            self.user.latitude = location.coordinate.latitude
+            self.user.longitude = location.coordinate.longitude
+            self.user.speed = speed
+            self.latestStatisticLocationData = locationData
+            
+            self.locationAccuracy = location.horizontalAccuracy
+            
+            self.updateStatistic(with: locationData)
+        }
     }
     
     private func makeLocationData(from location: CLLocation, speed: Double? = nil) -> LocationData {

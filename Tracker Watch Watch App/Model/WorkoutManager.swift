@@ -199,6 +199,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         userLocation = nil
         previousUserLocation = nil
         lastAcceptedCollectionLocation = nil
+        resetPoorAccuracyFailOpen()
         
         // update the workout usage count
         incrementWorkoutCount(for: workoutType)
@@ -306,6 +307,8 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let secondsWeIgnoreLocations = 5.0
     private var locationManagerStartTime = Date.distantPast
     private var lastAcceptedCollectionLocation: CLLocation?
+    private var poorAccuracyStreakStartTime: Date?
+    private var isFailingOpenForPoorAccuracy = false
     
     // Kalman Filter
     var resetKalmanFilter: Bool = false
@@ -346,6 +349,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 locationManagerStartTime = Date.now
                 isUpdatingLocation = true
                 lastAcceptedCollectionLocation = nil
+                resetPoorAccuracyFailOpen()
             }
         } else {
             // show location authorization request again
@@ -365,6 +369,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         resetKalmanFilter = true
         isUpdatingLocation = false
         lastAcceptedCollectionLocation = nil
+        resetPoorAccuracyFailOpen()
         
         // reset locations
         DispatchQueue.main.async {
@@ -388,6 +393,7 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             guard let newLocation = acceptedLocations.last else {
                 return
             }
+            let canFailOpenForPoorAccuracy = shouldFailOpenForPoorAccuracy(newLocation)
             
             if !withGPS {
                 startLocation = newLocation
@@ -426,20 +432,26 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         self.userLocation = newLocation
                         self.updateStatistic()
                     }
+                } else if canFailOpenForPoorAccuracy {
+                    publishRawLocationFallback(newLocation)
                 }
             } else {
                 if let kalmanFilter = self.kalmanFilter {
                     if resetKalmanFilter == true {
-                        
-                        // two of these four are not needed, but save is save
-                        self.kalmanFilter?.rValue = rValue
-                        self.kalmanFilter?.sigma = sigma
-                        kalmanFilter.rValue = rValue
-                        kalmanFilter.sigma = sigma
-                        
-                        kalmanFilter.resetKalman(newStartLocation: newLocation)
-                        
-                        resetKalmanFilter = false
+                        if newLocation.horizontalAccuracy <= Constants.minHorizontalAccuracy {
+                            
+                            // two of these four are not needed, but save is save
+                            self.kalmanFilter?.rValue = rValue
+                            self.kalmanFilter?.sigma = sigma
+                            kalmanFilter.rValue = rValue
+                            kalmanFilter.sigma = sigma
+                            
+                            kalmanFilter.resetKalman(newStartLocation: newLocation)
+                            
+                            resetKalmanFilter = false
+                        } else if canFailOpenForPoorAccuracy {
+                            publishRawLocationFallback(newLocation)
+                        }
                         
                     } else {
                         
@@ -467,6 +479,8 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.userLocation = kalmanLocation
                                 self.updateStatistic()
                             }
+                        } else if canFailOpenForPoorAccuracy {
+                            publishRawLocationFallback(newLocation)
                         }
                     }
                 }
@@ -506,6 +520,49 @@ class WorkoutManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
         
         return false
+    }
+
+    private func shouldFailOpenForPoorAccuracy(_ location: CLLocation) -> Bool {
+        guard location.horizontalAccuracy > Constants.minHorizontalAccuracy else {
+            resetPoorAccuracyFailOpen()
+            return false
+        }
+        
+        if isFailingOpenForPoorAccuracy {
+            return true
+        }
+        
+        if poorAccuracyStreakStartTime == nil {
+            poorAccuracyStreakStartTime = location.timestamp
+        }
+        
+        let poorAccuracyDuration = location.timestamp.timeIntervalSince(poorAccuracyStreakStartTime ?? location.timestamp)
+        if poorAccuracyDuration >= Constants.poorAccuracyFailOpenTimeInterval {
+            isFailingOpenForPoorAccuracy = true
+            print("Failing open for poor GPS accuracy at \(Int(location.horizontalAccuracy.rounded()))m")
+            return true
+        }
+        
+        return false
+    }
+
+    private func resetPoorAccuracyFailOpen() {
+        poorAccuracyStreakStartTime = nil
+        isFailingOpenForPoorAccuracy = false
+    }
+
+    private func publishRawLocationFallback(_ location: CLLocation) {
+        routeBuilder?.insertRouteData([location]) { (success, error) in
+            if !success {
+                // Handle any errors here.
+            }
+        }
+        
+        DispatchQueue.main.async {
+            self.previousUserLocation = self.userLocation
+            self.userLocation = location
+            self.updateStatistic()
+        }
     }
     
     /// Updates the run statistic
@@ -947,4 +1004,3 @@ extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
         }
     }
 }
-
