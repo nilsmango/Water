@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import CoreLocation
 import _MapKit_SwiftUI
 #if os(iOS)
@@ -19,6 +20,49 @@ typealias Transaction = StoreKit.Transaction
 
 public enum StoreError: Error {
     case failedVerification
+}
+
+enum FakeDataExportError: LocalizedError {
+    case noHealthKitData
+    case noRunsFound(year: Int)
+    case noExportableRuns(year: Int)
+
+    var errorDescription: String? {
+        switch self {
+        case .noHealthKitData:
+            return "HealthKit data is not available on this device."
+        case .noRunsFound(let year):
+            return "No supported workouts were found for \(year)."
+        case .noExportableRuns(let year):
+            return "Workouts were found for \(year), but none had route data that could be exported."
+        }
+    }
+}
+
+struct ScreenshotFeaturedRuns: Codable {
+    var angleRunID: UUID?
+    var exportRunID: UUID?
+    var tagsRunID: UUID?
+    var placesRunID: UUID?
+    var statsDetailRunID: UUID?
+    var parawingRunID: UUID?
+    var upDownwindParawingRunID: UUID?
+    var mapRunID: UUID?
+    var homeRunID: UUID?
+    var queuedImportRunIDs: [UUID] = []
+    var highlightedTags: [String] = []
+    var highlightedPlaces: [String] = []
+}
+
+struct ScreenshotFakeDataBundle: Codable {
+    var sourceYear: Int
+    var exportedAt: Date
+    var importRuns: [ImportRun]
+    var queuedImportRuns: [ImportRun]
+    var runEdits: [RunEdit]
+    var dashboards: [Dashboard]
+    var widgetDashboardIds: [UUID]
+    var featured: ScreenshotFeaturedRuns
 }
 
 class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
@@ -3651,6 +3695,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var statisticsCount = 0
     @Published var unableToLoadProducts = false
     @AppStorage("editCounter") var editCounter = 0
+    var forcePremiumForScreenshots = false
     
     var updateListenerTask: Task<Void, Error>? = nil
     
@@ -3729,6 +3774,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.showPromptForReview = true
             // The app already displayed the rating and review request view. Store this current version.
             self.lastVersionPromptedForReview = self.currentAppVersion
+        }
+
+        if forcePremiumForScreenshots {
+            purchasedProducts = []
+            hasPurchasedPremium = true
+            showUpgradeSheet = false
+            statisticsCount = max(statisticsCount, runStatistics.count)
+            return
         }
         
         var currentEntitledPurchases: [Product] = []
@@ -3888,6 +3941,845 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             try data.write(to: url)
         } catch {
             print("Error saving imported runs: \(error)")
+        }
+    }
+
+    func exportHealthKitRunsForFakeData(year: Int = 2025) async throws -> URL {
+        guard HKHealthStore.isHealthDataAvailable() else {
+            throw FakeDataExportError.noHealthKitData
+        }
+
+        let workouts = try await loadWorkoutsFromHealthKit(year: year)
+        guard !workouts.isEmpty else {
+            throw FakeDataExportError.noRunsFound(year: year)
+        }
+
+        var exportedRuns: [ImportRun] = []
+        for workout in workouts {
+            if let run = try await makeImportRunFromHealthWorkout(workout) {
+                exportedRuns.append(run)
+            }
+        }
+
+        guard !exportedRuns.isEmpty else {
+            throw FakeDataExportError.noExportableRuns(year: year)
+        }
+
+        let dashboardManager = TrackedElementsManager()
+        let screenshotBundle = buildScreenshotFakeDataBundle(
+            from: exportedRuns,
+            year: year,
+            dashboards: dashboardManager.dashboards,
+            widgetDashboardIds: dashboardManager.widgetDashboardIds
+        )
+
+        let outputURL = try getDocumentsDirectory().appendingPathComponent("AppStoreScreenshotData-\(year).json")
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(screenshotBundle)
+        try data.write(to: outputURL, options: .atomic)
+        return outputURL
+    }
+
+    private func buildScreenshotFakeDataBundle(
+        from runs: [ImportRun],
+        year: Int,
+        dashboards: [Dashboard],
+        widgetDashboardIds: [UUID]
+    ) -> ScreenshotFakeDataBundle {
+        var preparedRuns = runs.enumerated().map { normalizeScreenshotRun($0.element, index: $0.offset, year: year) }
+        preparedRuns.sort { ($0.startLocation?.timestamp ?? $0.locations.first?.timestamp ?? .distantPast) > ($1.startLocation?.timestamp ?? $1.locations.first?.timestamp ?? .distantPast) }
+        let existingRunEdits = Dictionary(uniqueKeysWithValues: runEdits.map { ($0.id, $0) })
+
+        let dashboardSeed = dashboards.isEmpty ? screenshotFallbackDashboards(referenceYear: year) : dashboards
+        let widgetSeed = widgetDashboardIds.isEmpty ? dashboardSeed.map(\.id) : widgetDashboardIds.filter { id in
+            dashboardSeed.contains(where: { $0.id == id })
+        }
+
+        var featured = ScreenshotFeaturedRuns()
+
+        featured.angleRunID = screenshotAngleRun(from: preparedRuns)?.id
+        if featured.angleRunID == nil, let synthetic = makeSyntheticRun(
+            from: preparedRuns.first(where: { ($0.workoutType ?? .surf) == .parawing || ($0.workoutType ?? .surf) == .dWParawing }) ?? preparedRuns.first,
+            preferredDate: screenshotDate(year: year, month: 6, day: 17, hour: 17, minute: 40),
+            workoutType: .parawing,
+            locationString: preferredRoutePlaces(from: valueCounts(from: preparedRuns.compactMap(\.locationString))).first ?? "Saint-Aubin-Sauges",
+            tags: ["#angle", "#parawing", "#screenshots"],
+            minimumDistance: 12_000,
+            minimumTopSpeed: 20
+        ) {
+            preparedRuns.append(synthetic)
+            featured.angleRunID = synthetic.id
+        }
+
+        featured.parawingRunID = screenshotParawingRun(from: preparedRuns)?.id
+        if featured.parawingRunID == nil, let synthetic = makeSyntheticRun(
+            from: preparedRuns.first(where: { ($0.workoutType ?? .surf) == .dWParawing }) ?? preparedRuns.first(where: { ($0.workoutType ?? .surf).angleSport }) ?? preparedRuns.first,
+            preferredDate: screenshotDate(year: year, month: 2, day: 2, hour: 12, minute: 7),
+            workoutType: .parawing,
+            locationString: preferredRoutePlaces(from: valueCounts(from: preparedRuns.compactMap(\.locationString))).first ?? "Saint-Aubin-Sauges",
+            tags: ["#parawing", "#angle", "#screenshots"],
+            minimumDistance: 9_470,
+            minimumTopSpeed: 16
+        ) {
+            preparedRuns.append(synthetic)
+            featured.parawingRunID = synthetic.id
+        }
+
+        featured.upDownwindParawingRunID = preparedRuns.first(where: { $0.workoutType == .paraUpDown })?.id
+        if featured.upDownwindParawingRunID == nil, let synthetic = makeSyntheticRun(
+            from: preparedRuns.first(where: { $0.id == featured.parawingRunID }) ?? preparedRuns.first,
+            preferredDate: screenshotDate(year: year, month: 3, day: 8, hour: 13, minute: 14),
+            workoutType: .paraUpDown,
+            locationString: preferredRoutePlaces(from: valueCounts(from: preparedRuns.compactMap(\.locationString))).first ?? "Saint-Aubin-Sauges",
+            tags: ["#udw", "#parawing", "#screenshots"],
+            minimumDistance: 14_200,
+            minimumTopSpeed: 16
+        ) {
+            preparedRuns.append(synthetic)
+            featured.upDownwindParawingRunID = synthetic.id
+        }
+
+        featured.statsDetailRunID = screenshotStatsDetailRun(from: preparedRuns)?.id
+        if featured.statsDetailRunID == nil, let synthetic = makeSyntheticRun(
+            from: preparedRuns.first(where: { ($0.workoutType ?? .surf) == .dWParawing }) ?? preparedRuns.max(by: { $0.totalDistance < $1.totalDistance }),
+            preferredDate: screenshotDate(year: year, month: 4, day: 1, hour: 15, minute: 21),
+            workoutType: .dWParawing,
+            locationString: preferredRoutePlaces(from: valueCounts(from: preparedRuns.compactMap(\.locationString))).first ?? "Cortaillod -> Yverdon-les-Bains",
+            tags: ["#720s", "#82ml", "#screenshots"],
+            minimumDistance: 26_600,
+            minimumTopSpeed: 35,
+            minimumAverageSpeed: 19.2
+        ) {
+            preparedRuns.append(synthetic)
+            featured.statsDetailRunID = synthetic.id
+        }
+
+        featured.exportRunID = screenshotExportRun(from: preparedRuns)?.id ?? featured.statsDetailRunID
+
+        preparedRuns = ensureStatisticsCoverage(for: preparedRuns, referenceYear: year)
+        preparedRuns.sort { ($0.startLocation?.timestamp ?? $0.locations.first?.timestamp ?? .distantPast) > ($1.startLocation?.timestamp ?? $1.locations.first?.timestamp ?? .distantPast) }
+
+        let tagCounts = valueCounts(from: preparedRuns.flatMap(\.tags))
+        let placeCounts = valueCounts(from: preparedRuns.compactMap(\.locationString))
+        let highlightedTags = screenshotHighlightedTags(from: tagCounts)
+        let highlightedPlaces = preferredRoutePlaces(from: placeCounts)
+
+        featured.homeRunID = featured.statsDetailRunID ?? preparedRuns.first?.id
+        featured.mapRunID = featured.exportRunID ?? featured.statsDetailRunID ?? preparedRuns.first?.id
+        featured.tagsRunID = screenshotTagsRun(from: preparedRuns, tagCounts: tagCounts, preferredTags: highlightedTags)?.id ?? featured.homeRunID
+        featured.placesRunID = screenshotPlacesRun(from: preparedRuns, placeCounts: placeCounts, preferredPlaces: highlightedPlaces)?.id ?? featured.homeRunID
+        featured.highlightedTags = highlightedTags
+        featured.highlightedPlaces = highlightedPlaces
+
+        preparedRuns = preparedRuns.map { compactScreenshotRun($0, featured: featured) }
+
+        let queuedImportRuns = makeQueuedImportRuns(from: preparedRuns)
+        featured.queuedImportRunIDs = queuedImportRuns.map(\.id)
+
+        let runEdits = preparedRuns.map { run in
+            makeScreenshotRunEdit(
+                for: run,
+                existing: existingRunEdits[run.id],
+                featured: featured,
+                referenceYear: year
+            )
+        }
+
+        return ScreenshotFakeDataBundle(
+            sourceYear: year,
+            exportedAt: .now,
+            importRuns: preparedRuns,
+            queuedImportRuns: queuedImportRuns,
+            runEdits: runEdits,
+            dashboards: dashboardSeed,
+            widgetDashboardIds: widgetSeed,
+            featured: featured
+        )
+    }
+
+    private func normalizeScreenshotRun(_ run: ImportRun, index: Int, year: Int) -> ImportRun {
+        let startDate = run.startLocation?.timestamp ?? run.locations.first?.timestamp ?? screenshotDate(year: year, month: 1, day: 1, hour: 9, minute: 0)
+        let durationHours = max(run.runTime / 60, 0.1)
+
+        let averageSpeed: Double
+        if run.averageSpeed > 0 {
+            averageSpeed = run.averageSpeed
+        } else {
+            averageSpeed = (run.totalDistance / 1000) / durationHours
+        }
+
+        let routeTopSpeed = run.locations.compactMap(\.speed).max().map { $0 * 3.6 } ?? 0
+        let topSpeed: Double
+        if run.topSpeed > 0 {
+            topSpeed = run.topSpeed
+        } else {
+            topSpeed = max(routeTopSpeed, averageSpeed * 1.28)
+        }
+
+        let averageHeartRate: Double
+        if run.averageHeartRate > 0 {
+            averageHeartRate = run.averageHeartRate
+        } else if !run.heartRates.isEmpty {
+            averageHeartRate = run.heartRates.map(\.heartRate).reduce(0, +) / Double(run.heartRates.count)
+        } else {
+            averageHeartRate = 0
+        }
+
+        let workoutType = run.workoutType ?? (run.totalDistance > 18_000 ? .downwindSUPFoil : .windsurf)
+        let locationString = (run.locationString?.isEmpty ?? true) ? fallbackLocationString(index: index) : run.locationString
+        let tags = run.tags.isEmpty ? fallbackTags(for: run, index: index) : uniqueOrdered(run.tags)
+
+        return ImportRun(
+            id: run.id,
+            runTime: run.runTime,
+            topSpeed: topSpeed,
+            averageSpeed: averageSpeed,
+            totalDistance: run.totalDistance,
+            startLocation: run.startLocation ?? run.locations.first ?? LocationData(timestamp: startDate, latitude: 46.999, longitude: 6.952, altitude: 0, speed: nil, verticalAccuracy: 5),
+            locations: run.locations,
+            heartRates: run.heartRates,
+            averageHeartRate: averageHeartRate,
+            workoutType: workoutType,
+            tags: tags,
+            locationString: locationString
+        )
+    }
+
+    private func ensureStatisticsCoverage(for runs: [ImportRun], referenceYear: Int) -> [ImportRun] {
+        var coveredRuns = runs
+        let calendar = Calendar.current
+        let uniqueMonths = Set(coveredRuns.compactMap { run in
+            let start = run.startLocation?.timestamp ?? run.locations.first?.timestamp
+            return start.map { calendar.component(.month, from: $0) }
+        })
+        let uniqueYears = Set(coveredRuns.compactMap { run in
+            let start = run.startLocation?.timestamp ?? run.locations.first?.timestamp
+            return start.map { calendar.component(.year, from: $0) }
+        })
+
+        if uniqueMonths.count < 4 {
+            let seedRuns = coveredRuns.isEmpty ? [] : coveredRuns.sorted {
+                ($0.startLocation?.timestamp ?? $0.locations.first?.timestamp ?? .distantPast) > ($1.startLocation?.timestamp ?? $1.locations.first?.timestamp ?? .distantPast)
+            }
+            let targetDates = [
+                screenshotDate(year: referenceYear, month: 1, day: 28, hour: 15, minute: 10),
+                screenshotDate(year: referenceYear, month: 3, day: 7, hour: 11, minute: 29),
+                screenshotDate(year: referenceYear, month: 4, day: 1, hour: 11, minute: 22),
+                screenshotDate(year: referenceYear, month: 9, day: 12, hour: 14, minute: 18)
+            ]
+
+            for (offset, targetDate) in targetDates.enumerated() {
+                let month = calendar.component(.month, from: targetDate)
+                if uniqueMonths.contains(month) {
+                    continue
+                }
+                if let clone = makeSyntheticRun(
+                    from: seedRuns.indices.contains(offset) ? seedRuns[offset] : seedRuns.first,
+                    preferredDate: targetDate,
+                    workoutType: seedRuns.indices.contains(offset) ? seedRuns[offset].workoutType : seedRuns.first?.workoutType,
+                    locationString: fallbackLocationString(index: coveredRuns.count + offset),
+                    tags: seedRuns.indices.contains(offset) ? fallbackTags(for: seedRuns[offset], index: offset) : ["#screenshots"],
+                    minimumDistance: nil
+                ) {
+                    coveredRuns.append(clone)
+                }
+            }
+        }
+
+        if uniqueYears.count < 2, let base = coveredRuns.max(by: { $0.totalDistance < $1.totalDistance }) {
+            if let previousYearClone = makeSyntheticRun(
+                from: base,
+                preferredDate: screenshotDate(year: referenceYear - 1, month: 11, day: 19, hour: 12, minute: 47),
+                workoutType: .downwindSUPFoil,
+                locationString: "Saint-Aubin-Sauges -> St-Blaise",
+                tags: ["#770R", "#foil", "#screenshots"],
+                minimumDistance: 23_930,
+                minimumTopSpeed: 31
+            ) {
+                coveredRuns.append(previousYearClone)
+            }
+        }
+
+        return coveredRuns
+    }
+
+    private func makeSyntheticRun(
+        from source: ImportRun?,
+        preferredDate: Date,
+        workoutType: WorkoutType?,
+        locationString: String,
+        tags: [String],
+        minimumDistance: Double?,
+        minimumTopSpeed: Double? = nil,
+        minimumAverageSpeed: Double? = nil
+    ) -> ImportRun? {
+        guard let source else { return nil }
+
+        let sourceStart = source.startLocation?.timestamp ?? source.locations.first?.timestamp ?? preferredDate
+        let timeShift = preferredDate.timeIntervalSince(sourceStart)
+        let speedBump = minimumTopSpeed.map { max(1.0, $0 / max(source.topSpeed, 1)) } ?? 1.0
+        let totalDistance = max(source.totalDistance, minimumDistance ?? source.totalDistance)
+        let averageSpeed = max(source.averageSpeed, minimumAverageSpeed ?? source.averageSpeed)
+        let runTime = if averageSpeed > 0 {
+            (totalDistance / 1000) / averageSpeed * 60
+        } else {
+            source.runTime
+        }
+        let shiftedLocations = source.locations.enumerated().map { index, location in
+            var shifted = location
+            shifted.timestamp = location.timestamp.addingTimeInterval(timeShift)
+            shifted.speed = max((location.speed ?? 0) * speedBump, location.speed ?? 0)
+            shifted.latitude += Double(index) * 0.0000015
+            shifted.longitude -= Double(index) * 0.0000012
+            return shifted
+        }
+
+        return ImportRun(
+            id: UUID(),
+            runTime: max(source.runTime, runTime),
+            topSpeed: max(source.topSpeed, minimumTopSpeed ?? source.topSpeed),
+            averageSpeed: averageSpeed,
+            totalDistance: totalDistance,
+            startLocation: shiftedLocations.first,
+            locations: shiftedLocations,
+            heartRates: source.heartRates.map {
+                HeartRate(date: $0.date.addingTimeInterval(timeShift), heartRate: $0.heartRate)
+            },
+            averageHeartRate: source.averageHeartRate,
+            workoutType: workoutType ?? source.workoutType,
+            tags: uniqueOrdered(tags + source.tags),
+            locationString: locationString
+        )
+    }
+
+    private func makeQueuedImportRuns(from runs: [ImportRun]) -> [ImportRun] {
+        Array(runs.prefix(2)).enumerated().map { index, run in
+            ImportRun(
+                id: UUID(),
+                runTime: run.runTime,
+                topSpeed: run.topSpeed,
+                averageSpeed: run.averageSpeed,
+                totalDistance: run.totalDistance,
+                startLocation: run.startLocation,
+                locations: run.locations,
+                heartRates: [],
+                averageHeartRate: 0,
+                workoutType: nil,
+                tags: [],
+                locationString: run.locationString ?? fallbackLocationString(index: index)
+            )
+        }
+    }
+
+    private func makeScreenshotRunEdit(
+        for run: ImportRun,
+        existing: RunEdit?,
+        featured: ScreenshotFeaturedRuns,
+        referenceYear: Int
+    ) -> RunEdit {
+        let fallback = RunEdit(
+            id: run.id,
+            startLocation: run.startLocation,
+            finishLocation: run.locations.last,
+            deletedLocations: nil,
+            newTotalTime: run.runTime,
+            newTotalDistance: run.totalDistance,
+            newTopSpeed: run.topSpeed,
+            topSpeed10s: max(run.averageSpeed + 1.5, run.topSpeed - 4.2),
+            topSpeed1s: max(run.topSpeed + 1.4, run.averageSpeed + 2.2),
+            newAverageSpeed: run.averageSpeed,
+            popUps: (run.workoutType ?? .surf).calculateFoilingStats ? max(Int(run.totalDistance / 4100), 3) : nil,
+            percentageOnFoil: (run.workoutType ?? .surf).calculateFoilingStats ? min(96, max(61, run.averageSpeed * 4.1)) : nil,
+            turnsCount: (run.workoutType ?? .surf).countTurns ? max(Int(run.totalDistance / 42), 6) : nil,
+            longestDistanceOnFoil: (run.workoutType ?? .surf).calculateFoilingStats ? max(run.totalDistance * 0.42, 680) : nil,
+            waves: nil,
+            newTags: uniqueOrdered(run.tags),
+            newWorkoutType: run.workoutType ?? .surf,
+            locationString: run.locationString ?? fallbackLocationString(index: referenceYear),
+            angles: featured.angleRunID == run.id ? screenshotAngles(from: run.locations) : nil
+        )
+
+        guard var existing else {
+            return fallback
+        }
+
+        existing.startLocation = existing.startLocation ?? fallback.startLocation
+        existing.finishLocation = existing.finishLocation ?? fallback.finishLocation
+        existing.newTotalTime = existing.newTotalTime ?? fallback.newTotalTime
+        existing.newTotalDistance = existing.newTotalDistance ?? fallback.newTotalDistance
+        existing.newTopSpeed = existing.newTopSpeed ?? fallback.newTopSpeed
+        existing.topSpeed10s = existing.topSpeed10s ?? fallback.topSpeed10s
+        existing.topSpeed1s = existing.topSpeed1s ?? fallback.topSpeed1s
+        existing.newAverageSpeed = existing.newAverageSpeed ?? fallback.newAverageSpeed
+        existing.popUps = existing.popUps ?? fallback.popUps
+        existing.percentageOnFoil = existing.percentageOnFoil ?? fallback.percentageOnFoil
+        existing.turnsCount = existing.turnsCount ?? fallback.turnsCount
+        existing.longestDistanceOnFoil = existing.longestDistanceOnFoil ?? fallback.longestDistanceOnFoil
+        existing.waves = existing.waves ?? fallback.waves
+        existing.newTags = uniqueOrdered((existing.newTags ?? []) + (fallback.newTags ?? []))
+        existing.newWorkoutType = existing.newWorkoutType ?? fallback.newWorkoutType
+        existing.locationString = existing.locationString ?? fallback.locationString
+        existing.angles = (existing.angles?.isEmpty == false) ? existing.angles : fallback.angles
+        return existing
+    }
+
+    private func screenshotAngles(from locations: [LocationData]) -> [MapAngle]? {
+        guard locations.count > 300 else { return nil }
+
+        return [
+            MapAngle(coordinates: [
+                CLLocationCoordinate2D(latitude: locations[50].latitude, longitude: locations[50].longitude),
+                CLLocationCoordinate2D(latitude: locations[115].latitude, longitude: locations[115].longitude),
+                CLLocationCoordinate2D(latitude: locations[180].latitude, longitude: locations[180].longitude)
+            ]),
+            MapAngle(coordinates: [
+                CLLocationCoordinate2D(latitude: locations[155].latitude, longitude: locations[155].longitude),
+                CLLocationCoordinate2D(latitude: locations[230].latitude, longitude: locations[230].longitude),
+                CLLocationCoordinate2D(latitude: locations[295].latitude, longitude: locations[295].longitude)
+            ])
+        ]
+    }
+
+    private func fallbackLocationString(index: Int) -> String {
+        let locations = [
+            "Concise -> St-Blaise",
+            "Neuenburg -> St-Blaise",
+            "Saint-Aubin-Sauges",
+            "Saint-Aubin-Sauges -> St-Blaise",
+            "Cortaillod -> Yverdon-les-Bains",
+            "Hyeres"
+        ]
+        return locations[index % locations.count]
+    }
+
+    private func fallbackTags(for run: ImportRun, index: Int) -> [String] {
+        let baseTags = switch run.workoutType ?? .surf {
+        case .downwindSUPFoil: ["#foil", "#dw", "#850S"]
+        case .downwindSUP: ["#dw", "#paddle", "#screenshots"]
+        case .parawing: ["#parawing", "#screenshots", "#lightwind"]
+        case .paraUpDown: ["#udw", "#parawing", "#screenshots"]
+        case .windsurf: ["#mistral", "#angle", "#screenshots"]
+        case .windFoil: ["#foil", "#windfoil", "#screenshots"]
+        default: ["#screenshots", "#session", "#water"]
+        }
+        let rotation = ["#sunrise", "#foil", "#speed", "#gear", "#wind", "#lake"]
+        return uniqueOrdered(baseTags + [rotation[index % rotation.count]])
+    }
+
+    private func screenshotDate(year: Int, month: Int, day: Int, hour: Int, minute: Int) -> Date {
+        Calendar.current.date(from: DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)) ?? .now
+    }
+
+    private func uniqueOrdered<T: Hashable>(_ values: [T]) -> [T] {
+        var seen = Set<T>()
+        return values.filter { seen.insert($0).inserted }
+    }
+
+    private func valueCounts(from values: [String]) -> [String: Int] {
+        values.reduce(into: [String: Int]()) { partialResult, value in
+            partialResult[value, default: 0] += 1
+        }
+    }
+
+    private func sortedScreenshotValues(from counts: [String: Int]) -> [String] {
+        counts.keys.sorted { lhs, rhs in
+            let lhsCount = counts[lhs, default: 0]
+            let rhsCount = counts[rhs, default: 0]
+            if lhsCount == rhsCount {
+                return lhs < rhs
+            }
+            return lhsCount > rhsCount
+        }
+    }
+
+    private func screenshotAngleRun(from runs: [ImportRun]) -> ImportRun? {
+        let preferredTypes: [WorkoutType] = [.parawing, .dWParawing, .paraUpDown, .windsurf, .windFoil, .wingFoil]
+        for preferredType in preferredTypes {
+            let matches = runs.filter { ($0.workoutType ?? .surf) == preferredType }
+            if let best = matches.max(by: { angleRunScore(for: $0) < angleRunScore(for: $1) }) {
+                return best
+            }
+        }
+
+        return runs
+            .filter { ($0.workoutType ?? .surf).angleSport }
+            .max(by: { angleRunScore(for: $0) < angleRunScore(for: $1) })
+    }
+
+    private func screenshotParawingRun(from runs: [ImportRun]) -> ImportRun? {
+        runs
+            .filter { ($0.workoutType ?? .surf) == .parawing }
+            .max(by: { angleRunScore(for: $0) < angleRunScore(for: $1) })
+    }
+
+    private func screenshotStatsDetailRun(from runs: [ImportRun]) -> ImportRun? {
+        let preferred = runs
+            .filter {
+                ($0.workoutType ?? .surf) == .dWParawing &&
+                $0.totalDistance >= 20_000 &&
+                $0.averageSpeed >= 19 &&
+                $0.tags.contains(where: { $0.caseInsensitiveCompare("#720s") == .orderedSame })
+            }
+            .max(by: { statsDetailScore(for: $0) < statsDetailScore(for: $1) })
+
+        if let preferred {
+            return preferred
+        }
+
+        let downwindParawing = runs
+            .filter { ($0.workoutType ?? .surf) == .dWParawing && $0.totalDistance >= 20_000 }
+            .max(by: { statsDetailScore(for: $0) < statsDetailScore(for: $1) })
+
+        if let downwindParawing {
+            return downwindParawing
+        }
+
+        return runs
+            .filter { ($0.workoutType ?? .surf).isDWSport && $0.totalDistance >= 20_000 }
+            .max(by: { statsDetailScore(for: $0) < statsDetailScore(for: $1) })
+    }
+
+    private func screenshotExportRun(from runs: [ImportRun]) -> ImportRun? {
+        runs
+            .filter { ($0.workoutType ?? .surf).isDWSport }
+            .max(by: { exportRunScore(for: $0) < exportRunScore(for: $1) })
+    }
+
+    private func screenshotTagsRun(from runs: [ImportRun], tagCounts: [String: Int], preferredTags: [String]) -> ImportRun? {
+        if let preferredTag = preferredTags.first {
+            let matches = runs.filter { run in
+                run.tags.contains(where: { $0.caseInsensitiveCompare(preferredTag) == .orderedSame })
+            }
+            if let best = matches.max(by: { tagScore(for: $0, tagCounts: tagCounts) < tagScore(for: $1, tagCounts: tagCounts) }) {
+                return best
+            }
+        }
+
+        return runs
+            .filter { !$0.tags.isEmpty }
+            .max { lhs, rhs in
+                tagScore(for: lhs, tagCounts: tagCounts) < tagScore(for: rhs, tagCounts: tagCounts)
+            }
+    }
+
+    private func screenshotPlacesRun(from runs: [ImportRun], placeCounts: [String: Int], preferredPlaces: [String]) -> ImportRun? {
+        for preferredPlace in preferredPlaces {
+            let matches = runs.filter { $0.locationString == preferredPlace }
+            if let best = matches.max(by: { placeScore(for: $0, placeCounts: placeCounts) < placeScore(for: $1, placeCounts: placeCounts) }) {
+                return best
+            }
+        }
+
+        return runs
+            .filter { !($0.locationString?.isEmpty ?? true) }
+            .max { lhs, rhs in
+                placeScore(for: lhs, placeCounts: placeCounts) < placeScore(for: rhs, placeCounts: placeCounts)
+            }
+    }
+
+    private func screenshotHighlightedTags(from counts: [String: Int]) -> [String] {
+        let sortedTags = sortedScreenshotValues(from: counts)
+        let preferredOrder = ["#850S", "#720s", "#82ml", "#1300S", "#980S", "#1130S", "#105dw", "#65ML"]
+        for preferred in preferredOrder {
+            if let match = sortedTags.first(where: { $0.caseInsensitiveCompare(preferred) == .orderedSame }) {
+                return [match]
+            }
+        }
+        return Array(sortedTags.prefix(1))
+    }
+
+    private func preferredRoutePlaces(from counts: [String: Int]) -> [String] {
+        let routeCounts = counts.filter { key, _ in
+            key.contains("→") || key.contains("->")
+        }
+        let routePlaces = sortedScreenshotValues(from: routeCounts)
+        if !routePlaces.isEmpty {
+            return Array(routePlaces.prefix(2))
+        }
+        return Array(sortedScreenshotValues(from: counts).prefix(2))
+    }
+
+    private func tagScore(for run: ImportRun, tagCounts: [String: Int]) -> Int {
+        run.tags.reduce(0) { partialResult, tag in
+            partialResult + tagCounts[tag, default: 0]
+        }
+    }
+
+    private func placeScore(for run: ImportRun, placeCounts: [String: Int]) -> Int {
+        guard let place = run.locationString else { return 0 }
+        return placeCounts[place, default: 0]
+    }
+
+    private func angleRunScore(for run: ImportRun) -> Double {
+        let typeBonus: Double
+        switch run.workoutType ?? .surf {
+        case .parawing: typeBonus = 180
+        case .dWParawing: typeBonus = 150
+        case .paraUpDown: typeBonus = 120
+        case .windsurf: typeBonus = 90
+        default: typeBonus = 0
+        }
+
+        let angleTagBonus = run.tags.contains(where: { $0.localizedCaseInsensitiveContains("720") || $0.localizedCaseInsensitiveContains("angle") }) ? 45.0 : 0.0
+        return typeBonus + angleTagBonus + run.averageSpeed + (run.totalDistance / 1000)
+    }
+
+    private func statsDetailScore(for run: ImportRun) -> Double {
+        let heartRateBonus = run.heartRates.isEmpty ? 0.0 : 40.0
+        let tagBonus = run.tags.contains(where: { $0.caseInsensitiveCompare("#720s") == .orderedSame }) ? 60.0 : 0.0
+        let typeBonus = (run.workoutType ?? .surf) == .dWParawing ? 100.0 : 0.0
+        let speedScore = run.averageSpeed * 8
+        let distanceScore = run.totalDistance / 1000
+        return typeBonus + tagBonus + heartRateBonus + speedScore + distanceScore
+    }
+
+    private func exportRunScore(for run: ImportRun) -> Double {
+        let heartRateBonus = run.heartRates.isEmpty ? 0.0 : 25.0
+        return heartRateBonus + run.averageSpeed * 6 + (run.totalDistance / 1000)
+    }
+
+    private func compactScreenshotRun(_ run: ImportRun, featured: ScreenshotFeaturedRuns) -> ImportRun {
+        let featuredIDs = Set([
+            featured.angleRunID,
+            featured.exportRunID,
+            featured.tagsRunID,
+            featured.placesRunID,
+            featured.statsDetailRunID,
+            featured.parawingRunID,
+            featured.upDownwindParawingRunID,
+            featured.mapRunID,
+            featured.homeRunID
+        ].compactMap { $0 })
+
+        let isAngleRun = featured.angleRunID == run.id
+        let isFeaturedRun = featuredIDs.contains(run.id)
+        let maxLocations = isAngleRun ? 420 : (isFeaturedRun ? 320 : 180)
+        let maxHeartRates = isFeaturedRun ? 48 : 20
+
+        return ImportRun(
+            id: run.id,
+            runTime: run.runTime,
+            topSpeed: run.topSpeed,
+            averageSpeed: run.averageSpeed,
+            totalDistance: run.totalDistance,
+            startLocation: run.startLocation,
+            locations: downsampled(run.locations, maxCount: maxLocations),
+            heartRates: downsampled(run.heartRates, maxCount: maxHeartRates),
+            averageHeartRate: run.averageHeartRate,
+            workoutType: run.workoutType,
+            tags: uniqueOrdered(run.tags),
+            locationString: run.locationString
+        )
+    }
+
+    private func downsampled<T>(_ values: [T], maxCount: Int) -> [T] {
+        guard values.count > maxCount, maxCount > 1 else { return values }
+
+        let lastIndex = values.count - 1
+        let interiorCount = max(0, maxCount - 2)
+        var sampledIndices = [0]
+
+        if interiorCount > 0 {
+            for step in 1...interiorCount {
+                let progress = Double(step) / Double(interiorCount + 1)
+                let index = Int(round(progress * Double(lastIndex)))
+                if index > 0 && index < lastIndex {
+                    sampledIndices.append(index)
+                }
+            }
+        }
+
+        sampledIndices.append(lastIndex)
+        sampledIndices = uniqueOrdered(sampledIndices).sorted()
+        return sampledIndices.map { values[$0] }
+    }
+
+    private func screenshotFallbackDashboards(referenceYear: Int) -> [Dashboard] {
+        let updated = screenshotDate(year: referenceYear, month: 1, day: 28, hour: 14, minute: 41)
+        let bielerseeURL = "https://wind.example/bielersee"
+        let neuchatelURL = "https://wind.example/neuchatel"
+
+        func trackedElement(url: String, label: String, value: String) -> TrackedElement {
+            TrackedElement(url: url, xpath: "//value", userLabel: label, lastValue: value, lastUpdated: updated, lastError: nil)
+        }
+
+        return [
+            Dashboard(
+                name: "Bielersee",
+                elements: [
+                    trackedElement(url: bielerseeURL, label: "Wingreis Avg", value: "1.7 kn"),
+                    trackedElement(url: bielerseeURL, label: "Wingreis Gust", value: "3.3 kn"),
+                    trackedElement(url: bielerseeURL, label: "Wingreis Dir", value: "O"),
+                    trackedElement(url: bielerseeURL, label: "Vingelz Avg", value: "1.0 kn"),
+                    trackedElement(url: bielerseeURL, label: "Vingelz Gust", value: "2.2 kn"),
+                    trackedElement(url: bielerseeURL, label: "Vingelz Dir", value: "SSW")
+                ]
+            ),
+            Dashboard(
+                name: "Lac de Neuchatel",
+                elements: [
+                    trackedElement(url: neuchatelURL, label: "Yverdon Avg", value: "4.3 kn"),
+                    trackedElement(url: neuchatelURL, label: "Yverdon Gust", value: "7.0 kn"),
+                    trackedElement(url: neuchatelURL, label: "Yverdon Dir", value: "ENE"),
+                    trackedElement(url: neuchatelURL, label: "Concise Avg", value: "12.0 kn"),
+                    trackedElement(url: neuchatelURL, label: "Concise Gust", value: "13.0 kn"),
+                    trackedElement(url: neuchatelURL, label: "Concise Dir", value: "NE")
+                ]
+            )
+        ]
+    }
+
+    private func loadWorkoutsFromHealthKit(year: Int) async throws -> [HKWorkout] {
+        try await withCheckedThrowingContinuation { continuation in
+            let calendar = Calendar.current
+            let startOfYear = calendar.date(from: DateComponents(year: year, month: 1, day: 1)) ?? .distantPast
+            let startOfNextYear = calendar.date(from: DateComponents(year: year + 1, month: 1, day: 1)) ?? .distantFuture
+
+            let workoutTypePredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+                HKQuery.predicateForWorkouts(with: .paddleSports),
+                HKQuery.predicateForWorkouts(with: .sailing),
+                HKQuery.predicateForWorkouts(with: .surfingSports)
+            ])
+            let datePredicate = HKQuery.predicateForSamples(withStart: startOfYear, end: startOfNextYear)
+            let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [workoutTypePredicate, datePredicate])
+            let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+
+            let query = HKSampleQuery(
+                sampleType: HKQuantityType.workoutType(),
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [sortDescriptor]
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                continuation.resume(returning: samples as? [HKWorkout] ?? [])
+            }
+
+            healthStore.execute(query)
+        }
+    }
+
+    private func makeImportRunFromHealthWorkout(_ workout: HKWorkout) async throws -> ImportRun? {
+        guard let route = await workoutRoute(for: workout) else {
+            return nil
+        }
+
+        let locations = await locationData(from: route)
+        guard locations.count > 1 else {
+            return nil
+        }
+
+        let heartRates = try await heartRates(for: workout)
+        let averageHeartRate = if heartRates.isEmpty {
+            await averageHeartRate(for: workout) ?? 0
+        } else {
+            heartRates.map(\.heartRate).reduce(0, +) / Double(heartRates.count)
+        }
+
+        let backup = backupWorkoutData.first(where: { $0.startDate == workout.startDate })
+        let metadata = getWorkoutMetadata(workout: workout, backup: backup)
+        let runEdit = runEdits.first(where: { $0.id == workout.uuid })
+
+        let totalDistance = metadata.totalDistance > 0
+            ? metadata.totalDistance
+            : calculatedDistance(from: locations)
+        let durationMinutes = workout.duration / 60
+        let averageSpeed = metadata.averageSpeed > 0
+            ? metadata.averageSpeed
+            : (durationMinutes > 0 ? (totalDistance / 1000) / (durationMinutes / 60) : 0)
+        let topSpeed = metadata.topSpeed > 0
+            ? metadata.topSpeed
+            : locations.compactMap(\.speed).max().map { $0 * 3.6 } ?? 0
+
+        return ImportRun(
+            id: workout.uuid,
+            runTime: durationMinutes,
+            topSpeed: topSpeed,
+            averageSpeed: averageSpeed,
+            totalDistance: totalDistance,
+            startLocation: metadata.startLocation ?? locations.first,
+            locations: locations,
+            heartRates: heartRates,
+            averageHeartRate: averageHeartRate,
+            workoutType: runEdit?.newWorkoutType ?? metadata.workoutType,
+            tags: runEdit?.newTags ?? metadata.tags,
+            locationString: runEdit?.locationString
+        )
+    }
+
+    private func workoutRoute(for workout: HKWorkout) async -> HKWorkoutRoute? {
+        await withCheckedContinuation { continuation in
+            loadWorkoutRoute(workout: workout) { route in
+                continuation.resume(returning: route)
+            }
+        }
+    }
+
+    private func locationData(from route: HKWorkoutRoute) async -> [LocationData] {
+        await withCheckedContinuation { continuation in
+            locationDataFromWorkoutRoute(route: route) { locations in
+                continuation.resume(returning: locations)
+            }
+        }
+    }
+
+    private func averageHeartRate(for workout: HKWorkout) async -> Double? {
+        await withCheckedContinuation { continuation in
+            getAVGHeartRate(for: workout) { averageHeartRate in
+                continuation.resume(returning: averageHeartRate)
+            }
+        }
+    }
+
+    private func heartRates(for workout: HKWorkout) async throws -> [HeartRate] {
+        guard let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate) else {
+            return []
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let predicate = HKQuery.predicateForSamples(
+                withStart: workout.startDate,
+                end: workout.endDate,
+                options: .strictEndDate
+            )
+            let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
+
+            let query = HKSampleQuery(
+                sampleType: heartRateType,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [sortDescriptor]
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                let result = (samples as? [HKQuantitySample] ?? []).map { sample in
+                    HeartRate(
+                        date: sample.startDate,
+                        heartRate: sample.quantity.doubleValue(for: .count().unitDivided(by: .minute()))
+                    )
+                }
+                continuation.resume(returning: result)
+            }
+
+            healthStore.execute(query)
+        }
+    }
+
+    private func calculatedDistance(from locations: [LocationData]) -> Double {
+        guard locations.count > 1 else { return 0 }
+
+        return zip(locations, locations.dropFirst()).reduce(0) { partial, pair in
+            let first = CLLocation(latitude: pair.0.latitude, longitude: pair.0.longitude)
+            let second = CLLocation(latitude: pair.1.latitude, longitude: pair.1.longitude)
+            return partial + first.distance(from: second)
         }
     }
     

@@ -1,0 +1,9 @@
+# Generated screenshot fixture data
+7III Downwind/Screenshots/.screenshot-data/
+7III Downwind/Screenshots/.AppStoreScreenshotData*.json
+7III Downwind/Screenshots/AppStoreScreenshotData*.json
+
+# Xcode generated output
+build/
+DerivedData/
+.DS_Store

@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 struct StartView: View {
     @ObservedObject var downwindManager: DownwindManager
-    @StateObject private var manager = TrackedElementsManager()
+    @StateObject private var manager: TrackedElementsManager
     
     @State private var showRunPicker = false
     @State private var showStartRunSheet = false
@@ -18,7 +18,7 @@ struct StartView: View {
     
     @State private var showCaptureStatistics = false
         
-    @State private var importedRuns: [ImportRun] = []
+    @State private var importedRuns: [ImportRun]
     @State private var isImporting: Bool = false
     @State private var isLoadingImportedRuns: Bool = false
     
@@ -26,8 +26,21 @@ struct StartView: View {
     @State private var showTagsEditView = false
     @State private var editRunIndex: Int? = nil
     @State private var showSavedOverlay = false
+    @State private var isCollectingFakeData = false
+    @State private var fakeDataExportURL: URL? = nil
+    @State private var fakeDataExportError = ""
     
     @State private var navPath = NavigationPath()
+
+    init(
+        downwindManager: DownwindManager,
+        initialDashboardManager: TrackedElementsManager = TrackedElementsManager(),
+        initialImportedRuns: [ImportRun] = []
+    ) {
+        self.downwindManager = downwindManager
+        _manager = StateObject(wrappedValue: initialDashboardManager)
+        _importedRuns = State(initialValue: initialImportedRuns)
+    }
     
     var body: some View {
         NavigationStack(path: $navPath) {
@@ -256,6 +269,61 @@ struct StartView: View {
                     if downwindManager.developerMode {
                         Toggle("Collect Raw GPS", isOn: $downwindManager.collectRawGPS)
                             .padding()
+                        #if os(iOS)
+                        VStack(alignment: .leading, spacing: 12) {
+                            Button {
+                                isCollectingFakeData = true
+                                fakeDataExportURL = nil
+                                fakeDataExportError = ""
+
+                                Task {
+                                    do {
+                                        let url = try await downwindManager.exportHealthKitRunsForFakeData(year: 2025)
+                                        await MainActor.run {
+                                            fakeDataExportURL = url
+                                            isCollectingFakeData = false
+                                        }
+                                    } catch {
+                                        await MainActor.run {
+                                            fakeDataExportError = error.localizedDescription
+                                            isCollectingFakeData = false
+                                        }
+                                    }
+                                }
+                            } label: {
+                                Label(
+                                    isCollectingFakeData ? "Collecting 2025 Fake Data..." : "Collect 2025 Fake Data",
+                                    systemImage: "square.and.arrow.down.on.square"
+                                )
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .disabled(isCollectingFakeData)
+
+                            if isCollectingFakeData {
+                                ProgressView("Exporting screenshot bundle with runs, tags, places, dashboards, and featured sessions...")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            if let fakeDataExportURL {
+                                Text("Saved \(fakeDataExportURL.lastPathComponent)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+
+                                ShareLink(item: fakeDataExportURL) {
+                                    Label("Share Screenshot Data JSON", systemImage: "square.and.arrow.up")
+                                }
+                                .buttonStyle(.bordered)
+                            }
+
+                            if !fakeDataExportError.isEmpty {
+                                Text(fakeDataExportError)
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
+                            }
+                        }
+                        .padding(.horizontal)
+                        #endif
                         NavigationLink(destination: StatisticTestsView(downwindManager: downwindManager)) {
                             Label("Statistics Test", systemImage: "chart.xyaxis.line")
                         }

@@ -101,6 +101,9 @@ struct OptionsView: View {
                     }
                 }
                 
+//                Toggle("Developer Mode", isOn: $downwindManager.developerMode)
+//                    .tint(.accent)
+                
             } header: {
                 Text("Main View")
             }

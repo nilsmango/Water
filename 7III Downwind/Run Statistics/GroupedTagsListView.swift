@@ -9,14 +9,26 @@ import SwiftUI
 
 struct GroupedTagsListView: View {
     @ObservedObject var downwindManager: DownwindManager
+    
+    init(
+        downwindManager: DownwindManager,
+        initialTags: [String] = [],
+        initialLocation: String = "",
+        initialWorkout: String = "",
+        initialShowOnlyAngles: Bool = false,
+        initialTab: Tab = .tags
+    ) {
+        self.downwindManager = downwindManager
+        _chosenTags = State(initialValue: initialTags)
+        _chosenLocation = State(initialValue: initialLocation)
+        _chosenWorkout = State(initialValue: initialWorkout)
+        _showOnlyAngles = State(initialValue: initialShowOnlyAngles)
+        _tabSelection = State(initialValue: initialTab)
         
-        init(downwindManager: DownwindManager) {
-            self.downwindManager = downwindManager
-            
-            // Set the color for the page indicators
-            UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.blackAndWhite
-            UIPageControl.appearance().pageIndicatorTintColor = UIColor.grayAndGray
-        }
+        // Set the color for the page indicators
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.blackAndWhite
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor.grayAndGray
+    }
     
     @State private var chosenTags = [String]()
     @State private var chosenLocation = ""
@@ -25,7 +37,7 @@ struct GroupedTagsListView: View {
     
     @State private var tabSelection: Tab = .tags
     
-    private enum Tab {
+    enum Tab {
         case tags, locations, workouts, options
         
         var prettyString: String {

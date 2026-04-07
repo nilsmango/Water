@@ -1,6 +1,15 @@
 {
-  "originHash" : "7b5bca1c9b93680ed273ff465668451f871e1f811d7b92b08d1233830b2809c5",
+  "originHash" : "fceba34c2d347126dad02acae3205a211fcd0374ba60865ffd1af04b466ae40a",
   "pins" : [
+    {
+      "identity" : "appscreenshotkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nilsmango/AppScreenshotKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b0fce0bd815e5b2ffb4b0ed058bacb162ebf8670"
+      }
+    },
     {
       "identity" : "kanna",
       "kind" : "remoteSourceControl",
@@ -26,6 +35,15 @@
       "state" : {
         "revision" : "6e4a47e63da8801afe6188cf039e9f04eb577721",
         "version" : "2.3.2"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
       }
     },
     {
