@@ -6,7 +6,7 @@ import SwiftUI
 struct Phone10SimpleMap: View {
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 1610,
+            seed: 1210,
             titleLines: ["Beautiful", "& Simple"],
             phoneOffsetY: 300,
             phoneColorScheme: .light

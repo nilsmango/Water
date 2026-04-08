@@ -6,7 +6,7 @@ import SwiftUI
 struct Phone03Export: View {
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 303,
+            seed: 923,
             titleLines: ["Video, Photo", "& GPX Export"],
             phoneOffsetY: 300,
             phoneColorScheme: .light

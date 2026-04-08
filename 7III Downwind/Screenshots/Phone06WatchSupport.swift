@@ -6,7 +6,7 @@ import SwiftUI
 struct Phone06WatchSupport: View {
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 606,
+            seed: 676,
             titleLines: ["Tracking with", "Watch Support"],
             phoneOffsetY: 300,
             phoneColorScheme: .light

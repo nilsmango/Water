@@ -106,8 +106,12 @@ private struct NeonWiggleRoute: View {
             min(canvasSize.width * 0.48, diagonalDistance() * 0.5),
             420
         )
-        let textKeepOut = textSafeRect == .zero ? .null : textSafeRect.insetBy(dx: -24, dy: -20)
-        let deviceMarkerKeepOut = deviceRect.isEmpty ? .null : deviceRect.insetBy(dx: 20, dy: 12)
+        let textKeepOut = textSafeRect == .zero
+            ? .null
+            : adjustedRect(textSafeRect, left: -24, right: -24, top: -20, bottom: -4)
+        let deviceMarkerKeepOut = deviceRect.isEmpty
+            ? .null
+            : adjustedRect(deviceRect, left: 20, right: 20, top: 34, bottom: 12)
         let markerKeepOutRects = [
             textKeepOut,
             deviceMarkerKeepOut
@@ -159,24 +163,25 @@ private struct NeonWiggleRoute: View {
         let direction = CGPoint(x: deltaX / length, y: deltaY / length)
         let perpendicular = CGPoint(x: -direction.y, y: direction.x)
         let turns = min(
-            surpriseStyle.maxTurns,
+            surpriseStyle.maxTurns * 1.9,
             max(
                 surpriseStyle.minTurns,
-                (length / surpriseStyle.turnDistanceDivisor)
+                (length / (surpriseStyle.turnDistanceDivisor * 0.52))
                     + CGFloat.random(in: surpriseStyle.turnJitter, using: &generator)
             )
         )
-        let pointCount = min(19, max(11, Int(length / 88) + Int.random(in: 0...2, using: &generator)))
+        let pointCount = min(260, max(36, Int(length / 7) + Int.random(in: 0...18, using: &generator)))
         let amplitude = min(
             canvasSize.width * surpriseStyle.maxAmplitudeFactor,
             max(surpriseStyle.minAmplitude, length * surpriseStyle.distanceAmplitudeFactor)
         )
         let phase = CGFloat.random(in: 0...(2 * .pi), using: &generator)
-        let includesLoop = length > canvasSize.width * 0.58 && Bool.random(using: &generator) && surpriseStyle.allowsLoop
         var routePoints = [startPoint]
 
-        let loopCenter = CGFloat.random(in: 0.34...0.72, using: &generator)
-        let loopWindow = CGFloat.random(in: 0.12...0.18, using: &generator)
+        let detourCenter = CGFloat.random(in: 0.24...0.78, using: &generator)
+        let detourWindow = CGFloat.random(in: 0.07...0.11, using: &generator)
+        let detourDirection: CGFloat = Bool.random(using: &generator) ? 1 : -1
+        let detourStrength = amplitude * CGFloat.random(in: 0.34...0.48, using: &generator)
         let alongOffsetAmplitude = min(
             surpriseStyle.maxAlongOffset,
             max(surpriseStyle.minAlongOffset, length * surpriseStyle.alongOffsetFactor)
@@ -193,13 +198,11 @@ private struct NeonWiggleRoute: View {
             lateralOffset += sin(progress * (turns + 1.35) * (.pi * 2) + phase * 0.6) * amplitude * 0.18
             var alongOffset = sin(progress * (.pi * 2) + phase * 0.35) * alongOffsetAmplitude
 
-            if includesLoop {
-                let loopProgress = (progress - loopCenter) / loopWindow
-                if abs(loopProgress) < 1 {
-                    let swirlAngle = loopProgress * (.pi * 2)
-                    lateralOffset += cos(swirlAngle) * amplitude * 1.02
-                    alongOffset += sin(swirlAngle) * amplitude * 0.54
-                }
+            let detourProgress = abs((progress - detourCenter) / detourWindow)
+            if detourProgress < 1 {
+                let detourEnvelope = sin((1 - detourProgress) * (.pi / 2))
+                lateralOffset += detourDirection * detourStrength * detourEnvelope
+                alongOffset += detourDirection * detourStrength * 0.12 * detourEnvelope
             }
 
             let rawPoint = CGPoint(
@@ -215,6 +218,11 @@ private struct NeonWiggleRoute: View {
         }
 
         routePoints.append(endPoint)
+        routePoints = smoothedRoutePoints(
+            routePoints,
+            keepOutRects: pathKeepOutRects,
+            margin: margin
+        )
 
         return [
             WigglePoint(point: routePoints.first ?? startPoint, color: .green)
@@ -282,13 +290,19 @@ private struct NeonWiggleRoute: View {
         }
 
         if let maxDistance = rankedVisibleCandidates.first.map({ distance(from: anchorPoint, to: $0) }) {
-            let nearBestThreshold = max(maxDistance * 0.92, minimumDistance)
+            let nearBestThreshold = max(maxDistance * 0.76, minimumDistance)
             let candidatePool = rankedVisibleCandidates
-                .prefix(16)
+                .prefix(40)
                 .filter { distance(from: anchorPoint, to: $0) >= nearBestThreshold }
 
-            if let chosenCandidate = Array(candidatePool).randomElement(using: &generator)
-                ?? Array(rankedVisibleCandidates.prefix(8)).randomElement(using: &generator) {
+            if let chosenCandidate = Array(candidatePool).randomElement(using: &generator) {
+                return chosenCandidate
+            }
+
+            let validVisibleCandidates = rankedVisibleCandidates
+                .prefix(48)
+                .filter { distance(from: anchorPoint, to: $0) >= minimumDistance }
+            if let chosenCandidate = Array(validVisibleCandidates).randomElement(using: &generator) {
                 return chosenCandidate
             }
         }
@@ -462,20 +476,61 @@ private struct NeonWiggleRoute: View {
         keepOutRects: [CGRect],
         margin: CGFloat
     ) -> CGPoint {
-        var adjusted = CGPoint(
-            x: min(max(point.x, margin), canvasSize.width - margin),
-            y: min(max(point.y, margin), canvasSize.height - margin)
-        )
+        var adjusted = point
 
         for rect in keepOutRects where rect.contains(adjusted) {
             let pushLeft = abs(adjusted.x - rect.minX)
             let pushRight = abs(rect.maxX - adjusted.x)
             adjusted.x = pushLeft < pushRight ? rect.minX - 42 : rect.maxX + 42
-            adjusted.x = min(max(adjusted.x, margin), canvasSize.width - margin)
             adjusted.y = rect.maxY + 24
         }
 
         return adjusted
+    }
+
+    private func smoothedRoutePoints(
+        _ points: [CGPoint],
+        keepOutRects: [CGRect],
+        margin: CGFloat
+    ) -> [CGPoint] {
+        guard points.count > 3 else { return points }
+
+        var smoothed = points
+        for _ in 0..<2 {
+            var next = smoothed
+            for index in 1..<(smoothed.count - 1) {
+                let previous = smoothed[index - 1]
+                let current = smoothed[index]
+                let upcoming = smoothed[index + 1]
+                let blended = CGPoint(
+                    x: previous.x * 0.2 + current.x * 0.6 + upcoming.x * 0.2,
+                    y: previous.y * 0.2 + current.y * 0.6 + upcoming.y * 0.2
+                )
+                next[index] = adjustedPathPoint(
+                    blended,
+                    keepOutRects: keepOutRects,
+                    margin: margin
+                )
+            }
+            smoothed = next
+        }
+
+        return smoothed
+    }
+
+    private func adjustedRect(
+        _ rect: CGRect,
+        left: CGFloat,
+        right: CGFloat,
+        top: CGFloat,
+        bottom: CGFloat
+    ) -> CGRect {
+        CGRect(
+            x: rect.minX + left,
+            y: rect.minY + top,
+            width: rect.width - left - right,
+            height: rect.height - top - bottom
+        )
     }
 
     private func midpoint(_ first: CGPoint, _ second: CGPoint) -> CGPoint {
