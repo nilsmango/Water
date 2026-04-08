@@ -7,8 +7,8 @@ struct Phone01AngleTool: View {
     var body: some View {
         AppStorePhoneCanvas(
             seed: 101,
-            titleLines: ["NEW: Angle", "Tool"],
-            phoneOffsetY: 340,
+            titleLines: ["NEW:", "Angle Tool"],
+            phoneOffsetY: 300,
             phoneColorScheme: .dark
         ) {
             ScreenshotAngleToolView()

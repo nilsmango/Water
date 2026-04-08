@@ -54,7 +54,7 @@ private struct NeonWiggleRoute: View {
         ZStack {
             if showsLine {
                 routePath(points: points)
-                    .stroke(screenshotNeonRouteColor, style: StrokeStyle(lineWidth: 6, lineCap: .round, lineJoin: .round))
+                    .stroke(screenshotNeonRouteColor, style: StrokeStyle(lineWidth: 12, lineCap: .round, lineJoin: .round))
             }
 
             if showsMarkers {
@@ -63,9 +63,9 @@ private struct NeonWiggleRoute: View {
                         .fill(marker.color)
                         .overlay {
                             Circle()
-                                .stroke(.white, lineWidth: 4)
+                                .stroke(.white, lineWidth: 8)
                         }
-                        .frame(width: 22, height: 22)
+                        .frame(width: 44, height: 44)
                         .position(marker.point)
                 }
             }
@@ -84,32 +84,36 @@ private struct NeonWiggleRoute: View {
                 return
             }
 
-            var previousMidpoint = midpoint(routePoints[0], routePoints[1])
-            path.addLine(to: previousMidpoint)
+            let firstMidpoint = midpoint(routePoints[0], routePoints[1])
+            path.addLine(to: firstMidpoint)
 
             for index in 1..<(routePoints.count - 1) {
                 let current = routePoints[index]
                 let next = routePoints[index + 1]
                 let mid = midpoint(current, next)
                 path.addQuadCurve(to: mid, control: current)
-                previousMidpoint = mid
             }
 
-            path.addQuadCurve(to: routePoints.last!, control: routePoints[routePoints.count - 2])
+            path.addQuadCurve(to: routePoints.last!, control: routePoints.last!)
         }
     }
 
     private func makePoints() -> [WigglePoint] {
         var generator = SeededGenerator(seed: seed)
         let surpriseStyle = SurpriseStyle.allCases.randomElement(using: &generator) ?? .slingshot
-        let markerRadius: CGFloat = 18
-        let textKeepOut = textSafeRect == .zero ? .null : textSafeRect.insetBy(dx: -42, dy: -42)
+        let markerRadius: CGFloat = 24
+        let minimumEndpointDistance = max(
+            min(canvasSize.width * 0.48, diagonalDistance() * 0.5),
+            420
+        )
+        let textKeepOut = textSafeRect == .zero ? .null : textSafeRect.insetBy(dx: -24, dy: -20)
+        let deviceMarkerKeepOut = deviceRect.isEmpty ? .null : deviceRect.insetBy(dx: 20, dy: 12)
         let markerKeepOutRects = [
             textKeepOut,
-            deviceRect.insetBy(dx: -10, dy: -10)
+            deviceMarkerKeepOut
         ].filter { !$0.isNull && !$0.isEmpty }
         let pathKeepOutRects = [textKeepOut].filter { !$0.isNull && !$0.isEmpty }
-        let margin: CGFloat = 42
+        let margin: CGFloat = 16
         let deviceCandidates = deviceMarkerCandidates(
             margin: margin,
             style: surpriseStyle,
@@ -127,18 +131,24 @@ private struct NeonWiggleRoute: View {
             isVisibleMarker($0, forbiddenRects: markerKeepOutRects, margin: margin, radius: markerRadius)
         }
 
-        let selectedPair = bestSeparatedMarkerPair(
+        let devicePoint = selectedDeviceMarkerPoint(
             visibleDeviceCandidates: visibleDeviceCandidates,
             deviceCandidates: deviceCandidates,
-            visibleSurpriseCandidates: visibleSurpriseCandidates,
-            surpriseCandidates: surpriseCandidates,
             forbiddenRects: markerKeepOutRects,
             margin: margin,
             radius: markerRadius,
             generator: &generator
         )
-        let devicePoint = selectedPair.device
-        let remotePoint = selectedPair.remote
+        let remotePoint = selectedRemoteMarkerPoint(
+            anchorPoint: devicePoint,
+            visibleSurpriseCandidates: visibleSurpriseCandidates,
+            surpriseCandidates: surpriseCandidates,
+            forbiddenRects: markerKeepOutRects,
+            margin: margin,
+            radius: markerRadius,
+            minimumDistance: minimumEndpointDistance,
+            generator: &generator
+        )
         let startNearDevice = Bool.random(using: &generator)
         let startPoint = startNearDevice ? devicePoint : remotePoint
         let endPoint = startNearDevice ? remotePoint : devicePoint
@@ -166,7 +176,7 @@ private struct NeonWiggleRoute: View {
         var routePoints = [startPoint]
 
         let loopCenter = CGFloat.random(in: 0.34...0.72, using: &generator)
-        let loopWindow = CGFloat.random(in: 0.08...0.13, using: &generator)
+        let loopWindow = CGFloat.random(in: 0.12...0.18, using: &generator)
         let alongOffsetAmplitude = min(
             surpriseStyle.maxAlongOffset,
             max(surpriseStyle.minAlongOffset, length * surpriseStyle.alongOffsetFactor)
@@ -187,8 +197,8 @@ private struct NeonWiggleRoute: View {
                 let loopProgress = (progress - loopCenter) / loopWindow
                 if abs(loopProgress) < 1 {
                     let swirlAngle = loopProgress * (.pi * 2)
-                    lateralOffset += cos(swirlAngle) * amplitude * 0.58
-                    alongOffset += sin(swirlAngle) * amplitude * 0.28
+                    lateralOffset += cos(swirlAngle) * amplitude * 1.02
+                    alongOffset += sin(swirlAngle) * amplitude * 0.54
                 }
             }
 
@@ -215,86 +225,148 @@ private struct NeonWiggleRoute: View {
         ]
     }
 
-    private func bestSeparatedMarkerPair(
+    private func selectedDeviceMarkerPoint(
         visibleDeviceCandidates: [CGPoint],
         deviceCandidates: [CGPoint],
+        forbiddenRects: [CGRect],
+        margin: CGFloat,
+        radius: CGFloat,
+        generator: inout SeededGenerator
+    ) -> CGPoint {
+        let prioritizedVisibleCandidates = prioritizedDeviceCandidates(
+            visibleDeviceCandidates,
+            generator: &generator
+        )
+        if let preferredCandidate = prioritizedVisibleCandidates.first {
+            return preferredCandidate
+        }
+
+        if let fallback = visibleMarkerPoint(
+            candidates: prioritizedDeviceCandidates(deviceCandidates, generator: &generator),
+            forbiddenRects: forbiddenRects,
+            margin: margin,
+            radius: radius
+        ) {
+            return fallback
+        }
+
+        return forcedFarMarkerPoint(
+            awayFrom: CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2),
+            forbiddenRects: forbiddenRects,
+            margin: margin,
+            radius: radius,
+            minimumDistance: 0
+        )
+    }
+
+    private func selectedRemoteMarkerPoint(
+        anchorPoint: CGPoint,
         visibleSurpriseCandidates: [CGPoint],
         surpriseCandidates: [CGPoint],
         forbiddenRects: [CGRect],
         margin: CGFloat,
         radius: CGFloat,
+        minimumDistance: CGFloat,
         generator: inout SeededGenerator
-    ) -> (device: CGPoint, remote: CGPoint) {
-        let minimumDistance = min(
-            max(canvasSize.width * 0.54, canvasSize.height * 0.36),
-            diagonalDistance() * 0.72
-        )
-
-        let availableDeviceCandidates = visibleDeviceCandidates.isEmpty
-            ? [visibleMarkerPoint(
-                candidates: deviceCandidates.shuffled(using: &generator),
-                forbiddenRects: forbiddenRects,
-                margin: margin,
-                radius: radius
-            )]
-            : visibleDeviceCandidates
-        let availableSurpriseCandidates = visibleSurpriseCandidates.isEmpty
-            ? [visibleMarkerPoint(
-                candidates: surpriseCandidates.shuffled(using: &generator),
-                forbiddenRects: forbiddenRects,
-                margin: margin,
-                radius: radius
-            )]
-            : visibleSurpriseCandidates
-
-        let rankedPairs = availableDeviceCandidates.flatMap { devicePoint in
-            availableSurpriseCandidates.map { remotePoint in
-                MarkerPair(
-                    device: devicePoint,
-                    remote: remotePoint,
-                    distance: distance(from: devicePoint, to: remotePoint)
-                )
-            }
+    ) -> CGPoint {
+        let farFromDeviceVisibleCandidates = visibleSurpriseCandidates.filter { !isNearDeviceCandidate($0) }
+        let preferredVisibleCandidates: [CGPoint]
+        if !farFromDeviceVisibleCandidates.isEmpty && CGFloat.random(in: 0...1, using: &generator) < 0.8 {
+            preferredVisibleCandidates = farFromDeviceVisibleCandidates
+        } else {
+            preferredVisibleCandidates = visibleSurpriseCandidates
         }
-        .sorted { $0.distance > $1.distance }
 
-        if let maxDistance = rankedPairs.first?.distance {
-            let nearBestThreshold = max(maxDistance * 0.97, minimumDistance)
-            let candidatePairs = rankedPairs
-                .prefix(18)
-                .filter { $0.distance >= nearBestThreshold }
+        let rankedVisibleCandidates = preferredVisibleCandidates.sorted {
+            distance(from: anchorPoint, to: $0) > distance(from: anchorPoint, to: $1)
+        }
 
-            if let chosenPair = Array(candidatePairs).randomElement(using: &generator) ?? rankedPairs.first {
-                return (device: chosenPair.device, remote: chosenPair.remote)
+        if let maxDistance = rankedVisibleCandidates.first.map({ distance(from: anchorPoint, to: $0) }) {
+            let nearBestThreshold = max(maxDistance * 0.92, minimumDistance)
+            let candidatePool = rankedVisibleCandidates
+                .prefix(16)
+                .filter { distance(from: anchorPoint, to: $0) >= nearBestThreshold }
+
+            if let chosenCandidate = Array(candidatePool).randomElement(using: &generator)
+                ?? Array(rankedVisibleCandidates.prefix(8)).randomElement(using: &generator) {
+                return chosenCandidate
             }
         }
 
-        let fallbackDevice = visibleMarkerPoint(
-            candidates: deviceCandidates.shuffled(using: &generator),
-            forbiddenRects: forbiddenRects,
-            margin: margin,
-            radius: radius
-        )
-        let orderedSurpriseFallbacks = surpriseCandidates
-            .sorted { distance(from: fallbackDevice, to: $0) > distance(from: fallbackDevice, to: $1) }
-        let fallbackRemote = visibleMarkerPoint(
-            candidates: orderedSurpriseFallbacks,
-            forbiddenRects: forbiddenRects,
-            margin: margin,
-            radius: radius
-        )
+        let farFromDeviceFallbacks = surpriseCandidates.filter { !isNearDeviceCandidate($0) }
+        let preferredFallbacks: [CGPoint]
+        if !farFromDeviceFallbacks.isEmpty && CGFloat.random(in: 0...1, using: &generator) < 0.8 {
+            preferredFallbacks = farFromDeviceFallbacks
+        } else {
+            preferredFallbacks = surpriseCandidates
+        }
 
-        return (device: fallbackDevice, remote: fallbackRemote)
+        let orderedFallbacks = preferredFallbacks
+            .sorted { distance(from: anchorPoint, to: $0) > distance(from: anchorPoint, to: $1) }
+        if let fallback = visibleMarkerPoint(
+            candidates: orderedFallbacks,
+            forbiddenRects: forbiddenRects,
+            margin: margin,
+            radius: radius,
+            minimumDistanceFrom: anchorPoint,
+            minimumDistance: minimumDistance
+        ) {
+            return fallback
+        }
+
+        return forcedFarMarkerPoint(
+            awayFrom: anchorPoint,
+            forbiddenRects: forbiddenRects,
+            margin: margin,
+            radius: radius,
+            minimumDistance: minimumDistance
+        )
+    }
+
+    private func prioritizedDeviceCandidates(
+        _ candidates: [CGPoint],
+        generator: inout SeededGenerator
+    ) -> [CGPoint] {
+        let leftRightCandidates = candidates
+            .filter { isHorizontalDeviceCandidate($0) }
+            .shuffled(using: &generator)
+        let aboveBelowCandidates = candidates
+            .filter { !isHorizontalDeviceCandidate($0) }
+            .shuffled(using: &generator)
+
+        guard !leftRightCandidates.isEmpty, !aboveBelowCandidates.isEmpty else {
+            return candidates.shuffled(using: &generator)
+        }
+
+        let prefersLeftRight = CGFloat.random(in: 0...1, using: &generator) < 0.75
+        return prefersLeftRight
+            ? leftRightCandidates + aboveBelowCandidates
+            : aboveBelowCandidates + leftRightCandidates
+    }
+
+    private func isHorizontalDeviceCandidate(_ point: CGPoint) -> Bool {
+        guard !deviceRect.isEmpty else { return false }
+        let horizontalInset: CGFloat = 8
+        return point.x <= deviceRect.minX - horizontalInset || point.x >= deviceRect.maxX + horizontalInset
+    }
+
+    private func isNearDeviceCandidate(_ point: CGPoint) -> Bool {
+        guard !deviceRect.isEmpty else { return false }
+        let relaxedDeviceZone = deviceRect.insetBy(dx: -170, dy: -150)
+        return relaxedDeviceZone.contains(point)
     }
 
     private func visibleMarkerPoint(
         candidates: [CGPoint],
         forbiddenRects: [CGRect],
         margin: CGFloat,
-        radius: CGFloat
-    ) -> CGPoint {
+        radius: CGFloat,
+        minimumDistanceFrom anchorPoint: CGPoint? = nil,
+        minimumDistance: CGFloat = 0
+    ) -> CGPoint? {
         for candidate in candidates {
-            if isVisibleMarker(candidate, forbiddenRects: forbiddenRects, margin: margin, radius: radius) {
+            let isFarEnough = anchorPoint.map { distance(from: candidate, to: $0) >= minimumDistance } ?? true
+            if isFarEnough && isVisibleMarker(candidate, forbiddenRects: forbiddenRects, margin: margin, radius: radius) {
                 return candidate
             }
         }
@@ -310,13 +382,54 @@ private struct NeonWiggleRoute: View {
             ]
 
             for fallback in fallbackCandidates {
-                if isVisibleMarker(fallback, forbiddenRects: forbiddenRects, margin: margin, radius: radius) {
+                let isFarEnough = anchorPoint.map { distance(from: fallback, to: $0) >= minimumDistance } ?? true
+                if isFarEnough && isVisibleMarker(fallback, forbiddenRects: forbiddenRects, margin: margin, radius: radius) {
                     return fallback
                 }
             }
         }
 
-        return CGPoint(x: canvasSize.width / 2, y: canvasSize.height / 2)
+        return nil
+    }
+
+    private func forcedFarMarkerPoint(
+        awayFrom anchorPoint: CGPoint,
+        forbiddenRects: [CGRect],
+        margin: CGFloat,
+        radius: CGFloat,
+        minimumDistance: CGFloat
+    ) -> CGPoint {
+        let horizontalEdgeBuffer = max(radius + 16, margin)
+        let verticalEdgeBuffer = max(margin + radius + 44, canvasSize.height * 0.045)
+        let mirrored = CGPoint(
+            x: min(max(canvasSize.width - anchorPoint.x, horizontalEdgeBuffer), canvasSize.width - horizontalEdgeBuffer),
+            y: min(max(canvasSize.height - anchorPoint.y, verticalEdgeBuffer), canvasSize.height - verticalEdgeBuffer)
+        )
+        let edgeCandidates = [
+            mirrored,
+            CGPoint(x: horizontalEdgeBuffer, y: verticalEdgeBuffer),
+            CGPoint(x: canvasSize.width - horizontalEdgeBuffer, y: verticalEdgeBuffer),
+            CGPoint(x: horizontalEdgeBuffer, y: canvasSize.height - verticalEdgeBuffer),
+            CGPoint(x: canvasSize.width - horizontalEdgeBuffer, y: canvasSize.height - verticalEdgeBuffer),
+            CGPoint(x: horizontalEdgeBuffer, y: canvasSize.height * 0.5),
+            CGPoint(x: canvasSize.width - horizontalEdgeBuffer, y: canvasSize.height * 0.5),
+            CGPoint(x: canvasSize.width * 0.5, y: verticalEdgeBuffer),
+            CGPoint(x: canvasSize.width * 0.5, y: canvasSize.height - verticalEdgeBuffer)
+        ]
+        .sorted { distance(from: anchorPoint, to: $0) > distance(from: anchorPoint, to: $1) }
+
+        if let visibleCandidate = visibleMarkerPoint(
+            candidates: edgeCandidates,
+            forbiddenRects: forbiddenRects,
+            margin: margin,
+            radius: radius,
+            minimumDistanceFrom: anchorPoint,
+            minimumDistance: minimumDistance
+        ) {
+            return visibleCandidate
+        }
+
+        return edgeCandidates.first ?? mirrored
     }
 
     private func isVisibleMarker(
@@ -325,7 +438,12 @@ private struct NeonWiggleRoute: View {
         margin: CGFloat,
         radius: CGFloat
     ) -> Bool {
-        guard point.x >= margin, point.x <= canvasSize.width - margin, point.y >= margin, point.y <= canvasSize.height - margin else {
+        let horizontalEdgeBuffer = max(radius + 16, margin)
+        let verticalEdgeBuffer = max(margin + radius + 44, canvasSize.height * 0.045)
+        guard point.x >= horizontalEdgeBuffer,
+              point.x <= canvasSize.width - horizontalEdgeBuffer,
+              point.y >= verticalEdgeBuffer,
+              point.y <= canvasSize.height - verticalEdgeBuffer else {
             return false
         }
 
@@ -664,13 +782,6 @@ private struct NeonWiggleRoute: View {
         case top
         case bottom
     }
-
-    private struct MarkerPair {
-        let device: CGPoint
-        let remote: CGPoint
-        let distance: CGFloat
-    }
-
     private enum SurpriseStyle: CaseIterable {
         case slingshot
         case sideSwipe
@@ -946,9 +1057,10 @@ struct AppStorePhoneCanvas<Content: View>: View {
     var body: some View {
         GeometryReader { proxy in
             let wiggleSeed = seed ^ Int.random(in: 1...Int.max)
+            let phoneScale: CGFloat = 0.93
             let phoneSize = CGSize(
-                width: environment.screenshotSize.width * 0.95,
-                height: environment.screenshotSize.height * 0.95
+                width: environment.screenshotSize.width * phoneScale,
+                height: environment.screenshotSize.height * phoneScale
             )
             let phoneRect = CGRect(
                 x: (proxy.size.width - phoneSize.width) / 2,

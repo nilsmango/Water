@@ -8,7 +8,7 @@ struct Phone07WaterSports: View {
         AppStorePhoneCanvas(
             seed: 707,
             titleLines: ["For all Water", "Sports"],
-            phoneOffsetY: 350,
+            phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             ScreenshotWaterSportsView()

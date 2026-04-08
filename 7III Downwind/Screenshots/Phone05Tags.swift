@@ -8,7 +8,7 @@ struct Phone05Tags: View {
         AppStorePhoneCanvas(
             seed: 505,
             titleLines: ["Powerful", "Tags"],
-            phoneOffsetY: 325,
+            phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             ScreenshotTagsView()

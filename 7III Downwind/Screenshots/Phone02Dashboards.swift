@@ -8,7 +8,7 @@ struct Phone02Dashboards: View {
         AppStorePhoneCanvas(
             seed: 202,
             titleLines: ["NEW:", "Dashboards"],
-            phoneOffsetY: 310,
+            phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             ScreenshotDashboardHomeView()

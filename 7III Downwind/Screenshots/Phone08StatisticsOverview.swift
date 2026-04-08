@@ -8,7 +8,7 @@ struct Phone08StatisticsOverview: View {
         AppStorePhoneCanvas(
             seed: 808,
             titleLines: ["With", "Statistics"],
-            phoneOffsetY: 330,
+            phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             ScreenshotStatisticsOverviewView()

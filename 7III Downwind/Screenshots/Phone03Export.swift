@@ -7,8 +7,8 @@ struct Phone03Export: View {
     var body: some View {
         AppStorePhoneCanvas(
             seed: 303,
-            titleLines: ["Video, Photo", "& GPX", "Export"],
-            phoneOffsetY: 390,
+            titleLines: ["Video, Photo", "& GPX Export"],
+            phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             ScreenshotExportRunView()

@@ -8,7 +8,7 @@ struct Phone09MakeEdits: View {
         AppStorePhoneCanvas(
             seed: 909,
             titleLines: ["Make Edits"],
-            phoneOffsetY: 305,
+            phoneOffsetY: 300,
             phoneColorScheme: .dark
         ) {
             ScreenshotEditRouteView()

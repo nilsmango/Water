@@ -8,7 +8,7 @@ struct Phone04Places: View {
         AppStorePhoneCanvas(
             seed: 404,
             titleLines: ["Filter by", "Places & More"],
-            phoneOffsetY: 340,
+            phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             ScreenshotPlacesView()

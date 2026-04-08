@@ -7,8 +7,8 @@ struct Phone12GPXImport: View {
     var body: some View {
         AppStorePhoneCanvas(
             seed: 1212,
-            titleLines: ["GPX Import:", "Garmin &", "More"],
-            phoneOffsetY: 385,
+            titleLines: ["GPX Import:", "Garmin & More"],
+            phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             ScreenshotGPXImportView()

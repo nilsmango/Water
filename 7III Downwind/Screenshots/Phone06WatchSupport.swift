@@ -8,7 +8,7 @@ struct Phone06WatchSupport: View {
         AppStorePhoneCanvas(
             seed: 606,
             titleLines: ["Tracking with", "Watch Support"],
-            phoneOffsetY: 360,
+            phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             ScreenshotWatchSupportView()
