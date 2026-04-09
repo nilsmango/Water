@@ -6,7 +6,7 @@ import SwiftUI
 struct Phone08StatisticsOverview: View {
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 808,
+            seed: 908,
             titleLines: ["With", "Statistics"],
             phoneOffsetY: 300,
             phoneColorScheme: .light

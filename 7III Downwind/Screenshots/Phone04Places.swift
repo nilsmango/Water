@@ -6,7 +6,7 @@ import SwiftUI
 struct Phone04Places: View {
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 404,
+            seed: 704,
             titleLines: ["Filter by", "Places & More"],
             phoneOffsetY: 300,
             phoneColorScheme: .light

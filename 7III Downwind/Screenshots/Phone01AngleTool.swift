@@ -6,7 +6,7 @@ import SwiftUI
 struct Phone01AngleTool: View {
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 101,
+            seed: 1901,
             titleLines: ["NEW:", "Angle Tool"],
             phoneOffsetY: 300,
             phoneColorScheme: .dark
