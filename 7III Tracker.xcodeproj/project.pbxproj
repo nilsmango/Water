@@ -213,6 +213,393 @@
 		78F36B2C2D9AB1160079F20B /* CrownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2B2D9AB1160079F20B /* CrownButton.swift */; };
 		78F36B2E2D9AB9C10079F20B /* OptionsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F36B2D2D9AB9C10079F20B /* OptionsSheetView.swift */; };
 		78F937F02C35816B00D34796 /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
+		78F9DF732F87CE5D008FDBCF /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
+		78F9DF742F87CE5D008FDBCF /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC22B40B84300EB07F8 /* StartView.swift */; };
+		78F9DF752F87CE5D008FDBCF /* XMarkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382232E8BFCD800C68EF6 /* XMarkLabel.swift */; };
+		78F9DF762F87CE5D008FDBCF /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB908B2E44CA9500B222C2 /* NavigationButton.swift */; };
+		78F9DF772F87CE5D008FDBCF /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB908D2E44D2C300B222C2 /* NavigationBar.swift */; };
+		78F9DF782F87CE5D008FDBCF /* NewsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF212D6B192B0075CA4C /* NewsSection.swift */; };
+		78F9DF792F87CE5D008FDBCF /* VersionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF272D6B1A0A0075CA4C /* VersionHistoryView.swift */; };
+		78F9DF7A2F87CE5D008FDBCF /* ReviewRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783886462DA2DB5F00B12FE9 /* ReviewRequestView.swift */; };
+		78F9DF7B2F87CE5D008FDBCF /* ListBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1F2D6B182E0075CA4C /* ListBackground.swift */; };
+		78F9DF7C2F87CE5D008FDBCF /* TagsEditViewStatisticCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
+		78F9DF7D2F87CE5D008FDBCF /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468E2C342160009F8733 /* SummaryView.swift */; };
+		78F9DF7E2F87CE5D008FDBCF /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
+		78F9DF7F2F87CE5D008FDBCF /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B67582C3A7A2B00B90578 /* UpgradeView.swift */; };
+		78F9DF802F87CE5D008FDBCF /* UpgradeShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */; };
+		78F9DF812F87CE5D008FDBCF /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
+		78F9DF822F87CE5D008FDBCF /* UpgradeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A283792C450EA80052AA52 /* UpgradeStatus.swift */; };
+		78F9DF832F87CE5D008FDBCF /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
+		78F9DF842F87CE5D008FDBCF /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
+		78F9DF852F87CE5D008FDBCF /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
+		78F9DF862F87CE5D008FDBCF /* FoilingThresholds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */; };
+		78F9DF872F87CE5D008FDBCF /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C2A2C3C171A005CCE87 /* HelpView.swift */; };
+		78F9DF882F87CE5D008FDBCF /* RefundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837D2C45578F0052AA52 /* RefundView.swift */; };
+		78F9DF892F87CE5D008FDBCF /* PremiumSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837B2C4551BD0052AA52 /* PremiumSection.swift */; };
+		78F9DF8A2F87CE5D008FDBCF /* FirstTimeUserNameSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */; };
+		78F9DF8B2F87CE5D008FDBCF /* RunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACA2B41705C00EB07F8 /* RunView.swift */; };
+		78F9DF8C2F87CE5D008FDBCF /* RunUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACE2B4308A800EB07F8 /* RunUITest.swift */; };
+		78F9DF8D2F87CE5D008FDBCF /* HeadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D42B626BF500701D7F /* HeadingIndicator.swift */; };
+		78F9DF8E2F87CE5D008FDBCF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
+		78F9DF8F2F87CE5D008FDBCF /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
+		78F9DF902F87CE5D008FDBCF /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
+		78F9DF912F87CE5D008FDBCF /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
+		78F9DF922F87CE5D008FDBCF /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
+		78F9DF932F87CE5D008FDBCF /* RunListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD52B44096400EB07F8 /* RunListView.swift */; };
+		78F9DF942F87CE5D008FDBCF /* RunListMapSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D62B62C53C00701D7F /* RunListMapSheet.swift */; };
+		78F9DF952F87CE5D008FDBCF /* BearingArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */; };
+		78F9DF962F87CE5D008FDBCF /* MemberListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53BF2B59A61B00701D7F /* MemberListView.swift */; };
+		78F9DF972F87CE5D008FDBCF /* NoActiveRunnersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */; };
+		78F9DF982F87CE5D008FDBCF /* ListInfoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53CC2B5E6C9A00701D7F /* ListInfoLabel.swift */; };
+		78F9DF992F87CE5D008FDBCF /* RunMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C62B5DA57C00701D7F /* RunMapView.swift */; };
+		78F9DF9A2F87CE5D008FDBCF /* CoordinatesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C82B5E667500701D7F /* CoordinatesListView.swift */; };
+		78F9DF9B2F87CE5D008FDBCF /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C22B5D930400701D7F /* MapView.swift */; };
+		78F9DF9C2F87CE5D008FDBCF /* CircleAndText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C42B5D9DB000701D7F /* CircleAndText.swift */; };
+		78F9DF9D2F87CE5D008FDBCF /* StatisticsControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */; };
+		78F9DF9E2F87CE5D008FDBCF /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */; };
+		78F9DF9F2F87CE5D008FDBCF /* YearlyMonthlyStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
+		78F9DFA02F87CE5D008FDBCF /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
+		78F9DFA12F87CE5D008FDBCF /* GroupedTagsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083662C258112004C0857 /* GroupedTagsListView.swift */; };
+		78F9DFA22F87CE5D008FDBCF /* StringSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1D2D6A2EAC0075CA4C /* StringSelectionView.swift */; };
+		78F9DFA32F87CE5D008FDBCF /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
+		78F9DFA42F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */; };
+		78F9DFA52F87CE5D008FDBCF /* SpeedChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7883824A2E8EB24800C68EF6 /* SpeedChartView.swift */; };
+		78F9DFA62F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */; };
+		78F9DFA72F87CE5D008FDBCF /* MapSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835D2C21B279004C0857 /* MapSectionView.swift */; };
+		78F9DFA82F87CE5D008FDBCF /* AngleSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */; };
+		78F9DFA92F87CE5D008FDBCF /* TagsFlexiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E14A2BC5850C00776890 /* TagsFlexiView.swift */; };
+		78F9DFAA2F87CE5D008FDBCF /* TagsEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E12B2BC52A0900776890 /* TagsEditView.swift */; };
+		78F9DFAB2F87CE5D008FDBCF /* EmptyTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083572C2170A3004C0857 /* EmptyTagsView.swift */; };
+		78F9DFAC2F87CE5D008FDBCF /* HeartRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835F2C21C096004C0857 /* HeartRateView.swift */; };
+		78F9DFAD2F87CE5D008FDBCF /* HeartRateChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083592C2188CF004C0857 /* HeartRateChartView.swift */; };
+		78F9DFAE2F87CE5D008FDBCF /* StatisticsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1252BC3F7A800776890 /* StatisticsDetails.swift */; };
+		78F9DFAF2F87CE5D008FDBCF /* StatisticsInfoViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */; };
+		78F9DFB02F87CE5D008FDBCF /* StatisticsRounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898D40C2BBEB490007820DB /* StatisticsRounds.swift */; };
+		78F9DFB12F87CE5D008FDBCF /* StatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
+		78F9DFB22F87CE5D008FDBCF /* EditMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC608C2E0D319E00C55950 /* EditMap.swift */; };
+		78F9DFB32F87CE5D008FDBCF /* SpeedGradientStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */; };
+		78F9DFB42F87CE5D008FDBCF /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
+		78F9DFB52F87CE5D008FDBCF /* GradientMapTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */; };
+		78F9DFB62F87CE5D008FDBCF /* GPXExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B5EF182D539D7D0079B16A /* GPXExportButton.swift */; };
+		78F9DFB72F87CE5D008FDBCF /* ShareStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA42C4E77B10046AE0E /* ShareStatisticsView.swift */; };
+		78F9DFB82F87CE5D008FDBCF /* RouteSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC60902E0DDBD100C55950 /* RouteSticker.swift */; };
+		78F9DFB92F87CE5D008FDBCF /* StickerHowToView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC60922E0EACF600C55950 /* StickerHowToView.swift */; };
+		78F9DFBA2F87CE5D008FDBCF /* OverlaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF172D6891260075CA4C /* OverlaySettingsView.swift */; };
+		78F9DFBB2F87CE5D008FDBCF /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAE2C4EE64B0046AE0E /* ActivityViewController.swift */; };
+		78F9DFBC2F87CE5D008FDBCF /* ShareImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAA2C4E912F0046AE0E /* ShareImagePreview.swift */; };
+		78F9DFBD2F87CE5D008FDBCF /* ShareOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4B9E2C4E45340046AE0E /* ShareOverlay.swift */; };
+		78F9DFBE2F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF192D6894DB0075CA4C /* ShareOverlayDivider.swift */; };
+		78F9DFBF2F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAC2C4E9F310046AE0E /* SharePreviewWrapper.swift */; };
+		78F9DFC02F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BB02C4FAD5E0046AE0E /* VideoOverlayView.swift */; };
+		78F9DFC12F87CE5D008FDBCF /* VideoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7857BF332C57C16600AD7F4F /* VideoPicker.swift */; };
+		78F9DFC22F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */; };
+		78F9DFC32F87CE5D008FDBCF /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
+		78F9DFC42F87CE5D008FDBCF /* BetaBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */; };
+		78F9DFC52F87CE5D008FDBCF /* Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB913E2E45FB9D00B222C2 /* Dashboards.swift */; };
+		78F9DFC62F87CE5D008FDBCF /* TrackedElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */; };
+		78F9DFC72F87CE5D008FDBCF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91402E45FB9D00B222C2 /* DashboardView.swift */; };
+		78F9DFC82F87CE5D008FDBCF /* WebPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91432E45FB9D00B222C2 /* WebPreview.swift */; };
+		78F9DFC92F87CE5D008FDBCF /* NestedElementsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */; };
+		78F9DFCA2F87CE5D008FDBCF /* WidgetDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */; };
+		78F9DFCB2F87CE5D008FDBCF /* AddElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB914C2E45FC5100B222C2 /* AddElementView.swift */; };
+		78F9DFCC2F87CE5D008FDBCF /* ToolbarPlacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */; };
+		78F9DFCD2F87CE5D008FDBCF /* SelectionButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */; };
+		78F9DFCE2F87CE5D008FDBCF /* _FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1372BC52BB400776890 /* _FlexibleView.swift */; };
+		78F9DFCF2F87CE5D008FDBCF /* (null) in Sources */ = {isa = PBXBuildFile; };
+		78F9DFD02F87CE5D008FDBCF /* StatisticTestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
+		78F9DFD12F87CE5D008FDBCF /* StatisticsModelings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */; };
+		78F9DFD22F87CE5D008FDBCF /* SpotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC22F217F66000D9591 /* SpotDetailView.swift */; };
+		78F9DFD32F87CE5D008FDBCF /* SpotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC02F217F66000D9591 /* SpotManager.swift */; };
+		78F9DFD42F87CE5D008FDBCF /* SpotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC32F217F66000D9591 /* SpotsView.swift */; };
+		78F9DFD52F87CE5D008FDBCF /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FBF2F217F66000D9591 /* Spot.swift */; };
+		78F9DFD62F87CE5D008FDBCF /* SubmitSpotRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570702F225E11000D9591 /* SubmitSpotRequest.swift */; };
+		78F9DFD72F87CE5D008FDBCF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805706F2F225E11000D9591 /* APIService.swift */; };
+		78F9DFD82F87CE5D008FDBCF /* SpotKindPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570762F225E22000D9591 /* SpotKindPicker.swift */; };
+		78F9DFD92F87CE5D008FDBCF /* InfoSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570752F225E22000D9591 /* InfoSectionView.swift */; };
+		78F9DFDA2F87CE5D008FDBCF /* AddSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570732F225E22000D9591 /* AddSpotView.swift */; };
+		78F9DFDB2F87CE5D008FDBCF /* VideoSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570772F225E22000D9591 /* VideoSectionView.swift */; };
+		78F9DFDC2F87CE5D008FDBCF /* CountryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570742F225E22000D9591 /* CountryPicker.swift */; };
+		78F9DFDD2F87CE5D008FDBCF /* AllRunsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780571AC2F23BEEC000D9591 /* AllRunsMapView.swift */; };
+		78F9DFDE2F87CE5D008FDBCF /* DashboardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7894765C2E489B35005D8C58 /* DashboardRow.swift */; };
+		78F9DFDF2F87CE5D008FDBCF /* AverageHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468C2C33329F009F8733 /* AverageHeartView.swift */; };
+		78F9DFE02F87CE5D008FDBCF /* product_ids.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78A283732C3FC2610052AA52 /* product_ids.plist */; };
+		78F9DFE12F87CE5D008FDBCF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
+		78F9DFE22F87CE5D008FDBCF /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */; };
+		78F9DFE32F87CE5D008FDBCF /* AppScreenshotKit in Frameworks */ = {isa = PBXBuildFile; productRef = 79B1000A2F8500010041C173 /* AppScreenshotKit */; };
+		78F9DFE42F87CE5D008FDBCF /* ShareStatStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA02C4E46F80046AE0E /* ShareStatStack.swift */; };
+		78F9DFE52F87CE5D008FDBCF /* WebScrapingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91332E45EFBA00B222C2 /* WebScrapingService.swift */; };
+		78F9DFE62F87CE5D008FDBCF /* UnitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91322E45EFBA00B222C2 /* UnitType.swift */; };
+		78F9DFE72F87CE5D008FDBCF /* TrackedElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91302E45EFBA00B222C2 /* TrackedElement.swift */; };
+		78F9DFE82F87CE5D008FDBCF /* HeartSpeedSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D1E2F1EC16A000D9591 /* HeartSpeedSamples.swift */; };
+		78F9DFE92F87CE5D008FDBCF /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
+		78F9DFEA2F87CE5D008FDBCF /* Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABB2B40B04000EB07F8 /* Run.swift */; };
+		78F9DFEB2F87CE5D008FDBCF /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF232D6B195E0075CA4C /* Version.swift */; };
+		78F9DFEC2F87CE5D008FDBCF /* WavesHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D1A2F1E901B000D9591 /* WavesHelpers.swift */; };
+		78F9DFED2F87CE5D008FDBCF /* ImportRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C22D9DA417003E11FA /* ImportRun.swift */; };
+		78F9DFEE2F87CE5D008FDBCF /* DBRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACC2B41D28400EB07F8 /* DBRun.swift */; };
+		78F9DFEF2F87CE5D008FDBCF /* MapAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E062EC0B99900E2AE43 /* MapAngle.swift */; };
+		78F9DFF02F87CE5D008FDBCF /* RunListSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD72B45B04800EB07F8 /* RunListSorting.swift */; };
+		78F9DFF12F87CE5D008FDBCF /* RunType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53CE2B5FBF5000701D7F /* RunType.swift */; };
+		78F9DFF22F87CE5D008FDBCF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD92B45EAD000EB07F8 /* Extensions.swift */; };
+		78F9DFF32F87CE5D008FDBCF /* View+readSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1482BC52C9600776890 /* View+readSize.swift */; };
+		78F9DFF42F87CE5D008FDBCF /* ElapsedTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E422C2EAB7000B703F5 /* ElapsedTimeFormatter.swift */; };
+		78F9DFF52F87CE5D008FDBCF /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAD2B359DAD00EB07F8 /* HTTPClient.swift */; };
+		78F9DFF62F87CE5D008FDBCF /* ChartStrideBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835B2C218985004C0857 /* ChartStrideBy.swift */; };
+		78F9DFF72F87CE5D008FDBCF /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
+		78F9DFF82F87CE5D008FDBCF /* HCKalmanAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BBA2BB1C15E00D6A772 /* HCKalmanAlgorithm.swift */; };
+		78F9DFF92F87CE5D008FDBCF /* SpeedOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BB62C50F2470046AE0E /* SpeedOption.swift */; };
+		78F9DFFA2F87CE5D008FDBCF /* LocationThings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD02B4313EF00EB07F8 /* LocationThings.swift */; };
+		78F9DFFB2F87CE5D008FDBCF /* VideoProcessingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BB22C4FAFA70046AE0E /* VideoProcessingHelper.swift */; };
+		78F9DFFC2F87CE5D008FDBCF /* GenerateQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */; };
+		78F9DFFD2F87CE5D008FDBCF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AAF2B359F8E00EB07F8 /* Constants.swift */; };
+		78F9DFFE2F87CE5D008FDBCF /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB72B35D24200EB07F8 /* HelperFunctions.swift */; };
+		78F9DFFF2F87CE5D008FDBCF /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA82C4E874E0046AE0E /* Snapshot.swift */; };
+		78F9E0002F87CE5D008FDBCF /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2392BA6DADB00639E65 /* LocationData.swift */; };
+		78F9E0012F87CE5D008FDBCF /* CrewStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2442BAC8B8A00639E65 /* CrewStatistic.swift */; };
+		78F9E0022F87CE5D008FDBCF /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E32C18C93F00C75A60 /* WorkoutType.swift */; };
+		78F9E0032F87CE5D008FDBCF /* VersionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF252D6B197E0075CA4C /* VersionHistory.swift */; };
+		78F9E0042F87CE5D008FDBCF /* FoilStallDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382462E8EA63A00C68EF6 /* FoilStallDetector.swift */; };
+		78F9E0052F87CE5D008FDBCF /* GeocodingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1B2D69DE8B0075CA4C /* GeocodingManager.swift */; };
+		78F9E0062F87CE5D008FDBCF /* CoordinateSmoothingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D162F1E8CD4000D9591 /* CoordinateSmoothingHelpers.swift */; };
+		78F9E0072F87CE5D008FDBCF /* NavDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91042E45EF5C00B222C2 /* NavDestination.swift */; };
+		78F9E0082F87CE5D008FDBCF /* RunEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083632C21FB54004C0857 /* RunEdit.swift */; };
+		78F9E0092F87CE5D008FDBCF /* MapTapGesture26.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E082EC0DA2E00E2AE43 /* MapTapGesture26.swift */; };
+		78F9E00A2F87CE5D008FDBCF /* MemberRunData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD22B433D4000EB07F8 /* MemberRunData.swift */; };
+		78F9E00B2F87CE5D008FDBCF /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AB92B40AF7400EB07F8 /* Member.swift */; };
+		78F9E00C2F87CE5D008FDBCF /* GPXStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F047C42D9DA607003E11FA /* GPXStuff.swift */; };
+		78F9E00D2F87CE5D008FDBCF /* MapDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D112F1E46BB000D9591 /* MapDebug.swift */; };
+		78F9E00E2F87CE5D008FDBCF /* SpeedGradientHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */; };
+		78F9E00F2F87CE5D008FDBCF /* SpeedGradientMapCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */; };
+		78F9E0102F87CE5D008FDBCF /* IfLet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7894765A2E488F5F005D8C58 /* IfLet.swift */; };
+		78F9E0112F87CE5D008FDBCF /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912E2E45EFBA00B222C2 /* Dashboard.swift */; };
+		78F9E0122F87CE5D008FDBCF /* UnitConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91312E45EFBA00B222C2 /* UnitConverter.swift */; };
+		78F9E0132F87CE5D008FDBCF /* DownwindManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */; };
+		78F9E0142F87CE5D008FDBCF /* SpeedGradientMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */; };
+		78F9E0152F87CE5D008FDBCF /* TrackedElementsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912F2E45EFBA00B222C2 /* TrackedElementsManager.swift */; };
+		78F9E0162F87CE5D008FDBCF /* RunStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */; };
+		78F9E0172F87CE5D008FDBCF /* ShareVideoOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BB42C4FDFE70046AE0E /* ShareVideoOverlay.swift */; };
+		78F9E0182F87CE5D008FDBCF /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
+		78F9E0192F87CE5D008FDBCF /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC22B40B84300EB07F8 /* StartView.swift */; };
+		78F9E01A2F87CE5D008FDBCF /* XMarkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382232E8BFCD800C68EF6 /* XMarkLabel.swift */; };
+		78F9E01B2F87CE5D008FDBCF /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB908B2E44CA9500B222C2 /* NavigationButton.swift */; };
+		78F9E01C2F87CE5D008FDBCF /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB908D2E44D2C300B222C2 /* NavigationBar.swift */; };
+		78F9E01D2F87CE5D008FDBCF /* NewsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF212D6B192B0075CA4C /* NewsSection.swift */; };
+		78F9E01E2F87CE5D008FDBCF /* VersionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF272D6B1A0A0075CA4C /* VersionHistoryView.swift */; };
+		78F9E01F2F87CE5D008FDBCF /* ReviewRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783886462DA2DB5F00B12FE9 /* ReviewRequestView.swift */; };
+		78F9E0202F87CE5D008FDBCF /* ListBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1F2D6B182E0075CA4C /* ListBackground.swift */; };
+		78F9E0212F87CE5D008FDBCF /* TagsEditViewStatisticCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
+		78F9E0222F87CE5D008FDBCF /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468E2C342160009F8733 /* SummaryView.swift */; };
+		78F9E0232F87CE5D008FDBCF /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
+		78F9E0242F87CE5D008FDBCF /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B67582C3A7A2B00B90578 /* UpgradeView.swift */; };
+		78F9E0252F87CE5D008FDBCF /* UpgradeShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */; };
+		78F9E0262F87CE5D008FDBCF /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
+		78F9E0272F87CE5D008FDBCF /* UpgradeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A283792C450EA80052AA52 /* UpgradeStatus.swift */; };
+		78F9E0282F87CE5D008FDBCF /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
+		78F9E0292F87CE5D008FDBCF /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
+		78F9E02A2F87CE5D008FDBCF /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
+		78F9E02B2F87CE5D008FDBCF /* FoilingThresholds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */; };
+		78F9E02C2F87CE5D008FDBCF /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C2A2C3C171A005CCE87 /* HelpView.swift */; };
+		78F9E02D2F87CE5D008FDBCF /* RefundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837D2C45578F0052AA52 /* RefundView.swift */; };
+		78F9E02E2F87CE5D008FDBCF /* PremiumSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837B2C4551BD0052AA52 /* PremiumSection.swift */; };
+		78F9E02F2F87CE5D008FDBCF /* FirstTimeUserNameSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */; };
+		78F9E0302F87CE5D008FDBCF /* RunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACA2B41705C00EB07F8 /* RunView.swift */; };
+		78F9E0312F87CE5D008FDBCF /* RunUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACE2B4308A800EB07F8 /* RunUITest.swift */; };
+		78F9E0322F87CE5D008FDBCF /* HeadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D42B626BF500701D7F /* HeadingIndicator.swift */; };
+		78F9E0332F87CE5D008FDBCF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
+		78F9E0342F87CE5D008FDBCF /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
+		78F9E0352F87CE5D008FDBCF /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
+		78F9E0362F87CE5D008FDBCF /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
+		78F9E0372F87CE5D008FDBCF /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
+		78F9E0382F87CE5D008FDBCF /* RunListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD52B44096400EB07F8 /* RunListView.swift */; };
+		78F9E0392F87CE5D008FDBCF /* RunListMapSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D62B62C53C00701D7F /* RunListMapSheet.swift */; };
+		78F9E03A2F87CE5D008FDBCF /* BearingArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */; };
+		78F9E03B2F87CE5D008FDBCF /* MemberListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53BF2B59A61B00701D7F /* MemberListView.swift */; };
+		78F9E03C2F87CE5D008FDBCF /* NoActiveRunnersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */; };
+		78F9E03D2F87CE5D008FDBCF /* ListInfoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53CC2B5E6C9A00701D7F /* ListInfoLabel.swift */; };
+		78F9E03E2F87CE5D008FDBCF /* RunMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C62B5DA57C00701D7F /* RunMapView.swift */; };
+		78F9E03F2F87CE5D008FDBCF /* CoordinatesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C82B5E667500701D7F /* CoordinatesListView.swift */; };
+		78F9E0402F87CE5D008FDBCF /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C22B5D930400701D7F /* MapView.swift */; };
+		78F9E0412F87CE5D008FDBCF /* CircleAndText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C42B5D9DB000701D7F /* CircleAndText.swift */; };
+		78F9E0422F87CE5D008FDBCF /* StatisticsControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */; };
+		78F9E0432F87CE5D008FDBCF /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */; };
+		78F9E0442F87CE5D008FDBCF /* YearlyMonthlyStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
+		78F9E0452F87CE5D008FDBCF /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
+		78F9E0462F87CE5D008FDBCF /* GroupedTagsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083662C258112004C0857 /* GroupedTagsListView.swift */; };
+		78F9E0472F87CE5D008FDBCF /* StringSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1D2D6A2EAC0075CA4C /* StringSelectionView.swift */; };
+		78F9E0482F87CE5D008FDBCF /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
+		78F9E0492F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */; };
+		78F9E04A2F87CE5D008FDBCF /* SpeedChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7883824A2E8EB24800C68EF6 /* SpeedChartView.swift */; };
+		78F9E04B2F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */; };
+		78F9E04C2F87CE5D008FDBCF /* MapSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835D2C21B279004C0857 /* MapSectionView.swift */; };
+		78F9E04D2F87CE5D008FDBCF /* AngleSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */; };
+		78F9E04E2F87CE5D008FDBCF /* TagsFlexiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E14A2BC5850C00776890 /* TagsFlexiView.swift */; };
+		78F9E04F2F87CE5D008FDBCF /* TagsEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E12B2BC52A0900776890 /* TagsEditView.swift */; };
+		78F9E0502F87CE5D008FDBCF /* EmptyTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083572C2170A3004C0857 /* EmptyTagsView.swift */; };
+		78F9E0512F87CE5D008FDBCF /* HeartRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835F2C21C096004C0857 /* HeartRateView.swift */; };
+		78F9E0522F87CE5D008FDBCF /* HeartRateChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083592C2188CF004C0857 /* HeartRateChartView.swift */; };
+		78F9E0532F87CE5D008FDBCF /* StatisticsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1252BC3F7A800776890 /* StatisticsDetails.swift */; };
+		78F9E0542F87CE5D008FDBCF /* StatisticsInfoViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */; };
+		78F9E0552F87CE5D008FDBCF /* StatisticsRounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898D40C2BBEB490007820DB /* StatisticsRounds.swift */; };
+		78F9E0562F87CE5D008FDBCF /* StatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
+		78F9E0572F87CE5D008FDBCF /* EditMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC608C2E0D319E00C55950 /* EditMap.swift */; };
+		78F9E0582F87CE5D008FDBCF /* SpeedGradientStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */; };
+		78F9E0592F87CE5D008FDBCF /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
+		78F9E05A2F87CE5D008FDBCF /* GradientMapTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */; };
+		78F9E05B2F87CE5D008FDBCF /* GPXExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B5EF182D539D7D0079B16A /* GPXExportButton.swift */; };
+		78F9E05C2F87CE5D008FDBCF /* ShareStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA42C4E77B10046AE0E /* ShareStatisticsView.swift */; };
+		78F9E05D2F87CE5D008FDBCF /* RouteSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC60902E0DDBD100C55950 /* RouteSticker.swift */; };
+		78F9E05E2F87CE5D008FDBCF /* StickerHowToView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC60922E0EACF600C55950 /* StickerHowToView.swift */; };
+		78F9E05F2F87CE5D008FDBCF /* OverlaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF172D6891260075CA4C /* OverlaySettingsView.swift */; };
+		78F9E0602F87CE5D008FDBCF /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAE2C4EE64B0046AE0E /* ActivityViewController.swift */; };
+		78F9E0612F87CE5D008FDBCF /* ShareImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAA2C4E912F0046AE0E /* ShareImagePreview.swift */; };
+		78F9E0622F87CE5D008FDBCF /* ShareOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4B9E2C4E45340046AE0E /* ShareOverlay.swift */; };
+		78F9E0632F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF192D6894DB0075CA4C /* ShareOverlayDivider.swift */; };
+		78F9E0642F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAC2C4E9F310046AE0E /* SharePreviewWrapper.swift */; };
+		78F9E0652F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BB02C4FAD5E0046AE0E /* VideoOverlayView.swift */; };
+		78F9E0662F87CE5D008FDBCF /* VideoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7857BF332C57C16600AD7F4F /* VideoPicker.swift */; };
+		78F9E0672F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */; };
+		78F9E0682F87CE5D008FDBCF /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
+		78F9E0692F87CE5D008FDBCF /* BetaBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */; };
+		78F9E06A2F87CE5D008FDBCF /* Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB913E2E45FB9D00B222C2 /* Dashboards.swift */; };
+		78F9E06B2F87CE5D008FDBCF /* TrackedElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */; };
+		78F9E06C2F87CE5D008FDBCF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91402E45FB9D00B222C2 /* DashboardView.swift */; };
+		78F9E06D2F87CE5D008FDBCF /* WebPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91432E45FB9D00B222C2 /* WebPreview.swift */; };
+		78F9E06E2F87CE5D008FDBCF /* NestedElementsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */; };
+		78F9E06F2F87CE5D008FDBCF /* WidgetDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */; };
+		78F9E0702F87CE5D008FDBCF /* AddElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB914C2E45FC5100B222C2 /* AddElementView.swift */; };
+		78F9E0712F87CE5D008FDBCF /* ToolbarPlacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */; };
+		78F9E0722F87CE5D008FDBCF /* SelectionButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */; };
+		78F9E0732F87CE5D008FDBCF /* _FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1372BC52BB400776890 /* _FlexibleView.swift */; };
+		78F9E0742F87CE5D008FDBCF /* (null) in Sources */ = {isa = PBXBuildFile; };
+		78F9E0752F87CE5D008FDBCF /* StatisticTestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
+		78F9E0762F87CE5D008FDBCF /* StatisticsModelings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */; };
+		78F9E0772F87CE5D008FDBCF /* SpotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC22F217F66000D9591 /* SpotDetailView.swift */; };
+		78F9E0782F87CE5D008FDBCF /* SpotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC02F217F66000D9591 /* SpotManager.swift */; };
+		78F9E0792F87CE5D008FDBCF /* SpotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC32F217F66000D9591 /* SpotsView.swift */; };
+		78F9E07A2F87CE5D008FDBCF /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FBF2F217F66000D9591 /* Spot.swift */; };
+		78F9E07B2F87CE5D008FDBCF /* SubmitSpotRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570702F225E11000D9591 /* SubmitSpotRequest.swift */; };
+		78F9E07C2F87CE5D008FDBCF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805706F2F225E11000D9591 /* APIService.swift */; };
+		78F9E07D2F87CE5D008FDBCF /* SpotKindPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570762F225E22000D9591 /* SpotKindPicker.swift */; };
+		78F9E07E2F87CE5D008FDBCF /* InfoSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570752F225E22000D9591 /* InfoSectionView.swift */; };
+		78F9E07F2F87CE5D008FDBCF /* AddSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570732F225E22000D9591 /* AddSpotView.swift */; };
+		78F9E0802F87CE5D008FDBCF /* VideoSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570772F225E22000D9591 /* VideoSectionView.swift */; };
+		78F9E0812F87CE5D008FDBCF /* CountryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570742F225E22000D9591 /* CountryPicker.swift */; };
+		78F9E0822F87CE5D008FDBCF /* AllRunsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780571AC2F23BEEC000D9591 /* AllRunsMapView.swift */; };
+		78F9E0832F87CE5D008FDBCF /* DashboardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7894765C2E489B35005D8C58 /* DashboardRow.swift */; };
+		78F9E0842F87CE5D008FDBCF /* AverageHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468C2C33329F009F8733 /* AverageHeartView.swift */; };
+		78F9E0852F87CE5D008FDBCF /* _III_DownwindApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
+		78F9E0862F87CE5D008FDBCF /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC22B40B84300EB07F8 /* StartView.swift */; };
+		78F9E0872F87CE5D008FDBCF /* XMarkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382232E8BFCD800C68EF6 /* XMarkLabel.swift */; };
+		78F9E0882F87CE5D008FDBCF /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB908B2E44CA9500B222C2 /* NavigationButton.swift */; };
+		78F9E0892F87CE5D008FDBCF /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB908D2E44D2C300B222C2 /* NavigationBar.swift */; };
+		78F9E08A2F87CE5D008FDBCF /* NewsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF212D6B192B0075CA4C /* NewsSection.swift */; };
+		78F9E08B2F87CE5D008FDBCF /* VersionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF272D6B1A0A0075CA4C /* VersionHistoryView.swift */; };
+		78F9E08C2F87CE5D008FDBCF /* ReviewRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783886462DA2DB5F00B12FE9 /* ReviewRequestView.swift */; };
+		78F9E08D2F87CE5D008FDBCF /* ListBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1F2D6B182E0075CA4C /* ListBackground.swift */; };
+		78F9E08E2F87CE5D008FDBCF /* TagsEditViewStatisticCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
+		78F9E08F2F87CE5D008FDBCF /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468E2C342160009F8733 /* SummaryView.swift */; };
+		78F9E0902F87CE5D008FDBCF /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
+		78F9E0912F87CE5D008FDBCF /* UpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B67582C3A7A2B00B90578 /* UpgradeView.swift */; };
+		78F9E0922F87CE5D008FDBCF /* UpgradeShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */; };
+		78F9E0932F87CE5D008FDBCF /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
+		78F9E0942F87CE5D008FDBCF /* UpgradeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A283792C450EA80052AA52 /* UpgradeStatus.swift */; };
+		78F9E0952F87CE5D008FDBCF /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
+		78F9E0962F87CE5D008FDBCF /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
+		78F9E0972F87CE5D008FDBCF /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
+		78F9E0982F87CE5D008FDBCF /* FoilingThresholds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */; };
+		78F9E0992F87CE5D008FDBCF /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C0C2A2C3C171A005CCE87 /* HelpView.swift */; };
+		78F9E09A2F87CE5D008FDBCF /* RefundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837D2C45578F0052AA52 /* RefundView.swift */; };
+		78F9E09B2F87CE5D008FDBCF /* PremiumSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A2837B2C4551BD0052AA52 /* PremiumSection.swift */; };
+		78F9E09C2F87CE5D008FDBCF /* FirstTimeUserNameSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */; };
+		78F9E09D2F87CE5D008FDBCF /* RunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACA2B41705C00EB07F8 /* RunView.swift */; };
+		78F9E09E2F87CE5D008FDBCF /* RunUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ACE2B4308A800EB07F8 /* RunUITest.swift */; };
+		78F9E09F2F87CE5D008FDBCF /* HeadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D42B626BF500701D7F /* HeadingIndicator.swift */; };
+		78F9E0A02F87CE5D008FDBCF /* StartRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
+		78F9E0A12F87CE5D008FDBCF /* RunShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
+		78F9E0A22F87CE5D008FDBCF /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
+		78F9E0A32F87CE5D008FDBCF /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
+		78F9E0A42F87CE5D008FDBCF /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
+		78F9E0A52F87CE5D008FDBCF /* RunListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AD52B44096400EB07F8 /* RunListView.swift */; };
+		78F9E0A62F87CE5D008FDBCF /* RunListMapSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D62B62C53C00701D7F /* RunListMapSheet.swift */; };
+		78F9E0A72F87CE5D008FDBCF /* BearingArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */; };
+		78F9E0A82F87CE5D008FDBCF /* MemberListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53BF2B59A61B00701D7F /* MemberListView.swift */; };
+		78F9E0A92F87CE5D008FDBCF /* NoActiveRunnersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */; };
+		78F9E0AA2F87CE5D008FDBCF /* ListInfoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53CC2B5E6C9A00701D7F /* ListInfoLabel.swift */; };
+		78F9E0AB2F87CE5D008FDBCF /* RunMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C62B5DA57C00701D7F /* RunMapView.swift */; };
+		78F9E0AC2F87CE5D008FDBCF /* CoordinatesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C82B5E667500701D7F /* CoordinatesListView.swift */; };
+		78F9E0AD2F87CE5D008FDBCF /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C22B5D930400701D7F /* MapView.swift */; };
+		78F9E0AE2F87CE5D008FDBCF /* CircleAndText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A53C42B5D9DB000701D7F /* CircleAndText.swift */; };
+		78F9E0AF2F87CE5D008FDBCF /* StatisticsControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */; };
+		78F9E0B02F87CE5D008FDBCF /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */; };
+		78F9E0B12F87CE5D008FDBCF /* YearlyMonthlyStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
+		78F9E0B22F87CE5D008FDBCF /* RunOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
+		78F9E0B32F87CE5D008FDBCF /* GroupedTagsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083662C258112004C0857 /* GroupedTagsListView.swift */; };
+		78F9E0B42F87CE5D008FDBCF /* StringSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF1D2D6A2EAC0075CA4C /* StringSelectionView.swift */; };
+		78F9E0B52F87CE5D008FDBCF /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
+		78F9E0B62F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */; };
+		78F9E0B72F87CE5D008FDBCF /* SpeedChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7883824A2E8EB24800C68EF6 /* SpeedChartView.swift */; };
+		78F9E0B82F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */; };
+		78F9E0B92F87CE5D008FDBCF /* MapSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835D2C21B279004C0857 /* MapSectionView.swift */; };
+		78F9E0BA2F87CE5D008FDBCF /* AngleSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */; };
+		78F9E0BB2F87CE5D008FDBCF /* TagsFlexiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E14A2BC5850C00776890 /* TagsFlexiView.swift */; };
+		78F9E0BC2F87CE5D008FDBCF /* TagsEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E12B2BC52A0900776890 /* TagsEditView.swift */; };
+		78F9E0BD2F87CE5D008FDBCF /* EmptyTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083572C2170A3004C0857 /* EmptyTagsView.swift */; };
+		78F9E0BE2F87CE5D008FDBCF /* HeartRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840835F2C21C096004C0857 /* HeartRateView.swift */; };
+		78F9E0BF2F87CE5D008FDBCF /* HeartRateChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784083592C2188CF004C0857 /* HeartRateChartView.swift */; };
+		78F9E0C02F87CE5D008FDBCF /* StatisticsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1252BC3F7A800776890 /* StatisticsDetails.swift */; };
+		78F9E0C12F87CE5D008FDBCF /* StatisticsInfoViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */; };
+		78F9E0C22F87CE5D008FDBCF /* StatisticsRounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898D40C2BBEB490007820DB /* StatisticsRounds.swift */; };
+		78F9E0C32F87CE5D008FDBCF /* StatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
+		78F9E0C42F87CE5D008FDBCF /* EditMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC608C2E0D319E00C55950 /* EditMap.swift */; };
+		78F9E0C52F87CE5D008FDBCF /* SpeedGradientStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */; };
+		78F9E0C62F87CE5D008FDBCF /* WindSportStatisticsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
+		78F9E0C72F87CE5D008FDBCF /* GradientMapTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */; };
+		78F9E0C82F87CE5D008FDBCF /* GPXExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B5EF182D539D7D0079B16A /* GPXExportButton.swift */; };
+		78F9E0C92F87CE5D008FDBCF /* ShareStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA42C4E77B10046AE0E /* ShareStatisticsView.swift */; };
+		78F9E0CA2F87CE5D008FDBCF /* RouteSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC60902E0DDBD100C55950 /* RouteSticker.swift */; };
+		78F9E0CB2F87CE5D008FDBCF /* StickerHowToView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC60922E0EACF600C55950 /* StickerHowToView.swift */; };
+		78F9E0CC2F87CE5D008FDBCF /* OverlaySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF172D6891260075CA4C /* OverlaySettingsView.swift */; };
+		78F9E0CD2F87CE5D008FDBCF /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAE2C4EE64B0046AE0E /* ActivityViewController.swift */; };
+		78F9E0CE2F87CE5D008FDBCF /* ShareImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAA2C4E912F0046AE0E /* ShareImagePreview.swift */; };
+		78F9E0CF2F87CE5D008FDBCF /* ShareOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4B9E2C4E45340046AE0E /* ShareOverlay.swift */; };
+		78F9E0D02F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CCF192D6894DB0075CA4C /* ShareOverlayDivider.swift */; };
+		78F9E0D12F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BAC2C4E9F310046AE0E /* SharePreviewWrapper.swift */; };
+		78F9E0D22F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BB02C4FAD5E0046AE0E /* VideoOverlayView.swift */; };
+		78F9E0D32F87CE5D008FDBCF /* VideoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7857BF332C57C16600AD7F4F /* VideoPicker.swift */; };
+		78F9E0D42F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */; };
+		78F9E0D52F87CE5D008FDBCF /* OutsideTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
+		78F9E0D62F87CE5D008FDBCF /* BetaBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */; };
+		78F9E0D72F87CE5D008FDBCF /* Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB913E2E45FB9D00B222C2 /* Dashboards.swift */; };
+		78F9E0D82F87CE5D008FDBCF /* TrackedElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */; };
+		78F9E0D92F87CE5D008FDBCF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91402E45FB9D00B222C2 /* DashboardView.swift */; };
+		78F9E0DA2F87CE5D008FDBCF /* WebPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91432E45FB9D00B222C2 /* WebPreview.swift */; };
+		78F9E0DB2F87CE5D008FDBCF /* NestedElementsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */; };
+		78F9E0DC2F87CE5D008FDBCF /* WidgetDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */; };
+		78F9E0DD2F87CE5D008FDBCF /* AddElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB914C2E45FC5100B222C2 /* AddElementView.swift */; };
+		78F9E0DE2F87CE5D008FDBCF /* ToolbarPlacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */; };
+		78F9E0DF2F87CE5D008FDBCF /* SelectionButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */; };
+		78F9E0E02F87CE5D008FDBCF /* _FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1372BC52BB400776890 /* _FlexibleView.swift */; };
+		78F9E0E12F87CE5D008FDBCF /* (null) in Sources */ = {isa = PBXBuildFile; };
+		78F9E0E22F87CE5D008FDBCF /* StatisticTestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
+		78F9E0E32F87CE5D008FDBCF /* StatisticsModelings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */; };
+		78F9E0E42F87CE5D008FDBCF /* SpotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC22F217F66000D9591 /* SpotDetailView.swift */; };
+		78F9E0E52F87CE5D008FDBCF /* SpotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC02F217F66000D9591 /* SpotManager.swift */; };
+		78F9E0E62F87CE5D008FDBCF /* SpotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FC32F217F66000D9591 /* SpotsView.swift */; };
+		78F9E0E72F87CE5D008FDBCF /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78056FBF2F217F66000D9591 /* Spot.swift */; };
+		78F9E0E82F87CE5D008FDBCF /* SubmitSpotRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570702F225E11000D9591 /* SubmitSpotRequest.swift */; };
+		78F9E0E92F87CE5D008FDBCF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805706F2F225E11000D9591 /* APIService.swift */; };
+		78F9E0EA2F87CE5D008FDBCF /* SpotKindPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570762F225E22000D9591 /* SpotKindPicker.swift */; };
+		78F9E0EB2F87CE5D008FDBCF /* InfoSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570752F225E22000D9591 /* InfoSectionView.swift */; };
+		78F9E0EC2F87CE5D008FDBCF /* AddSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570732F225E22000D9591 /* AddSpotView.swift */; };
+		78F9E0ED2F87CE5D008FDBCF /* VideoSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570772F225E22000D9591 /* VideoSectionView.swift */; };
+		78F9E0EE2F87CE5D008FDBCF /* CountryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780570742F225E22000D9591 /* CountryPicker.swift */; };
+		78F9E0EF2F87CE5D008FDBCF /* AllRunsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780571AC2F23BEEC000D9591 /* AllRunsMapView.swift */; };
+		78F9E0F02F87CE5D008FDBCF /* DashboardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7894765C2E489B35005D8C58 /* DashboardRow.swift */; };
+		78F9E0F12F87CE5D008FDBCF /* AverageHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840468C2C33329F009F8733 /* AverageHeartView.swift */; };
+		78F9E0F22F87CE5D008FDBCF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A9C2B358F7D00EB07F8 /* Assets.xcassets */; };
+		78F9E0F32F87CE5D008FDBCF /* locationData.json in Resources */ = {isa = PBXBuildFile; fileRef = 78EC608E2E0D331800C55950 /* locationData.json */; };
+		78F9E1012F87D2B0008FDBCF /* FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1352BC52BB300776890 /* FlexibleView.swift */; };
+		78F9E1022F87D2B0008FDBCF /* FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1352BC52BB300776890 /* FlexibleView.swift */; };
 		78FB8BC92E4CCBD1009F5A6F /* DownwindManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */; };
 		78FB8C222E4CCCF0009F5A6F /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912E2E45EFBA00B222C2 /* Dashboard.swift */; };
 		78FB8C232E4CCCF6009F5A6F /* TrackedElementsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912F2E45EFBA00B222C2 /* TrackedElementsManager.swift */; };
@@ -237,7 +624,6 @@
 		78FB8C392E4CD196009F5A6F /* ToolbarPlacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */; };
 		78FB8C3A2E4CD196009F5A6F /* ToolbarPlacements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */; };
 		78FBCC012C2DA7EF0091F9EA /* GenerateQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */; };
-		78FD8F6D2F84FE280041C173 /* AppScreenshotKit in Frameworks */ = {isa = PBXBuildFile; productRef = 78FD8F6C2F84FE280041C173 /* AppScreenshotKit */; };
 		78FD8FCD2F850D4D0041C173 /* DownwindManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785C4ABD2B40B14000EB07F8 /* DownwindManager.swift */; };
 		78FD8FCE2F850DB10041C173 /* TrackedElementsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB912F2E45EFBA00B222C2 /* TrackedElementsManager.swift */; };
 		78FD8FCF2F850DB90041C173 /* RunStatistic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C4D2372BA6D9DE00639E65 /* RunStatistic.swift */; };
@@ -311,6 +697,120 @@
 		79A100132F8500030041C173 /* Phone10SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */; };
 		79A100142F8500030041C173 /* Phone11StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */; };
 		79A100152F8500030041C173 /* Phone12GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone12GPXImport.swift */; };
+		79B1000C2F8500010041C173 /* AppScreenshotKit in Frameworks */ = {isa = PBXBuildFile; productRef = 78FD8F6C2F84FE280041C173 /* AppScreenshotKit */; };
+		79B1000D2F8500010041C173 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 785C4AC02B40B62E00EB07F8 /* KeychainSwift */; };
+		79B1000E2F8500010041C173 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
+		79B1000F2F8500010041C173 /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
+		79B100102F8500010041C173 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 78DB913B2E45F1D700B222C2 /* Kanna */; };
+		79B200000000000000000000 /* _III_DownwindApp.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C4A982B358F7B00EB07F8 /* _III_DownwindApp.swift */; };
+		79B200000000000000000001 /* StartView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AC22B40B84300EB07F8 /* StartView.swift */; };
+		79B200000000000000000002 /* XMarkLabel.swift in Resources */ = {isa = PBXBuildFile; fileRef = 788382232E8BFCD800C68EF6 /* XMarkLabel.swift */; };
+		79B200000000000000000003 /* NavigationButton.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78DB908B2E44CA9500B222C2 /* NavigationButton.swift */; };
+		79B200000000000000000004 /* NavigationBar.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78DB908D2E44D2C300B222C2 /* NavigationBar.swift */; };
+		79B200000000000000000005 /* NewsSection.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785CCF212D6B192B0075CA4C /* NewsSection.swift */; };
+		79B200000000000000000006 /* VersionHistoryView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785CCF272D6B1A0A0075CA4C /* VersionHistoryView.swift */; };
+		79B200000000000000000008 /* ReviewRequestView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783886462DA2DB5F00B12FE9 /* ReviewRequestView.swift */; };
+		79B200000000000000000009 /* ListBackground.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785CCF1F2D6B182E0075CA4C /* ListBackground.swift */; };
+		79B20000000000000000000A /* TagsEditViewStatisticCapture.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78096F3C2BC5CA4900255AEF /* TagsEditViewStatisticCapture.swift */; };
+		79B20000000000000000000B /* SummaryView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7840468E2C342160009F8733 /* SummaryView.swift */; };
+		79B20000000000000000000C /* MapsMenuView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
+		79B20000000000000000000D /* UpgradeView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 782B67582C3A7A2B00B90578 /* UpgradeView.swift */; };
+		79B20000000000000000000E /* UpgradeShowcase.swift in Resources */ = {isa = PBXBuildFile; fileRef = 782B675E2C3AC21C00B90578 /* UpgradeShowcase.swift */; };
+		79B20000000000000000000F /* CircleImage.swift in Resources */ = {isa = PBXBuildFile; fileRef = 782B675C2C3ABBA700B90578 /* CircleImage.swift */; };
+		79B200000000000000000010 /* UpgradeStatus.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78A283792C450EA80052AA52 /* UpgradeStatus.swift */; };
+		79B200000000000000000011 /* OptionsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
+		79B200000000000000000012 /* StartOptionsMenu.swift in Resources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
+		79B200000000000000000013 /* AboutView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
+		79B200000000000000000014 /* FoilingThresholds.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */; };
+		79B200000000000000000015 /* HelpView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C0C2A2C3C171A005CCE87 /* HelpView.swift */; };
+		79B200000000000000000016 /* RefundView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78A2837D2C45578F0052AA52 /* RefundView.swift */; };
+		79B200000000000000000017 /* PremiumSection.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78A2837B2C4551BD0052AA52 /* PremiumSection.swift */; };
+		79B200000000000000000018 /* FirstTimeUserNameSet.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AC82B40BA1600EB07F8 /* FirstTimeUserNameSet.swift */; };
+		79B200000000000000000019 /* RunView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C4ACA2B41705C00EB07F8 /* RunView.swift */; };
+		79B20000000000000000001A /* RunUITest.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C4ACE2B4308A800EB07F8 /* RunUITest.swift */; };
+		79B20000000000000000001B /* HeadingIndicator.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53D42B626BF500701D7F /* HeadingIndicator.swift */; };
+		79B20000000000000000001C /* StartRun.swift in Resources */ = {isa = PBXBuildFile; fileRef = 787A7EE72B4B03C20083ECEF /* StartRun.swift */; };
+		79B20000000000000000001D /* RunShareView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78A9EB072B57132F0054E9F9 /* RunShareView.swift */; };
+		79B20000000000000000001E /* QRCodeView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781562A22B94D92900E081FC /* QRCodeView.swift */; };
+		79B20000000000000000001F /* ShareDialog.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781562A62B94DD7500E081FC /* ShareDialog.swift */; };
+		79B200000000000000000020 /* OptionsMenu.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
+		79B200000000000000000021 /* RunListView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AD52B44096400EB07F8 /* RunListView.swift */; };
+		79B200000000000000000023 /* RunListMapSheet.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53D62B62C53C00701D7F /* RunListMapSheet.swift */; };
+		79B200000000000000000024 /* BearingArrowView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C4ADB2B45EBD400EB07F8 /* BearingArrowView.swift */; };
+		79B200000000000000000025 /* MemberListView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53BF2B59A61B00701D7F /* MemberListView.swift */; };
+		79B200000000000000000026 /* NoActiveRunnersView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53D22B5FD18000701D7F /* NoActiveRunnersView.swift */; };
+		79B200000000000000000027 /* ListInfoLabel.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53CC2B5E6C9A00701D7F /* ListInfoLabel.swift */; };
+		79B200000000000000000028 /* RunMapView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53C62B5DA57C00701D7F /* RunMapView.swift */; };
+		79B200000000000000000029 /* CoordinatesListView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53C82B5E667500701D7F /* CoordinatesListView.swift */; };
+		79B20000000000000000002A /* MapView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53C22B5D930400701D7F /* MapView.swift */; };
+		79B20000000000000000002B /* CircleAndText.swift in Resources */ = {isa = PBXBuildFile; fileRef = 783A53C42B5D9DB000701D7F /* CircleAndText.swift */; };
+		79B20000000000000000002C /* StatisticsControlCenter.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78C4D2352BA6D3CC00639E65 /* StatisticsControlCenter.swift */; };
+		79B20000000000000000002D /* StatisticsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78C4D23B2BA74EBC00639E65 /* StatisticsView.swift */; };
+		79B20000000000000000002E /* YearlyMonthlyStatisticView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78B388E52C1A136800C75A60 /* YearlyMonthlyStatisticView.swift */; };
+		79B20000000000000000002F /* RunOverView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78C4D23E2BA7512A00639E65 /* RunOverView.swift */; };
+		79B200000000000000000030 /* GroupedTagsListView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 784083662C258112004C0857 /* GroupedTagsListView.swift */; };
+		79B200000000000000000031 /* StringSelectionView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785CCF1D2D6A2EAC0075CA4C /* StringSelectionView.swift */; };
+		79B200000000000000000032 /* StatisticsRunView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
+		79B200000000000000000033 /* StallStatsOverlay.swift in Resources */ = {isa = PBXBuildFile; fileRef = 788382482E8EA78B00C68EF6 /* StallStatsOverlay.swift */; };
+		79B200000000000000000034 /* SpeedChartView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7883824A2E8EB24800C68EF6 /* SpeedChartView.swift */; };
+		79B200000000000000000035 /* StatisticsMainHeader.swift in Resources */ = {isa = PBXBuildFile; fileRef = 784083612C21C2AD004C0857 /* StatisticsMainHeader.swift */; };
+		79B200000000000000000036 /* MapSectionView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7840835D2C21B279004C0857 /* MapSectionView.swift */; };
+		79B200000000000000000037 /* AngleSection.swift in Resources */ = {isa = PBXBuildFile; fileRef = 782D8E0A2EC0E57C00E2AE43 /* AngleSection.swift */; };
+		79B200000000000000000038 /* TagsFlexiView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7877E14A2BC5850C00776890 /* TagsFlexiView.swift */; };
+		79B200000000000000000039 /* TagsEditView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7877E12B2BC52A0900776890 /* TagsEditView.swift */; };
+		79B20000000000000000003A /* EmptyTagsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 784083572C2170A3004C0857 /* EmptyTagsView.swift */; };
+		79B20000000000000000003B /* HeartRateView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7840835F2C21C096004C0857 /* HeartRateView.swift */; };
+		79B20000000000000000003C /* HeartRateChartView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 784083592C2188CF004C0857 /* HeartRateChartView.swift */; };
+		79B20000000000000000003D /* StatisticsDetails.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7877E1252BC3F7A800776890 /* StatisticsDetails.swift */; };
+		79B20000000000000000003E /* StatisticsInfoViews.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7877E1272BC41DB300776890 /* StatisticsInfoViews.swift */; };
+		79B20000000000000000003F /* StatisticsRounds.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7898D40C2BBEB490007820DB /* StatisticsRounds.swift */; };
+		79B200000000000000000040 /* StatisticsMap.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78C4D2422BAB6A9500639E65 /* StatisticsMap.swift */; };
+		79B200000000000000000041 /* EditMap.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78EC608C2E0D319E00C55950 /* EditMap.swift */; };
+		79B200000000000000000042 /* SpeedGradientStatisticsMap.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78056D182F1E8FB5000D9591 /* SpeedGradientStatisticsMap.swift */; };
+		79B200000000000000000043 /* WindSportStatisticsMap.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78F937EF2C35816B00D34796 /* WindSportStatisticsMap.swift */; };
+		79B200000000000000000045 /* GradientMapTestView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78056D0F2F1E45BB000D9591 /* GradientMapTestView.swift */; };
+		79B200000000000000000046 /* GPXExportButton.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78B5EF182D539D7D0079B16A /* GPXExportButton.swift */; };
+		79B200000000000000000047 /* ShareStatisticsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781A4BA42C4E77B10046AE0E /* ShareStatisticsView.swift */; };
+		79B200000000000000000048 /* RouteSticker.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78EC60902E0DDBD100C55950 /* RouteSticker.swift */; };
+		79B200000000000000000049 /* StickerHowToView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78EC60922E0EACF600C55950 /* StickerHowToView.swift */; };
+		79B20000000000000000004A /* OverlaySettingsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785CCF172D6891260075CA4C /* OverlaySettingsView.swift */; };
+		79B20000000000000000004B /* ActivityViewController.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781A4BAE2C4EE64B0046AE0E /* ActivityViewController.swift */; };
+		79B20000000000000000004C /* ShareImagePreview.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781A4BAA2C4E912F0046AE0E /* ShareImagePreview.swift */; };
+		79B20000000000000000004D /* ShareOverlay.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781A4B9E2C4E45340046AE0E /* ShareOverlay.swift */; };
+		79B20000000000000000004E /* ShareOverlayDivider.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785CCF192D6894DB0075CA4C /* ShareOverlayDivider.swift */; };
+		79B20000000000000000004F /* SharePreviewWrapper.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781A4BAC2C4E9F310046AE0E /* SharePreviewWrapper.swift */; };
+		79B200000000000000000050 /* VideoOverlayView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781A4BB02C4FAD5E0046AE0E /* VideoOverlayView.swift */; };
+		79B200000000000000000051 /* VideoPicker.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7857BF332C57C16600AD7F4F /* VideoPicker.swift */; };
+		79B200000000000000000053 /* OverlayAlertView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AE02B49DBF900EB07F8 /* OverlayAlertView.swift */; };
+		79B200000000000000000054 /* OutsideTap.swift in Resources */ = {isa = PBXBuildFile; fileRef = 781562A42B94DA0E00E081FC /* OutsideTap.swift */; };
+		79B200000000000000000055 /* BetaBadgeView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78F0A1022F6A6D1100A1B2C3 /* BetaBadgeView.swift */; };
+		79B200000000000000000056 /* Dashboards.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78DB913E2E45FB9D00B222C2 /* Dashboards.swift */; };
+		79B200000000000000000057 /* TrackedElementRow.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78DB91422E45FB9D00B222C2 /* TrackedElementRow.swift */; };
+		79B200000000000000000058 /* DashboardView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78DB91402E45FB9D00B222C2 /* DashboardView.swift */; };
+		79B200000000000000000059 /* WebPreview.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78DB91432E45FB9D00B222C2 /* WebPreview.swift */; };
+		79B20000000000000000005A /* NestedElementsRow.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78DB91412E45FB9D00B222C2 /* NestedElementsRow.swift */; };
+		79B20000000000000000005B /* WidgetDashboardView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */; };
+		79B20000000000000000005C /* AddElementView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78DB914C2E45FC5100B222C2 /* AddElementView.swift */; };
+		79B20000000000000000005D /* ToolbarPlacements.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78FB8C382E4CD196009F5A6F /* ToolbarPlacements.swift */; };
+		79B20000000000000000005E /* SelectionButtonLabel.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */; };
+		79B20000000000000000005F /* _FlexibleView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7877E1372BC52BB400776890 /* _FlexibleView.swift */; };
+		79B200000000000000000060 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		79B200000000000000000061 /* StatisticTestsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78320BC32BB1D8F900D6A772 /* StatisticTestsView.swift */; };
+		79B200000000000000000062 /* StatisticsModelings.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78320BC62BB1D97800D6A772 /* StatisticsModelings.swift */; };
+		79B200000000000000000069 /* SpotDetailView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78056FC22F217F66000D9591 /* SpotDetailView.swift */; };
+		79B20000000000000000006A /* SpotManager.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78056FC02F217F66000D9591 /* SpotManager.swift */; };
+		79B20000000000000000006B /* SpotsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78056FC32F217F66000D9591 /* SpotsView.swift */; };
+		79B20000000000000000006C /* Spot.swift in Resources */ = {isa = PBXBuildFile; fileRef = 78056FBF2F217F66000D9591 /* Spot.swift */; };
+		79B20000000000000000006D /* SubmitSpotRequest.swift in Resources */ = {isa = PBXBuildFile; fileRef = 780570702F225E11000D9591 /* SubmitSpotRequest.swift */; };
+		79B20000000000000000006E /* APIService.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7805706F2F225E11000D9591 /* APIService.swift */; };
+		79B20000000000000000006F /* SpotKindPicker.swift in Resources */ = {isa = PBXBuildFile; fileRef = 780570762F225E22000D9591 /* SpotKindPicker.swift */; };
+		79B200000000000000000070 /* InfoSectionView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 780570752F225E22000D9591 /* InfoSectionView.swift */; };
+		79B200000000000000000071 /* AddSpotView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 780570732F225E22000D9591 /* AddSpotView.swift */; };
+		79B200000000000000000072 /* VideoSectionView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 780570772F225E22000D9591 /* VideoSectionView.swift */; };
+		79B200000000000000000073 /* CountryPicker.swift in Resources */ = {isa = PBXBuildFile; fileRef = 780570742F225E22000D9591 /* CountryPicker.swift */; };
+		79B200000000000000000074 /* AllRunsMapView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 780571AC2F23BEEC000D9591 /* AllRunsMapView.swift */; };
+		79B200000000000000000075 /* DashboardRow.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7894765C2E489B35005D8C58 /* DashboardRow.swift */; };
+		79B20000000000000000007A /* AverageHeartView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7840468C2C33329F009F8733 /* AverageHeartView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -342,12 +842,12 @@
 			remoteGlobalIDString = 78FB8BA02E4CCB4E009F5A6F;
 			remoteInfo = "Water Mac";
 		};
-		78FD8FBB2F850CCE0041C173 /* PBXContainerItemProxy */ = {
+		79B100022F8500010041C173 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 785C4A8D2B358F7B00EB07F8 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 785C4A942B358F7B00EB07F8;
-			remoteInfo = "7III Tracker";
+			remoteGlobalIDString = 79B100062F8500010041C173;
+			remoteInfo = "7III Water Screenshots";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -592,6 +1092,7 @@
 		79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone10SimpleMap.swift; sourceTree = "<group>"; };
 		79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone11StatsDetail.swift; sourceTree = "<group>"; };
 		79A1001C2F8500030041C173 /* Phone12GPXImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone12GPXImport.swift; sourceTree = "<group>"; };
+		79B100012F8500010041C173 /* 7III Water Screenshots.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Water Screenshots.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -611,7 +1112,6 @@
 				78F047C82D9DA655003E11FA /* XMLCoder in Frameworks */,
 				78320BC02BB1C28400D6A772 /* Surge in Frameworks */,
 				78DB913C2E45F1D700B222C2 /* Kanna in Frameworks */,
-				78FD8F6D2F84FE280041C173 /* AppScreenshotKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +1157,19 @@
 				78FD90132F8519000041C173 /* Kanna in Frameworks */,
 				78FD90142F8519000041C173 /* AppScreenshotKit in Frameworks */,
 				78FD90152F8519000041C173 /* AppScreenshotKitTestTools in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B100032F8500010041C173 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78F9DFE32F87CE5D008FDBCF /* AppScreenshotKit in Frameworks */,
+				79B1000C2F8500010041C173 /* AppScreenshotKit in Frameworks */,
+				79B1000D2F8500010041C173 /* KeychainSwift in Frameworks */,
+				79B1000E2F8500010041C173 /* Surge in Frameworks */,
+				79B1000F2F8500010041C173 /* XMLCoder in Frameworks */,
+				79B100102F8500010041C173 /* Kanna in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -823,6 +1336,7 @@
 				78FB8BA12E4CCB4E009F5A6F /* 7III Water.app */,
 				78FB8BAE2E4CCB4F009F5A6F /* Water MacTests.xctest */,
 				78FB8BB82E4CCB4F009F5A6F /* Water MacUITests.xctest */,
+				79B100012F8500010041C173 /* 7III Water Screenshots.app */,
 				78FD8FB72F850CCE0041C173 /* TrackerScreenshotTests.xctest */,
 			);
 			name = Products;
@@ -1177,7 +1691,6 @@
 				78320BBF2BB1C28400D6A772 /* Surge */,
 				78F047C72D9DA655003E11FA /* XMLCoder */,
 				78DB913B2E45F1D700B222C2 /* Kanna */,
-				78FD8F6C2F84FE280041C173 /* AppScreenshotKit */,
 			);
 			productName = "7III Downwind";
 			productReference = 785C4A952B358F7B00EB07F8 /* 7III Tracker.app */;
@@ -1299,7 +1812,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				78FD90212F851A200041C173 /* PBXTargetDependency */,
+				79B1000B2F8500010041C173 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				78FD8FB82F850CCE0041C173 /* TrackerScreenshotTests */,
@@ -1316,6 +1829,30 @@
 			productName = TrackerScreenshotTests;
 			productReference = 78FD8FB72F850CCE0041C173 /* TrackerScreenshotTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		79B100062F8500010041C173 /* 7III Water Screenshots */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79B100092F8500010041C173 /* Build configuration list for PBXNativeTarget "7III Water Screenshots" */;
+			buildPhases = (
+				79B100052F8500010041C173 /* Sources */,
+				79B100032F8500010041C173 /* Frameworks */,
+				79B100042F8500010041C173 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "7III Water Screenshots";
+			packageProductDependencies = (
+				79B1000A2F8500010041C173 /* AppScreenshotKit */,
+				785C4AC02B40B62E00EB07F8 /* KeychainSwift */,
+				78320BBF2BB1C28400D6A772 /* Surge */,
+				78F047C72D9DA655003E11FA /* XMLCoder */,
+				78DB913B2E45F1D700B222C2 /* Kanna */,
+			);
+			productName = "7III Water Screenshots";
+			productReference = 79B100012F8500010041C173 /* 7III Water Screenshots.app */;
+			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
@@ -1349,7 +1886,10 @@
 					};
 					78FD8FB62F850CCE0041C173 = {
 						CreatedOnToolsVersion = 26.4;
-						TestTargetID = 785C4A942B358F7B00EB07F8;
+						TestTargetID = 79B100062F8500010041C173;
+					};
+					79B100062F8500010041C173 = {
+						CreatedOnToolsVersion = 26.4;
 					};
 				};
 			};
@@ -1379,6 +1919,7 @@
 				78FB8BA02E4CCB4E009F5A6F /* 7III Water */,
 				78FB8BAD2E4CCB4F009F5A6F /* Water MacTests */,
 				78FB8BB72E4CCB4F009F5A6F /* Water MacUITests */,
+				79B100062F8500010041C173 /* 7III Water Screenshots */,
 				78FD8FB62F850CCE0041C173 /* TrackerScreenshotTests */,
 			);
 		};
@@ -1394,6 +1935,224 @@
 				782D8E302EC3CE7800E2AE43 /* 7III Water.icon in Resources */,
 				785C4A9D2B358F7D00EB07F8 /* Assets.xcassets in Resources */,
 				78A283742C3FC2610052AA52 /* product_ids.plist in Resources */,
+				79B200000000000000000000 /* _III_DownwindApp.swift in Resources */,
+				79B200000000000000000001 /* StartView.swift in Resources */,
+				79B200000000000000000002 /* XMarkLabel.swift in Resources */,
+				79B200000000000000000003 /* NavigationButton.swift in Resources */,
+				79B200000000000000000004 /* NavigationBar.swift in Resources */,
+				79B200000000000000000005 /* NewsSection.swift in Resources */,
+				79B200000000000000000006 /* VersionHistoryView.swift in Resources */,
+				79B200000000000000000008 /* ReviewRequestView.swift in Resources */,
+				79B200000000000000000009 /* ListBackground.swift in Resources */,
+				79B20000000000000000000A /* TagsEditViewStatisticCapture.swift in Resources */,
+				79B20000000000000000000B /* SummaryView.swift in Resources */,
+				79B20000000000000000000C /* MapsMenuView.swift in Resources */,
+				79B20000000000000000000D /* UpgradeView.swift in Resources */,
+				79B20000000000000000000E /* UpgradeShowcase.swift in Resources */,
+				79B20000000000000000000F /* CircleImage.swift in Resources */,
+				79B200000000000000000010 /* UpgradeStatus.swift in Resources */,
+				79B200000000000000000011 /* OptionsView.swift in Resources */,
+				79B200000000000000000012 /* StartOptionsMenu.swift in Resources */,
+				79B200000000000000000013 /* AboutView.swift in Resources */,
+				79B200000000000000000014 /* FoilingThresholds.swift in Resources */,
+				79B200000000000000000015 /* HelpView.swift in Resources */,
+				79B200000000000000000016 /* RefundView.swift in Resources */,
+				79B200000000000000000017 /* PremiumSection.swift in Resources */,
+				79B200000000000000000018 /* FirstTimeUserNameSet.swift in Resources */,
+				79B200000000000000000019 /* RunView.swift in Resources */,
+				79B20000000000000000001A /* RunUITest.swift in Resources */,
+				79B20000000000000000001B /* HeadingIndicator.swift in Resources */,
+				79B20000000000000000001C /* StartRun.swift in Resources */,
+				79B20000000000000000001D /* RunShareView.swift in Resources */,
+				79B20000000000000000001E /* QRCodeView.swift in Resources */,
+				79B20000000000000000001F /* ShareDialog.swift in Resources */,
+				79B200000000000000000020 /* OptionsMenu.swift in Resources */,
+				79B200000000000000000021 /* RunListView.swift in Resources */,
+				79B200000000000000000023 /* RunListMapSheet.swift in Resources */,
+				79B200000000000000000024 /* BearingArrowView.swift in Resources */,
+				79B200000000000000000025 /* MemberListView.swift in Resources */,
+				79B200000000000000000026 /* NoActiveRunnersView.swift in Resources */,
+				79B200000000000000000027 /* ListInfoLabel.swift in Resources */,
+				79B200000000000000000028 /* RunMapView.swift in Resources */,
+				79B200000000000000000029 /* CoordinatesListView.swift in Resources */,
+				79B20000000000000000002A /* MapView.swift in Resources */,
+				79B20000000000000000002B /* CircleAndText.swift in Resources */,
+				79B20000000000000000002C /* StatisticsControlCenter.swift in Resources */,
+				79B20000000000000000002D /* StatisticsView.swift in Resources */,
+				79B20000000000000000002E /* YearlyMonthlyStatisticView.swift in Resources */,
+				79B20000000000000000002F /* RunOverView.swift in Resources */,
+				79B200000000000000000030 /* GroupedTagsListView.swift in Resources */,
+				79B200000000000000000031 /* StringSelectionView.swift in Resources */,
+				79B200000000000000000032 /* StatisticsRunView.swift in Resources */,
+				79B200000000000000000033 /* StallStatsOverlay.swift in Resources */,
+				79B200000000000000000034 /* SpeedChartView.swift in Resources */,
+				79B200000000000000000035 /* StatisticsMainHeader.swift in Resources */,
+				79B200000000000000000036 /* MapSectionView.swift in Resources */,
+				79B200000000000000000037 /* AngleSection.swift in Resources */,
+				79B200000000000000000038 /* TagsFlexiView.swift in Resources */,
+				79B200000000000000000039 /* TagsEditView.swift in Resources */,
+				79B20000000000000000003A /* EmptyTagsView.swift in Resources */,
+				79B20000000000000000003B /* HeartRateView.swift in Resources */,
+				79B20000000000000000003C /* HeartRateChartView.swift in Resources */,
+				79B20000000000000000003D /* StatisticsDetails.swift in Resources */,
+				79B20000000000000000003E /* StatisticsInfoViews.swift in Resources */,
+				79B20000000000000000003F /* StatisticsRounds.swift in Resources */,
+				79B200000000000000000040 /* StatisticsMap.swift in Resources */,
+				79B200000000000000000041 /* EditMap.swift in Resources */,
+				79B200000000000000000042 /* SpeedGradientStatisticsMap.swift in Resources */,
+				79B200000000000000000043 /* WindSportStatisticsMap.swift in Resources */,
+				79B200000000000000000045 /* GradientMapTestView.swift in Resources */,
+				79B200000000000000000046 /* GPXExportButton.swift in Resources */,
+				79B200000000000000000047 /* ShareStatisticsView.swift in Resources */,
+				79B200000000000000000048 /* RouteSticker.swift in Resources */,
+				79B200000000000000000049 /* StickerHowToView.swift in Resources */,
+				79B20000000000000000004A /* OverlaySettingsView.swift in Resources */,
+				79B20000000000000000004B /* ActivityViewController.swift in Resources */,
+				79B20000000000000000004C /* ShareImagePreview.swift in Resources */,
+				79B20000000000000000004D /* ShareOverlay.swift in Resources */,
+				79B20000000000000000004E /* ShareOverlayDivider.swift in Resources */,
+				79B20000000000000000004F /* SharePreviewWrapper.swift in Resources */,
+				79B200000000000000000050 /* VideoOverlayView.swift in Resources */,
+				79B200000000000000000051 /* VideoPicker.swift in Resources */,
+				79B200000000000000000053 /* OverlayAlertView.swift in Resources */,
+				79B200000000000000000054 /* OutsideTap.swift in Resources */,
+				79B200000000000000000055 /* BetaBadgeView.swift in Resources */,
+				79B200000000000000000056 /* Dashboards.swift in Resources */,
+				79B200000000000000000057 /* TrackedElementRow.swift in Resources */,
+				79B200000000000000000058 /* DashboardView.swift in Resources */,
+				79B200000000000000000059 /* WebPreview.swift in Resources */,
+				79B20000000000000000005A /* NestedElementsRow.swift in Resources */,
+				79B20000000000000000005B /* WidgetDashboardView.swift in Resources */,
+				79B20000000000000000005C /* AddElementView.swift in Resources */,
+				79B20000000000000000005D /* ToolbarPlacements.swift in Resources */,
+				79B20000000000000000005E /* SelectionButtonLabel.swift in Resources */,
+				79B20000000000000000005F /* _FlexibleView.swift in Resources */,
+				79B200000000000000000060 /* (null) in Resources */,
+				79B200000000000000000061 /* StatisticTestsView.swift in Resources */,
+				79B200000000000000000062 /* StatisticsModelings.swift in Resources */,
+				79B200000000000000000069 /* SpotDetailView.swift in Resources */,
+				79B20000000000000000006A /* SpotManager.swift in Resources */,
+				79B20000000000000000006B /* SpotsView.swift in Resources */,
+				79B20000000000000000006C /* Spot.swift in Resources */,
+				79B20000000000000000006D /* SubmitSpotRequest.swift in Resources */,
+				79B20000000000000000006E /* APIService.swift in Resources */,
+				79B20000000000000000006F /* SpotKindPicker.swift in Resources */,
+				79B200000000000000000070 /* InfoSectionView.swift in Resources */,
+				79B200000000000000000071 /* AddSpotView.swift in Resources */,
+				79B200000000000000000072 /* VideoSectionView.swift in Resources */,
+				79B200000000000000000073 /* CountryPicker.swift in Resources */,
+				79B200000000000000000074 /* AllRunsMapView.swift in Resources */,
+				79B200000000000000000075 /* DashboardRow.swift in Resources */,
+				79B20000000000000000007A /* AverageHeartView.swift in Resources */,
+				79B200000000000000000000 /* _III_DownwindApp.swift in Resources */,
+				79B200000000000000000001 /* StartView.swift in Resources */,
+				79B200000000000000000002 /* XMarkLabel.swift in Resources */,
+				79B200000000000000000003 /* NavigationButton.swift in Resources */,
+				79B200000000000000000004 /* NavigationBar.swift in Resources */,
+				79B200000000000000000005 /* NewsSection.swift in Resources */,
+				79B200000000000000000006 /* VersionHistoryView.swift in Resources */,
+				79B200000000000000000008 /* ReviewRequestView.swift in Resources */,
+				79B200000000000000000009 /* ListBackground.swift in Resources */,
+				79B20000000000000000000A /* TagsEditViewStatisticCapture.swift in Resources */,
+				79B20000000000000000000B /* SummaryView.swift in Resources */,
+				79B20000000000000000000C /* MapsMenuView.swift in Resources */,
+				79B20000000000000000000D /* UpgradeView.swift in Resources */,
+				79B20000000000000000000E /* UpgradeShowcase.swift in Resources */,
+				79B20000000000000000000F /* CircleImage.swift in Resources */,
+				79B200000000000000000010 /* UpgradeStatus.swift in Resources */,
+				79B200000000000000000011 /* OptionsView.swift in Resources */,
+				79B200000000000000000012 /* StartOptionsMenu.swift in Resources */,
+				79B200000000000000000013 /* AboutView.swift in Resources */,
+				79B200000000000000000014 /* FoilingThresholds.swift in Resources */,
+				79B200000000000000000015 /* HelpView.swift in Resources */,
+				79B200000000000000000016 /* RefundView.swift in Resources */,
+				79B200000000000000000017 /* PremiumSection.swift in Resources */,
+				79B200000000000000000018 /* FirstTimeUserNameSet.swift in Resources */,
+				79B200000000000000000019 /* RunView.swift in Resources */,
+				79B20000000000000000001A /* RunUITest.swift in Resources */,
+				79B20000000000000000001B /* HeadingIndicator.swift in Resources */,
+				79B20000000000000000001C /* StartRun.swift in Resources */,
+				79B20000000000000000001D /* RunShareView.swift in Resources */,
+				79B20000000000000000001E /* QRCodeView.swift in Resources */,
+				79B20000000000000000001F /* ShareDialog.swift in Resources */,
+				79B200000000000000000020 /* OptionsMenu.swift in Resources */,
+				79B200000000000000000021 /* RunListView.swift in Resources */,
+				79B200000000000000000023 /* RunListMapSheet.swift in Resources */,
+				79B200000000000000000024 /* BearingArrowView.swift in Resources */,
+				79B200000000000000000025 /* MemberListView.swift in Resources */,
+				79B200000000000000000026 /* NoActiveRunnersView.swift in Resources */,
+				79B200000000000000000027 /* ListInfoLabel.swift in Resources */,
+				79B200000000000000000028 /* RunMapView.swift in Resources */,
+				79B200000000000000000029 /* CoordinatesListView.swift in Resources */,
+				79B20000000000000000002A /* MapView.swift in Resources */,
+				79B20000000000000000002B /* CircleAndText.swift in Resources */,
+				79B20000000000000000002C /* StatisticsControlCenter.swift in Resources */,
+				79B20000000000000000002D /* StatisticsView.swift in Resources */,
+				79B20000000000000000002E /* YearlyMonthlyStatisticView.swift in Resources */,
+				79B20000000000000000002F /* RunOverView.swift in Resources */,
+				79B200000000000000000030 /* GroupedTagsListView.swift in Resources */,
+				79B200000000000000000031 /* StringSelectionView.swift in Resources */,
+				79B200000000000000000032 /* StatisticsRunView.swift in Resources */,
+				79B200000000000000000033 /* StallStatsOverlay.swift in Resources */,
+				79B200000000000000000034 /* SpeedChartView.swift in Resources */,
+				79B200000000000000000035 /* StatisticsMainHeader.swift in Resources */,
+				79B200000000000000000036 /* MapSectionView.swift in Resources */,
+				79B200000000000000000037 /* AngleSection.swift in Resources */,
+				79B200000000000000000038 /* TagsFlexiView.swift in Resources */,
+				79B200000000000000000039 /* TagsEditView.swift in Resources */,
+				79B20000000000000000003A /* EmptyTagsView.swift in Resources */,
+				79B20000000000000000003B /* HeartRateView.swift in Resources */,
+				79B20000000000000000003C /* HeartRateChartView.swift in Resources */,
+				79B20000000000000000003D /* StatisticsDetails.swift in Resources */,
+				79B20000000000000000003E /* StatisticsInfoViews.swift in Resources */,
+				79B20000000000000000003F /* StatisticsRounds.swift in Resources */,
+				79B200000000000000000040 /* StatisticsMap.swift in Resources */,
+				79B200000000000000000041 /* EditMap.swift in Resources */,
+				79B200000000000000000042 /* SpeedGradientStatisticsMap.swift in Resources */,
+				79B200000000000000000043 /* WindSportStatisticsMap.swift in Resources */,
+				79B200000000000000000045 /* GradientMapTestView.swift in Resources */,
+				79B200000000000000000046 /* GPXExportButton.swift in Resources */,
+				79B200000000000000000047 /* ShareStatisticsView.swift in Resources */,
+				79B200000000000000000048 /* RouteSticker.swift in Resources */,
+				79B200000000000000000049 /* StickerHowToView.swift in Resources */,
+				79B20000000000000000004A /* OverlaySettingsView.swift in Resources */,
+				79B20000000000000000004B /* ActivityViewController.swift in Resources */,
+				79B20000000000000000004C /* ShareImagePreview.swift in Resources */,
+				79B20000000000000000004D /* ShareOverlay.swift in Resources */,
+				79B20000000000000000004E /* ShareOverlayDivider.swift in Resources */,
+				79B20000000000000000004F /* SharePreviewWrapper.swift in Resources */,
+				79B200000000000000000050 /* VideoOverlayView.swift in Resources */,
+				79B200000000000000000051 /* VideoPicker.swift in Resources */,
+				79B200000000000000000053 /* OverlayAlertView.swift in Resources */,
+				79B200000000000000000054 /* OutsideTap.swift in Resources */,
+				79B200000000000000000055 /* BetaBadgeView.swift in Resources */,
+				79B200000000000000000056 /* Dashboards.swift in Resources */,
+				79B200000000000000000057 /* TrackedElementRow.swift in Resources */,
+				79B200000000000000000058 /* DashboardView.swift in Resources */,
+				79B200000000000000000059 /* WebPreview.swift in Resources */,
+				79B20000000000000000005A /* NestedElementsRow.swift in Resources */,
+				79B20000000000000000005B /* WidgetDashboardView.swift in Resources */,
+				79B20000000000000000005C /* AddElementView.swift in Resources */,
+				79B20000000000000000005D /* ToolbarPlacements.swift in Resources */,
+				79B20000000000000000005E /* SelectionButtonLabel.swift in Resources */,
+				79B20000000000000000005F /* _FlexibleView.swift in Resources */,
+				79B200000000000000000060 /* (null) in Resources */,
+				79B200000000000000000061 /* StatisticTestsView.swift in Resources */,
+				79B200000000000000000062 /* StatisticsModelings.swift in Resources */,
+				79B200000000000000000069 /* SpotDetailView.swift in Resources */,
+				79B20000000000000000006A /* SpotManager.swift in Resources */,
+				79B20000000000000000006B /* SpotsView.swift in Resources */,
+				79B20000000000000000006C /* Spot.swift in Resources */,
+				79B20000000000000000006D /* SubmitSpotRequest.swift in Resources */,
+				79B20000000000000000006E /* APIService.swift in Resources */,
+				79B20000000000000000006F /* SpotKindPicker.swift in Resources */,
+				79B200000000000000000070 /* InfoSectionView.swift in Resources */,
+				79B200000000000000000071 /* AddSpotView.swift in Resources */,
+				79B200000000000000000072 /* VideoSectionView.swift in Resources */,
+				79B200000000000000000073 /* CountryPicker.swift in Resources */,
+				79B200000000000000000074 /* AllRunsMapView.swift in Resources */,
+				79B200000000000000000075 /* DashboardRow.swift in Resources */,
+				79B20000000000000000007A /* AverageHeartView.swift in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1446,8 +2205,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78F9E0F22F87CE5D008FDBCF /* Assets.xcassets in Resources */,
+				78F9E0F32F87CE5D008FDBCF /* locationData.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B100042F8500010041C173 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 				78FD900E2F8516B80041C173 /* Assets.xcassets in Resources */,
 				78FD8FFE2F850DEB0041C173 /* locationData.json in Resources */,
+				78F9DFE02F87CE5D008FDBCF /* product_ids.plist in Resources */,
+				78F9DFE12F87CE5D008FDBCF /* Preview Assets.xcassets in Resources */,
+				78F9DFE22F87CE5D008FDBCF /* 7III Water.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1459,19 +2230,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				78F0A1012F6A6D1100A1B2C3 /* BetaBadgeView.swift in Sources */,
-				79A100032F8500020041C173 /* ScreenshotSupport.swift in Sources */,
-				79A100042F8500020041C173 /* Phone01AngleTool.swift in Sources */,
-				79A100052F8500020041C173 /* Phone02Dashboards.swift in Sources */,
-				79A100062F8500020041C173 /* Phone03Export.swift in Sources */,
-				79A100072F8500020041C173 /* Phone04Places.swift in Sources */,
-				79A100082F8500020041C173 /* Phone05Tags.swift in Sources */,
-				79A1000F2F8500030041C173 /* Phone06WatchSupport.swift in Sources */,
-				79A100102F8500030041C173 /* Phone07WaterSports.swift in Sources */,
-				79A100112F8500030041C173 /* Phone08StatisticsOverview.swift in Sources */,
-				79A100122F8500030041C173 /* Phone09MakeEdits.swift in Sources */,
-				79A100132F8500030041C173 /* Phone10SimpleMap.swift in Sources */,
-				79A100142F8500030041C173 /* Phone11StatsDetail.swift in Sources */,
-				79A100152F8500030041C173 /* Phone12GPXImport.swift in Sources */,
 				781A4BAB2C4E912F0046AE0E /* ShareImagePreview.swift in Sources */,
 				7840835A2C2188CF004C0857 /* HeartRateChartView.swift in Sources */,
 				7840835E2C21B279004C0857 /* MapSectionView.swift in Sources */,
@@ -1710,6 +2468,298 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78F9DFE42F87CE5D008FDBCF /* ShareStatStack.swift in Sources */,
+				78F9DFE52F87CE5D008FDBCF /* WebScrapingService.swift in Sources */,
+				78F9DFE62F87CE5D008FDBCF /* UnitType.swift in Sources */,
+				78F9DFE72F87CE5D008FDBCF /* TrackedElement.swift in Sources */,
+				78F9DFE82F87CE5D008FDBCF /* HeartSpeedSamples.swift in Sources */,
+				78F9DFE92F87CE5D008FDBCF /* PolylineData.swift in Sources */,
+				78F9DFEA2F87CE5D008FDBCF /* Run.swift in Sources */,
+				78F9DFEB2F87CE5D008FDBCF /* Version.swift in Sources */,
+				78F9DFEC2F87CE5D008FDBCF /* WavesHelpers.swift in Sources */,
+				78F9DFED2F87CE5D008FDBCF /* ImportRun.swift in Sources */,
+				78F9DFEE2F87CE5D008FDBCF /* DBRun.swift in Sources */,
+				78F9DFEF2F87CE5D008FDBCF /* MapAngle.swift in Sources */,
+				78F9DFF02F87CE5D008FDBCF /* RunListSorting.swift in Sources */,
+				78F9DFF12F87CE5D008FDBCF /* RunType.swift in Sources */,
+				78F9DFF22F87CE5D008FDBCF /* Extensions.swift in Sources */,
+				78F9DFF32F87CE5D008FDBCF /* View+readSize.swift in Sources */,
+				78F9DFF42F87CE5D008FDBCF /* ElapsedTimeFormatter.swift in Sources */,
+				78F9DFF52F87CE5D008FDBCF /* HTTPClient.swift in Sources */,
+				78F9DFF62F87CE5D008FDBCF /* ChartStrideBy.swift in Sources */,
+				78F9DFF72F87CE5D008FDBCF /* MeasurementSystem.swift in Sources */,
+				78F9DFF82F87CE5D008FDBCF /* HCKalmanAlgorithm.swift in Sources */,
+				78F9DFF92F87CE5D008FDBCF /* SpeedOption.swift in Sources */,
+				78F9DFFA2F87CE5D008FDBCF /* LocationThings.swift in Sources */,
+				78F9DFFB2F87CE5D008FDBCF /* VideoProcessingHelper.swift in Sources */,
+				78F9DFFC2F87CE5D008FDBCF /* GenerateQRCode.swift in Sources */,
+				78F9DFFD2F87CE5D008FDBCF /* Constants.swift in Sources */,
+				78F9DFFE2F87CE5D008FDBCF /* HelperFunctions.swift in Sources */,
+				78F9DFFF2F87CE5D008FDBCF /* Snapshot.swift in Sources */,
+				78F9E0002F87CE5D008FDBCF /* LocationData.swift in Sources */,
+				78F9E0012F87CE5D008FDBCF /* CrewStatistic.swift in Sources */,
+				78F9E0022F87CE5D008FDBCF /* WorkoutType.swift in Sources */,
+				78F9E0032F87CE5D008FDBCF /* VersionHistory.swift in Sources */,
+				78F9E0042F87CE5D008FDBCF /* FoilStallDetector.swift in Sources */,
+				78F9E0052F87CE5D008FDBCF /* GeocodingManager.swift in Sources */,
+				78F9E0062F87CE5D008FDBCF /* CoordinateSmoothingHelpers.swift in Sources */,
+				78F9E0072F87CE5D008FDBCF /* NavDestination.swift in Sources */,
+				78F9E0082F87CE5D008FDBCF /* RunEdit.swift in Sources */,
+				78F9E0092F87CE5D008FDBCF /* MapTapGesture26.swift in Sources */,
+				78F9E00A2F87CE5D008FDBCF /* MemberRunData.swift in Sources */,
+				78F9E00B2F87CE5D008FDBCF /* Member.swift in Sources */,
+				78F9E00C2F87CE5D008FDBCF /* GPXStuff.swift in Sources */,
+				78F9E00D2F87CE5D008FDBCF /* MapDebug.swift in Sources */,
+				78F9E00E2F87CE5D008FDBCF /* SpeedGradientHelpers.swift in Sources */,
+				78F9E00F2F87CE5D008FDBCF /* SpeedGradientMapCoordinator.swift in Sources */,
+				78F9E0102F87CE5D008FDBCF /* IfLet.swift in Sources */,
+				78F9E0112F87CE5D008FDBCF /* Dashboard.swift in Sources */,
+				78F9E0122F87CE5D008FDBCF /* UnitConverter.swift in Sources */,
+				78F9E0132F87CE5D008FDBCF /* DownwindManager.swift in Sources */,
+				78F9E0142F87CE5D008FDBCF /* SpeedGradientMapView.swift in Sources */,
+				78F9E0152F87CE5D008FDBCF /* TrackedElementsManager.swift in Sources */,
+				78F9E0162F87CE5D008FDBCF /* RunStatistic.swift in Sources */,
+				78F9E0172F87CE5D008FDBCF /* ShareVideoOverlay.swift in Sources */,
+				78F9E0182F87CE5D008FDBCF /* _III_DownwindApp.swift in Sources */,
+				78F9E0192F87CE5D008FDBCF /* StartView.swift in Sources */,
+				78F9E01A2F87CE5D008FDBCF /* XMarkLabel.swift in Sources */,
+				78F9E01B2F87CE5D008FDBCF /* NavigationButton.swift in Sources */,
+				78F9E01C2F87CE5D008FDBCF /* NavigationBar.swift in Sources */,
+				78F9E01D2F87CE5D008FDBCF /* NewsSection.swift in Sources */,
+				78F9E01E2F87CE5D008FDBCF /* VersionHistoryView.swift in Sources */,
+				78F9E01F2F87CE5D008FDBCF /* ReviewRequestView.swift in Sources */,
+				78F9E0202F87CE5D008FDBCF /* ListBackground.swift in Sources */,
+				78F9E0212F87CE5D008FDBCF /* TagsEditViewStatisticCapture.swift in Sources */,
+				78F9E0222F87CE5D008FDBCF /* SummaryView.swift in Sources */,
+				78F9E0232F87CE5D008FDBCF /* MapsMenuView.swift in Sources */,
+				78F9E0242F87CE5D008FDBCF /* UpgradeView.swift in Sources */,
+				78F9E0252F87CE5D008FDBCF /* UpgradeShowcase.swift in Sources */,
+				78F9E0262F87CE5D008FDBCF /* CircleImage.swift in Sources */,
+				78F9E0272F87CE5D008FDBCF /* UpgradeStatus.swift in Sources */,
+				78F9E0282F87CE5D008FDBCF /* OptionsView.swift in Sources */,
+				78F9E0292F87CE5D008FDBCF /* StartOptionsMenu.swift in Sources */,
+				78F9E02A2F87CE5D008FDBCF /* AboutView.swift in Sources */,
+				78F9E02B2F87CE5D008FDBCF /* FoilingThresholds.swift in Sources */,
+				78F9E02C2F87CE5D008FDBCF /* HelpView.swift in Sources */,
+				78F9E02D2F87CE5D008FDBCF /* RefundView.swift in Sources */,
+				78F9E02E2F87CE5D008FDBCF /* PremiumSection.swift in Sources */,
+				78F9E02F2F87CE5D008FDBCF /* FirstTimeUserNameSet.swift in Sources */,
+				78F9E0302F87CE5D008FDBCF /* RunView.swift in Sources */,
+				78F9E0312F87CE5D008FDBCF /* RunUITest.swift in Sources */,
+				78F9E0322F87CE5D008FDBCF /* HeadingIndicator.swift in Sources */,
+				78F9E0332F87CE5D008FDBCF /* StartRun.swift in Sources */,
+				78F9E0342F87CE5D008FDBCF /* RunShareView.swift in Sources */,
+				78F9E0352F87CE5D008FDBCF /* QRCodeView.swift in Sources */,
+				78F9E0362F87CE5D008FDBCF /* ShareDialog.swift in Sources */,
+				78F9E0372F87CE5D008FDBCF /* OptionsMenu.swift in Sources */,
+				78F9E0382F87CE5D008FDBCF /* RunListView.swift in Sources */,
+				78F9E0392F87CE5D008FDBCF /* RunListMapSheet.swift in Sources */,
+				78F9E03A2F87CE5D008FDBCF /* BearingArrowView.swift in Sources */,
+				78F9E03B2F87CE5D008FDBCF /* MemberListView.swift in Sources */,
+				78F9E03C2F87CE5D008FDBCF /* NoActiveRunnersView.swift in Sources */,
+				78F9E03D2F87CE5D008FDBCF /* ListInfoLabel.swift in Sources */,
+				78F9E03E2F87CE5D008FDBCF /* RunMapView.swift in Sources */,
+				78F9E03F2F87CE5D008FDBCF /* CoordinatesListView.swift in Sources */,
+				78F9E0402F87CE5D008FDBCF /* MapView.swift in Sources */,
+				78F9E0412F87CE5D008FDBCF /* CircleAndText.swift in Sources */,
+				78F9E0422F87CE5D008FDBCF /* StatisticsControlCenter.swift in Sources */,
+				78F9E0432F87CE5D008FDBCF /* StatisticsView.swift in Sources */,
+				78F9E0442F87CE5D008FDBCF /* YearlyMonthlyStatisticView.swift in Sources */,
+				78F9E0452F87CE5D008FDBCF /* RunOverView.swift in Sources */,
+				78F9E0462F87CE5D008FDBCF /* GroupedTagsListView.swift in Sources */,
+				78F9E0472F87CE5D008FDBCF /* StringSelectionView.swift in Sources */,
+				78F9E0482F87CE5D008FDBCF /* StatisticsRunView.swift in Sources */,
+				78F9E0492F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */,
+				78F9E04A2F87CE5D008FDBCF /* SpeedChartView.swift in Sources */,
+				78F9E04B2F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */,
+				78F9E04C2F87CE5D008FDBCF /* MapSectionView.swift in Sources */,
+				78F9E04D2F87CE5D008FDBCF /* AngleSection.swift in Sources */,
+				78F9E04E2F87CE5D008FDBCF /* TagsFlexiView.swift in Sources */,
+				78F9E04F2F87CE5D008FDBCF /* TagsEditView.swift in Sources */,
+				78F9E0502F87CE5D008FDBCF /* EmptyTagsView.swift in Sources */,
+				78F9E0512F87CE5D008FDBCF /* HeartRateView.swift in Sources */,
+				78F9E0522F87CE5D008FDBCF /* HeartRateChartView.swift in Sources */,
+				78F9E0532F87CE5D008FDBCF /* StatisticsDetails.swift in Sources */,
+				78F9E0542F87CE5D008FDBCF /* StatisticsInfoViews.swift in Sources */,
+				78F9E0552F87CE5D008FDBCF /* StatisticsRounds.swift in Sources */,
+				78F9E0562F87CE5D008FDBCF /* StatisticsMap.swift in Sources */,
+				78F9E0572F87CE5D008FDBCF /* EditMap.swift in Sources */,
+				78F9E0582F87CE5D008FDBCF /* SpeedGradientStatisticsMap.swift in Sources */,
+				78F9E0592F87CE5D008FDBCF /* WindSportStatisticsMap.swift in Sources */,
+				78F9E05A2F87CE5D008FDBCF /* GradientMapTestView.swift in Sources */,
+				78F9E05B2F87CE5D008FDBCF /* GPXExportButton.swift in Sources */,
+				78F9E05C2F87CE5D008FDBCF /* ShareStatisticsView.swift in Sources */,
+				78F9E05D2F87CE5D008FDBCF /* RouteSticker.swift in Sources */,
+				78F9E05E2F87CE5D008FDBCF /* StickerHowToView.swift in Sources */,
+				78F9E05F2F87CE5D008FDBCF /* OverlaySettingsView.swift in Sources */,
+				78F9E0602F87CE5D008FDBCF /* ActivityViewController.swift in Sources */,
+				78F9E0612F87CE5D008FDBCF /* ShareImagePreview.swift in Sources */,
+				78F9E0622F87CE5D008FDBCF /* ShareOverlay.swift in Sources */,
+				78F9E0632F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */,
+				78F9E0642F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */,
+				78F9E0652F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */,
+				78F9E0662F87CE5D008FDBCF /* VideoPicker.swift in Sources */,
+				78F9E0672F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */,
+				78F9E0682F87CE5D008FDBCF /* OutsideTap.swift in Sources */,
+				78F9E0692F87CE5D008FDBCF /* BetaBadgeView.swift in Sources */,
+				78F9E06A2F87CE5D008FDBCF /* Dashboards.swift in Sources */,
+				78F9E06B2F87CE5D008FDBCF /* TrackedElementRow.swift in Sources */,
+				78F9E06C2F87CE5D008FDBCF /* DashboardView.swift in Sources */,
+				78F9E06D2F87CE5D008FDBCF /* WebPreview.swift in Sources */,
+				78F9E06E2F87CE5D008FDBCF /* NestedElementsRow.swift in Sources */,
+				78F9E06F2F87CE5D008FDBCF /* WidgetDashboardView.swift in Sources */,
+				78F9E0702F87CE5D008FDBCF /* AddElementView.swift in Sources */,
+				78F9E0712F87CE5D008FDBCF /* ToolbarPlacements.swift in Sources */,
+				78F9E0722F87CE5D008FDBCF /* SelectionButtonLabel.swift in Sources */,
+				78F9E0732F87CE5D008FDBCF /* _FlexibleView.swift in Sources */,
+				78F9E0742F87CE5D008FDBCF /* (null) in Sources */,
+				78F9E0752F87CE5D008FDBCF /* StatisticTestsView.swift in Sources */,
+				78F9E0762F87CE5D008FDBCF /* StatisticsModelings.swift in Sources */,
+				78F9E0772F87CE5D008FDBCF /* SpotDetailView.swift in Sources */,
+				78F9E0782F87CE5D008FDBCF /* SpotManager.swift in Sources */,
+				78F9E0792F87CE5D008FDBCF /* SpotsView.swift in Sources */,
+				78F9E07A2F87CE5D008FDBCF /* Spot.swift in Sources */,
+				78F9E07B2F87CE5D008FDBCF /* SubmitSpotRequest.swift in Sources */,
+				78F9E07C2F87CE5D008FDBCF /* APIService.swift in Sources */,
+				78F9E07D2F87CE5D008FDBCF /* SpotKindPicker.swift in Sources */,
+				78F9E07E2F87CE5D008FDBCF /* InfoSectionView.swift in Sources */,
+				78F9E07F2F87CE5D008FDBCF /* AddSpotView.swift in Sources */,
+				78F9E0802F87CE5D008FDBCF /* VideoSectionView.swift in Sources */,
+				78F9E0812F87CE5D008FDBCF /* CountryPicker.swift in Sources */,
+				78F9E0822F87CE5D008FDBCF /* AllRunsMapView.swift in Sources */,
+				78F9E0832F87CE5D008FDBCF /* DashboardRow.swift in Sources */,
+				78F9E0842F87CE5D008FDBCF /* AverageHeartView.swift in Sources */,
+				78F9E0852F87CE5D008FDBCF /* _III_DownwindApp.swift in Sources */,
+				78F9E0862F87CE5D008FDBCF /* StartView.swift in Sources */,
+				78F9E0872F87CE5D008FDBCF /* XMarkLabel.swift in Sources */,
+				78F9E0882F87CE5D008FDBCF /* NavigationButton.swift in Sources */,
+				78F9E0892F87CE5D008FDBCF /* NavigationBar.swift in Sources */,
+				78F9E08A2F87CE5D008FDBCF /* NewsSection.swift in Sources */,
+				78F9E08B2F87CE5D008FDBCF /* VersionHistoryView.swift in Sources */,
+				78F9E08C2F87CE5D008FDBCF /* ReviewRequestView.swift in Sources */,
+				78F9E08D2F87CE5D008FDBCF /* ListBackground.swift in Sources */,
+				78F9E08E2F87CE5D008FDBCF /* TagsEditViewStatisticCapture.swift in Sources */,
+				78F9E08F2F87CE5D008FDBCF /* SummaryView.swift in Sources */,
+				78F9E0902F87CE5D008FDBCF /* MapsMenuView.swift in Sources */,
+				78F9E0912F87CE5D008FDBCF /* UpgradeView.swift in Sources */,
+				78F9E0922F87CE5D008FDBCF /* UpgradeShowcase.swift in Sources */,
+				78F9E0932F87CE5D008FDBCF /* CircleImage.swift in Sources */,
+				78F9E0942F87CE5D008FDBCF /* UpgradeStatus.swift in Sources */,
+				78F9E0952F87CE5D008FDBCF /* OptionsView.swift in Sources */,
+				78F9E0962F87CE5D008FDBCF /* StartOptionsMenu.swift in Sources */,
+				78F9E0972F87CE5D008FDBCF /* AboutView.swift in Sources */,
+				78F9E0982F87CE5D008FDBCF /* FoilingThresholds.swift in Sources */,
+				78F9E0992F87CE5D008FDBCF /* HelpView.swift in Sources */,
+				78F9E09A2F87CE5D008FDBCF /* RefundView.swift in Sources */,
+				78F9E09B2F87CE5D008FDBCF /* PremiumSection.swift in Sources */,
+				78F9E09C2F87CE5D008FDBCF /* FirstTimeUserNameSet.swift in Sources */,
+				78F9E09D2F87CE5D008FDBCF /* RunView.swift in Sources */,
+				78F9E09E2F87CE5D008FDBCF /* RunUITest.swift in Sources */,
+				78F9E09F2F87CE5D008FDBCF /* HeadingIndicator.swift in Sources */,
+				78F9E0A02F87CE5D008FDBCF /* StartRun.swift in Sources */,
+				78F9E0A12F87CE5D008FDBCF /* RunShareView.swift in Sources */,
+				78F9E0A22F87CE5D008FDBCF /* QRCodeView.swift in Sources */,
+				78F9E0A32F87CE5D008FDBCF /* ShareDialog.swift in Sources */,
+				78F9E0A42F87CE5D008FDBCF /* OptionsMenu.swift in Sources */,
+				78F9E0A52F87CE5D008FDBCF /* RunListView.swift in Sources */,
+				78F9E0A62F87CE5D008FDBCF /* RunListMapSheet.swift in Sources */,
+				78F9E0A72F87CE5D008FDBCF /* BearingArrowView.swift in Sources */,
+				78F9E0A82F87CE5D008FDBCF /* MemberListView.swift in Sources */,
+				78F9E0A92F87CE5D008FDBCF /* NoActiveRunnersView.swift in Sources */,
+				78F9E0AA2F87CE5D008FDBCF /* ListInfoLabel.swift in Sources */,
+				78F9E0AB2F87CE5D008FDBCF /* RunMapView.swift in Sources */,
+				78F9E0AC2F87CE5D008FDBCF /* CoordinatesListView.swift in Sources */,
+				78F9E0AD2F87CE5D008FDBCF /* MapView.swift in Sources */,
+				78F9E0AE2F87CE5D008FDBCF /* CircleAndText.swift in Sources */,
+				78F9E0AF2F87CE5D008FDBCF /* StatisticsControlCenter.swift in Sources */,
+				78F9E0B02F87CE5D008FDBCF /* StatisticsView.swift in Sources */,
+				78F9E0B12F87CE5D008FDBCF /* YearlyMonthlyStatisticView.swift in Sources */,
+				78F9E0B22F87CE5D008FDBCF /* RunOverView.swift in Sources */,
+				78F9E0B32F87CE5D008FDBCF /* GroupedTagsListView.swift in Sources */,
+				78F9E0B42F87CE5D008FDBCF /* StringSelectionView.swift in Sources */,
+				78F9E0B52F87CE5D008FDBCF /* StatisticsRunView.swift in Sources */,
+				78F9E1022F87D2B0008FDBCF /* FlexibleView.swift in Sources */,
+				78F9E0B62F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */,
+				78F9E0B72F87CE5D008FDBCF /* SpeedChartView.swift in Sources */,
+				78F9E0B82F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */,
+				78F9E0B92F87CE5D008FDBCF /* MapSectionView.swift in Sources */,
+				78F9E0BA2F87CE5D008FDBCF /* AngleSection.swift in Sources */,
+				78F9E0BB2F87CE5D008FDBCF /* TagsFlexiView.swift in Sources */,
+				78F9E0BC2F87CE5D008FDBCF /* TagsEditView.swift in Sources */,
+				78F9E0BD2F87CE5D008FDBCF /* EmptyTagsView.swift in Sources */,
+				78F9E0BE2F87CE5D008FDBCF /* HeartRateView.swift in Sources */,
+				78F9E0BF2F87CE5D008FDBCF /* HeartRateChartView.swift in Sources */,
+				78F9E0C02F87CE5D008FDBCF /* StatisticsDetails.swift in Sources */,
+				78F9E0C12F87CE5D008FDBCF /* StatisticsInfoViews.swift in Sources */,
+				78F9E0C22F87CE5D008FDBCF /* StatisticsRounds.swift in Sources */,
+				78F9E0C32F87CE5D008FDBCF /* StatisticsMap.swift in Sources */,
+				78F9E0C42F87CE5D008FDBCF /* EditMap.swift in Sources */,
+				78F9E0C52F87CE5D008FDBCF /* SpeedGradientStatisticsMap.swift in Sources */,
+				78F9E0C62F87CE5D008FDBCF /* WindSportStatisticsMap.swift in Sources */,
+				78F9E0C72F87CE5D008FDBCF /* GradientMapTestView.swift in Sources */,
+				78F9E0C82F87CE5D008FDBCF /* GPXExportButton.swift in Sources */,
+				78F9E0C92F87CE5D008FDBCF /* ShareStatisticsView.swift in Sources */,
+				78F9E0CA2F87CE5D008FDBCF /* RouteSticker.swift in Sources */,
+				78F9E0CB2F87CE5D008FDBCF /* StickerHowToView.swift in Sources */,
+				78F9E0CC2F87CE5D008FDBCF /* OverlaySettingsView.swift in Sources */,
+				78F9E0CD2F87CE5D008FDBCF /* ActivityViewController.swift in Sources */,
+				78F9E0CE2F87CE5D008FDBCF /* ShareImagePreview.swift in Sources */,
+				78F9E0CF2F87CE5D008FDBCF /* ShareOverlay.swift in Sources */,
+				78F9E0D02F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */,
+				78F9E0D12F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */,
+				78F9E0D22F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */,
+				78F9E0D32F87CE5D008FDBCF /* VideoPicker.swift in Sources */,
+				78F9E0D42F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */,
+				78F9E0D52F87CE5D008FDBCF /* OutsideTap.swift in Sources */,
+				78F9E0D62F87CE5D008FDBCF /* BetaBadgeView.swift in Sources */,
+				78F9E0D72F87CE5D008FDBCF /* Dashboards.swift in Sources */,
+				78F9E0D82F87CE5D008FDBCF /* TrackedElementRow.swift in Sources */,
+				78F9E0D92F87CE5D008FDBCF /* DashboardView.swift in Sources */,
+				78F9E0DA2F87CE5D008FDBCF /* WebPreview.swift in Sources */,
+				78F9E0DB2F87CE5D008FDBCF /* NestedElementsRow.swift in Sources */,
+				78F9E0DC2F87CE5D008FDBCF /* WidgetDashboardView.swift in Sources */,
+				78F9E0DD2F87CE5D008FDBCF /* AddElementView.swift in Sources */,
+				78F9E0DE2F87CE5D008FDBCF /* ToolbarPlacements.swift in Sources */,
+				78F9E0DF2F87CE5D008FDBCF /* SelectionButtonLabel.swift in Sources */,
+				78F9E0E02F87CE5D008FDBCF /* _FlexibleView.swift in Sources */,
+				78F9E0E12F87CE5D008FDBCF /* (null) in Sources */,
+				78F9E0E22F87CE5D008FDBCF /* StatisticTestsView.swift in Sources */,
+				78F9E0E32F87CE5D008FDBCF /* StatisticsModelings.swift in Sources */,
+				78F9E0E42F87CE5D008FDBCF /* SpotDetailView.swift in Sources */,
+				78F9E0E52F87CE5D008FDBCF /* SpotManager.swift in Sources */,
+				78F9E0E62F87CE5D008FDBCF /* SpotsView.swift in Sources */,
+				78F9E0E72F87CE5D008FDBCF /* Spot.swift in Sources */,
+				78F9E0E82F87CE5D008FDBCF /* SubmitSpotRequest.swift in Sources */,
+				78F9E0E92F87CE5D008FDBCF /* APIService.swift in Sources */,
+				78F9E0EA2F87CE5D008FDBCF /* SpotKindPicker.swift in Sources */,
+				78F9E0EB2F87CE5D008FDBCF /* InfoSectionView.swift in Sources */,
+				78F9E0EC2F87CE5D008FDBCF /* AddSpotView.swift in Sources */,
+				78F9E0ED2F87CE5D008FDBCF /* VideoSectionView.swift in Sources */,
+				78F9E0EE2F87CE5D008FDBCF /* CountryPicker.swift in Sources */,
+				78F9E0EF2F87CE5D008FDBCF /* AllRunsMapView.swift in Sources */,
+				78F9E0F02F87CE5D008FDBCF /* DashboardRow.swift in Sources */,
+				78F9E0F12F87CE5D008FDBCF /* AverageHeartView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79B100052F8500010041C173 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79A100032F8500020041C173 /* ScreenshotSupport.swift in Sources */,
+				79A100042F8500020041C173 /* Phone01AngleTool.swift in Sources */,
+				79A100052F8500020041C173 /* Phone02Dashboards.swift in Sources */,
+				79A100062F8500020041C173 /* Phone03Export.swift in Sources */,
+				79A100072F8500020041C173 /* Phone04Places.swift in Sources */,
+				78F9E1012F87D2B0008FDBCF /* FlexibleView.swift in Sources */,
+				79A100082F8500020041C173 /* Phone05Tags.swift in Sources */,
+				79A1000F2F8500030041C173 /* Phone06WatchSupport.swift in Sources */,
+				79A100102F8500030041C173 /* Phone07WaterSports.swift in Sources */,
+				79A100112F8500030041C173 /* Phone08StatisticsOverview.swift in Sources */,
+				79A100122F8500030041C173 /* Phone09MakeEdits.swift in Sources */,
+				79A100132F8500030041C173 /* Phone10SimpleMap.swift in Sources */,
+				79A100142F8500030041C173 /* Phone11StatsDetail.swift in Sources */,
+				79A100152F8500030041C173 /* Phone12GPXImport.swift in Sources */,
 				78FD900F2F8516CF0041C173 /* ShareStatStack.swift in Sources */,
 				78FD8FD02F850DDA0041C173 /* WebScrapingService.swift in Sources */,
 				78FD8FD12F850DDA0041C173 /* UnitType.swift in Sources */,
@@ -1762,6 +2812,115 @@
 				78FD8FCE2F850DB10041C173 /* TrackedElementsManager.swift in Sources */,
 				78FD8FCF2F850DB90041C173 /* RunStatistic.swift in Sources */,
 				78FD8FFF2F850E0A0041C173 /* ShareVideoOverlay.swift in Sources */,
+				78F9DF732F87CE5D008FDBCF /* _III_DownwindApp.swift in Sources */,
+				78F9DF742F87CE5D008FDBCF /* StartView.swift in Sources */,
+				78F9DF752F87CE5D008FDBCF /* XMarkLabel.swift in Sources */,
+				78F9DF762F87CE5D008FDBCF /* NavigationButton.swift in Sources */,
+				78F9DF772F87CE5D008FDBCF /* NavigationBar.swift in Sources */,
+				78F9DF782F87CE5D008FDBCF /* NewsSection.swift in Sources */,
+				78F9DF792F87CE5D008FDBCF /* VersionHistoryView.swift in Sources */,
+				78F9DF7A2F87CE5D008FDBCF /* ReviewRequestView.swift in Sources */,
+				78F9DF7B2F87CE5D008FDBCF /* ListBackground.swift in Sources */,
+				78F9DF7C2F87CE5D008FDBCF /* TagsEditViewStatisticCapture.swift in Sources */,
+				78F9DF7D2F87CE5D008FDBCF /* SummaryView.swift in Sources */,
+				78F9DF7E2F87CE5D008FDBCF /* MapsMenuView.swift in Sources */,
+				78F9DF7F2F87CE5D008FDBCF /* UpgradeView.swift in Sources */,
+				78F9DF802F87CE5D008FDBCF /* UpgradeShowcase.swift in Sources */,
+				78F9DF812F87CE5D008FDBCF /* CircleImage.swift in Sources */,
+				78F9DF822F87CE5D008FDBCF /* UpgradeStatus.swift in Sources */,
+				78F9DF832F87CE5D008FDBCF /* OptionsView.swift in Sources */,
+				78F9DF842F87CE5D008FDBCF /* StartOptionsMenu.swift in Sources */,
+				78F9DF852F87CE5D008FDBCF /* AboutView.swift in Sources */,
+				78F9DF862F87CE5D008FDBCF /* FoilingThresholds.swift in Sources */,
+				78F9DF872F87CE5D008FDBCF /* HelpView.swift in Sources */,
+				78F9DF882F87CE5D008FDBCF /* RefundView.swift in Sources */,
+				78F9DF892F87CE5D008FDBCF /* PremiumSection.swift in Sources */,
+				78F9DF8A2F87CE5D008FDBCF /* FirstTimeUserNameSet.swift in Sources */,
+				78F9DF8B2F87CE5D008FDBCF /* RunView.swift in Sources */,
+				78F9DF8C2F87CE5D008FDBCF /* RunUITest.swift in Sources */,
+				78F9DF8D2F87CE5D008FDBCF /* HeadingIndicator.swift in Sources */,
+				78F9DF8E2F87CE5D008FDBCF /* StartRun.swift in Sources */,
+				78F9DF8F2F87CE5D008FDBCF /* RunShareView.swift in Sources */,
+				78F9DF902F87CE5D008FDBCF /* QRCodeView.swift in Sources */,
+				78F9DF912F87CE5D008FDBCF /* ShareDialog.swift in Sources */,
+				78F9DF922F87CE5D008FDBCF /* OptionsMenu.swift in Sources */,
+				78F9DF932F87CE5D008FDBCF /* RunListView.swift in Sources */,
+				78F9DF942F87CE5D008FDBCF /* RunListMapSheet.swift in Sources */,
+				78F9DF952F87CE5D008FDBCF /* BearingArrowView.swift in Sources */,
+				78F9DF962F87CE5D008FDBCF /* MemberListView.swift in Sources */,
+				78F9DF972F87CE5D008FDBCF /* NoActiveRunnersView.swift in Sources */,
+				78F9DF982F87CE5D008FDBCF /* ListInfoLabel.swift in Sources */,
+				78F9DF992F87CE5D008FDBCF /* RunMapView.swift in Sources */,
+				78F9DF9A2F87CE5D008FDBCF /* CoordinatesListView.swift in Sources */,
+				78F9DF9B2F87CE5D008FDBCF /* MapView.swift in Sources */,
+				78F9DF9C2F87CE5D008FDBCF /* CircleAndText.swift in Sources */,
+				78F9DF9D2F87CE5D008FDBCF /* StatisticsControlCenter.swift in Sources */,
+				78F9DF9E2F87CE5D008FDBCF /* StatisticsView.swift in Sources */,
+				78F9DF9F2F87CE5D008FDBCF /* YearlyMonthlyStatisticView.swift in Sources */,
+				78F9DFA02F87CE5D008FDBCF /* RunOverView.swift in Sources */,
+				78F9DFA12F87CE5D008FDBCF /* GroupedTagsListView.swift in Sources */,
+				78F9DFA22F87CE5D008FDBCF /* StringSelectionView.swift in Sources */,
+				78F9DFA32F87CE5D008FDBCF /* StatisticsRunView.swift in Sources */,
+				78F9DFA42F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */,
+				78F9DFA52F87CE5D008FDBCF /* SpeedChartView.swift in Sources */,
+				78F9DFA62F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */,
+				78F9DFA72F87CE5D008FDBCF /* MapSectionView.swift in Sources */,
+				78F9DFA82F87CE5D008FDBCF /* AngleSection.swift in Sources */,
+				78F9DFA92F87CE5D008FDBCF /* TagsFlexiView.swift in Sources */,
+				78F9DFAA2F87CE5D008FDBCF /* TagsEditView.swift in Sources */,
+				78F9DFAB2F87CE5D008FDBCF /* EmptyTagsView.swift in Sources */,
+				78F9DFAC2F87CE5D008FDBCF /* HeartRateView.swift in Sources */,
+				78F9DFAD2F87CE5D008FDBCF /* HeartRateChartView.swift in Sources */,
+				78F9DFAE2F87CE5D008FDBCF /* StatisticsDetails.swift in Sources */,
+				78F9DFAF2F87CE5D008FDBCF /* StatisticsInfoViews.swift in Sources */,
+				78F9DFB02F87CE5D008FDBCF /* StatisticsRounds.swift in Sources */,
+				78F9DFB12F87CE5D008FDBCF /* StatisticsMap.swift in Sources */,
+				78F9DFB22F87CE5D008FDBCF /* EditMap.swift in Sources */,
+				78F9DFB32F87CE5D008FDBCF /* SpeedGradientStatisticsMap.swift in Sources */,
+				78F9DFB42F87CE5D008FDBCF /* WindSportStatisticsMap.swift in Sources */,
+				78F9DFB52F87CE5D008FDBCF /* GradientMapTestView.swift in Sources */,
+				78F9DFB62F87CE5D008FDBCF /* GPXExportButton.swift in Sources */,
+				78F9DFB72F87CE5D008FDBCF /* ShareStatisticsView.swift in Sources */,
+				78F9DFB82F87CE5D008FDBCF /* RouteSticker.swift in Sources */,
+				78F9DFB92F87CE5D008FDBCF /* StickerHowToView.swift in Sources */,
+				78F9DFBA2F87CE5D008FDBCF /* OverlaySettingsView.swift in Sources */,
+				78F9DFBB2F87CE5D008FDBCF /* ActivityViewController.swift in Sources */,
+				78F9DFBC2F87CE5D008FDBCF /* ShareImagePreview.swift in Sources */,
+				78F9DFBD2F87CE5D008FDBCF /* ShareOverlay.swift in Sources */,
+				78F9DFBE2F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */,
+				78F9DFBF2F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */,
+				78F9DFC02F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */,
+				78F9DFC12F87CE5D008FDBCF /* VideoPicker.swift in Sources */,
+				78F9DFC22F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */,
+				78F9DFC32F87CE5D008FDBCF /* OutsideTap.swift in Sources */,
+				78F9DFC42F87CE5D008FDBCF /* BetaBadgeView.swift in Sources */,
+				78F9DFC52F87CE5D008FDBCF /* Dashboards.swift in Sources */,
+				78F9DFC62F87CE5D008FDBCF /* TrackedElementRow.swift in Sources */,
+				78F9DFC72F87CE5D008FDBCF /* DashboardView.swift in Sources */,
+				78F9DFC82F87CE5D008FDBCF /* WebPreview.swift in Sources */,
+				78F9DFC92F87CE5D008FDBCF /* NestedElementsRow.swift in Sources */,
+				78F9DFCA2F87CE5D008FDBCF /* WidgetDashboardView.swift in Sources */,
+				78F9DFCB2F87CE5D008FDBCF /* AddElementView.swift in Sources */,
+				78F9DFCC2F87CE5D008FDBCF /* ToolbarPlacements.swift in Sources */,
+				78F9DFCD2F87CE5D008FDBCF /* SelectionButtonLabel.swift in Sources */,
+				78F9DFCE2F87CE5D008FDBCF /* _FlexibleView.swift in Sources */,
+				78F9DFCF2F87CE5D008FDBCF /* (null) in Sources */,
+				78F9DFD02F87CE5D008FDBCF /* StatisticTestsView.swift in Sources */,
+				78F9DFD12F87CE5D008FDBCF /* StatisticsModelings.swift in Sources */,
+				78F9DFD22F87CE5D008FDBCF /* SpotDetailView.swift in Sources */,
+				78F9DFD32F87CE5D008FDBCF /* SpotManager.swift in Sources */,
+				78F9DFD42F87CE5D008FDBCF /* SpotsView.swift in Sources */,
+				78F9DFD52F87CE5D008FDBCF /* Spot.swift in Sources */,
+				78F9DFD62F87CE5D008FDBCF /* SubmitSpotRequest.swift in Sources */,
+				78F9DFD72F87CE5D008FDBCF /* APIService.swift in Sources */,
+				78F9DFD82F87CE5D008FDBCF /* SpotKindPicker.swift in Sources */,
+				78F9DFD92F87CE5D008FDBCF /* InfoSectionView.swift in Sources */,
+				78F9DFDA2F87CE5D008FDBCF /* AddSpotView.swift in Sources */,
+				78F9DFDB2F87CE5D008FDBCF /* VideoSectionView.swift in Sources */,
+				78F9DFDC2F87CE5D008FDBCF /* CountryPicker.swift in Sources */,
+				78F9DFDD2F87CE5D008FDBCF /* AllRunsMapView.swift in Sources */,
+				78F9DFDE2F87CE5D008FDBCF /* DashboardRow.swift in Sources */,
+				78F9DFDF2F87CE5D008FDBCF /* AverageHeartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1788,10 +2947,10 @@
 			target = 78FB8BA02E4CCB4E009F5A6F /* 7III Water */;
 			targetProxy = 78FB8BB92E4CCB4F009F5A6F /* PBXContainerItemProxy */;
 		};
-		78FD90212F851A200041C173 /* PBXTargetDependency */ = {
+		79B1000B2F8500010041C173 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 785C4A942B358F7B00EB07F8 /* 7III Tracker */;
-			targetProxy = 78FD8FBB2F850CCE0041C173 /* PBXContainerItemProxy */;
+			target = 79B100062F8500010041C173 /* 7III Water Screenshots */;
+			targetProxy = 79B100022F8500010041C173 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1982,6 +3141,12 @@
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					7III,
+					"Downwind/Screenshots/*",
+					7III,
+					"Downwind/Screenshots/**/*",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "-III-Downwind-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "7III Water";
@@ -2290,8 +3455,8 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Tracker";
-				TEST_TARGET_NAME = "7III Tracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Water Screenshots.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Water Screenshots";
+				TEST_TARGET_NAME = "7III Water Screenshots";
 			};
 			name = Debug;
 		};
@@ -2315,8 +3480,108 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Tracker";
-				TEST_TARGET_NAME = "7III Tracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Water Screenshots.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Water Screenshots";
+				TEST_TARGET_NAME = "7III Water Screenshots";
+			};
+			name = Release;
+		};
+		79B100072F8500010041C173 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "7III Water";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 46;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "-III-Downwind-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "7III Water Shots";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to Health data so we can display your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to Health data so we can save your sessions.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need access to your photo library to save images.";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MARKETING_VERSION = 1.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker.screenshots;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		79B100082F8500010041C173 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "7III Water";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 46;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "-III-Downwind-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "7III Water Shots";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need access to Health data so we can display your sessions.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need access to Health data so we can save your sessions.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to track your route.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need access to your photo library to save images.";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MARKETING_VERSION = 1.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker.screenshots;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -2391,6 +3656,15 @@
 			buildConfigurations = (
 				78FD8FBD2F850CCE0041C173 /* Debug */,
 				78FD8FBE2F850CCE0041C173 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79B100092F8500010041C173 /* Build configuration list for PBXNativeTarget "7III Water Screenshots" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79B100072F8500010041C173 /* Debug */,
+				79B100082F8500010041C173 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2485,6 +3759,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 78FD8F6B2F84FE280041C173 /* XCRemoteSwiftPackageReference "AppScreenshotKit" */;
 			productName = AppScreenshotKitTestTools;
+		};
+		79B1000A2F8500010041C173 /* AppScreenshotKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78FD8F6B2F84FE280041C173 /* XCRemoteSwiftPackageReference "AppScreenshotKit" */;
+			productName = AppScreenshotKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

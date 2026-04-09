@@ -8,7 +8,7 @@
 import AppScreenshotKitTestTools
 import Foundation
 import Testing
-@testable import _III_Tracker
+@testable import _III_Water_Screenshots
 
 @Test @MainActor
 func exportScreenshots() throws {
