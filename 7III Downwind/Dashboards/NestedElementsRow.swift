@@ -16,11 +16,19 @@ struct NestedElementsRow: View {
     let element: TrackedElement?
     let dashboardIndex: Int?
     let manager: TrackedElementsManager
+    var animateDirectionArrow: Bool = true
     var onExpand: () -> Void
     var onEdit: () -> Void
     var onDuplicate: () -> Void
     
     @State private var animationDegrees: Double = 0
+
+    private var displayedDirectionDegrees: Double {
+        if !animateDirectionArrow {
+            return directionDegrees ?? 0
+        }
+        return animationDegrees
+    }
     
     var body: some View {
         HStack {
@@ -64,7 +72,7 @@ struct NestedElementsRow: View {
                         if directionDegrees != nil {
                             let size = 16.0
                             Image(systemName: "arrow.up")
-                                .rotationEffect(.degrees(animationDegrees))
+                                .rotationEffect(.degrees(displayedDirectionDegrees))
                                 .frame(width: size, height: size)
                         }
                     }
@@ -76,14 +84,14 @@ struct NestedElementsRow: View {
             }
         }
         .onAppear {
-            if let directionDegrees = directionDegrees {
+            if animateDirectionArrow, let directionDegrees = directionDegrees {
                 withAnimation {
                     animationDegrees = directionDegrees
                 }
             }
         }
         .onChange(of: directionDegrees) {
-            if let directionDegrees = directionDegrees {
+            if animateDirectionArrow, let directionDegrees = directionDegrees {
                 withAnimation {
                     animationDegrees = directionDegrees
                 }

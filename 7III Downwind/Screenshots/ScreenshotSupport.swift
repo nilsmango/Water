@@ -2652,7 +2652,8 @@ struct ScreenshotDashboardHomeView: View {
     var body: some View {
         StartView(
             downwindManager: downwindManager,
-            initialDashboardManager: manager
+            initialDashboardManager: manager,
+            animateDashboardDirectionArrows: false
         )
     }
 }
@@ -3036,7 +3037,8 @@ struct ScreenshotWatchSupportView: View {
     var body: some View {
         StartView(
             downwindManager: downwindManager,
-            initialDashboardManager: manager
+            initialDashboardManager: manager,
+            animateDashboardDirectionArrows: false
         )
         .overlay(alignment: .bottom) {
             ScreenshotWatchOverlay()
@@ -3055,7 +3057,8 @@ struct ScreenshotWaterSportsView: View {
     var body: some View {
         StartView(
             downwindManager: downwindManager,
-            initialDashboardManager: manager
+            initialDashboardManager: manager,
+            animateDashboardDirectionArrows: false
         )
         .overlay(alignment: .top) {
             ScreenshotWorkoutPickerOverlay()
@@ -3178,7 +3181,8 @@ struct ScreenshotGPXImportView: View {
         StartView(
             downwindManager: downwindManager,
             initialDashboardManager: manager,
-            initialImportedRuns: ScreenshotSampleData.gpxImportRuns()
+            initialImportedRuns: ScreenshotSampleData.gpxImportRuns(),
+            animateDashboardDirectionArrows: false
         )
     }
 }

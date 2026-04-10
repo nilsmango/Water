@@ -31,13 +31,16 @@ struct StartView: View {
     @State private var fakeDataExportError = ""
     
     @State private var navPath = NavigationPath()
+    private let animateDashboardDirectionArrows: Bool
 
     init(
         downwindManager: DownwindManager,
         initialDashboardManager: TrackedElementsManager = TrackedElementsManager(),
-        initialImportedRuns: [ImportRun] = []
+        initialImportedRuns: [ImportRun] = [],
+        animateDashboardDirectionArrows: Bool = true
     ) {
         self.downwindManager = downwindManager
+        self.animateDashboardDirectionArrows = animateDashboardDirectionArrows
         _manager = StateObject(wrappedValue: initialDashboardManager)
         _importedRuns = State(initialValue: initialImportedRuns)
     }
@@ -237,7 +240,7 @@ struct StartView: View {
                                 .buttonStyle(.borderedProminent)
                                 
                             } else {
-                                WidgetDashboardView(manager: manager, downwindManager: downwindManager, dashboard: dashboard, navPath: $navPath)
+                                WidgetDashboardView(manager: manager, downwindManager: downwindManager, dashboard: dashboard, animateDirectionArrows: animateDashboardDirectionArrows, navPath: $navPath)
                             }
                         }
                         
