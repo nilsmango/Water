@@ -112,11 +112,16 @@ private struct NeonWiggleRoute: View {
         let deviceMarkerKeepOut = deviceRect.isEmpty
             ? .null
             : deviceRect
+        let textPathKeepOut = textSafeRect == .zero
+            ? .null
+            : adjustedRect(textSafeRect, left: -8, right: -8, top: -8, bottom: -8)
         let markerKeepOutRects = [
             textKeepOut,
             deviceMarkerKeepOut
         ].filter { !$0.isNull && !$0.isEmpty }
-        let pathKeepOutRects: [CGRect] = []
+        let pathKeepOutRects = [
+            textPathKeepOut
+        ].filter { !$0.isNull && !$0.isEmpty }
         let margin: CGFloat = 16
         let deviceCandidates = deviceMarkerCandidates(
             margin: margin,
@@ -154,49 +159,97 @@ private struct NeonWiggleRoute: View {
             generator: &generator
         )
         let minimumPlacementDistance: CGFloat = 300
-        let placeNearDevice = CGFloat.random(in: 0...1, using: &generator) < 0.3
+        let upperGapRange = upperGapMarkerYRange(
+            textKeepOut: textKeepOut,
+            markerRadius: markerRadius
+        )
+        let upperGapCandidates = upperGapMarkerCandidates(
+            textKeepOut: textKeepOut,
+            markerRadius: markerRadius,
+            margin: margin,
+            generator: &generator
+        )
+        let visibleUpperGapCandidates = upperGapCandidates.filter {
+            isVisibleMarker($0, forbiddenRects: markerKeepOutRects, margin: margin, radius: markerRadius)
+        }
+        let prioritizedVisibleDeviceCandidates = prioritizedDeviceCandidates(
+            visibleDeviceCandidates,
+            generator: &generator
+        )
+        let anchoredUpperGapAvailable = !(visibleUpperGapCandidates.isEmpty ? upperGapCandidates.isEmpty : false)
+        let anchoredDeviceAvailable = !prioritizedVisibleDeviceCandidates.isEmpty || !deviceRect.isEmpty
+        let anchorMode: EndpointAnchorMode?
+        switch (anchoredUpperGapAvailable, anchoredDeviceAvailable) {
+        case (true, true):
+            anchorMode = Bool.random(using: &generator) ? .upperGap : .nearDevice
+        case (true, false):
+            anchorMode = .upperGap
+        case (false, true):
+            anchorMode = .nearDevice
+        default:
+            anchorMode = nil
+        }
         let startPoint: CGPoint
         let endPoint: CGPoint
 
-        if placeNearDevice {
-            let startNearDevice = Bool.random(using: &generator)
-            startPoint = startNearDevice ? devicePoint : remotePoint
-            endPoint = startNearDevice ? remotePoint : devicePoint
+        if let anchorMode {
+            let anchoredPoint: CGPoint
+            let companionCandidates: [CGPoint]
+
+            switch anchorMode {
+            case .upperGap:
+                let upperPool = visibleUpperGapCandidates.isEmpty ? upperGapCandidates : visibleUpperGapCandidates
+                anchoredPoint = upperPool.randomElement(using: &generator) ?? remotePoint
+                companionCandidates = ([devicePoint, remotePoint] + visibleSurpriseCandidates + prioritizedVisibleDeviceCandidates)
+                    .filter { candidate in
+                        candidate != anchoredPoint
+                            && !(upperGapRange?.contains(candidate.y) ?? false)
+                    }
+            case .nearDevice:
+                anchoredPoint = prioritizedVisibleDeviceCandidates.prefix(6).randomElement(using: &generator) ?? devicePoint
+                companionCandidates = ([remotePoint] + visibleUpperGapCandidates + visibleSurpriseCandidates)
+                    .filter { candidate in
+                        candidate != anchoredPoint && !isNearDeviceCandidate(candidate)
+                    }
+            }
+
+            if let companionPoint = selectedCompanionPoint(
+                anchorPoint: anchoredPoint,
+                candidates: companionCandidates,
+                minimumDistance: max(220, minimumPlacementDistance * 0.68),
+                avoidRect: textPathKeepOut,
+                generator: &generator
+            ) {
+                let startIsAnchor = Bool.random(using: &generator)
+                startPoint = startIsAnchor ? anchoredPoint : companionPoint
+                endPoint = startIsAnchor ? companionPoint : anchoredPoint
+            } else {
+                let startNearDevice = Bool.random(using: &generator)
+                startPoint = startNearDevice ? devicePoint : remotePoint
+                endPoint = startNearDevice ? remotePoint : devicePoint
+            }
         } else {
             var upperCandidates = [CGPoint]()
-
-            let textBottom = textKeepOut.isNull ? CGFloat.zero : textKeepOut.maxY + markerRadius
-            let deviceTop = deviceRect.isEmpty ? canvasSize.height * 0.5 : deviceRect.minY - markerRadius
-
-            if deviceTop > textBottom {
-                let gapMinY = textBottom + 2
-                let gapMaxY = deviceTop - 2
-                let gapRange = gapMaxY - gapMinY
-                if gapRange > 0 {
-                    for _ in 0..<16 {
-                        upperCandidates.append(CGPoint(
-                            x: CGFloat.random(
-                                in: (margin + markerRadius + 10)...(canvasSize.width - margin - markerRadius - 10),
-                                using: &generator
-                            ),
-                            y: gapMinY + CGFloat.random(in: 0...gapRange, using: &generator)
-                        ))
-                    }
-                }
-            }
+            upperCandidates.append(contentsOf: upperGapCandidates)
 
             let edgeMinX = margin + markerRadius + 20
             let edgeMaxX = canvasSize.width - margin - markerRadius - 20
-            let edgeMaxY = max(textBottom - 2, margin + markerRadius + 10)
-            for _ in 0..<16 {
+            let edgeMaxY = max(
+                (textKeepOut.isNull ? canvasSize.height * 0.14 : textKeepOut.minY - 6),
+                margin + markerRadius + 12
+            )
+            for _ in 0..<8 {
                 upperCandidates.append(CGPoint(
                     x: CGFloat.random(in: edgeMinX...edgeMaxX, using: &generator),
-                    y: CGFloat.random(in: (margin + markerRadius + 10)...max(edgeMinX + 1, edgeMaxY), using: &generator)
+                    y: CGFloat.random(
+                        in: (margin + markerRadius + 10)...max(margin + markerRadius + 14, edgeMaxY),
+                        using: &generator
+                    )
                 ))
             }
 
             upperCandidates.append(contentsOf: visibleSurpriseCandidates.filter {
-                $0.y < canvasSize.height * 0.45 && !isNearDeviceCandidate($0)
+                $0.y < canvasSize.height * 0.44 && !isNearDeviceCandidate($0)
             })
 
             let visibleUpper = upperCandidates.filter {
@@ -204,29 +257,20 @@ private struct NeonWiggleRoute: View {
             }
             let pool = visibleUpper.isEmpty ? upperCandidates : visibleUpper
 
-            var bestFirst = pool.randomElement(using: &generator) ?? remotePoint
-            var bestSecond = pool.randomElement(using: &generator) ?? remotePoint
-            var bestDist = distance(from: bestFirst, to: bestSecond)
-            for _ in 0..<20 {
-                let candidate1 = pool.randomElement(using: &generator) ?? remotePoint
-                let farSorted = pool.sorted { distance(from: candidate1, to: $0) > distance(from: candidate1, to: $1) }
-                let candidate2 = Array(farSorted.prefix(12)).randomElement(using: &generator) ?? farSorted.first ?? remotePoint
-                let dist = distance(from: candidate1, to: candidate2)
-                if dist > bestDist {
-                    bestFirst = candidate1
-                    bestSecond = candidate2
-                    bestDist = dist
-                }
-            }
-
-            if bestDist < minimumPlacementDistance {
+            if let pair = selectedCandidatePair(
+                candidates: pool,
+                minimumDistance: minimumPlacementDistance,
+                preferredYRange: upperGapRange,
+                avoidRect: textPathKeepOut,
+                generator: &generator
+            ) {
+                let startIsFirst = Bool.random(using: &generator)
+                startPoint = startIsFirst ? pair.0 : pair.1
+                endPoint = startIsFirst ? pair.1 : pair.0
+            } else {
                 let startNearDevice = Bool.random(using: &generator)
                 startPoint = startNearDevice ? devicePoint : remotePoint
                 endPoint = startNearDevice ? remotePoint : devicePoint
-            } else {
-                let startIsFirst = Bool.random(using: &generator)
-                startPoint = startIsFirst ? bestFirst : bestSecond
-                endPoint = startIsFirst ? bestSecond : bestFirst
             }
         }
 
@@ -236,32 +280,64 @@ private struct NeonWiggleRoute: View {
         let direction = CGPoint(x: deltaX / length, y: deltaY / length)
         let perpendicular = CGPoint(x: -direction.y, y: direction.x)
         let distanceScale = max(1.0, pow(length / 600, 0.7))
-        let turns = max(
-            surpriseStyle.minTurns,
+        let turns = min(
+            surpriseStyle.maxTurns,
+            max(
+                surpriseStyle.minTurns,
             (length / surpriseStyle.turnDistanceDivisor) * distanceScale
                 + CGFloat.random(in: surpriseStyle.turnJitter, using: &generator)
+            )
         )
         let pointCount = min(600, max(60, Int(length / 3) * Int(max(1.0, distanceScale * 0.7)) + Int.random(in: 0...24, using: &generator)))
-        let lengthAmplitudeScale = 0.55 + 0.45 * min(1.0, max(0, (length - 300)) / 700)
+        let lengthAmplitudeScale = 0.72 + 0.55 * min(1.0, max(0, (length - 220)) / 620)
         let amplitude = min(
-            canvasSize.width * surpriseStyle.maxAmplitudeFactor * 0.5,
-            max(surpriseStyle.minAmplitude, length * surpriseStyle.distanceAmplitudeFactor * 0.5)
+            canvasSize.width * 0.22,
+            max(canvasSize.width * 0.08, length * 0.16, surpriseStyle.minAmplitude * 2.8)
         ) * lengthAmplitudeScale
+        let shortRouteBoost = max(CGFloat.zero, min(1, (860 - length) / 460))
         let phase = CGFloat.random(in: 0...(2 * .pi), using: &generator)
         var routePoints = [startPoint]
-
-        let detourCenter = CGFloat.random(in: 0.24...0.78, using: &generator)
-        let detourWindow = CGFloat.random(in: 0.07...0.11, using: &generator)
-        let detourDirection: CGFloat = Bool.random(using: &generator) ? 1 : -1
-        let detourStrength = amplitude * CGFloat.random(in: 0.34...0.48, using: &generator)
-        let alongOffsetAmplitude = min(
-            surpriseStyle.maxAlongOffset,
-            max(surpriseStyle.minAlongOffset, length * surpriseStyle.alongOffsetFactor)
+        let microTurns = min(
+            CGFloat(9.4),
+            max(
+                CGFloat(3.4) + shortRouteBoost * 1.4,
+                turns * CGFloat.random(
+                    in: (CGFloat(2.05) + shortRouteBoost * 0.40)...(CGFloat(2.75) + shortRouteBoost * 0.62),
+                    using: &generator
+                )
+            )
         )
-        let lateralJitterScale = amplitude * 0.35 * distanceScale
-        let alongJitterScale = alongOffsetAmplitude * 0.4 * distanceScale
-        let amplitudeModFreq = CGFloat.random(in: 0.3...1.2, using: &generator)
-        let amplitudeModPhase = CGFloat.random(in: 0...(2 * .pi), using: &generator)
+
+        let detourCenter = CGFloat.random(in: 0.28...0.72, using: &generator)
+        let detourWindow = CGFloat.random(in: 0.24...0.34, using: &generator)
+        let detourDirection: CGFloat = Bool.random(using: &generator) ? 1 : -1
+        let detourStrength = min(
+            canvasSize.width * 0.32,
+            max(canvasSize.width * 0.14, length * 0.24, amplitude * CGFloat.random(in: 3.2...4.4, using: &generator))
+        )
+        let alongOffsetAmplitude = min(
+            surpriseStyle.maxAlongOffset * 1.8,
+            max(surpriseStyle.minAlongOffset * 1.4, length * surpriseStyle.alongOffsetFactor * 1.35)
+        )
+        let jitterLengthFactor = 1.25 + max(0, (length - 180) / 180)
+        let alongJitterScale = alongOffsetAmplitude * (0.28 + shortRouteBoost * 0.16) * distanceScale * jitterLengthFactor
+        let baseWiggleAmplitude = amplitude * CGFloat.random(in: 0.04...(0.08 + shortRouteBoost * 0.05), using: &generator)
+        let curveBoostAmplitude = amplitude * CGFloat.random(in: (0.38 + shortRouteBoost * 0.14)...(0.58 + shortRouteBoost * 0.18), using: &generator)
+        let secondaryWaveAmplitude = amplitude * CGFloat.random(in: 0.03...(0.07 + shortRouteBoost * 0.04), using: &generator)
+        let driftAmplitude = amplitude * CGFloat.random(in: (0.12 + shortRouteBoost * 0.05)...(0.22 + shortRouteBoost * 0.08), using: &generator)
+        let driftPhase = CGFloat.random(in: 0...(2 * .pi), using: &generator)
+        let curveWindow = CGFloat.random(in: 2.2...3.2, using: &generator)
+        let bigCurveCenter = microTurns * CGFloat.random(in: 0.40...0.60, using: &generator)
+        let erraticCenter = min(max(detourCenter + CGFloat.random(in: -0.05...0.05, using: &generator), 0.18), 0.82)
+        let erraticWindow = CGFloat.random(in: 0.12...0.19, using: &generator)
+        let erraticCycles = CGFloat.random(in: 0.45...0.9, using: &generator)
+        let erraticPhase = CGFloat.random(in: 0...(2 * .pi), using: &generator)
+        let erraticLateralAmplitude = amplitude * CGFloat.random(in: (0.16 + shortRouteBoost * 0.08)...(0.24 + shortRouteBoost * 0.10), using: &generator) * jitterLengthFactor
+        let erraticAlongAmplitude = alongOffsetAmplitude * CGFloat.random(in: (0.22 + shortRouteBoost * 0.08)...(0.34 + shortRouteBoost * 0.10), using: &generator) * jitterLengthFactor
+        let backgroundLateralJitterScale = amplitude * (0.055 + shortRouteBoost * 0.035) * min(jitterLengthFactor, 3.2)
+        let backgroundAlongJitterScale = alongJitterScale * (0.62 + shortRouteBoost * 0.18)
+        let smoothingPasses = shortRouteBoost > 0.55 ? 3 : 5
+        let minimumPointSpacing = max(CGFloat(110), CGFloat(300) - shortRouteBoost * 150)
 
         for index in 1..<pointCount {
             let progress = CGFloat(index) / CGFloat(pointCount)
@@ -270,18 +346,42 @@ private struct NeonWiggleRoute: View {
                 y: startPoint.y + deltaY * progress
             )
 
-            let amplitudeEnvelope = 0.1 + 0.9 * pow(abs(sin(progress * amplitudeModFreq * .pi + amplitudeModPhase)), 0.6)
-            var lateralOffset = sin(progress * turns * (.pi * 2) + phase) * amplitude * amplitudeEnvelope
-            lateralOffset += sin(progress * (turns + 1.35) * (.pi * 2) + phase * 0.6) * amplitude * 0.18 * amplitudeEnvelope
-            lateralOffset += CGFloat.random(in: -lateralJitterScale...lateralJitterScale, using: &generator)
-            var alongOffset = sin(progress * (.pi * 2) + phase * 0.35) * alongOffsetAmplitude
-            alongOffset += CGFloat.random(in: -alongJitterScale...alongJitterScale, using: &generator)
+            let cycleProgress = progress * microTurns
+            var strongCurveEnvelope: CGFloat = 0
+            let distanceFromCurve = abs((cycleProgress - bigCurveCenter) / curveWindow)
+            if distanceFromCurve < 1 {
+                strongCurveEnvelope = pow(
+                    sin((1 - distanceFromCurve) * (.pi / 2)),
+                    1.1
+                )
+            }
+
+            var erraticEnvelope: CGFloat = 0
+            let erraticDistance = abs((progress - erraticCenter) / erraticWindow)
+            if erraticDistance < 1 {
+                erraticEnvelope = pow(
+                    sin((1 - erraticDistance) * (.pi / 2)),
+                    0.7
+                )
+            }
+
+            var lateralOffset = sin(cycleProgress * (.pi * 2) + phase) * (baseWiggleAmplitude + curveBoostAmplitude * strongCurveEnvelope)
+            lateralOffset += sin(cycleProgress * (.pi * 2) * 0.34 + phase * 0.6) * secondaryWaveAmplitude * (0.3 + strongCurveEnvelope * 0.55)
+            lateralOffset += sin(progress * .pi + driftPhase) * driftAmplitude
+            lateralOffset += sin(((progress - erraticCenter) / max(erraticWindow, 0.001)) * (.pi * 2) * erraticCycles + erraticPhase)
+                * erraticLateralAmplitude * erraticEnvelope
+            lateralOffset += CGFloat.random(in: -backgroundLateralJitterScale...backgroundLateralJitterScale, using: &generator)
+            var alongOffset = sin(progress * .pi + phase * 0.35) * alongOffsetAmplitude * 0.42
+            alongOffset += sin(progress * (.pi * 2) * 0.32 + phase * 0.18) * alongOffsetAmplitude * 0.14
+            alongOffset += cos(((progress - erraticCenter) / max(erraticWindow, 0.001)) * (.pi * 2) * erraticCycles + erraticPhase * 0.7)
+                * erraticAlongAmplitude * erraticEnvelope
+            alongOffset += CGFloat.random(in: -backgroundAlongJitterScale...backgroundAlongJitterScale, using: &generator)
 
             let detourProgress = abs((progress - detourCenter) / detourWindow)
             if detourProgress < 1 {
-                let detourEnvelope = sin((1 - detourProgress) * (.pi / 2))
+                let detourEnvelope = pow(sin((1 - detourProgress) * (.pi / 2)), 0.8)
                 lateralOffset += detourDirection * detourStrength * detourEnvelope
-                alongOffset += detourDirection * detourStrength * 0.12 * detourEnvelope
+                alongOffset += detourDirection * detourStrength * 0.14 * detourEnvelope
             }
 
             let rawPoint = CGPoint(
@@ -300,7 +400,12 @@ private struct NeonWiggleRoute: View {
         routePoints = smoothedRoutePoints(
             routePoints,
             keepOutRects: pathKeepOutRects,
-            margin: margin
+            margin: margin,
+            passes: smoothingPasses
+        )
+        routePoints = minimumSpacingRoutePoints(
+            routePoints,
+            minimumDistance: minimumPointSpacing
         )
 
         return [
@@ -449,6 +554,142 @@ private struct NeonWiggleRoute: View {
         return relaxedDeviceZone.contains(point)
     }
 
+    private func upperGapMarkerYRange(
+        textKeepOut: CGRect,
+        markerRadius: CGFloat
+    ) -> ClosedRange<CGFloat>? {
+        let minY = (textKeepOut.isNull ? canvasSize.height * 0.16 : textKeepOut.maxY + markerRadius + 16)
+        let maxY = (deviceRect.isEmpty ? canvasSize.height * 0.44 : deviceRect.minY - markerRadius - 18)
+        guard maxY - minY >= 46 else { return nil }
+        return minY...maxY
+    }
+
+    private func upperGapMarkerCandidates(
+        textKeepOut: CGRect,
+        markerRadius: CGFloat,
+        margin: CGFloat,
+        generator: inout SeededGenerator
+    ) -> [CGPoint] {
+        guard let yRange = upperGapMarkerYRange(textKeepOut: textKeepOut, markerRadius: markerRadius) else {
+            return []
+        }
+
+        let minX = max(margin + markerRadius + 18, canvasSize.width * 0.18)
+        let maxX = min(canvasSize.width - margin - markerRadius - 18, canvasSize.width * 0.82)
+        guard maxX > minX else { return [] }
+
+        let laneFractions: [CGFloat] = [0.0, 0.18, 0.34, 0.5, 0.66, 0.82, 1.0]
+        let rowFractions: [CGFloat] = [0.12, 0.34, 0.58, 0.82]
+        let width = maxX - minX
+        let height = yRange.upperBound - yRange.lowerBound
+        var candidates = [CGPoint]()
+
+        for lane in laneFractions {
+            for row in rowFractions {
+                candidates.append(CGPoint(
+                    x: min(max(minX + width * lane + CGFloat.random(in: -26...26, using: &generator), minX), maxX),
+                    y: min(max(yRange.lowerBound + height * row + CGFloat.random(in: -14...14, using: &generator), yRange.lowerBound), yRange.upperBound)
+                ))
+            }
+        }
+
+        for _ in 0..<18 {
+            candidates.append(CGPoint(
+                x: CGFloat.random(in: minX...maxX, using: &generator),
+                y: CGFloat.random(in: yRange, using: &generator)
+            ))
+        }
+
+        return candidates
+    }
+
+    private func selectedCompanionPoint(
+        anchorPoint: CGPoint,
+        candidates: [CGPoint],
+        minimumDistance: CGFloat,
+        avoidRect: CGRect,
+        generator: inout SeededGenerator
+    ) -> CGPoint? {
+        guard !candidates.isEmpty else { return nil }
+
+        let scoredCandidates = candidates.map { candidate in
+            let companionDistance = distance(from: anchorPoint, to: candidate)
+            let xSeparation = abs(anchorPoint.x - candidate.x)
+            let ySeparation = abs(anchorPoint.y - candidate.y)
+            let edgeInset = min(candidate.x, canvasSize.width - candidate.x)
+            let edgePenalty = max(0, canvasSize.width * 0.14 - edgeInset)
+            let textCrossPenalty = segmentIntersectsRect(from: anchorPoint, to: candidate, rect: avoidRect) ? 180.0 : 0
+            let score = companionDistance
+                + xSeparation * 0.42
+                - ySeparation * 0.14
+                - edgePenalty * 2.2
+                - textCrossPenalty
+
+            return (candidate: candidate, distance: companionDistance, score: score)
+        }
+
+        let eligibleCandidates = scoredCandidates.filter { $0.distance >= minimumDistance }
+        let pool = eligibleCandidates.isEmpty ? scoredCandidates : eligibleCandidates
+        let bestCandidates = pool
+            .sorted { $0.score > $1.score }
+            .prefix(10)
+
+        return Array(bestCandidates).randomElement(using: &generator)?.candidate
+    }
+
+    private func selectedCandidatePair(
+        candidates: [CGPoint],
+        minimumDistance: CGFloat,
+        preferredYRange: ClosedRange<CGFloat>? = nil,
+        avoidRect: CGRect = .null,
+        generator: inout SeededGenerator
+    ) -> (CGPoint, CGPoint)? {
+        guard candidates.count > 1 else { return nil }
+
+        var scoredPairs: [(first: CGPoint, second: CGPoint, distance: CGFloat, score: CGFloat)] = []
+        for firstIndex in 0..<(candidates.count - 1) {
+            for secondIndex in (firstIndex + 1)..<candidates.count {
+                let first = candidates[firstIndex]
+                let second = candidates[secondIndex]
+                let pairDistance = distance(from: first, to: second)
+                let xSeparation = abs(first.x - second.x)
+                let ySeparation = abs(first.y - second.y)
+                let edgeInset = min(
+                    first.x,
+                    canvasSize.width - first.x,
+                    second.x,
+                    canvasSize.width - second.x
+                )
+                let edgePenalty = max(0, canvasSize.width * 0.15 - edgeInset)
+                let preferredCount = preferredYRange.map { range in
+                    CGFloat([first, second].filter { range.contains($0.y) }.count)
+                } ?? 0
+                let upperBias = max(0, canvasSize.height * 0.46 - ((first.y + second.y) / 2)) * 0.12
+                let textCrossPenalty = segmentIntersectsRect(from: first, to: second, rect: avoidRect) ? 170.0 : 0
+                let score = pairDistance
+                    + xSeparation * 0.55
+                    - ySeparation * 0.2
+                    - edgePenalty * 2.4
+                    + preferredCount * 115
+                    + upperBias
+                    - textCrossPenalty
+                scoredPairs.append((first, second, pairDistance, score))
+            }
+        }
+
+        let eligiblePairs = scoredPairs.filter { $0.distance >= minimumDistance * 0.72 }
+        let pairPool = eligiblePairs.isEmpty ? scoredPairs : eligiblePairs
+        let topPairs = pairPool
+            .sorted { $0.score > $1.score }
+            .prefix(8)
+
+        guard let selectedPair = Array(topPairs).randomElement(using: &generator) else {
+            return nil
+        }
+
+        return (selectedPair.first, selectedPair.second)
+    }
+
     private func visibleMarkerPoint(
         candidates: [CGPoint],
         forbiddenRects: [CGRect],
@@ -582,12 +823,13 @@ private struct NeonWiggleRoute: View {
     private func smoothedRoutePoints(
         _ points: [CGPoint],
         keepOutRects: [CGRect],
-        margin: CGFloat
+        margin: CGFloat,
+        passes: Int = 5
     ) -> [CGPoint] {
         guard points.count > 3 else { return points }
 
         var smoothed = points
-        for _ in 0..<5 {
+        for _ in 0..<max(0, passes) {
             var next = smoothed
             for index in 1..<(smoothed.count - 1) {
                 let previous = smoothed[index - 1]
@@ -607,6 +849,80 @@ private struct NeonWiggleRoute: View {
         }
 
         return smoothed
+    }
+
+    private func minimumSpacingRoutePoints(
+        _ points: [CGPoint],
+        minimumDistance: CGFloat
+    ) -> [CGPoint] {
+        guard points.count > 2 else { return points }
+
+        var filtered = [points[0]]
+        for index in 1..<(points.count - 1) {
+            let point = points[index]
+            let nextPoint = points[index + 1]
+
+            if let last = filtered.last,
+               shouldKeepRoutePoint(
+                previousKeptPoint: last,
+                candidatePoint: point,
+                nextPoint: nextPoint,
+                minimumDistance: minimumDistance
+               ) {
+                filtered.append(point)
+            }
+        }
+
+        if let lastPoint = points.last {
+            if let previous = filtered.last, distance(from: previous, to: lastPoint) < minimumDistance {
+                if filtered.count > 1 {
+                    filtered.removeLast()
+                }
+            }
+            filtered.append(lastPoint)
+        }
+
+        return filtered
+    }
+
+    private func shouldKeepRoutePoint(
+        previousKeptPoint: CGPoint,
+        candidatePoint: CGPoint,
+        nextPoint: CGPoint,
+        minimumDistance: CGFloat
+    ) -> Bool {
+        let distanceToPrevious = distance(from: previousKeptPoint, to: candidatePoint)
+        if distanceToPrevious >= minimumDistance {
+            return true
+        }
+
+        let turnPreservationDistance = max(150, minimumDistance * 0.52)
+        guard distanceToPrevious >= turnPreservationDistance else { return false }
+
+        let turnAngle = angleBetweenSegments(
+            from: previousKeptPoint,
+            through: candidatePoint,
+            to: nextPoint
+        )
+        return turnAngle >= 0.42
+    }
+
+    private func angleBetweenSegments(
+        from first: CGPoint,
+        through second: CGPoint,
+        to third: CGPoint
+    ) -> CGFloat {
+        let vector1 = CGPoint(x: second.x - first.x, y: second.y - first.y)
+        let vector2 = CGPoint(x: third.x - second.x, y: third.y - second.y)
+        let length1 = sqrt((vector1.x * vector1.x) + (vector1.y * vector1.y))
+        let length2 = sqrt((vector2.x * vector2.x) + (vector2.y * vector2.y))
+        guard length1 > 0.001, length2 > 0.001 else { return 0 }
+
+        let normalizedDot = max(
+            -1,
+            min(1, ((vector1.x * vector2.x) + (vector1.y * vector2.y)) / (length1 * length2))
+        )
+        return acos(normalizedDot)
     }
 
     private func adjustedRect(
@@ -632,6 +948,63 @@ private struct NeonWiggleRoute: View {
         let dx = first.x - second.x
         let dy = first.y - second.y
         return sqrt((dx * dx) + (dy * dy))
+    }
+
+    private func segmentIntersectsRect(
+        from first: CGPoint,
+        to second: CGPoint,
+        rect: CGRect
+    ) -> Bool {
+        guard !rect.isNull && !rect.isEmpty else { return false }
+        if rect.contains(first) || rect.contains(second) {
+            return true
+        }
+
+        let topLeft = CGPoint(x: rect.minX, y: rect.minY)
+        let topRight = CGPoint(x: rect.maxX, y: rect.minY)
+        let bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
+        let bottomRight = CGPoint(x: rect.maxX, y: rect.maxY)
+
+        return segmentsIntersect(first, second, topLeft, topRight)
+            || segmentsIntersect(first, second, topRight, bottomRight)
+            || segmentsIntersect(first, second, bottomRight, bottomLeft)
+            || segmentsIntersect(first, second, bottomLeft, topLeft)
+    }
+
+    private func segmentsIntersect(
+        _ firstStart: CGPoint,
+        _ firstEnd: CGPoint,
+        _ secondStart: CGPoint,
+        _ secondEnd: CGPoint
+    ) -> Bool {
+        func cross(_ origin: CGPoint, _ pointA: CGPoint, _ pointB: CGPoint) -> CGFloat {
+            (pointA.x - origin.x) * (pointB.y - origin.y) - (pointA.y - origin.y) * (pointB.x - origin.x)
+        }
+
+        func onSegment(_ point: CGPoint, _ segmentStart: CGPoint, _ segmentEnd: CGPoint) -> Bool {
+            let epsilon: CGFloat = 0.0001
+            return point.x >= min(segmentStart.x, segmentEnd.x) - epsilon
+                && point.x <= max(segmentStart.x, segmentEnd.x) + epsilon
+                && point.y >= min(segmentStart.y, segmentEnd.y) - epsilon
+                && point.y <= max(segmentStart.y, segmentEnd.y) + epsilon
+        }
+
+        let d1 = cross(firstStart, firstEnd, secondStart)
+        let d2 = cross(firstStart, firstEnd, secondEnd)
+        let d3 = cross(secondStart, secondEnd, firstStart)
+        let d4 = cross(secondStart, secondEnd, firstEnd)
+        let epsilon: CGFloat = 0.0001
+
+        if ((d1 > epsilon && d2 < -epsilon) || (d1 < -epsilon && d2 > epsilon))
+            && ((d3 > epsilon && d4 < -epsilon) || (d3 < -epsilon && d4 > epsilon)) {
+            return true
+        }
+
+        if abs(d1) <= epsilon && onSegment(secondStart, firstStart, firstEnd) { return true }
+        if abs(d2) <= epsilon && onSegment(secondEnd, firstStart, firstEnd) { return true }
+        if abs(d3) <= epsilon && onSegment(firstStart, secondStart, secondEnd) { return true }
+        if abs(d4) <= epsilon && onSegment(firstEnd, secondStart, secondEnd) { return true }
+        return false
     }
 
     private func diagonalDistance() -> CGFloat {
@@ -928,6 +1301,12 @@ private struct NeonWiggleRoute: View {
         case top
         case bottom
     }
+
+    private enum EndpointAnchorMode {
+        case upperGap
+        case nearDevice
+    }
+
     private enum SurpriseStyle: CaseIterable {
         case slingshot
         case sideSwipe
@@ -1274,6 +1653,8 @@ struct AppStorePhoneCanvas<Content: View>: View {
 }
 
 enum ScreenshotSampleData {
+    private static let screenshotReferenceMonth = 1
+    private static let screenshotReferenceYear = 2026
     private static let liveBundle: ScreenshotFakeDataBundle? = loadLiveBundle()
     private static let liveRunEditsByID: [UUID: RunEdit] = {
         guard let liveBundle else { return [:] }
@@ -1312,9 +1693,11 @@ enum ScreenshotSampleData {
         tags: [String],
         workoutType: WorkoutType,
         speedMultiplier: Double = 1.0,
-        withAngles: Bool = false
+        withAngles: Bool = false,
+        locationLimit: Int = 420
     ) -> RunStatistic {
-        let locations = shiftedLocations(from: startDate, speedMultiplier: speedMultiplier)
+        let normalizedStartDate = shiftedToReferenceYear(startDate)
+        let locations = shiftedLocations(from: normalizedStartDate, limit: locationLimit, speedMultiplier: speedMultiplier)
         var statistic = RunStatistic(
             id: id,
             runName: name,
@@ -1327,8 +1710,8 @@ enum ScreenshotSampleData {
             locationData: locations,
             tags: tags,
             workoutType: workoutType,
-            startDate: startDate,
-            endDate: locations.last?.timestamp ?? startDate.addingTimeInterval(runTime * 60),
+            startDate: normalizedStartDate,
+            endDate: locations.last?.timestamp ?? normalizedStartDate.addingTimeInterval(runTime * 60),
             topSpeed1s: topSpeed + 1.4,
             topSpeed10s: topSpeed - 4.2,
             popUps: 7,
@@ -1336,7 +1719,7 @@ enum ScreenshotSampleData {
             turnsCount: 808
         )
         statistic.averageHeartRate = 131
-        statistic.locationString = locationString
+        statistic.locationString = normalizedLocationString(locationString)
         statistic.startLocation = locations.first
         statistic.longestDistanceOnFoil = 1280
         statistic.angles = withAngles ? sampleAngles(from: locations) : []
@@ -1381,25 +1764,59 @@ enum ScreenshotSampleData {
             return liveStatisticsCache
         }
 
-        return [
+        func fallbackStatistic(
+            id: String,
+            name: String,
+            day: Int,
+            hour: Int,
+            minute: Int,
+            location: String,
+            runTime: Double,
+            distance: Double,
+            topSpeed: Double,
+            averageSpeed: Double,
+            tags: [String],
+            workoutType: WorkoutType,
+            speedMultiplier: Double
+        ) -> RunStatistic {
             statistic(
-                id: UUID(uuidString: "CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC") ?? UUID(),
+                id: UUID(uuidString: id) ?? UUID(),
+                name: name,
+                startDate: date(year: 2025, month: 1, day: day, hour: hour, minute: minute),
+                locationString: location,
+                runTime: runTime,
+                distance: distance,
+                topSpeed: topSpeed,
+                averageSpeed: averageSpeed,
+                tags: tags,
+                workoutType: workoutType,
+                speedMultiplier: speedMultiplier
+            )
+        }
+
+        return [
+            fallbackStatistic(
+                id: "CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC",
                 name: "DW SUP Foil",
-                startDate: date(year: 2025, month: 1, day: 28, hour: 15, minute: 10),
-                locationString: "Neuenburg -> St-Blaise",
+                day: 28,
+                hour: 15,
+                minute: 10,
+                location: "Neuenburg -> St-Blaise",
                 runTime: 22.83,
                 distance: 5320,
                 topSpeed: 24,
                 averageSpeed: 14,
-                tags: ["#850S"],
+                tags: ["#3frigate", "#4.7frigate", "#4brm", "#105dw", "#1130S", "#850S"],
                 workoutType: .downwindSUPFoil,
                 speedMultiplier: 0.78
             ),
-            statistic(
-                id: UUID(uuidString: "DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD") ?? UUID(),
+            fallbackStatistic(
+                id: "DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD",
                 name: "DW SUP Foil",
-                startDate: date(year: 2025, month: 1, day: 28, hour: 12, minute: 46),
-                locationString: "Concise → St-Blaise",
+                day: 28,
+                hour: 12,
+                minute: 46,
+                location: "Concise → St-Blaise",
                 runTime: 107,
                 distance: 30930,
                 topSpeed: 29,
@@ -1408,11 +1825,148 @@ enum ScreenshotSampleData {
                 workoutType: .downwindSUPFoil,
                 speedMultiplier: 1.02
             ),
-            statistic(
-                id: UUID(uuidString: "EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE") ?? UUID(),
+            fallbackStatistic(
+                id: "ABABABAB-1111-1111-1111-111111111111",
+                name: "Foil Surf",
+                day: 26,
+                hour: 14,
+                minute: 24,
+                location: "Chez-le-Bart",
+                runTime: 61,
+                distance: 11840,
+                topSpeed: 23.4,
+                averageSpeed: 11.6,
+                tags: ["#980S", "#foil"],
+                workoutType: .foilSurf,
+                speedMultiplier: 0.86
+            ),
+            fallbackStatistic(
+                id: "ABABABAB-2222-2222-2222-222222222222",
+                name: "DW SUP Foil",
+                day: 24,
+                hour: 11,
+                minute: 18,
+                location: "Neuenburg -> St-Blaise",
+                runTime: 94,
+                distance: 27420,
+                topSpeed: 31.3,
+                averageSpeed: 17.5,
+                tags: ["#4brm", "#850S"],
+                workoutType: .downwindSUPFoil,
+                speedMultiplier: 0.98
+            ),
+            fallbackStatistic(
+                id: "ABABABAB-3333-3333-3333-333333333333",
+                name: "Parawing",
+                day: 21,
+                hour: 13,
+                minute: 2,
+                location: "Saint-Aubin-Sauges",
+                runTime: 88,
+                distance: 16240,
+                topSpeed: 20.1,
+                averageSpeed: 11.1,
+                tags: ["#4.5ensis", "#720S"],
+                workoutType: .parawing,
+                speedMultiplier: 0.74
+            ),
+            fallbackStatistic(
+                id: "ABABABAB-4444-4444-4444-444444444444",
+                name: "DW SUP",
+                day: 18,
+                hour: 12,
+                minute: 11,
+                location: "Neuenburg -> Concise",
+                runTime: 96,
+                distance: 22130,
+                topSpeed: 19.8,
+                averageSpeed: 13.9,
+                tags: ["#105dw", "#1300S"],
+                workoutType: .downwindSUP,
+                speedMultiplier: 0.82
+            ),
+            fallbackStatistic(
+                id: "ABABABAB-5555-5555-5555-555555555555",
+                name: "DW SUP Foil",
+                day: 17,
+                hour: 10,
+                minute: 48,
+                location: "Neuenburg -> St-Blaise",
+                runTime: 102,
+                distance: 29840,
+                topSpeed: 32.2,
+                averageSpeed: 17.9,
+                tags: ["#1130S", "#850S"],
+                workoutType: .downwindSUPFoil,
+                speedMultiplier: 1.01
+            ),
+            fallbackStatistic(
+                id: "ABABABAB-6666-6666-6666-666666666666",
+                name: "Parawing",
+                day: 14,
+                hour: 15,
+                minute: 36,
+                location: "Saint-Aubin-Sauges",
+                runTime: 72,
+                distance: 13590,
+                topSpeed: 18.7,
+                averageSpeed: 10.8,
+                tags: ["#4.5ensis", "#720S"],
+                workoutType: .parawing,
+                speedMultiplier: 0.7
+            ),
+            fallbackStatistic(
+                id: "ABABABAB-7777-7777-7777-777777777777",
+                name: "Foil Surf",
+                day: 12,
+                hour: 9,
+                minute: 54,
+                location: "Neuenburg",
+                runTime: 54,
+                distance: 9630,
+                topSpeed: 21.9,
+                averageSpeed: 10.7,
+                tags: ["#foil", "#980S"],
+                workoutType: .foilSurf,
+                speedMultiplier: 0.83
+            ),
+            fallbackStatistic(
+                id: "ABABABAB-8888-8888-8888-888888888888",
+                name: "DW SUP Foil",
+                day: 9,
+                hour: 12,
+                minute: 27,
+                location: "Concise → St-Blaise",
+                runTime: 109,
+                distance: 31520,
+                topSpeed: 30.6,
+                averageSpeed: 17.3,
+                tags: ["#850S", "#770R"],
+                workoutType: .downwindSUPFoil,
+                speedMultiplier: 1.0
+            ),
+            fallbackStatistic(
+                id: "ABABABAB-9999-9999-9999-999999999999",
+                name: "Parawing",
+                day: 5,
+                hour: 11,
+                minute: 41,
+                location: "Saint-Aubin-Sauges",
+                runTime: 83,
+                distance: 14910,
+                topSpeed: 19.2,
+                averageSpeed: 10.9,
+                tags: ["#4.5ensis", "#700R"],
+                workoutType: .parawing,
+                speedMultiplier: 0.73
+            ),
+            fallbackStatistic(
+                id: "EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE",
                 name: "DW Parawing",
-                startDate: date(year: 2025, month: 1, day: 2, hour: 12, minute: 7),
-                locationString: "Saint-Aubin-Sauges",
+                day: 2,
+                hour: 12,
+                minute: 7,
+                location: "Saint-Aubin-Sauges",
                 runTime: 164,
                 distance: 9470,
                 topSpeed: 9.1,
@@ -1448,6 +2002,7 @@ enum ScreenshotSampleData {
                 speedMultiplier: 0.96
             )
         ]
+        .sorted(by: { ($0.startDate ?? .distantPast) > ($1.startDate ?? .distantPast) })
     }
 
     static func importRun(from statistic: RunStatistic) -> ImportRun {
@@ -1486,7 +2041,7 @@ enum ScreenshotSampleData {
         manager.statisticsCount = stats.count
         manager.importedRuns = liveBundle?.importRuns ?? stats.map(importRun(from:))
         manager.runEdits = liveBundle?.runEdits ?? stats.compactMap(makeRunEditFallback(from:))
-        manager.tags = uniqueStrings(stats.flatMap { $0.tags ?? [] })
+        manager.tags = sortedScreenshotTags(uniqueStrings(stats.flatMap { $0.tags ?? [] }))
         manager.locationStrings = uniqueStrings(stats.compactMap(\.locationString))
         manager.workoutUsageCount = Dictionary(grouping: stats.compactMap(\.workoutType), by: { $0 }).mapValues(\.count)
         manager.updateGroupedRunArray()
@@ -1511,18 +2066,18 @@ enum ScreenshotSampleData {
     static func makeDashboardManager() -> TrackedElementsManager {
         let manager = TrackedElementsManager()
         manager.showWidgetTap = false
+        let updated = Date().addingTimeInterval(-120)
 
         if let liveBundle {
-            manager.dashboards = liveBundle.dashboards
+            manager.dashboards = normalizedDashboards(liveBundle.dashboards, updated: updated)
             manager.widgetDashboardIds = liveBundle.widgetDashboardIds
             return manager
         }
 
-        let updated = date(year: 2025, month: 1, day: 28, hour: 14, minute: 41)
         let bielerseeURL = "https://wind.example/bielersee"
         let neuchURL = "https://wind.example/neuchatel"
 
-        manager.dashboards = [
+        manager.dashboards = normalizedDashboards([
             Dashboard(
                 name: "Bielersee",
                 elements: [
@@ -1538,23 +2093,26 @@ enum ScreenshotSampleData {
                 ]
             ),
             Dashboard(
-                name: "Lac de Neuchatel",
+                name: "Lac de Neuchâtel",
                 elements: [
-                    trackedElement(url: neuchURL, label: "Yverdon Avg", value: "0.0 kn", updated: updated),
-                    trackedElement(url: neuchURL, label: "Yverdon Gust", value: "0.0 kn", updated: updated),
-                    trackedElement(url: neuchURL, label: "Yverdon Dir", value: "-", updated: updated),
-                    trackedElement(url: neuchURL, label: "Yv Avg", value: "4.3 kn", updated: updated),
-                    trackedElement(url: neuchURL, label: "Yv Gust", value: "7.0 kn", updated: updated),
-                    trackedElement(url: neuchURL, label: "Yv Dir", value: "ENE", updated: updated),
-                    trackedElement(url: neuchURL, label: "Concise Avg", value: "12.0 kn", updated: updated),
-                    trackedElement(url: neuchURL, label: "Concise Gust", value: "13.0 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yverdon Avg", value: "18.9 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yverdon Gust", value: "20.5 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yverdon Dir", value: "NE", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yv Avg", value: "15.4 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yv Gust", value: "19.1 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yv Dir", value: "NE", updated: updated),
+                    trackedElement(url: neuchURL, label: "Concise Avg", value: "13.9 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Concise Gust", value: "21.2 kn", updated: updated),
                     trackedElement(url: neuchURL, label: "Concise Dir", value: "NE", updated: updated),
-                    trackedElement(url: neuchURL, label: "Estavayer Avg", value: "1.7 kn", updated: updated),
-                    trackedElement(url: neuchURL, label: "Estavayer Gust", value: "2.6 kn", updated: updated),
-                    trackedElement(url: neuchURL, label: "Estavayer Dir", value: "NNE", updated: updated)
+                    trackedElement(url: neuchURL, label: "Estavayer Avg", value: "7.8 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Estavayer Gust", value: "13.9 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Estavayer Dir", value: "NE", updated: updated),
+                    trackedElement(url: neuchURL, label: "Neuch Avg", value: "11.9 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Neuch Gust", value: "16.7 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Neuch Dir", value: "ENE", updated: updated)
                 ]
             )
-        ]
+        ], updated: updated)
         manager.widgetDashboardIds = manager.dashboards.map(\.id)
         return manager
     }
@@ -1576,19 +2134,26 @@ enum ScreenshotSampleData {
     }
 
     static func mapStatistic() -> RunStatistic {
-        bestMapStatistic() ?? featuredStatistic(id: liveBundle?.featured.mapRunID) ?? statistic(
+        longestDownwindStatistic() ?? bestMapStatistic() ?? featuredStatistic(id: liveBundle?.featured.mapRunID) ?? statistic(
             id: UUID(uuidString: "23232323-2323-2323-2323-232323232323") ?? UUID(),
             name: "Simple Route",
-            startDate: date(year: 2025, month: 3, day: 7, hour: 11, minute: 29),
-            locationString: "Neuenburg -> St-Blaise",
-            runTime: 64,
-            distance: 14520,
-            topSpeed: 27.5,
-            averageSpeed: 13.6,
-            tags: ["#simple", "#map"],
+            startDate: date(year: 2025, month: 4, day: 1, hour: 12, minute: 48),
+            locationString: "Cortaillod -> Yverdon-les-Bains",
+            runTime: 118,
+            distance: 36320,
+            topSpeed: 34,
+            averageSpeed: 18.5,
+            tags: ["#simple", "#map", "#long"],
             workoutType: .downwindSUPFoil,
-            speedMultiplier: 0.92
+            speedMultiplier: 1.04,
+            locationLimit: 620
         )
+    }
+
+    static func editStatistic() -> RunStatistic {
+        longestDownwindStatistic()
+        ?? bestDetailStatistic()
+        ?? mapStatistic()
     }
 
     static func detailStatistic() -> RunStatistic {
@@ -1656,7 +2221,7 @@ enum ScreenshotSampleData {
         if !places.isEmpty {
             return Array(places.prefix(2))
         }
-        return ["Saint-Aubin-Sauges -> St-Blaise", "Only sessions with angles"]
+        return ["Saint-Aubin-Sauges → St-Blaise", "Only sessions with angles"]
     }
 
     private static func loadLiveBundle() -> ScreenshotFakeDataBundle? {
@@ -1671,12 +2236,13 @@ enum ScreenshotSampleData {
                 bundle.url(forResource: "AppStoreScreenshotData", withExtension: "json")
             ]
         }.compactMap { $0 }
-        let candidateURLs = bundledCandidateURLs + unbundledCandidateURLs(in: sourceDirectory)
+        let unbundledCandidateURLs = unbundledCandidateURLs(in: sourceDirectory)
+        let candidateURLs = unbundledCandidateURLs + bundledCandidateURLs
 
         for url in candidateURLs where FileManager.default.fileExists(atPath: url.path) {
             if let data = try? Data(contentsOf: url, options: .mappedIfSafe),
                let bundle = try? decoder.decode(ScreenshotFakeDataBundle.self, from: data) {
-                return bundle
+                return normalized(bundle: bundle)
             }
         }
 
@@ -1684,8 +2250,6 @@ enum ScreenshotSampleData {
     }
 
     private static func unbundledCandidateURLs(in sourceDirectory: URL) -> [URL] {
-        guard shouldLoadUnbundledFixture else { return [] }
-
         return [
             sourceDirectory.appendingPathComponent(".screenshot-data/AppStoreScreenshotData.json"),
             sourceDirectory.appendingPathComponent(".screenshot-data/AppStoreScreenshotData-2025.json"),
@@ -1828,7 +2392,7 @@ enum ScreenshotSampleData {
         let totalTime = edit?.newTotalTime ?? run.runTime
         let averageSpeed = edit?.newAverageSpeed ?? run.averageSpeed
         let topSpeed = edit?.newTopSpeed ?? run.topSpeed
-        let startDate = run.startLocation?.timestamp ?? run.locations.first?.timestamp ?? .now
+        let startDate = shiftedToReferenceYear(run.startLocation?.timestamp ?? run.locations.first?.timestamp ?? .now)
         let endDate = run.locations.last?.timestamp ?? startDate.addingTimeInterval(totalTime * 60)
         let calories = max(distance / 28, 320)
         let tags = edit?.newTags ?? run.tags
@@ -1854,7 +2418,7 @@ enum ScreenshotSampleData {
             turnsCount: edit?.turnsCount ?? (workoutType.countTurns ? 34 : 0)
         )
         statistic.averageHeartRate = run.averageHeartRate > 0 ? run.averageHeartRate : nil
-        statistic.locationString = edit?.locationString ?? run.locationString
+        statistic.locationString = normalizedLocationString(edit?.locationString ?? run.locationString)
         statistic.startLocation = edit?.startLocation ?? run.startLocation ?? run.locations.first
         statistic.longestDistanceOnFoil = edit?.longestDistanceOnFoil
         statistic.angles = edit?.angles ?? []
@@ -1928,6 +2492,12 @@ enum ScreenshotSampleData {
         return frequentValues(from: values)
     }
 
+    private static func sortedScreenshotTags(_ values: [String]) -> [String] {
+        values.sorted { lhs, rhs in
+            lhs.localizedStandardCompare(rhs) == .orderedAscending
+        }
+    }
+
     private static func sampleAngles(from locations: [LocationData]) -> [MapAngle] {
         guard locations.count > 310 else { return [] }
 
@@ -1953,8 +2523,125 @@ enum ScreenshotSampleData {
         TrackedElement(url: url, xpath: "//value", userLabel: label, lastValue: value, lastUpdated: updated, lastError: nil)
     }
 
+    private static func longestDownwindStatistic() -> RunStatistic? {
+        listStatistics()
+            .filter { ($0.workoutType ?? .surf).isDWSport }
+            .max(by: {
+                if $0.runDistance == $1.runDistance {
+                    return ($0.averageSpeed ?? 0) < ($1.averageSpeed ?? 0)
+                }
+                return $0.runDistance < $1.runDistance
+            })
+    }
+
+    private static func normalizedDashboards(_ dashboards: [Dashboard], updated: Date) -> [Dashboard] {
+        dashboards.map { dashboard in
+            if dashboard.name == "Bielersee" {
+                return dashboard
+            }
+
+            let lowercasedName = dashboard.name.lowercased()
+            guard lowercasedName.contains("neuch") else {
+                return dashboard
+            }
+
+            let neuchURL = dashboard.elements.first?.url ?? "https://wind.example/neuchatel"
+            return Dashboard(
+                id: dashboard.id,
+                name: "Lac de Neuchâtel",
+                elements: [
+                    trackedElement(url: neuchURL, label: "Yverdon Avg", value: "18.9 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yverdon Gust", value: "20.5 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yverdon Dir", value: "NE", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yv Avg", value: "15.4 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yv Gust", value: "19.1 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Yv Dir", value: "NE", updated: updated),
+                    trackedElement(url: neuchURL, label: "Concise Avg", value: "13.9 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Concise Gust", value: "21.2 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Concise Dir", value: "NE", updated: updated),
+                    trackedElement(url: neuchURL, label: "Estavayer Avg", value: "7.8 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Estavayer Gust", value: "13.9 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Estavayer Dir", value: "NE", updated: updated),
+                    trackedElement(url: neuchURL, label: "Neuch Avg", value: "11.9 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Neuch Gust", value: "16.7 kn", updated: updated),
+                    trackedElement(url: neuchURL, label: "Neuch Dir", value: "ENE", updated: updated)
+                ]
+            )
+        }
+    }
+
+    private static func normalized(bundle: ScreenshotFakeDataBundle) -> ScreenshotFakeDataBundle {
+        var normalized = bundle
+        normalized.sourceYear = screenshotReferenceYear
+        normalized.exportedAt = shiftedToReferenceYear(bundle.exportedAt)
+        normalized.importRuns = bundle.importRuns.map(normalizedImportRun(_:))
+        normalized.queuedImportRuns = bundle.queuedImportRuns.map(normalizedImportRun(_:))
+        normalized.runEdits = bundle.runEdits.map(normalizedRunEdit(_:))
+        normalized.featured.highlightedPlaces = bundle.featured.highlightedPlaces.map { normalizedLocationString($0) ?? $0 }
+        return normalized
+    }
+
+    private static func normalizedImportRun(_ run: ImportRun) -> ImportRun {
+        ImportRun(
+            id: run.id,
+            runTime: run.runTime,
+            topSpeed: run.topSpeed,
+            averageSpeed: run.averageSpeed,
+            totalDistance: run.totalDistance,
+            startLocation: run.startLocation.map(normalizedLocationData(_:)),
+            locations: run.locations.map(normalizedLocationData(_:)),
+            heartRates: run.heartRates.map(normalizedHeartRate(_:)),
+            averageHeartRate: run.averageHeartRate,
+            workoutType: run.workoutType,
+            tags: run.tags,
+            locationString: normalizedLocationString(run.locationString)
+        )
+    }
+
+    private static func normalizedRunEdit(_ edit: RunEdit) -> RunEdit {
+        var normalized = edit
+        normalized.startLocation = edit.startLocation.map(normalizedLocationData(_:))
+        normalized.finishLocation = edit.finishLocation.map(normalizedLocationData(_:))
+        normalized.deletedLocations = edit.deletedLocations?.map(normalizedLocationData(_:))
+        normalized.waves = edit.waves?.map { $0.map(normalizedLocationData(_:)) }
+        normalized.locationString = normalizedLocationString(edit.locationString)
+        return normalized
+    }
+
+    private static func normalizedLocationData(_ location: LocationData) -> LocationData {
+        var normalized = location
+        normalized.timestamp = shiftedToReferenceYear(location.timestamp)
+        return normalized
+    }
+
+    private static func normalizedHeartRate(_ heartRate: HeartRate) -> HeartRate {
+        HeartRate(date: shiftedToReferenceYear(heartRate.date), heartRate: heartRate.heartRate)
+    }
+
+    private static func normalizedLocationString(_ value: String?) -> String? {
+        guard let value else { return nil }
+        return value
+            .replacingOccurrences(of: " -> ", with: " → ")
+            .replacingOccurrences(of: "->", with: "→")
+    }
+
+    private static func shiftedToReferenceYear(_ date: Date) -> Date {
+        var components = Calendar.current.dateComponents([.month, .day, .hour, .minute, .second, .nanosecond], from: date)
+        components.year = screenshotReferenceYear
+        components.month = screenshotReferenceMonth
+        return Calendar.current.date(from: components) ?? date
+    }
+
     private static func date(year: Int, month: Int, day: Int, hour: Int, minute: Int) -> Date {
-        Calendar.current.date(from: DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)) ?? .now
+        Calendar.current.date(
+            from: DateComponents(
+                year: screenshotReferenceYear,
+                month: month,
+                day: day,
+                hour: hour,
+                minute: minute
+            )
+        ) ?? .now
     }
 }
 
@@ -2042,29 +2729,60 @@ struct ScreenshotExportRunView: View {
 
 struct ScreenshotPlacesView: View {
     @StateObject private var downwindManager = ScreenshotSampleData.makeDownwindManager()
+    @State private var path: [ScreenshotRoute] = [.places]
 
     var body: some View {
-        NavigationStack {
-            GroupedTagsListView(
-                downwindManager: downwindManager,
-                initialLocation: "",
-                initialShowOnlyAngles: false,
-                initialTab: .locations
-            )
+        NavigationStack(path: $path) {
+            Color.clear
+                .navigationDestination(for: ScreenshotRoute.self) { route in
+                    switch route {
+                    case .statisticsOverview:
+                        StatisticsView(downwindManager: downwindManager)
+                    case .places:
+                        GroupedTagsListView(
+                            downwindManager: downwindManager,
+                            initialLocation: "Neuenburg → St-Blaise",
+                            initialShowOnlyAngles: false,
+                            initialTab: .locations
+                        )
+                    case .tags:
+                        GroupedTagsListView(
+                            downwindManager: downwindManager,
+                            initialTags: ScreenshotSampleData.highlightedTags(),
+                            initialTab: .tags
+                        )
+                    }
+                }
         }
     }
 }
 
 struct ScreenshotTagsView: View {
     @StateObject private var downwindManager = ScreenshotSampleData.makeDownwindManager()
+    @State private var path: [ScreenshotRoute] = [.tags]
 
     var body: some View {
-        NavigationStack {
-            GroupedTagsListView(
-                downwindManager: downwindManager,
-                initialTags: ScreenshotSampleData.highlightedTags(),
-                initialTab: .tags
-            )
+        NavigationStack(path: $path) {
+            Color.clear
+                .navigationDestination(for: ScreenshotRoute.self) { route in
+                    switch route {
+                    case .statisticsOverview:
+                        StatisticsView(downwindManager: downwindManager)
+                    case .places:
+                        GroupedTagsListView(
+                            downwindManager: downwindManager,
+                            initialLocation: "Neuenburg → St-Blaise",
+                            initialShowOnlyAngles: false,
+                            initialTab: .locations
+                        )
+                    case .tags:
+                        GroupedTagsListView(
+                            downwindManager: downwindManager,
+                            initialTags: ScreenshotSampleData.highlightedTags(),
+                            initialTab: .tags
+                        )
+                    }
+                }
         }
     }
 }
@@ -2348,12 +3066,38 @@ struct ScreenshotWaterSportsView: View {
 
 struct ScreenshotStatisticsOverviewView: View {
     @StateObject private var downwindManager = ScreenshotSampleData.makeDownwindManager()
+    @State private var path: [ScreenshotRoute] = [.statisticsOverview]
 
     var body: some View {
-        NavigationStack {
-            StatisticsView(downwindManager: downwindManager)
+        NavigationStack(path: $path) {
+            Color.clear
+                .navigationDestination(for: ScreenshotRoute.self) { route in
+                    switch route {
+                    case .statisticsOverview:
+                        StatisticsView(downwindManager: downwindManager)
+                    case .places:
+                        GroupedTagsListView(
+                            downwindManager: downwindManager,
+                            initialLocation: "Neuenburg → St-Blaise",
+                            initialShowOnlyAngles: false,
+                            initialTab: .locations
+                        )
+                    case .tags:
+                        GroupedTagsListView(
+                            downwindManager: downwindManager,
+                            initialTags: ScreenshotSampleData.highlightedTags(),
+                            initialTab: .tags
+                        )
+                    }
+                }
         }
     }
+}
+
+private enum ScreenshotRoute: Hashable {
+    case statisticsOverview
+    case places
+    case tags
 }
 
 struct ScreenshotEditRouteView: View {
@@ -2363,14 +3107,9 @@ struct ScreenshotEditRouteView: View {
         NavigationStack {
             ScreenshotStatisticContainer(
                 downwindManager: downwindManager,
-                statisticID: ScreenshotSampleData.mapStatistic().id
+                statisticID: ScreenshotSampleData.editStatistic().id
             ) { statistic in
                 EditMap(downwindManager: downwindManager, statisticsData: statistic)
-                    .overlay(alignment: .topLeading) {
-                        ScreenshotEditMenuOverlay()
-                            .padding(.top, 140)
-                            .padding(.leading, 26)
-                    }
             }
             .navigationTitle("Edit Route")
             .navigationBarTitleDisplayMode(.inline)
@@ -2502,7 +3241,7 @@ private struct ScreenshotDashboardWidgetCard: View {
                 }
             }
 
-            Text("Last updated just now")
+            Text("Last updated 2 min ago")
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
@@ -2532,7 +3271,7 @@ private struct ScreenshotRunDetailMockView: View {
                             .padding(.vertical, 7)
                             .background(Color.accentColor.opacity(0.14), in: Capsule())
 
-                        Text(statisticsData.locationString ?? "Neuenburg -> St-Blaise")
+                        Text(statisticsData.locationString ?? "Neuenburg → St-Blaise")
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
@@ -2714,7 +3453,7 @@ private struct ScreenshotResultCard: View {
 private struct ScreenshotStatisticSummaryCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("2025")
+            Text("2026")
                 .font(.title2.weight(.bold))
 
             ScreenshotInfoRow(title: "Sessions", value: "26 sessions on 14 days")

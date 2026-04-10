@@ -132,8 +132,7 @@ class TrackedElementsManager: ObservableObject {
             var foundArray = false
             for (index, elementArray) in nestedElements.enumerated() {
                 if elementArray.first!.url == element.url {
-                    let commonPrefix = elementArray.first!.userLabel.commonPrefix(with: element.userLabel)
-                    if commonPrefix.count >= 2 {
+                    if groupingLabel(for: elementArray.first!) == groupingLabel(for: element) {
                         nestedElements[index].append(element)
                         foundArray = true
                         break
@@ -160,11 +159,9 @@ class TrackedElementsManager: ObservableObject {
             
             for element in elements {
                 if label == nil {
-                    label = element.userLabel
+                    label = groupingLabel(for: element)
                 } else {
-                    let commonPrefix = label!
-                        .commonPrefix(with: element.userLabel)
-                    label = String(commonPrefix).trimmingCharacters(in: .whitespaces)
+                    label = groupingLabel(for: element)
                 }
                 
                 if url == nil {
@@ -186,6 +183,14 @@ class TrackedElementsManager: ObservableObject {
             
             return (label: label, url: url, error: error, rowText: rowText, directionDegrees: directionDegrees)
         }
+    }
+
+    private func groupingLabel(for element: TrackedElement) -> String {
+        let suffixes = [" Avg", " Gust", " Dir"]
+        for suffix in suffixes where element.userLabel.hasSuffix(suffix) {
+            return String(element.userLabel.dropLast(suffix.count))
+        }
+        return element.userLabel
     }
     
     func degreesForDirection(_ value: String) -> Double? {

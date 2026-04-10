@@ -1155,7 +1155,6 @@
 				78FD90112F8519000041C173 /* Surge in Frameworks */,
 				78FD90122F8519000041C173 /* XMLCoder in Frameworks */,
 				78FD90132F8519000041C173 /* Kanna in Frameworks */,
-				78FD90142F8519000041C173 /* AppScreenshotKit in Frameworks */,
 				78FD90152F8519000041C173 /* AppScreenshotKitTestTools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1823,7 +1822,6 @@
 				78320BBF2BB1C28400D6A772 /* Surge */,
 				78F047C72D9DA655003E11FA /* XMLCoder */,
 				78DB913B2E45F1D700B222C2 /* Kanna */,
-				78FD8F6C2F84FE280041C173 /* AppScreenshotKit */,
 				78FD90162F8519000041C173 /* AppScreenshotKitTestTools */,
 			);
 			productName = TrackerScreenshotTests;

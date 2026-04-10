@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct HelpView: View {
     @ObservedObject var downwindManager: DownwindManager

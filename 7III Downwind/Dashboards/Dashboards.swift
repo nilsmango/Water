@@ -5,6 +5,7 @@
 //  Created by Simon Lang on 28.07.2025.
 //
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct Dashboards: View {
     @ObservedObject var manager: TrackedElementsManager
