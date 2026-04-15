@@ -3957,14 +3957,17 @@ private extension ScreenshotSampleData {
     }
 }
 
+// A lil fake sheet
 struct ScreenshotHyeresAngleToolView: View {
-    @State private var showAngleMap = true
-
     var body: some View {
         let statistic = ScreenshotSampleData.hyeresStatistic()
 
-        Color.clear
-            .sheet(isPresented: $showAngleMap) {
+        ZStack {
+            Color.black.opacity(0.3)
+
+            VStack(spacing: 0) {
+                Spacer().frame(height: 60)
+
                 NavigationStack {
                     WindSportStatisticsMap(
                         downwindManager: DownwindManager(),
@@ -3973,15 +3976,19 @@ struct ScreenshotHyeresAngleToolView: View {
                     )
                     .navigationTitle(statistic.locationString ?? "Hyères")
                     .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: { showAngleMap = false }, label: {
-                                XMarkLabel()
-                            })
-                        }
-                    }
+//                    .toolbar {
+//                        ToolbarItem(placement: .navigationBarTrailing) {
+//                            Button(action: {}, label: {
+//                                XMarkLabel()
+//                            })
+//                        }
+//                    }
                 }
+                .clipShape(RoundedRectangle(cornerRadius: 43))
             }
+            
+        }
+        .ignoresSafeArea()
     }
 }
 #endif
