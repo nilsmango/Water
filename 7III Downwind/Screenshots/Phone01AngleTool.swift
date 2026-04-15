@@ -17,9 +17,9 @@ struct Phone01AngleTool: View, AppScreenshot {
             seed: 1901,
             titleLines: ["NEW:", "Angle Tool"],
             phoneOffsetY: 300,
-            phoneColorScheme: .dark
+            phoneColorScheme: .light
         ) {
-            ScreenshotAngleToolView()
+            ScreenshotHyeresAngleToolView()
         }
     }
 }

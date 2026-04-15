@@ -239,6 +239,7 @@ struct WindSportStatisticsMap: View {
                                         Button {
                                             if coordinates.count == 3 {
                                                 let newTool = MapAngle(coordinates: coordinates)
+//                                                print("ANGLE SAVED: \(newTool.coordinates.map { "CLLocationCoordinate2D(latitude: \($0.latitude), longitude: \($0.longitude))" }) — \(newTool.angle)")
                                                 coordinates = []
                                                 statisticsData.angles = (statisticsData.angles ?? []) + [newTool]
                                                 downwindManager.saveStatisticAngles(statisticsData: statisticsData)
