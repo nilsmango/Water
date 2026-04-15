@@ -1,5 +1,5 @@
 #if os(iOS)
-import AppScreenshotKit
+import Project7IIIScreenshots
 import CoreLocation
 import SwiftUI
 
@@ -2044,7 +2044,7 @@ enum ScreenshotSampleData {
         manager.tags = sortedScreenshotTags(uniqueStrings(stats.flatMap { $0.tags ?? [] }))
         manager.locationStrings = uniqueStrings(stats.compactMap(\.locationString))
         manager.workoutUsageCount = Dictionary(grouping: stats.compactMap(\.workoutType), by: { $0 }).mapValues(\.count)
-        manager.updateGroupedRunArray()
+        manager.updateGroupedRunArraySync()
         return manager
     }
 
@@ -3069,28 +3069,16 @@ struct ScreenshotWaterSportsView: View {
 
 struct ScreenshotStatisticsOverviewView: View {
     @StateObject private var downwindManager = ScreenshotSampleData.makeDownwindManager()
-    @State private var path: [ScreenshotRoute] = [.statisticsOverview]
 
     var body: some View {
-        NavigationStack(path: $path) {
-            Color.clear
-                .navigationDestination(for: ScreenshotRoute.self) { route in
-                    switch route {
-                    case .statisticsOverview:
-                        StatisticsView(downwindManager: downwindManager)
-                    case .places:
-                        GroupedTagsListView(
-                            downwindManager: downwindManager,
-                            initialLocation: "Neuenburg → St-Blaise",
-                            initialShowOnlyAngles: false,
-                            initialTab: .locations
-                        )
-                    case .tags:
-                        GroupedTagsListView(
-                            downwindManager: downwindManager,
-                            initialTags: ScreenshotSampleData.highlightedTags(),
-                            initialTab: .tags
-                        )
+        NavigationStack {
+            StatisticsView(downwindManager: downwindManager)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {} label: {
+                            Image(systemName: "chevron.left")
+                        }
                     }
                 }
         }

@@ -1,9 +1,17 @@
 #if os(iOS)
-import AppScreenshotKit
+import Project7IIIScreenshots
 import SwiftUI
 
-@AppScreenshot(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
-struct Phone03Export: View {
+struct Phone03Export: View, AppScreenshot {
+    nonisolated static var configuration: AppScreenshotConfiguration {
+        AppScreenshotConfiguration(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
+    }
+
+    @MainActor
+    static func body(environment: AppScreenshotEnvironment) -> some View {
+        Self().environment(\.appScreenshotEnvironment, environment)
+    }
+
     var body: some View {
         AppStorePhoneCanvas(
             seed: 923,

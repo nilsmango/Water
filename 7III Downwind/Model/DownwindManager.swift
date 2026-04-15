@@ -1246,7 +1246,30 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.groupedRunStatistics = grouped
         }
     }
-    
+
+    func updateGroupedRunArraySync() {
+        let calendar = Calendar.current
+        var grouped: [[[RunStatistic]]] = []
+
+        for statistic in runStatistics {
+            let components = calendar.dateComponents([.year, .month], from: statistic.startDate ?? statistic.locationData.first?.timestamp ?? Date.distantPast)
+            let year = components.year!
+            let month = components.month!
+
+            if grouped.isEmpty || calendar.component(.year, from: grouped.last!.last!.first!.startDate ?? Date.distantPast) != year {
+                grouped.append([])
+            }
+
+            if grouped.last!.isEmpty || calendar.component(.month, from: grouped.last!.last!.first!.startDate ?? Date.distantPast) != month {
+                grouped[grouped.count - 1].append([])
+            }
+
+            grouped[grouped.count - 1][grouped.last!.count - 1].append(statistic)
+        }
+
+        self.groupedRunStatistics = grouped
+    }
+
     private func loadWorkoutsFromHealthKit(completion: @escaping ([HKWorkout]) -> Void) {
         let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
             HKQuery.predicateForWorkouts(with: .paddleSports),

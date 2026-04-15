@@ -154,6 +154,21 @@
 		78844E522C303C0E00B703F5 /* TagsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78844E512C303C0E00B703F5 /* TagsSheetView.swift */; };
 		78844E552C303C6300B703F5 /* SelectionButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1362BC52BB400776890 /* SelectionButtonLabel.swift */; };
 		7885356B2DD33F0A00E223C1 /* FoilingThresholds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */; };
+		788B3E552F8BA5F800E34392 /* Project7IIIScreenshots in Frameworks */ = {isa = PBXBuildFile; productRef = 788B3E542F8BA5F800E34392 /* Project7IIIScreenshots */; };
+		788B3E592F8BA6CA00E34392 /* Project7IIIScreenshotTestTools in Frameworks */ = {isa = PBXBuildFile; productRef = 788B3E582F8BA6CA00E34392 /* Project7IIIScreenshotTestTools */; };
+		788B3E5E2F8C212A00E34392 /* Phone04Places.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000D2F8500020041C173 /* Phone04Places.swift */; };
+		788B3E5F2F8C212A00E34392 /* Phone06WatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100162F8500030041C173 /* Phone06WatchSupport.swift */; };
+		788B3E602F8C212A00E34392 /* ScreenshotSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100092F8500020041C173 /* ScreenshotSupport.swift */; };
+		788B3E612F8C212A00E34392 /* Phone11StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */; };
+		788B3E622F8C212A00E34392 /* Phone05Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000E2F8500020041C173 /* Phone05Tags.swift */; };
+		788B3E632F8C212A00E34392 /* Phone08StatisticsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100182F8500030041C173 /* Phone08StatisticsOverview.swift */; };
+		788B3E642F8C212A00E34392 /* Phone10SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */; };
+		788B3E652F8C212A00E34392 /* Phone09MakeEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* Phone09MakeEdits.swift */; };
+		788B3E662F8C212A00E34392 /* Phone03Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000C2F8500020041C173 /* Phone03Export.swift */; };
+		788B3E672F8C212A00E34392 /* Phone12GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone12GPXImport.swift */; };
+		788B3E682F8C212A00E34392 /* Phone02Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000B2F8500020041C173 /* Phone02Dashboards.swift */; };
+		788B3E692F8C212A00E34392 /* Phone07WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* Phone07WaterSports.swift */; };
+		788B3E6A2F8C212A00E34392 /* Phone01AngleTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000A2F8500020041C173 /* Phone01AngleTool.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
 		789476592E47D0DB005D8C58 /* WidgetDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */; };
@@ -325,7 +340,6 @@
 		78F9DFE02F87CE5D008FDBCF /* product_ids.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78A283732C3FC2610052AA52 /* product_ids.plist */; };
 		78F9DFE12F87CE5D008FDBCF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 785C4AA02B358F7D00EB07F8 /* Preview Assets.xcassets */; };
 		78F9DFE22F87CE5D008FDBCF /* 7III Water.icon in Resources */ = {isa = PBXBuildFile; fileRef = 782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */; };
-		78F9DFE32F87CE5D008FDBCF /* AppScreenshotKit in Frameworks */ = {isa = PBXBuildFile; productRef = 79B1000A2F8500010041C173 /* AppScreenshotKit */; };
 		78F9DFE42F87CE5D008FDBCF /* ShareStatStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781A4BA02C4E46F80046AE0E /* ShareStatStack.swift */; };
 		78F9DFE52F87CE5D008FDBCF /* WebScrapingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91332E45EFBA00B222C2 /* WebScrapingService.swift */; };
 		78F9DFE62F87CE5D008FDBCF /* UnitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB91322E45EFBA00B222C2 /* UnitType.swift */; };
@@ -682,8 +696,6 @@
 		78FD90112F8519000041C173 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
 		78FD90122F8519000041C173 /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
 		78FD90132F8519000041C173 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 78DB913B2E45F1D700B222C2 /* Kanna */; };
-		78FD90142F8519000041C173 /* AppScreenshotKit in Frameworks */ = {isa = PBXBuildFile; productRef = 78FD8F6C2F84FE280041C173 /* AppScreenshotKit */; };
-		78FD90152F8519000041C173 /* AppScreenshotKitTestTools in Frameworks */ = {isa = PBXBuildFile; productRef = 78FD90162F8519000041C173 /* AppScreenshotKitTestTools */; };
 		79A100032F8500020041C173 /* ScreenshotSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100092F8500020041C173 /* ScreenshotSupport.swift */; };
 		79A100042F8500020041C173 /* Phone01AngleTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000A2F8500020041C173 /* Phone01AngleTool.swift */; };
 		79A100052F8500020041C173 /* Phone02Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000B2F8500020041C173 /* Phone02Dashboards.swift */; };
@@ -697,7 +709,6 @@
 		79A100132F8500030041C173 /* Phone10SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */; };
 		79A100142F8500030041C173 /* Phone11StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */; };
 		79A100152F8500030041C173 /* Phone12GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone12GPXImport.swift */; };
-		79B1000C2F8500010041C173 /* AppScreenshotKit in Frameworks */ = {isa = PBXBuildFile; productRef = 78FD8F6C2F84FE280041C173 /* AppScreenshotKit */; };
 		79B1000D2F8500010041C173 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 785C4AC02B40B62E00EB07F8 /* KeychainSwift */; };
 		79B1000E2F8500010041C173 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
 		79B1000F2F8500010041C173 /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
@@ -820,6 +831,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 78844E262C2E9D6900B703F5;
 			remoteInfo = "Tracker Watch Watch App";
+		};
+		788B3E5C2F8C20C300E34392 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 785C4A8D2B358F7B00EB07F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 785C4A942B358F7B00EB07F8;
+			remoteInfo = "7III Tracker";
 		};
 		78A2838B2C4671420052AA52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1019,6 +1037,7 @@
 		78844E502C2EC00D00B703F5 /* Tracker-Watch-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Tracker-Watch-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		78844E512C303C0E00B703F5 /* TagsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsSheetView.swift; sourceTree = "<group>"; };
 		7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoilingThresholds.swift; sourceTree = "<group>"; };
+		788B3E4E2F8BA54C00E34392 /* Project7IIIScreenshots */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Project7IIIScreenshots; path = "../../Geschäft/project7III/Packages/project7III-Screenshots"; sourceTree = "<group>"; };
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDashboardView.swift; sourceTree = "<group>"; };
@@ -1155,7 +1174,7 @@
 				78FD90112F8519000041C173 /* Surge in Frameworks */,
 				78FD90122F8519000041C173 /* XMLCoder in Frameworks */,
 				78FD90132F8519000041C173 /* Kanna in Frameworks */,
-				78FD90152F8519000041C173 /* AppScreenshotKitTestTools in Frameworks */,
+				788B3E592F8BA6CA00E34392 /* Project7IIIScreenshotTestTools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1163,9 +1182,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78F9DFE32F87CE5D008FDBCF /* AppScreenshotKit in Frameworks */,
-				79B1000C2F8500010041C173 /* AppScreenshotKit in Frameworks */,
 				79B1000D2F8500010041C173 /* KeychainSwift in Frameworks */,
+				788B3E552F8BA5F800E34392 /* Project7IIIScreenshots in Frameworks */,
 				79B1000E2F8500010041C173 /* Surge in Frameworks */,
 				79B1000F2F8500010041C173 /* XMLCoder in Frameworks */,
 				79B100102F8500010041C173 /* Kanna in Frameworks */,
@@ -1631,6 +1649,7 @@
 		78E5A85B2C32DA4100456ABC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				788B3E4E2F8BA54C00E34392 /* Project7IIIScreenshots */,
 				78A283712C3E8DA00052AA52 /* StoreKit.framework */,
 				78A2836F2C3E8D6C0052AA52 /* StoreKit.framework */,
 			);
@@ -1812,6 +1831,7 @@
 			);
 			dependencies = (
 				79B1000B2F8500010041C173 /* PBXTargetDependency */,
+				788B3E5D2F8C20C300E34392 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				78FD8FB82F850CCE0041C173 /* TrackerScreenshotTests */,
@@ -1822,7 +1842,7 @@
 				78320BBF2BB1C28400D6A772 /* Surge */,
 				78F047C72D9DA655003E11FA /* XMLCoder */,
 				78DB913B2E45F1D700B222C2 /* Kanna */,
-				78FD90162F8519000041C173 /* AppScreenshotKitTestTools */,
+				788B3E582F8BA6CA00E34392 /* Project7IIIScreenshotTestTools */,
 			);
 			productName = TrackerScreenshotTests;
 			productReference = 78FD8FB72F850CCE0041C173 /* TrackerScreenshotTests.xctest */;
@@ -1842,11 +1862,11 @@
 			);
 			name = "7III Water Screenshots";
 			packageProductDependencies = (
-				79B1000A2F8500010041C173 /* AppScreenshotKit */,
 				785C4AC02B40B62E00EB07F8 /* KeychainSwift */,
 				78320BBF2BB1C28400D6A772 /* Surge */,
 				78F047C72D9DA655003E11FA /* XMLCoder */,
 				78DB913B2E45F1D700B222C2 /* Kanna */,
+				788B3E542F8BA5F800E34392 /* Project7IIIScreenshots */,
 			);
 			productName = "7III Water Screenshots";
 			productReference = 79B100012F8500010041C173 /* 7III Water Screenshots.app */;
@@ -1884,7 +1904,7 @@
 					};
 					78FD8FB62F850CCE0041C173 = {
 						CreatedOnToolsVersion = 26.4;
-						TestTargetID = 79B100062F8500010041C173;
+						TestTargetID = 785C4A942B358F7B00EB07F8;
 					};
 					79B100062F8500010041C173 = {
 						CreatedOnToolsVersion = 26.4;
@@ -1905,7 +1925,7 @@
 				78320BBE2BB1C28400D6A772 /* XCRemoteSwiftPackageReference "Surge" */,
 				78F047C62D9DA655003E11FA /* XCRemoteSwiftPackageReference "XMLCoder" */,
 				78DB913A2E45F1D700B222C2 /* XCRemoteSwiftPackageReference "Kanna" */,
-				78FD8F6B2F84FE280041C173 /* XCRemoteSwiftPackageReference "AppScreenshotKit" */,
+				788B3E4F2F8BA5D700E34392 /* XCLocalSwiftPackageReference "../../Geschäft/project7III/Packages/project7III-Screenshots" */,
 			);
 			productRefGroup = 785C4A962B358F7B00EB07F8 /* Products */;
 			projectDirPath = "";
@@ -2679,6 +2699,19 @@
 				78F9E1022F87D2B0008FDBCF /* FlexibleView.swift in Sources */,
 				78F9E0B62F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */,
 				78F9E0B72F87CE5D008FDBCF /* SpeedChartView.swift in Sources */,
+				788B3E5E2F8C212A00E34392 /* Phone04Places.swift in Sources */,
+				788B3E5F2F8C212A00E34392 /* Phone06WatchSupport.swift in Sources */,
+				788B3E602F8C212A00E34392 /* ScreenshotSupport.swift in Sources */,
+				788B3E612F8C212A00E34392 /* Phone11StatsDetail.swift in Sources */,
+				788B3E622F8C212A00E34392 /* Phone05Tags.swift in Sources */,
+				788B3E632F8C212A00E34392 /* Phone08StatisticsOverview.swift in Sources */,
+				788B3E642F8C212A00E34392 /* Phone10SimpleMap.swift in Sources */,
+				788B3E652F8C212A00E34392 /* Phone09MakeEdits.swift in Sources */,
+				788B3E662F8C212A00E34392 /* Phone03Export.swift in Sources */,
+				788B3E672F8C212A00E34392 /* Phone12GPXImport.swift in Sources */,
+				788B3E682F8C212A00E34392 /* Phone02Dashboards.swift in Sources */,
+				788B3E692F8C212A00E34392 /* Phone07WaterSports.swift in Sources */,
+				788B3E6A2F8C212A00E34392 /* Phone01AngleTool.swift in Sources */,
 				78F9E0B82F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */,
 				78F9E0B92F87CE5D008FDBCF /* MapSectionView.swift in Sources */,
 				78F9E0BA2F87CE5D008FDBCF /* AngleSection.swift in Sources */,
@@ -2929,6 +2962,11 @@
 			isa = PBXTargetDependency;
 			target = 78844E262C2E9D6900B703F5 /* Tracker Watch Watch App */;
 			targetProxy = 78844E322C2E9D6A00B703F5 /* PBXContainerItemProxy */;
+		};
+		788B3E5D2F8C20C300E34392 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 785C4A942B358F7B00EB07F8 /* 7III Tracker */;
+			targetProxy = 788B3E5C2F8C20C300E34392 /* PBXContainerItemProxy */;
 		};
 		78A2838C2C4671420052AA52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3453,7 +3491,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Water Screenshots.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Water Screenshots";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Tracker";
 				TEST_TARGET_NAME = "7III Water Screenshots";
 			};
 			name = Debug;
@@ -3478,7 +3516,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Water Screenshots.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Water Screenshots";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Tracker";
 				TEST_TARGET_NAME = "7III Water Screenshots";
 			};
 			name = Release;
@@ -3669,6 +3707,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		788B3E4F2F8BA5D700E34392 /* XCLocalSwiftPackageReference "../../Geschäft/project7III/Packages/project7III-Screenshots" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../Geschäft/project7III/Packages/project7III-Screenshots";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		78320BBE2BB1C28400D6A772 /* XCRemoteSwiftPackageReference "Surge" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -3702,14 +3747,6 @@
 				minimumVersion = 0.17.1;
 			};
 		};
-		78FD8F6B2F84FE280041C173 /* XCRemoteSwiftPackageReference "AppScreenshotKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nilsmango/AppScreenshotKit";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -3722,6 +3759,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 785C4ABF2B40B62E00EB07F8 /* XCRemoteSwiftPackageReference "keychain-swift" */;
 			productName = KeychainSwift;
+		};
+		788B3E542F8BA5F800E34392 /* Project7IIIScreenshots */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 788B3E4F2F8BA5D700E34392 /* XCLocalSwiftPackageReference "../../Geschäft/project7III/Packages/project7III-Screenshots" */;
+			productName = Project7IIIScreenshots;
+		};
+		788B3E582F8BA6CA00E34392 /* Project7IIIScreenshotTestTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 788B3E4F2F8BA5D700E34392 /* XCLocalSwiftPackageReference "../../Geschäft/project7III/Packages/project7III-Screenshots" */;
+			productName = Project7IIIScreenshotTestTools;
 		};
 		78DB913B2E45F1D700B222C2 /* Kanna */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -3747,21 +3794,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 78DB913A2E45F1D700B222C2 /* XCRemoteSwiftPackageReference "Kanna" */;
 			productName = Kanna;
-		};
-		78FD8F6C2F84FE280041C173 /* AppScreenshotKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 78FD8F6B2F84FE280041C173 /* XCRemoteSwiftPackageReference "AppScreenshotKit" */;
-			productName = AppScreenshotKit;
-		};
-		78FD90162F8519000041C173 /* AppScreenshotKitTestTools */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 78FD8F6B2F84FE280041C173 /* XCRemoteSwiftPackageReference "AppScreenshotKit" */;
-			productName = AppScreenshotKitTestTools;
-		};
-		79B1000A2F8500010041C173 /* AppScreenshotKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 78FD8F6B2F84FE280041C173 /* XCRemoteSwiftPackageReference "AppScreenshotKit" */;
-			productName = AppScreenshotKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
