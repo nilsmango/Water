@@ -119,6 +119,8 @@
 		785CF9552B4FE74E00528B6D /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9542B4FE74E00528B6D /* OptionsView.swift */; };
 		785CF9582B4FED3100528B6D /* MeasurementSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9572B4FED3100528B6D /* MeasurementSystem.swift */; };
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
+		785D39D32F90DE84006A54BC /* FakeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D39D22F90DE84006A54BC /* FakeMenu.swift */; };
+		785D39D42F90DE84006A54BC /* FakeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D39D22F90DE84006A54BC /* FakeMenu.swift */; };
 		78682D1F2F46132C0032D0B1 /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
 		7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
 		7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
@@ -1003,6 +1005,7 @@
 		785CF9542B4FE74E00528B6D /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
+		785D39D22F90DE84006A54BC /* FakeMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeMenu.swift; sourceTree = "<group>"; };
 		78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsMenuView.swift; sourceTree = "<group>"; };
 		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
 		7877E1232BC3D87C00776890 /* PolylineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineData.swift; sourceTree = "<group>"; };
@@ -1668,6 +1671,7 @@
 			isa = PBXGroup;
 			children = (
 				79A100092F8500020041C173 /* ScreenshotSupport.swift */,
+				785D39D22F90DE84006A54BC /* FakeMenu.swift */,
 				79A1000A2F8500020041C173 /* Phone01AngleTool.swift */,
 				79A1000B2F8500020041C173 /* Phone02Dashboards.swift */,
 				79A1000C2F8500020041C173 /* Phone03Export.swift */,
@@ -2489,6 +2493,7 @@
 				78F9DFE42F87CE5D008FDBCF /* ShareStatStack.swift in Sources */,
 				78F9DFE52F87CE5D008FDBCF /* WebScrapingService.swift in Sources */,
 				78F9DFE62F87CE5D008FDBCF /* UnitType.swift in Sources */,
+				785D39D32F90DE84006A54BC /* FakeMenu.swift in Sources */,
 				78F9DFE72F87CE5D008FDBCF /* TrackedElement.swift in Sources */,
 				78F9DFE82F87CE5D008FDBCF /* HeartSpeedSamples.swift in Sources */,
 				78F9DFE92F87CE5D008FDBCF /* PolylineData.swift in Sources */,
@@ -2846,6 +2851,7 @@
 				78F9DF732F87CE5D008FDBCF /* _III_DownwindApp.swift in Sources */,
 				78F9DF742F87CE5D008FDBCF /* StartView.swift in Sources */,
 				78F9DF752F87CE5D008FDBCF /* XMarkLabel.swift in Sources */,
+				785D39D42F90DE84006A54BC /* FakeMenu.swift in Sources */,
 				78F9DF762F87CE5D008FDBCF /* NavigationButton.swift in Sources */,
 				78F9DF772F87CE5D008FDBCF /* NavigationBar.swift in Sources */,
 				78F9DF782F87CE5D008FDBCF /* NewsSection.swift in Sources */,

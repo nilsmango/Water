@@ -75,6 +75,8 @@ struct StatisticsRunView: View {
     
     @AppStorage("hasTappedFastestDistance") var hasTappedDistance = false
     
+    var noToolbar: Bool = false
+    
     var body: some View {
         
         let cutDate = runDates.components(separatedBy: " ")
@@ -217,11 +219,11 @@ struct StatisticsRunView: View {
                 
                 
         }
-        .navigationTitle(statisticsData.runName)
+        .navigationTitle(noToolbar ? "" : statisticsData.runName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                if !showStallStats {
+                if !showStallStats && !noToolbar {
                     Menu {
                         Button {
                             videoSharing = true
@@ -253,33 +255,65 @@ struct StatisticsRunView: View {
             }
             
             ToolbarItem(placement: .topBarTrailing) {
-                if showStallStats {
-                    Button {
-                        showStallStats.toggle()
-                    } label: {
-                        Label("Close", systemImage: "xmark")
-                    }
-                } else {
-                    if statisticsData.locationData.count > 2 {
-                        Menu {
-                            Button(action: {
-                                if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4 {
+                if !noToolbar {
+                    if showStallStats {
+                        Button {
+                            showStallStats.toggle()
+                        } label: {
+                            Label("Close", systemImage: "xmark")
+                        }
+                    } else {
+                        if statisticsData.locationData.count > 2 {
+                            Menu {
+                                Button(action: {
+                                    if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4 {
+                                        // update the edit data
+                                        statisticsDataEdit = statisticsData
+                                        showRunEditView = true
+                                    } else {
+                                        showUpgradeSheet = true
+                                    }
+                                    
+                                }, label: {
+                                    if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4  {
+                                        Text("Edit Route")
+                                    } else {
+                                        Label("Edit Route", systemImage: "lock.fill")
+                                    }
+                                    
+                                })
+                                
+                                Button(action: {
                                     // update the edit data
-                                    statisticsDataEdit = statisticsData
-                                    showRunEditView = true
-                                } else {
-                                    showUpgradeSheet = true
+                                    editTags = tags
+                                    editType = statisticsData.workoutType ?? .surf
+                                    showEditData = true
+                                    
+                                }, label: {
+                                    Text("Edit Data")
+                                })
+                                
+                                if let workout = statisticsData.workoutType, workout.calculateFoilingStats {
+                                    NavigationLink(destination: FoilingThresholds()) {
+                                        Text("Edit Threshold Speeds")
+                                    }
                                 }
                                 
-                            }, label: {
-                                if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4  {
-                                    Text("Edit Route")
-                                } else {
-                                    Label("Edit Route", systemImage: "lock.fill")
+                                if statisticsData.locationData.isEmpty == false {
+                                    Button {
+                                        stallEvents = FoilStallDetector.detectAllStallSpeeds(from: statisticsData.locationData)
+                                        showStallStats = true
+                                    } label: {
+                                        Text("Calculate Stall Speeds")
+                                    }
                                 }
                                 
-                            })
-                            
+                                
+                                
+                            } label: {
+                                Text("Edit")
+                            }
+                        } else {
                             Button(action: {
                                 // update the edit data
                                 editTags = tags
@@ -287,42 +321,11 @@ struct StatisticsRunView: View {
                                 showEditData = true
                                 
                             }, label: {
-                                Text("Edit Data")
+                                Text("Edit")
                             })
-                            
-                            if let workout = statisticsData.workoutType, workout.calculateFoilingStats {
-                                NavigationLink(destination: FoilingThresholds()) {
-                                    Text("Edit Threshold Speeds")
-                                }
-                            }
-                            
-                            if statisticsData.locationData.isEmpty == false {
-                                Button {
-                                    stallEvents = FoilStallDetector.detectAllStallSpeeds(from: statisticsData.locationData)
-                                    showStallStats = true
-                                } label: {
-                                    Text("Calculate Stall Speeds")
-                                }
-                            }
-                            
-                            
-                            
-                        } label: {
-                            Text("Edit")
                         }
-                    } else {
-                        Button(action: {
-                            // update the edit data
-                            editTags = tags
-                            editType = statisticsData.workoutType ?? .surf
-                            showEditData = true
-                            
-                        }, label: {
-                            Text("Edit")
-                        })
                     }
-                }
-                
+                }                
             }
         }
     

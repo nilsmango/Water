@@ -2659,7 +2659,7 @@ struct ScreenshotDashboardHomeView: View {
     }
 }
 
-private struct ScreenshotStatisticContainer<Content: View>: View {
+struct ScreenshotStatisticContainer<Content: View>: View {
     @ObservedObject var downwindManager: DownwindManager
     let statisticID: UUID
     let content: (Binding<RunStatistic>) -> Content
@@ -2679,52 +2679,6 @@ private struct ScreenshotStatisticContainer<Content: View>: View {
             content($downwindManager.runStatistics[index])
         } else {
             Color(.systemGroupedBackground)
-        }
-    }
-}
-
-struct FakeExportMenuOverlay: View {
-    var body: some View {
-        VStack(spacing: 0) {
-            menuRow(title: "Video", icon: "film")
-            Divider()
-            menuRow(title: "Photo", icon: "photo")
-            Divider()
-            menuRow(title: "GPX", icon: "point.bottomleft.forward.to.point.topright.scurvepath")
-        }
-        .frame(width: 270)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .shadow(color: .black.opacity(0.16), radius: 24, y: 12)
-    }
-
-    private func menuRow(title: String, icon: String) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            Image(systemName: icon)
-                .font(.body.weight(.semibold))
-        }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 15)
-    }
-}
-
-struct ScreenshotExportRunView: View {
-    @StateObject private var downwindManager = ScreenshotSampleData.makeDownwindManager()
-
-    var body: some View {
-        NavigationStack {
-            ScreenshotStatisticContainer(
-                downwindManager: downwindManager,
-                statisticID: ScreenshotSampleData.exportStatistic().id
-            ) { statistic in
-                StatisticsRunView(downwindManager: downwindManager, statisticsData: statistic)
-                    .overlay(alignment: .topTrailing) {
-                        FakeExportMenuOverlay()
-                            .padding(.top, 110)
-                            .padding(.trailing, 28)
-                    }
-            }
         }
     }
 }

@@ -19,7 +19,39 @@ struct Phone03Export: View, AppScreenshot {
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
-            ScreenshotExportRunView()
+            let downwindManager = ScreenshotSampleData.makeDownwindManager()
+            ZStack {
+                NavigationStack {
+                    ScreenshotStatisticContainer(
+                        downwindManager: downwindManager,
+                        statisticID: ScreenshotSampleData.exportStatistic().id
+                    ) { statistic in
+                        StatisticsRunView(downwindManager: downwindManager, statisticsData: statistic, noToolbar: true)
+                            .toolbar {
+                                ToolbarItem(placement: .topBarLeading) {
+                                    Button {} label: {
+                                        Image(systemName: "chevron.left")
+                                    }
+                                }
+                            }
+                    }
+                }
+                
+                VStack() {
+                    HStack {
+                        Spacer()
+                        
+                        FakeMenu(items: [FakeMenuItem(title: "Video", icon: "film"), FakeMenuItem(title: "Map Photo", icon: "photo"), FakeMenuItem(title: "Sticker Overlay", icon: "square.dashed"), FakeMenuItem(title: "GPX", icon: "point.bottomleft.forward.to.point.topright.scurvepath")])
+                        
+                    }
+                    
+                    
+                    Spacer()
+                }
+                
+            
+            
+            }
         }
     }
 }
