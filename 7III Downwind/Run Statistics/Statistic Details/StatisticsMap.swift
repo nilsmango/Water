@@ -234,11 +234,14 @@ struct StatisticsMap: View {
         }
         .onAppear {
             statePolyLineNumber = maxPointsToShow
-            Task {
-                // coordinates pairs lines
-                polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
-            }
             hasEdits = downwindManager.hasEdits(for: statisticsData)
+            if downwindManager.forcePremiumForScreenshots {
+                polylineData = downwindManager.createPolylineDataSync(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
+            } else {
+                Task {
+                    polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
+                }
+            }
         }
         .onChange(of: refreshPolyLines) { _, _ in
             Task {

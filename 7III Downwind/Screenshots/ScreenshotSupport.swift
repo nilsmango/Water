@@ -3126,7 +3126,7 @@ struct ScreenshotStatsDetailView: View {
             }
             .onAppear {
                 withAnimation {
-                    proxy.scrollTo("speedDistribution", anchor: .center)
+                    proxy.scrollTo("speedDistribution", anchor: .top)
                 }
                 
             }

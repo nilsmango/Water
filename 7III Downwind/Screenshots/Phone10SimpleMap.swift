@@ -17,7 +17,7 @@ struct Phone10SimpleMap: View, AppScreenshot {
             seed: 1210,
             titleLines: ["Beautiful", "& Simple"],
             phoneOffsetY: 300,
-            phoneColorScheme: .light
+            phoneColorScheme: .dark
         ) {
             ScreenshotSimpleMapView()
         }

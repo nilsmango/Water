@@ -123,6 +123,18 @@ struct StatisticsRunView: View {
                         fastestDistances = calculateFastestDistances(from: statisticsData.locationData, system: downwindManager.measurementSystem)
                     }
                     heartRateSpeedData = Self.createSpeedData(from: statisticsData.locationData)
+                    if let importedRun = downwindManager.importedRuns.first(where: { $0.id == statisticsData.id }), !importedRun.heartRates.isEmpty {
+                        var heartRateData: [Date: (Double, Double)] = [:]
+                        for heartRate in importedRun.heartRates.sorted(by: { $0.date < $1.date }) {
+                            let binDate = Date(timeIntervalSince1970: floor(heartRate.date.timeIntervalSince1970))
+                            if let existing = heartRateData[binDate] {
+                                heartRateData[binDate] = (min(existing.0, heartRate.heartRate), max(existing.1, heartRate.heartRate))
+                            } else {
+                                heartRateData[binDate] = (heartRate.heartRate, heartRate.heartRate)
+                            }
+                        }
+                        heartRates = heartRateData
+                    }
                 }
                 
                 guard !hasLoadedInitialData else {

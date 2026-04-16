@@ -2412,19 +2412,20 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// creates polyline coordinates and colors
     func createPolylineData(locationData: [LocationData], numberOfElementsToKeep: Int, coordinatesCount: Int) async -> [PolylineData] {
+        return createPolylineDataSync(locationData: locationData, numberOfElementsToKeep: numberOfElementsToKeep, coordinatesCount: coordinatesCount)
+    }
+    
+    func createPolylineDataSync(locationData: [LocationData], numberOfElementsToKeep: Int, coordinatesCount: Int) -> [PolylineData] {
         guard numberOfElementsToKeep > 0 else {
             return []
         }
-        // create an array of all the location pairs
         var locationPairs = [(LocationData, LocationData)]()
         
         let stepSize = Double(coordinatesCount) / Double(numberOfElementsToKeep)
         
-        
         for i in 0..<numberOfElementsToKeep - 1 {
             let index = Int(round(Double(i) * stepSize))
             let index2 = Int(round(Double(i + 1) * stepSize))
-            // Ensure the index is within bounds of the array
             if index != index2 && index2 < coordinatesCount {
                 locationPairs.append((locationData[index], locationData[index2]))
             }
@@ -2436,7 +2437,6 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         let lineColors = quantizedSpeeds.map { createColorFromQuantizedSpeed(speed: $0)}
         
-        // create the polyline data
         var polylineData = [PolylineData]()
         
         for (index, line) in locationPairs.enumerated() {
