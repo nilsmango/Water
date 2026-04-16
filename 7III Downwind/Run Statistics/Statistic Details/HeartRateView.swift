@@ -215,6 +215,17 @@ struct SpeedDistributionView: View {
                 }
             }
         }
+        .onAppear {
+            if downwindManager.forcePremiumForScreenshots && !speedData.isEmpty && bins.isEmpty {
+                let result = buildSpeedDistribution(from: speedData, system: downwindManager.measurementSystem)
+                bins = result.bins
+                domainUpperBound = result.domainUpperBound
+                maxPercentage = result.maxPercentage
+                binWidth = result.binWidth
+                sampleCount = result.sampleCount
+                lastCacheKey = cacheKey
+            }
+        }
         .task(id: cacheKey) {
             await rebuildDistributionIfNeeded()
         }

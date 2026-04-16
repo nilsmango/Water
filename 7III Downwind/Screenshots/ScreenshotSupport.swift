@@ -1996,14 +1996,14 @@ enum ScreenshotSampleData {
 
     static func importRun(from statistic: RunStatistic) -> ImportRun {
         let totalPoints = statistic.locationData.count
-        let smoothedSpeeds = statistic.locationData.map { $0.speed ?? 3.0 }.smoothed(window: 80)
+        let smoothedSpeeds = statistic.locationData.map { $0.speed ?? 3.0 }.smoothed(window: 120)
         let heartRates = statistic.locationData.enumerated().compactMap { index, location -> HeartRate? in
             guard index.isMultiple(of: 18) else { return nil }
             let progress = Double(index) / Double(max(totalPoints - 1, 1))
             let speedFactor = min(max(smoothedSpeeds[index] / 9.0, 0.0), 1.0)
-            let baseline = 65.0 + progress * 15.0
-            let bpm = baseline + speedFactor * 50.0 + Double.random(in: -3...3)
-            return HeartRate(date: location.timestamp, heartRate: max(58, min(132, bpm)))
+            let baseline = 65.0 + progress * 12.0
+            let bpm = baseline + speedFactor * 45.0 + Double.random(in: -1.5...1.5)
+            return HeartRate(date: location.timestamp, heartRate: max(60, min(125, bpm)))
         }
 
         return ImportRun(
@@ -3093,11 +3093,14 @@ struct ScreenshotSimpleMapView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    proxy.scrollTo("rounds", anchor: .center)
-                    
+                withAnimation {
+                    proxy.scrollTo("measureAngles", anchor: .bottom)
                 }
             }
+//            .task {
+//                try? await Task.sleep(for: .seconds(0.3))
+//                proxy.scrollTo("measureAngles", anchor: .bottom)
+//            }
         }
     }
 }
@@ -3122,11 +3125,15 @@ struct ScreenshotStatsDetailView: View {
                 }
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        proxy.scrollTo("speedDistribution", anchor: .center)
-                    
+                withAnimation {
+                    proxy.scrollTo("speedDistribution", anchor: .center)
                 }
+                
             }
+//            .task {
+//                try? await Task.sleep(for: .seconds(0.3))
+//                proxy.scrollTo("speedDistribution", anchor: .center)
+//            }
         }
     }
 }

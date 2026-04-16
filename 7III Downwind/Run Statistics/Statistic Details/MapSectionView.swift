@@ -58,12 +58,12 @@ struct MapSectionView: View {
                         .disabled(true)
                 } else {
                     SpeedGradientStatisticsMap(statisticsData: $statisticsData, lineWidth: 1.5)
-//                    WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
                         .frame(height: 300)
                         .cornerRadius(8.0)
                         .disabled(true)
                 }
             }
+            .id("map")
             
         } header: {
             HStack {
@@ -96,6 +96,7 @@ struct MapSectionView: View {
                     Spacer()
                 }
                 .padding(.bottom, 9)
+                .id("measureAngles")
             }
         }
     }
