@@ -2979,7 +2979,7 @@ private struct ScreenshotGPXImportCard: View {
 struct ScreenshotWatchSupportView: View {
     @StateObject private var downwindManager = ScreenshotSampleData.makeHomeManager(
         showTracker: true,
-        workoutType: .downwindSUP
+        workoutType: .parawing
     )
     @StateObject private var manager = ScreenshotSampleData.makeDashboardManager()
 
@@ -3010,8 +3010,25 @@ struct ScreenshotWaterSportsView: View {
             animateDashboardDirectionArrows: false
         )
         .overlay(alignment: .top) {
-            ScreenshotWorkoutPickerOverlay()
-                .padding(.top, 110)
+            FakePicker(items: [
+                "Foil Surf",
+                "SUP Foil",
+                "DW SUP Foil",
+                "DW SUP",
+                "DW Prone Foil",
+                "Wing Foil",
+                "Parawing",
+                "DW Parawing",
+                "Wind Foil",
+                "Kite Foil",
+                "Kite",
+                "Windsurf",
+                "Pump Foil",
+                "Wake Thief",
+                "Wake Foil",
+                "Wake Surf"
+            ], selected: "DW SUP Foil")
+            .padding(.top, 110)
         }
     }
 }
@@ -5732,6 +5749,63 @@ private extension [Double] {
             let hi = Swift.min(count - 1, i + half)
             return (cumulative[hi + 1] - cumulative[lo]) / Double(hi - lo + 1)
         }
+    }
+}
+
+private enum ScreenshotSpotsRoute: Hashable {
+    case spots
+}
+
+struct ScreenshotSpotsMapView: View {
+    @State private var path: [ScreenshotSpotsRoute] = [.spots]
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            Color.clear
+                .navigationTitle("")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationDestination(for: ScreenshotSpotsRoute.self) { _ in
+                    SpotsView()
+                        .navigationBarBackButtonHidden(true)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Image(systemName: "chevron.backward")
+                            }
+                        }
+                }
+        }
+        .onAppear {
+            SpotManager.shared.spots = ScreenshotSampleData.sampleSpots()
+        }
+    }
+}
+
+extension ScreenshotSampleData {
+    private static let preloadedSpots: [Spot]? = loadSpotsJSON()
+
+    private static func loadSpotsJSON() -> [Spot]? {
+        let sourceDirectory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        let bundles = [Bundle.main, Bundle(for: ScreenshotBundleLocator.self)]
+        let bundledCandidateURLs = bundles.flatMap { bundle in
+            [bundle.url(forResource: "spots", withExtension: "json")]
+        }.compactMap { $0 }
+        let unbundledCandidateURLs = [
+            sourceDirectory.appendingPathComponent("spots.json"),
+            sourceDirectory.appendingPathComponent(".screenshot-data/spots.json")
+        ]
+        let candidateURLs = unbundledCandidateURLs + bundledCandidateURLs
+
+        for url in candidateURLs where FileManager.default.fileExists(atPath: url.path) {
+            if let data = try? Data(contentsOf: url, options: .mappedIfSafe),
+               let spots = try? JSONDecoder().decode([Spot].self, from: data) {
+                return spots
+            }
+        }
+        return nil
+    }
+
+    static func sampleSpots() -> [Spot] {
+        preloadedSpots ?? []
     }
 }
 

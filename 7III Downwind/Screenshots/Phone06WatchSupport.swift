@@ -19,7 +19,30 @@ struct Phone06WatchSupport: View, AppScreenshot {
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
-            ScreenshotWatchSupportView()
+            let downwindManager = ScreenshotSampleData.makeHomeManager(
+                showTracker: true,
+                workoutType: .downwindSUP
+            )
+            let manager = ScreenshotSampleData.makeDashboardManager()
+
+            StartView(
+                downwindManager: downwindManager,
+                initialDashboardManager: manager,
+                animateDashboardDirectionArrows: false
+            )
+        }
+        .overlay(alignment: .bottom) {
+            HStack(spacing: 24) {
+                Image("appleWatch01")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    
+//                Image("appleWatch02")
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+            }
+            .frame(height: 1120)
+            .padding(.bottom, 00)
         }
     }
 }

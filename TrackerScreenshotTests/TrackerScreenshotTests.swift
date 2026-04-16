@@ -23,7 +23,9 @@ func exportScreenshots() throws {
 //    try exporter.export(Phone07WaterSports.self)
 //    try exporter.export(Phone08StatisticsOverview.self)
 //    try exporter.export(Phone09MakeEdits.self)
-    try exporter.export(Phone10SimpleMap.self, captureDelay: 3)
-    try exporter.export(Phone11StatsDetail.self, captureDelay: 3)
+//    try exporter.export(Phone10SimpleMap.self, captureDelay: 3)
+//    try exporter.export(Phone11StatsDetail.self, captureDelay: 3)
 //    try exporter.export(Phone12GPXImport.self)
+        try exporter.export(Phone13SpotsMap.self, captureDelay: 6)
+    
 }

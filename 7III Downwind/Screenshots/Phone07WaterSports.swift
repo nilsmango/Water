@@ -19,7 +19,39 @@ struct Phone07WaterSports: View, AppScreenshot {
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
-            ScreenshotWaterSportsView()
+            let downwindManager = ScreenshotSampleData.makeHomeManager(
+                showTracker: true,
+                workoutType: .downwindSUPFoil
+            )
+            let manager = ScreenshotSampleData.makeDashboardManager()
+
+            StartView(
+                downwindManager: downwindManager,
+                initialDashboardManager: manager,
+                animateDashboardDirectionArrows: false
+            )
+            .overlay(alignment: .topTrailing) {
+                FakePicker(items: [
+                    "Foil Surf",
+                    "SUP Foil",
+                    "DW SUP Foil",
+                    "DW SUP",
+                    "DW Prone Foil",
+                    "Wing Foil",
+                    "Parawing",
+                    "DW Parawing",
+                    "Wind Foil",
+                    "Kite Foil",
+                    "Kite",
+                    "Windsurf",
+                    "Pump Foil",
+                    "Wake Thief",
+//                    "Wake Foil",
+//                    "Wake Surf"
+                ], selected: "DW SUP Foil")
+                .padding(.top, 218)
+                .padding(.trailing, 30)
+            }
         }
     }
 }

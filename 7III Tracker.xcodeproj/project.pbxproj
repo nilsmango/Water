@@ -121,6 +121,10 @@
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
 		785D39D32F90DE84006A54BC /* FakeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D39D22F90DE84006A54BC /* FakeMenu.swift */; };
 		785D39D42F90DE84006A54BC /* FakeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D39D22F90DE84006A54BC /* FakeMenu.swift */; };
+		785D3AE92F915FA5006A54BC /* Phone13SpotsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D3AE82F915FA5006A54BC /* Phone13SpotsMap.swift */; };
+		785D3AEA2F915FA5006A54BC /* Phone13SpotsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D3AE82F915FA5006A54BC /* Phone13SpotsMap.swift */; };
+		785D3AEC2F9164E2006A54BC /* spots.json in Resources */ = {isa = PBXBuildFile; fileRef = 785D3AEB2F9164E2006A54BC /* spots.json */; };
+		785D3AED2F9164E2006A54BC /* spots.json in Resources */ = {isa = PBXBuildFile; fileRef = 785D3AEB2F9164E2006A54BC /* spots.json */; };
 		78682D1F2F46132C0032D0B1 /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
 		7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
 		7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
@@ -1006,6 +1010,8 @@
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
 		785D39D22F90DE84006A54BC /* FakeMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeMenu.swift; sourceTree = "<group>"; };
+		785D3AE82F915FA5006A54BC /* Phone13SpotsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone13SpotsMap.swift; sourceTree = "<group>"; };
+		785D3AEB2F9164E2006A54BC /* spots.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = spots.json; sourceTree = "<group>"; };
 		78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsMenuView.swift; sourceTree = "<group>"; };
 		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
 		7877E1232BC3D87C00776890 /* PolylineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineData.swift; sourceTree = "<group>"; };
@@ -1670,6 +1676,7 @@
 		78FD8F702F84FE310041C173 /* Screenshots */ = {
 			isa = PBXGroup;
 			children = (
+				785D3AEB2F9164E2006A54BC /* spots.json */,
 				79A100092F8500020041C173 /* ScreenshotSupport.swift */,
 				785D39D22F90DE84006A54BC /* FakeMenu.swift */,
 				79A1000A2F8500020041C173 /* Phone01AngleTool.swift */,
@@ -1684,6 +1691,7 @@
 				79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */,
 				79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */,
 				79A1001C2F8500030041C173 /* Phone12GPXImport.swift */,
+				785D3AE82F915FA5006A54BC /* Phone13SpotsMap.swift */,
 			);
 			path = Screenshots;
 			sourceTree = "<group>";
@@ -2229,6 +2237,7 @@
 			files = (
 				78F9E0F22F87CE5D008FDBCF /* Assets.xcassets in Resources */,
 				78F9E0F32F87CE5D008FDBCF /* locationData.json in Resources */,
+				785D3AEC2F9164E2006A54BC /* spots.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2241,6 +2250,7 @@
 				78F9DFE02F87CE5D008FDBCF /* product_ids.plist in Resources */,
 				78F9DFE12F87CE5D008FDBCF /* Preview Assets.xcassets in Resources */,
 				78F9DFE22F87CE5D008FDBCF /* 7III Water.icon in Resources */,
+				785D3AED2F9164E2006A54BC /* spots.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2620,6 +2630,7 @@
 				78F9E0622F87CE5D008FDBCF /* ShareOverlay.swift in Sources */,
 				78F9E0632F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */,
 				78F9E0642F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */,
+				785D3AE92F915FA5006A54BC /* Phone13SpotsMap.swift in Sources */,
 				78F9E0652F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */,
 				78F9E0662F87CE5D008FDBCF /* VideoPicker.swift in Sources */,
 				78F9E0672F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */,
@@ -2828,6 +2839,7 @@
 				78FD8FDF2F850DDF0041C173 /* CrewStatistic.swift in Sources */,
 				78FD8FE02F850DDF0041C173 /* WorkoutType.swift in Sources */,
 				78FD8FE12F850DDF0041C173 /* VersionHistory.swift in Sources */,
+				785D3AEA2F915FA5006A54BC /* Phone13SpotsMap.swift in Sources */,
 				78FD8FE22F850DDF0041C173 /* FoilStallDetector.swift in Sources */,
 				78FD8FE32F850DDF0041C173 /* GeocodingManager.swift in Sources */,
 				78FD8FE42F850DDF0041C173 /* CoordinateSmoothingHelpers.swift in Sources */,
