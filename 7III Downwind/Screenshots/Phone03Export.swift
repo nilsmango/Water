@@ -15,16 +15,23 @@ struct Phone03Export: View, AppScreenshot {
     var body: some View {
         AppStorePhoneCanvas(
             seed: 923,
-            titleLines: ["Video, Photo", "& GPX Export"],
+            titleLines: ["The Exports", "of your Dreams"],
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
-            let downwindManager = ScreenshotSampleData.makeDownwindManager()
+            let downwindManager: DownwindManager = {
+                let mgr = ScreenshotSampleData.makeDownwindManager()
+                let parawingRun = ScreenshotSampleData.parawingDownwindRun()
+                mgr.runStatistics.append(parawingRun)
+                mgr.importedRuns.append(ScreenshotSampleData.importRun(from: parawingRun))
+                return mgr
+            }()
+            let exportStatID = ScreenshotSampleData.parawingDownwindRun().id
             ZStack {
                 NavigationStack {
                     ScreenshotStatisticContainer(
                         downwindManager: downwindManager,
-                        statisticID: ScreenshotSampleData.exportStatistic().id
+                        statisticID: exportStatID
                     ) { statistic in
                         StatisticsRunView(downwindManager: downwindManager, statisticsData: statistic, noToolbar: true)
                             .toolbar {
@@ -49,7 +56,6 @@ struct Phone03Export: View, AppScreenshot {
                     Spacer()
                 }
                 
-            
             
             }
         }

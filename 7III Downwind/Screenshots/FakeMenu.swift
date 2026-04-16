@@ -31,6 +31,12 @@ struct FakeMenu: View {
                 
             }
             .padding(18)
+            .background {
+                RoundedRectangle(cornerRadius: 26)
+                    .fill(
+                        Color.whiteAndBlack.opacity(0.5)
+                    )
+            }
             .glassEffect(in: RoundedRectangle(cornerRadius: 26))
             .padding(.trailing, 16)
         } else {

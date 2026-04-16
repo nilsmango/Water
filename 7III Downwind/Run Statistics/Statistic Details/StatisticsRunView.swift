@@ -116,6 +116,14 @@ struct StatisticsRunView: View {
                 locationName = statisticsData.locationString ?? ""
                 editLocationName = locationName
                 detailsSummary = Self.makeDetailsSummary(from: statisticsData, measurementSystem: downwindManager.measurementSystem)
+
+                if downwindManager.forcePremiumForScreenshots {
+                    if statisticsData.locationData.count > 2 {
+                        rounds = Self.createRounds(from: statisticsData.locationData)
+                        fastestDistances = calculateFastestDistances(from: statisticsData.locationData, system: downwindManager.measurementSystem)
+                    }
+                    heartRateSpeedData = Self.createSpeedData(from: statisticsData.locationData)
+                }
                 
                 guard !hasLoadedInitialData else {
                     return
@@ -172,6 +180,7 @@ struct StatisticsRunView: View {
                 
                 HeartRateView(downwindManager: downwindManager, heartRates: heartRates, startDate: statisticsData.startDate, endDate: statisticsData.endDate, speedData: heartRateSpeedData)
                 SpeedDistributionView(downwindManager: downwindManager, speedData: heartRateSpeedData)
+                    .id("speedDistribution")
                 
                 Section {
                     TagsFlexiView(strings: tags)

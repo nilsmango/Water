@@ -43,6 +43,7 @@ struct MapSectionView: View {
                 }
                 .padding(.bottom, 9)
             }
+            .id("rounds")
         }
         
         

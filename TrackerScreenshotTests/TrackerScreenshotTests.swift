@@ -14,9 +14,9 @@ import Testing
 func exportScreenshots() throws {
     let output = URL(fileURLWithPath: "/Users/simxn/Documents/Geschäft/project7III/Apps/7III Water/Water App Store Metadata/Screenshots")
     let exporter = AppScreenshotExporter(option: .file(outputURL: output))
-    try exporter.export(Phone01AngleTool.self, captureDelay: 3)
+//    try exporter.export(Phone01AngleTool.self, captureDelay: 3)
 //    try exporter.export(Phone02Dashboards.self)
-//    try exporter.export(Phone03Export.self)
+    try exporter.export(Phone03Export.self, captureDelay: 8)
 //    try exporter.export(Phone04Places.self)
 //    try exporter.export(Phone05Tags.self)
 //    try exporter.export(Phone06WatchSupport.self)
