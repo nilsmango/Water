@@ -19,7 +19,65 @@ struct Phone01AngleTool: View, AppScreenshot {
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
-            ScreenshotHyeresAngleToolView()
+            
+            // A lil fake sheet
+            
+            let statistic = ScreenshotSampleData.hyeresStatistic()
+
+            ZStack {
+                Color.black.opacity(0.3)
+
+                VStack(spacing: 0) {
+                    Spacer().frame(height: 60)
+                    
+                    ZStack {
+                        NavigationStack {
+                            WindSportStatisticsMap(
+                                downwindManager: DownwindManager(),
+                                statisticsData: .constant(statistic),
+                                angleTool: true
+                            )
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 40))
+                        
+                        VStack(spacing: 0) {
+                            
+                            ZStack {
+                                
+                                Rectangle()
+                                    .fill(.white.opacity(0.5))
+                                    .frame(width: 80, height: 40)
+                                    .blur(radius: 5)
+                                
+                                Text("Hyères")
+                                    .bold()
+                                
+                                HStack {
+                               
+                                    Spacer()
+                                    
+                                    if #available(iOS 26.0, *) {
+                                        Image(systemName: "xmark")
+                                            .font(.system(size: 22))
+                                            .foregroundStyle(.primary)
+                                            .padding(12)
+                                            .glassEffect()
+                                    } else {
+                                        // Fallback on earlier versions
+                                    }
+                                }
+                            }
+                            .padding()
+                            
+                            Spacer()
+
+                        }
+                    }
+                    
+                }
+                
+            }
+            .ignoresSafeArea()
         }
     }
 }

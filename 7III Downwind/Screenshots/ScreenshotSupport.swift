@@ -3682,7 +3682,7 @@ private struct ScreenshotAngleBadge: View {
     }
 }
 
-private extension ScreenshotSampleData {
+extension ScreenshotSampleData {
     static let hyeresLocationData: [LocationData] = {
         let pts: [(Double, Double, Double)] = [
             (43.0797672165824, 6.124062049829139, 0.56),
@@ -3957,38 +3957,6 @@ private extension ScreenshotSampleData {
     }
 }
 
-// A lil fake sheet
-struct ScreenshotHyeresAngleToolView: View {
-    var body: some View {
-        let statistic = ScreenshotSampleData.hyeresStatistic()
 
-        ZStack {
-            Color.black.opacity(0.3)
 
-            VStack(spacing: 0) {
-                Spacer().frame(height: 60)
-
-                NavigationStack {
-                    WindSportStatisticsMap(
-                        downwindManager: DownwindManager(),
-                        statisticsData: .constant(statistic),
-                        angleTool: true
-                    )
-                    .navigationTitle(statistic.locationString ?? "Hyères")
-                    .navigationBarTitleDisplayMode(.inline)
-//                    .toolbar {
-//                        ToolbarItem(placement: .navigationBarTrailing) {
-//                            Button(action: {}, label: {
-//                                XMarkLabel()
-//                            })
-//                        }
-//                    }
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 43))
-            }
-            
-        }
-        .ignoresSafeArea()
-    }
-}
 #endif
