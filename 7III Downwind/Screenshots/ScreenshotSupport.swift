@@ -1680,7 +1680,7 @@ struct WebsitePhoneCanvas<Content: View>: View {
 
             ZStack {
                 Rectangle()
-                    .fill(Color(red: 0.882, green: 0.882, blue: 0.888))
+                    .fill(Color(red: 0.782, green: 0.782, blue: 0.788))
 
                 DeviceView {
                     content
