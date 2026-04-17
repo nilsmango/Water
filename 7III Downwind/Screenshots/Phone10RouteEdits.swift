@@ -2,7 +2,7 @@
 import Project7IIIScreenshots
 import SwiftUI
 
-struct Phone02Dashboards: View, AppScreenshot {
+struct Phone10RouteEdits: View, AppScreenshot {
     nonisolated static var configuration: AppScreenshotConfiguration {
         AppScreenshotConfiguration(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
     }
@@ -14,17 +14,17 @@ struct Phone02Dashboards: View, AppScreenshot {
 
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 202,
-            titleLines: ["NEW:", "Dashboards"],
+            seed: 909,
+            titleLines: ["Route Edits"],
             phoneOffsetY: 300,
-            phoneColorScheme: .light
+            phoneColorScheme: .dark
         ) {
-            ScreenshotDashboardHomeView()
+            ScreenshotEditRouteView()
         }
     }
 }
 
 #Preview {
-    Phone02Dashboards.preview()
+    Phone10RouteEdits.preview()
 }
 #endif

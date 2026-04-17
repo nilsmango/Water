@@ -121,8 +121,8 @@
 		785CF95A2B4FF2E300528B6D /* OptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CF9592B4FF2E300528B6D /* OptionsMenu.swift */; };
 		785D39D32F90DE84006A54BC /* FakeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D39D22F90DE84006A54BC /* FakeMenu.swift */; };
 		785D39D42F90DE84006A54BC /* FakeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D39D22F90DE84006A54BC /* FakeMenu.swift */; };
-		785D3AE92F915FA5006A54BC /* Phone13SpotsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D3AE82F915FA5006A54BC /* Phone13SpotsMap.swift */; };
-		785D3AEA2F915FA5006A54BC /* Phone13SpotsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D3AE82F915FA5006A54BC /* Phone13SpotsMap.swift */; };
+		785D3AE92F915FA5006A54BC /* Phone11SpotsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */; };
+		785D3AEA2F915FA5006A54BC /* Phone11SpotsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */; };
 		785D3AEC2F9164E2006A54BC /* spots.json in Resources */ = {isa = PBXBuildFile; fileRef = 785D3AEB2F9164E2006A54BC /* spots.json */; };
 		785D3AED2F9164E2006A54BC /* spots.json in Resources */ = {isa = PBXBuildFile; fileRef = 785D3AEB2F9164E2006A54BC /* spots.json */; };
 		78682D1F2F46132C0032D0B1 /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
@@ -162,19 +162,19 @@
 		7885356B2DD33F0A00E223C1 /* FoilingThresholds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */; };
 		788B3E552F8BA5F800E34392 /* Project7IIIScreenshots in Frameworks */ = {isa = PBXBuildFile; productRef = 788B3E542F8BA5F800E34392 /* Project7IIIScreenshots */; };
 		788B3E592F8BA6CA00E34392 /* Project7IIIScreenshotTestTools in Frameworks */ = {isa = PBXBuildFile; productRef = 788B3E582F8BA6CA00E34392 /* Project7IIIScreenshotTestTools */; };
-		788B3E5E2F8C212A00E34392 /* Phone04Places.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000D2F8500020041C173 /* Phone04Places.swift */; };
-		788B3E5F2F8C212A00E34392 /* Phone06WatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100162F8500030041C173 /* Phone06WatchSupport.swift */; };
+		788B3E5E2F8C212A00E34392 /* Phone08Places.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000D2F8500020041C173 /* Phone08Places.swift */; };
+		788B3E5F2F8C212A00E34392 /* Phone01WatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100162F8500030041C173 /* Phone01WatchSupport.swift */; };
 		788B3E602F8C212A00E34392 /* ScreenshotSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100092F8500020041C173 /* ScreenshotSupport.swift */; };
-		788B3E612F8C212A00E34392 /* Phone11StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */; };
-		788B3E622F8C212A00E34392 /* Phone05Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000E2F8500020041C173 /* Phone05Tags.swift */; };
-		788B3E632F8C212A00E34392 /* Phone08StatisticsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100182F8500030041C173 /* Phone08StatisticsOverview.swift */; };
-		788B3E642F8C212A00E34392 /* Phone10SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */; };
-		788B3E652F8C212A00E34392 /* Phone09MakeEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* Phone09MakeEdits.swift */; };
-		788B3E662F8C212A00E34392 /* Phone03Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000C2F8500020041C173 /* Phone03Export.swift */; };
-		788B3E672F8C212A00E34392 /* Phone12GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone12GPXImport.swift */; };
-		788B3E682F8C212A00E34392 /* Phone02Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000B2F8500020041C173 /* Phone02Dashboards.swift */; };
-		788B3E692F8C212A00E34392 /* Phone07WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* Phone07WaterSports.swift */; };
-		788B3E6A2F8C212A00E34392 /* Phone01AngleTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000A2F8500020041C173 /* Phone01AngleTool.swift */; };
+		788B3E612F8C212A00E34392 /* Phone05StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001B2F8500030041C173 /* Phone05StatsDetail.swift */; };
+		788B3E622F8C212A00E34392 /* ExtraPhone05Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */; };
+		788B3E632F8C212A00E34392 /* Phone04StatisticsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100182F8500030041C173 /* Phone04StatisticsOverview.swift */; };
+		788B3E642F8C212A00E34392 /* Phone06SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone06SimpleMap.swift */; };
+		788B3E652F8C212A00E34392 /* Phone10RouteEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* Phone10RouteEdits.swift */; };
+		788B3E662F8C212A00E34392 /* Phone07Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000C2F8500020041C173 /* Phone07Export.swift */; };
+		788B3E672F8C212A00E34392 /* Phone03GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone03GPXImport.swift */; };
+		788B3E682F8C212A00E34392 /* Phone12Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000B2F8500020041C173 /* Phone12Dashboards.swift */; };
+		788B3E692F8C212A00E34392 /* Phone02WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* Phone02WaterSports.swift */; };
+		788B3E6A2F8C212A00E34392 /* Phone09AngleTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000A2F8500020041C173 /* Phone09AngleTool.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
 		789476592E47D0DB005D8C58 /* WidgetDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */; };
@@ -703,18 +703,18 @@
 		78FD90122F8519000041C173 /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
 		78FD90132F8519000041C173 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 78DB913B2E45F1D700B222C2 /* Kanna */; };
 		79A100032F8500020041C173 /* ScreenshotSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100092F8500020041C173 /* ScreenshotSupport.swift */; };
-		79A100042F8500020041C173 /* Phone01AngleTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000A2F8500020041C173 /* Phone01AngleTool.swift */; };
-		79A100052F8500020041C173 /* Phone02Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000B2F8500020041C173 /* Phone02Dashboards.swift */; };
-		79A100062F8500020041C173 /* Phone03Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000C2F8500020041C173 /* Phone03Export.swift */; };
-		79A100072F8500020041C173 /* Phone04Places.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000D2F8500020041C173 /* Phone04Places.swift */; };
-		79A100082F8500020041C173 /* Phone05Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000E2F8500020041C173 /* Phone05Tags.swift */; };
-		79A1000F2F8500030041C173 /* Phone06WatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100162F8500030041C173 /* Phone06WatchSupport.swift */; };
-		79A100102F8500030041C173 /* Phone07WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* Phone07WaterSports.swift */; };
-		79A100112F8500030041C173 /* Phone08StatisticsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100182F8500030041C173 /* Phone08StatisticsOverview.swift */; };
-		79A100122F8500030041C173 /* Phone09MakeEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* Phone09MakeEdits.swift */; };
-		79A100132F8500030041C173 /* Phone10SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */; };
-		79A100142F8500030041C173 /* Phone11StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */; };
-		79A100152F8500030041C173 /* Phone12GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone12GPXImport.swift */; };
+		79A100042F8500020041C173 /* Phone09AngleTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000A2F8500020041C173 /* Phone09AngleTool.swift */; };
+		79A100052F8500020041C173 /* Phone12Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000B2F8500020041C173 /* Phone12Dashboards.swift */; };
+		79A100062F8500020041C173 /* Phone07Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000C2F8500020041C173 /* Phone07Export.swift */; };
+		79A100072F8500020041C173 /* Phone08Places.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000D2F8500020041C173 /* Phone08Places.swift */; };
+		79A100082F8500020041C173 /* ExtraPhone05Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */; };
+		79A1000F2F8500030041C173 /* Phone01WatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100162F8500030041C173 /* Phone01WatchSupport.swift */; };
+		79A100102F8500030041C173 /* Phone02WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* Phone02WaterSports.swift */; };
+		79A100112F8500030041C173 /* Phone04StatisticsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100182F8500030041C173 /* Phone04StatisticsOverview.swift */; };
+		79A100122F8500030041C173 /* Phone10RouteEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* Phone10RouteEdits.swift */; };
+		79A100132F8500030041C173 /* Phone06SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone06SimpleMap.swift */; };
+		79A100142F8500030041C173 /* Phone05StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001B2F8500030041C173 /* Phone05StatsDetail.swift */; };
+		79A100152F8500030041C173 /* Phone03GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone03GPXImport.swift */; };
 		79B1000D2F8500010041C173 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 785C4AC02B40B62E00EB07F8 /* KeychainSwift */; };
 		79B1000E2F8500010041C173 /* Surge in Frameworks */ = {isa = PBXBuildFile; productRef = 78320BBF2BB1C28400D6A772 /* Surge */; };
 		79B1000F2F8500010041C173 /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 78F047C72D9DA655003E11FA /* XMLCoder */; };
@@ -1010,7 +1010,7 @@
 		785CF9572B4FED3100528B6D /* MeasurementSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSystem.swift; sourceTree = "<group>"; };
 		785CF9592B4FF2E300528B6D /* OptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsMenu.swift; sourceTree = "<group>"; };
 		785D39D22F90DE84006A54BC /* FakeMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeMenu.swift; sourceTree = "<group>"; };
-		785D3AE82F915FA5006A54BC /* Phone13SpotsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone13SpotsMap.swift; sourceTree = "<group>"; };
+		785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone11SpotsMap.swift; sourceTree = "<group>"; };
 		785D3AEB2F9164E2006A54BC /* spots.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = spots.json; sourceTree = "<group>"; };
 		78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsMenuView.swift; sourceTree = "<group>"; };
 		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
@@ -1108,18 +1108,18 @@
 		78FBCC002C2DA7EF0091F9EA /* GenerateQRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateQRCode.swift; sourceTree = "<group>"; };
 		78FD8FB72F850CCE0041C173 /* TrackerScreenshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerScreenshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		79A100092F8500020041C173 /* ScreenshotSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotSupport.swift; sourceTree = "<group>"; };
-		79A1000A2F8500020041C173 /* Phone01AngleTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone01AngleTool.swift; sourceTree = "<group>"; };
-		79A1000B2F8500020041C173 /* Phone02Dashboards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone02Dashboards.swift; sourceTree = "<group>"; };
-		79A1000C2F8500020041C173 /* Phone03Export.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone03Export.swift; sourceTree = "<group>"; };
-		79A1000D2F8500020041C173 /* Phone04Places.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone04Places.swift; sourceTree = "<group>"; };
-		79A1000E2F8500020041C173 /* Phone05Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone05Tags.swift; sourceTree = "<group>"; };
-		79A100162F8500030041C173 /* Phone06WatchSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone06WatchSupport.swift; sourceTree = "<group>"; };
-		79A100172F8500030041C173 /* Phone07WaterSports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone07WaterSports.swift; sourceTree = "<group>"; };
-		79A100182F8500030041C173 /* Phone08StatisticsOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone08StatisticsOverview.swift; sourceTree = "<group>"; };
-		79A100192F8500030041C173 /* Phone09MakeEdits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone09MakeEdits.swift; sourceTree = "<group>"; };
-		79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone10SimpleMap.swift; sourceTree = "<group>"; };
-		79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone11StatsDetail.swift; sourceTree = "<group>"; };
-		79A1001C2F8500030041C173 /* Phone12GPXImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone12GPXImport.swift; sourceTree = "<group>"; };
+		79A1000A2F8500020041C173 /* Phone09AngleTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone09AngleTool.swift; sourceTree = "<group>"; };
+		79A1000B2F8500020041C173 /* Phone12Dashboards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone12Dashboards.swift; sourceTree = "<group>"; };
+		79A1000C2F8500020041C173 /* Phone07Export.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone07Export.swift; sourceTree = "<group>"; };
+		79A1000D2F8500020041C173 /* Phone08Places.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone08Places.swift; sourceTree = "<group>"; };
+		79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraPhone05Tags.swift; sourceTree = "<group>"; };
+		79A100162F8500030041C173 /* Phone01WatchSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone01WatchSupport.swift; sourceTree = "<group>"; };
+		79A100172F8500030041C173 /* Phone02WaterSports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone02WaterSports.swift; sourceTree = "<group>"; };
+		79A100182F8500030041C173 /* Phone04StatisticsOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone04StatisticsOverview.swift; sourceTree = "<group>"; };
+		79A100192F8500030041C173 /* Phone10RouteEdits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone10RouteEdits.swift; sourceTree = "<group>"; };
+		79A1001A2F8500030041C173 /* Phone06SimpleMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone06SimpleMap.swift; sourceTree = "<group>"; };
+		79A1001B2F8500030041C173 /* Phone05StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone05StatsDetail.swift; sourceTree = "<group>"; };
+		79A1001C2F8500030041C173 /* Phone03GPXImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone03GPXImport.swift; sourceTree = "<group>"; };
 		79B100012F8500010041C173 /* 7III Water Screenshots.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "7III Water Screenshots.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -1679,19 +1679,19 @@
 				785D3AEB2F9164E2006A54BC /* spots.json */,
 				79A100092F8500020041C173 /* ScreenshotSupport.swift */,
 				785D39D22F90DE84006A54BC /* FakeMenu.swift */,
-				79A1000A2F8500020041C173 /* Phone01AngleTool.swift */,
-				79A1000B2F8500020041C173 /* Phone02Dashboards.swift */,
-				79A1000C2F8500020041C173 /* Phone03Export.swift */,
-				79A1000D2F8500020041C173 /* Phone04Places.swift */,
-				79A1000E2F8500020041C173 /* Phone05Tags.swift */,
-				79A100162F8500030041C173 /* Phone06WatchSupport.swift */,
-				79A100172F8500030041C173 /* Phone07WaterSports.swift */,
-				79A100182F8500030041C173 /* Phone08StatisticsOverview.swift */,
-				79A100192F8500030041C173 /* Phone09MakeEdits.swift */,
-				79A1001A2F8500030041C173 /* Phone10SimpleMap.swift */,
-				79A1001B2F8500030041C173 /* Phone11StatsDetail.swift */,
-				79A1001C2F8500030041C173 /* Phone12GPXImport.swift */,
-				785D3AE82F915FA5006A54BC /* Phone13SpotsMap.swift */,
+				79A100162F8500030041C173 /* Phone01WatchSupport.swift */,
+				79A100172F8500030041C173 /* Phone02WaterSports.swift */,
+				79A1001C2F8500030041C173 /* Phone03GPXImport.swift */,
+				79A100182F8500030041C173 /* Phone04StatisticsOverview.swift */,
+				79A1001B2F8500030041C173 /* Phone05StatsDetail.swift */,
+				79A1001A2F8500030041C173 /* Phone06SimpleMap.swift */,
+				79A1000C2F8500020041C173 /* Phone07Export.swift */,
+				79A1000D2F8500020041C173 /* Phone08Places.swift */,
+				79A1000A2F8500020041C173 /* Phone09AngleTool.swift */,
+				79A100192F8500030041C173 /* Phone10RouteEdits.swift */,
+				785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */,
+				79A1000B2F8500020041C173 /* Phone12Dashboards.swift */,
+				79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */,
 			);
 			path = Screenshots;
 			sourceTree = "<group>";
@@ -2630,7 +2630,7 @@
 				78F9E0622F87CE5D008FDBCF /* ShareOverlay.swift in Sources */,
 				78F9E0632F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */,
 				78F9E0642F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */,
-				785D3AE92F915FA5006A54BC /* Phone13SpotsMap.swift in Sources */,
+				785D3AE92F915FA5006A54BC /* Phone11SpotsMap.swift in Sources */,
 				78F9E0652F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */,
 				78F9E0662F87CE5D008FDBCF /* VideoPicker.swift in Sources */,
 				78F9E0672F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */,
@@ -2715,19 +2715,19 @@
 				78F9E1022F87D2B0008FDBCF /* FlexibleView.swift in Sources */,
 				78F9E0B62F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */,
 				78F9E0B72F87CE5D008FDBCF /* SpeedChartView.swift in Sources */,
-				788B3E5E2F8C212A00E34392 /* Phone04Places.swift in Sources */,
-				788B3E5F2F8C212A00E34392 /* Phone06WatchSupport.swift in Sources */,
+				788B3E5E2F8C212A00E34392 /* Phone08Places.swift in Sources */,
+				788B3E5F2F8C212A00E34392 /* Phone01WatchSupport.swift in Sources */,
 				788B3E602F8C212A00E34392 /* ScreenshotSupport.swift in Sources */,
-				788B3E612F8C212A00E34392 /* Phone11StatsDetail.swift in Sources */,
-				788B3E622F8C212A00E34392 /* Phone05Tags.swift in Sources */,
-				788B3E632F8C212A00E34392 /* Phone08StatisticsOverview.swift in Sources */,
-				788B3E642F8C212A00E34392 /* Phone10SimpleMap.swift in Sources */,
-				788B3E652F8C212A00E34392 /* Phone09MakeEdits.swift in Sources */,
-				788B3E662F8C212A00E34392 /* Phone03Export.swift in Sources */,
-				788B3E672F8C212A00E34392 /* Phone12GPXImport.swift in Sources */,
-				788B3E682F8C212A00E34392 /* Phone02Dashboards.swift in Sources */,
-				788B3E692F8C212A00E34392 /* Phone07WaterSports.swift in Sources */,
-				788B3E6A2F8C212A00E34392 /* Phone01AngleTool.swift in Sources */,
+				788B3E612F8C212A00E34392 /* Phone05StatsDetail.swift in Sources */,
+				788B3E622F8C212A00E34392 /* ExtraPhone05Tags.swift in Sources */,
+				788B3E632F8C212A00E34392 /* Phone04StatisticsOverview.swift in Sources */,
+				788B3E642F8C212A00E34392 /* Phone06SimpleMap.swift in Sources */,
+				788B3E652F8C212A00E34392 /* Phone10RouteEdits.swift in Sources */,
+				788B3E662F8C212A00E34392 /* Phone07Export.swift in Sources */,
+				788B3E672F8C212A00E34392 /* Phone03GPXImport.swift in Sources */,
+				788B3E682F8C212A00E34392 /* Phone12Dashboards.swift in Sources */,
+				788B3E692F8C212A00E34392 /* Phone02WaterSports.swift in Sources */,
+				788B3E6A2F8C212A00E34392 /* Phone09AngleTool.swift in Sources */,
 				78F9E0B82F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */,
 				78F9E0B92F87CE5D008FDBCF /* MapSectionView.swift in Sources */,
 				78F9E0BA2F87CE5D008FDBCF /* AngleSection.swift in Sources */,
@@ -2794,19 +2794,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				79A100032F8500020041C173 /* ScreenshotSupport.swift in Sources */,
-				79A100042F8500020041C173 /* Phone01AngleTool.swift in Sources */,
-				79A100052F8500020041C173 /* Phone02Dashboards.swift in Sources */,
-				79A100062F8500020041C173 /* Phone03Export.swift in Sources */,
-				79A100072F8500020041C173 /* Phone04Places.swift in Sources */,
+				79A100042F8500020041C173 /* Phone09AngleTool.swift in Sources */,
+				79A100052F8500020041C173 /* Phone12Dashboards.swift in Sources */,
+				79A100062F8500020041C173 /* Phone07Export.swift in Sources */,
+				79A100072F8500020041C173 /* Phone08Places.swift in Sources */,
 				78F9E1012F87D2B0008FDBCF /* FlexibleView.swift in Sources */,
-				79A100082F8500020041C173 /* Phone05Tags.swift in Sources */,
-				79A1000F2F8500030041C173 /* Phone06WatchSupport.swift in Sources */,
-				79A100102F8500030041C173 /* Phone07WaterSports.swift in Sources */,
-				79A100112F8500030041C173 /* Phone08StatisticsOverview.swift in Sources */,
-				79A100122F8500030041C173 /* Phone09MakeEdits.swift in Sources */,
-				79A100132F8500030041C173 /* Phone10SimpleMap.swift in Sources */,
-				79A100142F8500030041C173 /* Phone11StatsDetail.swift in Sources */,
-				79A100152F8500030041C173 /* Phone12GPXImport.swift in Sources */,
+				79A100082F8500020041C173 /* ExtraPhone05Tags.swift in Sources */,
+				79A1000F2F8500030041C173 /* Phone01WatchSupport.swift in Sources */,
+				79A100102F8500030041C173 /* Phone02WaterSports.swift in Sources */,
+				79A100112F8500030041C173 /* Phone04StatisticsOverview.swift in Sources */,
+				79A100122F8500030041C173 /* Phone10RouteEdits.swift in Sources */,
+				79A100132F8500030041C173 /* Phone06SimpleMap.swift in Sources */,
+				79A100142F8500030041C173 /* Phone05StatsDetail.swift in Sources */,
+				79A100152F8500030041C173 /* Phone03GPXImport.swift in Sources */,
 				78FD900F2F8516CF0041C173 /* ShareStatStack.swift in Sources */,
 				78FD8FD02F850DDA0041C173 /* WebScrapingService.swift in Sources */,
 				78FD8FD12F850DDA0041C173 /* UnitType.swift in Sources */,
@@ -2839,7 +2839,7 @@
 				78FD8FDF2F850DDF0041C173 /* CrewStatistic.swift in Sources */,
 				78FD8FE02F850DDF0041C173 /* WorkoutType.swift in Sources */,
 				78FD8FE12F850DDF0041C173 /* VersionHistory.swift in Sources */,
-				785D3AEA2F915FA5006A54BC /* Phone13SpotsMap.swift in Sources */,
+				785D3AEA2F915FA5006A54BC /* Phone11SpotsMap.swift in Sources */,
 				78FD8FE22F850DDF0041C173 /* FoilStallDetector.swift in Sources */,
 				78FD8FE32F850DDF0041C173 /* GeocodingManager.swift in Sources */,
 				78FD8FE42F850DDF0041C173 /* CoordinateSmoothingHelpers.swift in Sources */,

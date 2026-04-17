@@ -1865,7 +1865,7 @@ enum ScreenshotSampleData {
                 day: 18,
                 hour: 12,
                 minute: 11,
-                location: "Neuenburg -> Concise",
+                location: "Neuenburg → Concise",
                 runTime: 96,
                 distance: 22130,
                 topSpeed: 19.8,
@@ -2117,7 +2117,7 @@ enum ScreenshotSampleData {
             id: UUID(uuidString: "12121212-1212-1212-1212-121212121212") ?? UUID(),
             name: "Home Session",
             startDate: date(year: 2025, month: 4, day: 1, hour: 11, minute: 22),
-            locationString: "Neuenburg -> St-Blaise",
+            locationString: "Neuenburg → St-Blaise",
             runTime: 85,
             distance: 28150,
             topSpeed: 35,
@@ -2133,7 +2133,7 @@ enum ScreenshotSampleData {
             id: UUID(uuidString: "23232323-2323-2323-2323-232323232323") ?? UUID(),
             name: "Simple Route",
             startDate: date(year: 2025, month: 4, day: 1, hour: 12, minute: 48),
-            locationString: "Cortaillod -> Yverdon-les-Bains",
+            locationString: "Cortaillod → Yverdon-les-Bains",
             runTime: 118,
             distance: 36320,
             topSpeed: 34,
@@ -2156,7 +2156,7 @@ enum ScreenshotSampleData {
             id: UUID(uuidString: "34343434-3434-3434-3434-343434343434") ?? UUID(),
             name: "DW Parawing",
             startDate: date(year: 2025, month: 4, day: 1, hour: 15, minute: 21),
-            locationString: "Cortaillod -> Yverdon-les-Bains",
+            locationString: "Cortaillod → Yverdon-les-Bains",
             runTime: 85,
             distance: 28150,
             topSpeed: 35,
@@ -2172,6 +2172,14 @@ enum ScreenshotSampleData {
             return queued
         }
 
+        let run1Start = date(year: 2025, month: 4, day: 1, hour: 15, minute: 22)
+        let run1Locations = shiftedLocations(from: run1Start, limit: 300)
+        let run1Scaled = Self.scaledLocations(run1Locations, toMatchRunTime: 85, startDate: run1Start)
+
+        let run2Start = date(year: 2025, month: 4, day: 1, hour: 12, minute: 48)
+        let run2Locations = shiftedLocations(from: run2Start, limit: 360)
+        let run2Scaled = Self.scaledLocations(run2Locations, toMatchRunTime: 118, startDate: run2Start)
+
         return [
             ImportRun(
                 id: UUID(uuidString: "45454545-4545-4545-4545-454545454545") ?? UUID(),
@@ -2179,13 +2187,13 @@ enum ScreenshotSampleData {
                 topSpeed: 35,
                 averageSpeed: 20,
                 totalDistance: 28150,
-                startLocation: shiftedLocations(from: date(year: 2025, month: 4, day: 1, hour: 15, minute: 22), limit: 300).first,
-                locations: shiftedLocations(from: date(year: 2025, month: 4, day: 1, hour: 15, minute: 22), limit: 300),
+                startLocation: run1Scaled.first,
+                locations: run1Scaled,
                 heartRates: [],
                 averageHeartRate: 0,
                 workoutType: nil,
                 tags: [],
-                locationString: "Cortaillod -> Yverdon-les-Bains"
+                locationString: "Concise → Neuchâtel"
             ),
             ImportRun(
                 id: UUID(uuidString: "56565656-5656-5656-5656-565656565656") ?? UUID(),
@@ -2193,15 +2201,29 @@ enum ScreenshotSampleData {
                 topSpeed: 34,
                 averageSpeed: 18.5,
                 totalDistance: 36320,
-                startLocation: shiftedLocations(from: date(year: 2025, month: 4, day: 1, hour: 12, minute: 48), limit: 360).first,
-                locations: shiftedLocations(from: date(year: 2025, month: 4, day: 1, hour: 12, minute: 48), limit: 360),
+                startLocation: run2Scaled.first,
+                locations: run2Scaled,
                 heartRates: [],
                 averageHeartRate: 0,
                 workoutType: nil,
                 tags: [],
-                locationString: "Neuenburg -> St-Blaise"
+                locationString: "Concise → St-Blaise"
             )
         ]
+    }
+
+    private static func scaledLocations(_ locations: [LocationData], toMatchRunTime runTime: Double, startDate: Date) -> [LocationData] {
+        guard let first = locations.first, let last = locations.last else { return locations }
+        let originalDuration = last.timestamp.timeIntervalSince(first.timestamp)
+        let targetDuration = runTime * 60
+        guard originalDuration > 0 else { return locations }
+        let scale = targetDuration / originalDuration
+        return locations.map { location in
+            var scaled = location
+            let delta = location.timestamp.timeIntervalSince(first.timestamp)
+            scaled.timestamp = startDate.addingTimeInterval(delta * scale)
+            return scaled
+        }
     }
 
     static func highlightedTags() -> [String] {

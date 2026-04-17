@@ -34,7 +34,7 @@ struct FakeMenu: View {
             .background {
                 RoundedRectangle(cornerRadius: 26)
                     .fill(
-                        Color.whiteAndBlack.opacity(0.5)
+                        Color.whiteAndBlack.opacity(0.8)
                     )
             }
             .glassEffect(in: RoundedRectangle(cornerRadius: 26))
@@ -68,7 +68,7 @@ struct FakePicker: View {
             .background {
                 RoundedRectangle(cornerRadius: 26)
                     .fill(
-                        Color.whiteAndBlack.opacity(0.5)
+                        Color.whiteAndBlack.opacity(0.8)
                     )
             }
             .glassEffect(in: RoundedRectangle(cornerRadius: 26))

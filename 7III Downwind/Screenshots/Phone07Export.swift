@@ -2,7 +2,7 @@
 import Project7IIIScreenshots
 import SwiftUI
 
-struct Phone03Export: View, AppScreenshot {
+struct Phone07Export: View, AppScreenshot {
     nonisolated static var configuration: AppScreenshotConfiguration {
         AppScreenshotConfiguration(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
     }
@@ -15,7 +15,7 @@ struct Phone03Export: View, AppScreenshot {
     var body: some View {
         AppStorePhoneCanvas(
             seed: 923,
-            titleLines: ["The Exports", "of your Dreams"],
+            titleLines: ["With all", "the Exports"],
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
@@ -63,6 +63,6 @@ struct Phone03Export: View, AppScreenshot {
 }
 
 #Preview {
-    Phone03Export.preview()
+    Phone07Export.preview()
 }
 #endif

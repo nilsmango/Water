@@ -2,7 +2,7 @@
 import Project7IIIScreenshots
 import SwiftUI
 
-struct Phone13SpotsMap: View, AppScreenshot {
+struct Phone03GPXImport: View, AppScreenshot {
     nonisolated static var configuration: AppScreenshotConfiguration {
         AppScreenshotConfiguration(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
     }
@@ -14,17 +14,17 @@ struct Phone13SpotsMap: View, AppScreenshot {
 
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 1313,
-            titleLines: ["Add and find", "Foil Spots!"],
+            seed: 1212,
+            titleLines: ["GPX Import:", "Garmin & more"],
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
-            ScreenshotSpotsMapView()
+            ScreenshotGPXImportView()
         }
     }
 }
 
 #Preview {
-    Phone13SpotsMap.preview()
+    Phone03GPXImport.preview()
 }
 #endif

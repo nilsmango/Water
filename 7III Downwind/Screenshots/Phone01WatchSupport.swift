@@ -2,7 +2,7 @@
 import Project7IIIScreenshots
 import SwiftUI
 
-struct Phone07WaterSports: View, AppScreenshot {
+struct Phone01WatchSupport: View, AppScreenshot {
     nonisolated static var configuration: AppScreenshotConfiguration {
         AppScreenshotConfiguration(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
     }
@@ -14,14 +14,14 @@ struct Phone07WaterSports: View, AppScreenshot {
 
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 707,
-            titleLines: ["For all Water", "Sports"],
+            seed: 676,
+            titleLines: ["Tracking with", "Watch Support"],
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
             let downwindManager = ScreenshotSampleData.makeHomeManager(
                 showTracker: true,
-                workoutType: .downwindSUPFoil
+                workoutType: .downwindSUP
             )
             let manager = ScreenshotSampleData.makeDashboardManager()
 
@@ -30,33 +30,24 @@ struct Phone07WaterSports: View, AppScreenshot {
                 initialDashboardManager: manager,
                 animateDashboardDirectionArrows: false
             )
-            .overlay(alignment: .topTrailing) {
-                FakePicker(items: [
-                    "Foil Surf",
-                    "SUP Foil",
-                    "DW SUP Foil",
-                    "DW SUP",
-                    "DW Prone Foil",
-                    "Wing Foil",
-                    "Parawing",
-                    "DW Parawing",
-                    "Wind Foil",
-                    "Kite Foil",
-                    "Kite",
-                    "Windsurf",
-                    "Pump Foil",
-                    "Wake Thief",
-//                    "Wake Foil",
-//                    "Wake Surf"
-                ], selected: "DW SUP Foil")
-                .padding(.top, 218)
-                .padding(.trailing, 30)
+        }
+        .overlay(alignment: .bottom) {
+            HStack(spacing: 24) {
+                Image("appleWatch01")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    
+//                Image("appleWatch02")
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
             }
+            .frame(height: 1120)
+            .padding(.bottom, 00)
         }
     }
 }
 
 #Preview {
-    Phone07WaterSports.preview()
+    Phone01WatchSupport.preview()
 }
 #endif

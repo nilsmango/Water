@@ -2,7 +2,7 @@
 import Project7IIIScreenshots
 import SwiftUI
 
-struct Phone01AngleTool: View, AppScreenshot {
+struct Phone09AngleTool: View, AppScreenshot {
     nonisolated static var configuration: AppScreenshotConfiguration {
         AppScreenshotConfiguration(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
     }
@@ -15,7 +15,7 @@ struct Phone01AngleTool: View, AppScreenshot {
     var body: some View {
         AppStorePhoneCanvas(
             seed: 1901,
-            titleLines: ["NEW:", "Angle Tool"],
+            titleLines: ["Angle Tool"],
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
@@ -83,6 +83,6 @@ struct Phone01AngleTool: View, AppScreenshot {
 }
 
 #Preview {
-    Phone01AngleTool.preview()
+    Phone09AngleTool.preview()
 }
 #endif

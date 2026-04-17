@@ -2,7 +2,7 @@
 import Project7IIIScreenshots
 import SwiftUI
 
-struct Phone08StatisticsOverview: View, AppScreenshot {
+struct Phone05StatsDetail: View, AppScreenshot {
     nonisolated static var configuration: AppScreenshotConfiguration {
         AppScreenshotConfiguration(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
     }
@@ -14,17 +14,17 @@ struct Phone08StatisticsOverview: View, AppScreenshot {
 
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 908,
-            titleLines: ["With", "Statistics"],
+            seed: 1111,
+            titleLines: ["So many", "Details!"],
             phoneOffsetY: 300,
-            phoneColorScheme: .light
+            phoneColorScheme: .dark
         ) {
-            ScreenshotStatisticsOverviewView()
+            ScreenshotStatsDetailView()
         }
     }
 }
 
 #Preview {
-    Phone08StatisticsOverview.preview()
+    Phone05StatsDetail.preview()
 }
 #endif

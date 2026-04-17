@@ -2,7 +2,7 @@
 import Project7IIIScreenshots
 import SwiftUI
 
-struct Phone04Places: View, AppScreenshot {
+struct Phone12Dashboards: View, AppScreenshot {
     nonisolated static var configuration: AppScreenshotConfiguration {
         AppScreenshotConfiguration(.iPhone69Inch(size: .w1290h2796), options: defaultScreenshotOption)
     }
@@ -14,17 +14,17 @@ struct Phone04Places: View, AppScreenshot {
 
     var body: some View {
         AppStorePhoneCanvas(
-            seed: 704,
-            titleLines: ["Filter by", "Places & More"],
+            seed: 202,
+            titleLines: ["Wind", "Dashboards"],
             phoneOffsetY: 300,
             phoneColorScheme: .light
         ) {
-            ScreenshotPlacesView()
+            ScreenshotDashboardHomeView()
         }
     }
 }
 
 #Preview {
-    Phone04Places.preview()
+    Phone12Dashboards.preview()
 }
 #endif
