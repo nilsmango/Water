@@ -1653,6 +1653,48 @@ struct AppStorePhoneCanvas<Content: View>: View {
     }
 }
 
+struct WebsitePhoneCanvas<Content: View>: View {
+    @Environment(\.appScreenshotEnvironment) private var environment
+
+    let phoneOffsetY: CGFloat
+    let phoneColorScheme: ColorScheme
+    let content: Content
+
+    init(
+        phoneOffsetY: CGFloat,
+        phoneColorScheme: ColorScheme,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.phoneOffsetY = phoneOffsetY
+        self.phoneColorScheme = phoneColorScheme
+        self.content = content()
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            let phoneScale: CGFloat = 0.93
+            let phoneSize = CGSize(
+                width: environment.screenshotSize.width * phoneScale,
+                height: environment.screenshotSize.height * phoneScale
+            )
+
+            ZStack {
+                Rectangle()
+                    .fill(Color(red: 0.882, green: 0.882, blue: 0.888))
+
+                DeviceView {
+                    content
+                        .preferredColorScheme(phoneColorScheme)
+                }
+                .statusBarShown()
+                .frame(width: phoneSize.width, height: phoneSize.height)
+                .offset(y: phoneOffsetY)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
 enum ScreenshotSampleData {
     private static let screenshotReferenceMonth = 1
     private static let screenshotReferenceYear = 2026

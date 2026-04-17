@@ -126,6 +126,10 @@
 		785D3AEC2F9164E2006A54BC /* spots.json in Resources */ = {isa = PBXBuildFile; fileRef = 785D3AEB2F9164E2006A54BC /* spots.json */; };
 		785D3AED2F9164E2006A54BC /* spots.json in Resources */ = {isa = PBXBuildFile; fileRef = 785D3AEB2F9164E2006A54BC /* spots.json */; };
 		78682D1F2F46132C0032D0B1 /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
+		7876FB462F9265C8009575DA /* WebsiteScreenshot01Overview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876FB442F9265C8009575DA /* WebsiteScreenshot01Overview.swift */; };
+		7876FB472F9265C8009575DA /* WebsiteScreenshot02Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876FB452F9265C8009575DA /* WebsiteScreenshot02Detail.swift */; };
+		7876FB482F9265C8009575DA /* WebsiteScreenshot01Overview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876FB442F9265C8009575DA /* WebsiteScreenshot01Overview.swift */; };
+		7876FB492F9265C8009575DA /* WebsiteScreenshot02Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876FB452F9265C8009575DA /* WebsiteScreenshot02Detail.swift */; };
 		7877E1222BC2989300776890 /* StatisticsRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1212BC2989300776890 /* StatisticsRunView.swift */; };
 		7877E1242BC3D87C00776890 /* PolylineData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1232BC3D87C00776890 /* PolylineData.swift */; };
 		7877E1262BC3F7A800776890 /* StatisticsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7877E1252BC3F7A800776890 /* StatisticsDetails.swift */; };
@@ -1013,6 +1017,8 @@
 		785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone11SpotsMap.swift; sourceTree = "<group>"; };
 		785D3AEB2F9164E2006A54BC /* spots.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = spots.json; sourceTree = "<group>"; };
 		78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsMenuView.swift; sourceTree = "<group>"; };
+		7876FB442F9265C8009575DA /* WebsiteScreenshot01Overview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteScreenshot01Overview.swift; sourceTree = "<group>"; };
+		7876FB452F9265C8009575DA /* WebsiteScreenshot02Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteScreenshot02Detail.swift; sourceTree = "<group>"; };
 		7877E1212BC2989300776890 /* StatisticsRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsRunView.swift; sourceTree = "<group>"; };
 		7877E1232BC3D87C00776890 /* PolylineData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineData.swift; sourceTree = "<group>"; };
 		7877E1252BC3F7A800776890 /* StatisticsDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsDetails.swift; sourceTree = "<group>"; };
@@ -1692,6 +1698,8 @@
 				785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */,
 				79A1000B2F8500020041C173 /* Phone12Dashboards.swift */,
 				79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */,
+				7876FB442F9265C8009575DA /* WebsiteScreenshot01Overview.swift */,
+				7876FB452F9265C8009575DA /* WebsiteScreenshot02Detail.swift */,
 			);
 			path = Screenshots;
 			sourceTree = "<group>";
@@ -2674,6 +2682,8 @@
 				78F9E08D2F87CE5D008FDBCF /* ListBackground.swift in Sources */,
 				78F9E08E2F87CE5D008FDBCF /* TagsEditViewStatisticCapture.swift in Sources */,
 				78F9E08F2F87CE5D008FDBCF /* SummaryView.swift in Sources */,
+				7876FB462F9265C8009575DA /* WebsiteScreenshot01Overview.swift in Sources */,
+				7876FB472F9265C8009575DA /* WebsiteScreenshot02Detail.swift in Sources */,
 				78F9E0902F87CE5D008FDBCF /* MapsMenuView.swift in Sources */,
 				78F9E0912F87CE5D008FDBCF /* UpgradeView.swift in Sources */,
 				78F9E0922F87CE5D008FDBCF /* UpgradeShowcase.swift in Sources */,
@@ -2910,6 +2920,8 @@
 				78F9DFA12F87CE5D008FDBCF /* GroupedTagsListView.swift in Sources */,
 				78F9DFA22F87CE5D008FDBCF /* StringSelectionView.swift in Sources */,
 				78F9DFA32F87CE5D008FDBCF /* StatisticsRunView.swift in Sources */,
+				7876FB482F9265C8009575DA /* WebsiteScreenshot01Overview.swift in Sources */,
+				7876FB492F9265C8009575DA /* WebsiteScreenshot02Detail.swift in Sources */,
 				78F9DFA42F87CE5D008FDBCF /* StallStatsOverlay.swift in Sources */,
 				78F9DFA52F87CE5D008FDBCF /* SpeedChartView.swift in Sources */,
 				78F9DFA62F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */,
