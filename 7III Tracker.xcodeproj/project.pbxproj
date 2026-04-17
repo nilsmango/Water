@@ -173,11 +173,11 @@
 		788B3E622F8C212A00E34392 /* ExtraPhone05Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */; };
 		788B3E632F8C212A00E34392 /* Phone04StatisticsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100182F8500030041C173 /* Phone04StatisticsOverview.swift */; };
 		788B3E642F8C212A00E34392 /* Phone06SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone06SimpleMap.swift */; };
-		788B3E652F8C212A00E34392 /* Phone10RouteEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* Phone10RouteEdits.swift */; };
+		788B3E652F8C212A00E34392 /* ExtraPhone10RouteEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* ExtraPhone10RouteEdits.swift */; };
 		788B3E662F8C212A00E34392 /* Phone07Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000C2F8500020041C173 /* Phone07Export.swift */; };
 		788B3E672F8C212A00E34392 /* Phone03GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone03GPXImport.swift */; };
 		788B3E682F8C212A00E34392 /* Phone12Dashboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000B2F8500020041C173 /* Phone12Dashboards.swift */; };
-		788B3E692F8C212A00E34392 /* Phone02WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* Phone02WaterSports.swift */; };
+		788B3E692F8C212A00E34392 /* ExtraPhone02WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* ExtraPhone02WaterSports.swift */; };
 		788B3E6A2F8C212A00E34392 /* Phone09AngleTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000A2F8500020041C173 /* Phone09AngleTool.swift */; };
 		788B938E2B63F2CB00BA6B28 /* StartOptionsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */; };
 		788B93902B63F49D00BA6B28 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788B938F2B63F49D00BA6B28 /* AboutView.swift */; };
@@ -713,9 +713,9 @@
 		79A100072F8500020041C173 /* Phone08Places.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000D2F8500020041C173 /* Phone08Places.swift */; };
 		79A100082F8500020041C173 /* ExtraPhone05Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */; };
 		79A1000F2F8500030041C173 /* Phone01WatchSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100162F8500030041C173 /* Phone01WatchSupport.swift */; };
-		79A100102F8500030041C173 /* Phone02WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* Phone02WaterSports.swift */; };
+		79A100102F8500030041C173 /* ExtraPhone02WaterSports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100172F8500030041C173 /* ExtraPhone02WaterSports.swift */; };
 		79A100112F8500030041C173 /* Phone04StatisticsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100182F8500030041C173 /* Phone04StatisticsOverview.swift */; };
-		79A100122F8500030041C173 /* Phone10RouteEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* Phone10RouteEdits.swift */; };
+		79A100122F8500030041C173 /* ExtraPhone10RouteEdits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A100192F8500030041C173 /* ExtraPhone10RouteEdits.swift */; };
 		79A100132F8500030041C173 /* Phone06SimpleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001A2F8500030041C173 /* Phone06SimpleMap.swift */; };
 		79A100142F8500030041C173 /* Phone05StatsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001B2F8500030041C173 /* Phone05StatsDetail.swift */; };
 		79A100152F8500030041C173 /* Phone03GPXImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A1001C2F8500030041C173 /* Phone03GPXImport.swift */; };
@@ -1120,9 +1120,9 @@
 		79A1000D2F8500020041C173 /* Phone08Places.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone08Places.swift; sourceTree = "<group>"; };
 		79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraPhone05Tags.swift; sourceTree = "<group>"; };
 		79A100162F8500030041C173 /* Phone01WatchSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone01WatchSupport.swift; sourceTree = "<group>"; };
-		79A100172F8500030041C173 /* Phone02WaterSports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone02WaterSports.swift; sourceTree = "<group>"; };
+		79A100172F8500030041C173 /* ExtraPhone02WaterSports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraPhone02WaterSports.swift; sourceTree = "<group>"; };
 		79A100182F8500030041C173 /* Phone04StatisticsOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone04StatisticsOverview.swift; sourceTree = "<group>"; };
-		79A100192F8500030041C173 /* Phone10RouteEdits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone10RouteEdits.swift; sourceTree = "<group>"; };
+		79A100192F8500030041C173 /* ExtraPhone10RouteEdits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraPhone10RouteEdits.swift; sourceTree = "<group>"; };
 		79A1001A2F8500030041C173 /* Phone06SimpleMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone06SimpleMap.swift; sourceTree = "<group>"; };
 		79A1001B2F8500030041C173 /* Phone05StatsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone05StatsDetail.swift; sourceTree = "<group>"; };
 		79A1001C2F8500030041C173 /* Phone03GPXImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone03GPXImport.swift; sourceTree = "<group>"; };
@@ -1686,7 +1686,6 @@
 				79A100092F8500020041C173 /* ScreenshotSupport.swift */,
 				785D39D22F90DE84006A54BC /* FakeMenu.swift */,
 				79A100162F8500030041C173 /* Phone01WatchSupport.swift */,
-				79A100172F8500030041C173 /* Phone02WaterSports.swift */,
 				79A1001C2F8500030041C173 /* Phone03GPXImport.swift */,
 				79A100182F8500030041C173 /* Phone04StatisticsOverview.swift */,
 				79A1001B2F8500030041C173 /* Phone05StatsDetail.swift */,
@@ -1694,10 +1693,11 @@
 				79A1000C2F8500020041C173 /* Phone07Export.swift */,
 				79A1000D2F8500020041C173 /* Phone08Places.swift */,
 				79A1000A2F8500020041C173 /* Phone09AngleTool.swift */,
-				79A100192F8500030041C173 /* Phone10RouteEdits.swift */,
 				785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */,
 				79A1000B2F8500020041C173 /* Phone12Dashboards.swift */,
+				79A100192F8500030041C173 /* ExtraPhone10RouteEdits.swift */,
 				79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */,
+				79A100172F8500030041C173 /* ExtraPhone02WaterSports.swift */,
 				7876FB442F9265C8009575DA /* WebsiteScreenshot01Overview.swift */,
 				7876FB452F9265C8009575DA /* WebsiteScreenshot02Detail.swift */,
 			);
@@ -2732,11 +2732,11 @@
 				788B3E622F8C212A00E34392 /* ExtraPhone05Tags.swift in Sources */,
 				788B3E632F8C212A00E34392 /* Phone04StatisticsOverview.swift in Sources */,
 				788B3E642F8C212A00E34392 /* Phone06SimpleMap.swift in Sources */,
-				788B3E652F8C212A00E34392 /* Phone10RouteEdits.swift in Sources */,
+				788B3E652F8C212A00E34392 /* ExtraPhone10RouteEdits.swift in Sources */,
 				788B3E662F8C212A00E34392 /* Phone07Export.swift in Sources */,
 				788B3E672F8C212A00E34392 /* Phone03GPXImport.swift in Sources */,
 				788B3E682F8C212A00E34392 /* Phone12Dashboards.swift in Sources */,
-				788B3E692F8C212A00E34392 /* Phone02WaterSports.swift in Sources */,
+				788B3E692F8C212A00E34392 /* ExtraPhone02WaterSports.swift in Sources */,
 				788B3E6A2F8C212A00E34392 /* Phone09AngleTool.swift in Sources */,
 				78F9E0B82F87CE5D008FDBCF /* StatisticsMainHeader.swift in Sources */,
 				78F9E0B92F87CE5D008FDBCF /* MapSectionView.swift in Sources */,
@@ -2811,9 +2811,9 @@
 				78F9E1012F87D2B0008FDBCF /* FlexibleView.swift in Sources */,
 				79A100082F8500020041C173 /* ExtraPhone05Tags.swift in Sources */,
 				79A1000F2F8500030041C173 /* Phone01WatchSupport.swift in Sources */,
-				79A100102F8500030041C173 /* Phone02WaterSports.swift in Sources */,
+				79A100102F8500030041C173 /* ExtraPhone02WaterSports.swift in Sources */,
 				79A100112F8500030041C173 /* Phone04StatisticsOverview.swift in Sources */,
-				79A100122F8500030041C173 /* Phone10RouteEdits.swift in Sources */,
+				79A100122F8500030041C173 /* ExtraPhone10RouteEdits.swift in Sources */,
 				79A100132F8500030041C173 /* Phone06SimpleMap.swift in Sources */,
 				79A100142F8500030041C173 /* Phone05StatsDetail.swift in Sources */,
 				79A100152F8500030041C173 /* Phone03GPXImport.swift in Sources */,

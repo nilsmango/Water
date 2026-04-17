@@ -1754,7 +1754,7 @@ enum ScreenshotSampleData {
             tags: tags,
             workoutType: workoutType,
             startDate: normalizedStartDate,
-            endDate: locations.last?.timestamp ?? normalizedStartDate.addingTimeInterval(runTime * 60),
+            endDate: normalizedStartDate.addingTimeInterval(runTime * 60),
             topSpeed1s: topSpeed + 1.4,
             topSpeed10s: topSpeed - 4.2,
             popUps: 7,
@@ -2452,7 +2452,7 @@ enum ScreenshotSampleData {
         let averageSpeed = edit?.newAverageSpeed ?? run.averageSpeed
         let topSpeed = edit?.newTopSpeed ?? run.topSpeed
         let startDate = shiftedToReferenceYear(run.startLocation?.timestamp ?? run.locations.first?.timestamp ?? .now)
-        let endDate = run.locations.last?.timestamp ?? startDate.addingTimeInterval(totalTime * 60)
+        let endDate = startDate.addingTimeInterval(totalTime * 60)
         let calories = max(distance / 28, 320)
         let tags = edit?.newTags ?? run.tags
 
