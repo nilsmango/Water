@@ -9,6 +9,27 @@ import Foundation
 
 let versionHistory: [Version] = [
     // MARK: Newest on Top + Keep the introduction short to not get truncated text.
+    Version(versionNumber: "1.4",
+            introduction: "Getting more awesome!",
+            changes: [
+                "Improved angle tool.",
+                "New gradient line maps.",
+                "New combined speed and heart rate chart.",
+                "Added fastest overall kilometer.",
+                "Expanded speed statistics.",
+                "Added speed distribution.",
+                "Added \"Days with Sessions\" to statistics.",
+                "New workout type: UDW Parawing (Up/Downwind Parawing).",
+                "Maps update: add spots, view spots, and see all sessions on one map.",
+                "Improved map export (better image output).",
+                "Shared maps and stickers now support tags.",
+                "iPhone now records height data.",
+                "Added jump count and maximum jump height.",
+                "Automatic removal of obvious GPS spikes.",
+                "Improved handling of GPS issues."
+            ],
+            releaseDate: "April 2026"
+           ),
     Version(versionNumber: "1.3",
             introduction: "Dashboards!",
             changes: [
