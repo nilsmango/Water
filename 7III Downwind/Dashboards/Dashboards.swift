@@ -40,15 +40,7 @@ struct Dashboards: View {
                     #else
                     let isNotMac = true
                     #endif
-                    if !downwindManager.hasPurchasedPremium && manager.dashboards.firstIndex(of: dashboard) ?? 1 > 0 && isNotMac {
-                        Button {
-                            navPath = NavigationPath()
-                            downwindManager.showUpgradeSheet = true
-                            
-                        } label: {
-                            Label("Unlock unlimited Dashboards", systemImage: "lock.fill")
-                        }
-                    } else {
+                   
                         
                         NavigationLink(value: dashboard) {
                             let isWidgetEnabled = manager.widgetDashboardIds.contains(dashboard.id)
@@ -121,7 +113,7 @@ struct Dashboards: View {
                                     }
                                 }
                         }
-                    }
+                    
                 }
                 .onDelete(perform: manager.deleteDashboards)
                 .onMove(perform: manager.moveDashboards)

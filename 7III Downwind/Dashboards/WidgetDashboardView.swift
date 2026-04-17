@@ -48,27 +48,13 @@ struct WidgetDashboardView: View {
                     
                     VStack(spacing: widgetPadding*1.5) {
                             ForEach(nestedElements, id: \.self) { elements in
-                                let doNotShow = !downwindManager.hasPurchasedPremium && nestedElements.firstIndex(of: elements) != 0
-                                let doNotShowButton = !downwindManager.hasPurchasedPremium && nestedElements.firstIndex(of: elements) ?? 2 > 1
                                 
-                                if doNotShowButton {
-                                    
-                                } else if doNotShow {
-                                    Button {
-                                        downwindManager.showUpgradeSheet = true
-                                    } label: {
-                                        Label("Unlock unlimited Dashboards", systemImage: "lock.fill")
-                                    }
-                                    .buttonStyle(.borderedProminent)
-                                    .padding(.horizontal)
-                                    .padding(.top, elements == nestedElements.first ? 0 : widgetPadding/2)
-                                } else {
                                     let row = manager.makeNestedElementsRow(elements: elements)
                                     let element: TrackedElement? = elements.count == 1 ? elements[0] : nil
                                         NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: nil, manager: manager, animateDirectionArrow: animateDirectionArrows, onExpand: {}, onEdit: {}, onDuplicate: {})
                                         .padding(.horizontal)
                                         .padding(.top, elements == nestedElements.first ? 0 : widgetPadding/2)
-                                }                                    
+                                                                    
                             }
                         }
                         .padding(.vertical, widgetPadding*1.5)

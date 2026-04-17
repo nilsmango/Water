@@ -91,13 +91,13 @@ struct StatisticsView: View {
                                         }
                                     }
                                 } footer: {
-                                    if downwindManager.statisticsCount > 5, downwindManager.hasPurchasedPremium == false {
+                                    if downwindManager.statisticsCount > downwindManager.freeStatsToShow, downwindManager.hasPurchasedPremium == false {
                                         HStack {
                                             Spacer()
                                             Button {
                                                 showUpgradeSheet = true
                                             } label: {
-                                                Label("Load \(downwindManager.statisticsCount - 5) more Sessions", systemImage: "lock.fill")
+                                                Label("Load \(downwindManager.statisticsCount - downwindManager.freeStatsToShow) more Sessions", systemImage: "lock.fill")
                                             }
                                             .buttonStyle(.borderedProminent)
                                             Spacer()

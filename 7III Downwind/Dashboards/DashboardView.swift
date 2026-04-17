@@ -52,17 +52,7 @@ struct DashboardView: View {
                         #else
                         let isNotMac = true
                         #endif
-                        let doNotShow = !downwindManager.hasPurchasedPremium && nestedElements.firstIndex(of: elements) != 0 && isNotMac
-                        if doNotShow {
-                            Button {
-                                navPath = NavigationPath()
-                                downwindManager.showUpgradeSheet = true
-                                
-                            } label: {
-                                Label("Unlock unlimited Elements", systemImage: "lock.fill")
-                            }
-                            .listRowSeparator(.hidden)
-                        } else {
+                        
                             let row = manager.makeNestedElementsRow(elements: elements)
                             let element: TrackedElement? = elements.count == 1 ? elements[0] : nil
                             if !manager.expandedElements.contains(Set(elements.map(\.id))) {
@@ -114,7 +104,7 @@ struct DashboardView: View {
                                     manager.moveElements(from: indexSet, to: index, elements: elements, dashboardIndex: dashboardIndex)
                                 }
                             }
-                        }
+                        
                     }
                     .onMove { indexSet, index in
                         manager.moveGroupedElements(from: indexSet, to: index, nestedElements: nestedElements, dashboardIndex: dashboardIndex)

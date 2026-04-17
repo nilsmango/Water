@@ -1100,11 +1100,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         
                         self.findMatchingStatisticsAndMerge()
                         
-                        // Free user only show 5 runs
+                        // Free user only show xx runs
                         if !self.hasPurchasedPremium {
                             self.statisticsCount = self.runStatistics.count
-                            if self.statisticsCount > 5 {
-                                self.runStatistics = Array(self.runStatistics.prefix(5))
+                            if self.statisticsCount > self.freeStatsToShow {
+                                self.runStatistics = Array(self.runStatistics.prefix(self.freeStatsToShow))
                             }
                         }
                         
@@ -3710,6 +3710,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     @AppStorage("sessionCounter") var trackerSessionsCount = 0
     @AppStorage("Premium") var hasPurchasedPremium = false
+    let freeStatsToShow = 30
     @Published var purchasedProducts = [Product]()
     @Published var premiumProducts: [Product] = []
     @Published var subscriptionRenewalDate: Date? = nil
@@ -4838,11 +4839,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.runStatistics.sort(by: { $0.startDate ?? $0.locationData.first?.timestamp ?? Date.distantPast > $1.startDate ?? $1.locationData.first?.timestamp ?? Date.distantPast})
 
             
-            // Free user only show 7 runs
+            // Free user only show xx runs
             if !self.hasPurchasedPremium {
                 self.statisticsCount = self.runStatistics.count
-                if self.statisticsCount > 5 {
-                    self.runStatistics = Array(self.runStatistics.prefix(5))
+                if self.statisticsCount > self.freeStatsToShow {
+                    self.runStatistics = Array(self.runStatistics.prefix(self.freeStatsToShow))
                 }
             }
             

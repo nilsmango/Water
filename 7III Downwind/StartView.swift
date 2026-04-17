@@ -227,21 +227,9 @@ struct StartView: View {
                     ForEach(manager.widgetDashboardIds, id: \.self) { id in
                         // TODO: make not hasPurchased
                         if let dashboard = manager.dashboards.first(where: { $0.id == id }) {
-                            if !downwindManager.hasPurchasedPremium && manager.widgetDashboardIds.firstIndex(of: id) ?? 2 > 0 {
-                                Text(dashboard.name)
-                                    .font(.headline)
-                                    .padding(4)
-                                
-                                Button {
-                                    downwindManager.showUpgradeSheet = true
-                                } label: {
-                                    Label("Unlock unlimited Dashboards", systemImage: "lock.fill")
-                                }
-                                .buttonStyle(.borderedProminent)
-                                
-                            } else {
+                            
                                 WidgetDashboardView(manager: manager, downwindManager: downwindManager, dashboard: dashboard, animateDirectionArrows: animateDashboardDirectionArrows, navPath: $navPath)
-                            }
+                            
                         }
                         
                     }

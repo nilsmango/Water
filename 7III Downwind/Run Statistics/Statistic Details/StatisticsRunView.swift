@@ -287,7 +287,7 @@ struct StatisticsRunView: View {
                         if statisticsData.locationData.count > 2 {
                             Menu {
                                 Button(action: {
-                                    if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4 {
+                                    if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 5 {
                                         // update the edit data
                                         statisticsDataEdit = statisticsData
                                         showRunEditView = true
@@ -296,7 +296,7 @@ struct StatisticsRunView: View {
                                     }
                                     
                                 }, label: {
-                                    if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 4  {
+                                    if downwindManager.hasPurchasedPremium || downwindManager.editCounter <= 5  {
                                         Text("Edit Route")
                                     } else {
                                         Label("Edit Route", systemImage: "lock.fill")
