@@ -128,7 +128,7 @@ struct DashboardView: View {
                         }
                         #endif
                         if manager.showGroupInfo {
-                            Text("💡 Elements with the same URL and a label sharing at least a 2-character prefix will be grouped.")
+                            Text("💡 Elements with the same URL and first word in their label will be grouped (up to 3).")
                         }
                         Text("🤙 Don't forget to support your local wind stations!")
                         
