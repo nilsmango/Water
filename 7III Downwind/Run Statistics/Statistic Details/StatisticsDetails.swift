@@ -101,12 +101,6 @@ struct StatisticsDetails: View {
                 if turns != 0 {
                     StatisticsInfoViews(header: "Turns", bodyText: String(turns))
                         .frame(width: width, alignment: .leading)
-                } else {
-                    // we can use 0.0 km/h because we get that if speed is zero
-                    if topSpeed != "0.0 km/h" {
-                        StatisticsInfoViews(header: "GPS Top Speed", bodyText: topSpeed)
-                            .frame(width: width, alignment: .leading)
-                    }
                 }
             }
         }
