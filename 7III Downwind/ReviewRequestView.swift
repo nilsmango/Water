@@ -74,7 +74,7 @@ struct ReviewRequestView: View {
         let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         
-        let mailtoString = "mailto:hi@project7iii.com?subject=\(encodedSubject)&body=\(encodedBody)"
+        let mailtoString = "mailto:7+water@project7iii.com?subject=\(encodedSubject)&body=\(encodedBody)"
         
         if let mailtoURL = URL(string: mailtoString) {
             UIApplication.shared.open(mailtoURL, options: [:], completionHandler: nil)

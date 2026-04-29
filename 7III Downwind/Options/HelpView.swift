@@ -28,7 +28,7 @@ struct HelpView: View {
                     Link("Privacy Policy", destination: URL(string: "https://project7iii.com/water/privacy-policy/")!)
                     
                     Link("Terms and Conditions", destination: URL(string: "https://project7iii.com/water/terms-and-conditions/")!)
-                    Link("Contact us", destination: URL(string: "mailto:hi@project7iii.com")!)
+                    Link("Contact us", destination: URL(string: "mailto:7+water@project7iii.com")!)
                 }
                 
             } header: {

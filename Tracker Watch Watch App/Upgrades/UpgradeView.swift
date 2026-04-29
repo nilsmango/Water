@@ -70,7 +70,7 @@ struct UpgradeView: View {
                             Spacer()
                             VStack {
                                 ProgressView("Loading Products")
-                                Text("If nothing loads please email us at hi@project7iii.com")
+                                Text("If nothing loads please email us at 7+water@project7iii.com")
                             }
                             Spacer()
                         }
@@ -102,7 +102,7 @@ struct UpgradeView: View {
                         .font(.caption)
                         .padding(.top, 16)
                     
-                    Text("Note: If you are unable to afford an upgrade, please email us at hi@project7iii.com for a coupon code.")
+                    Text("Note: If you are unable to afford an upgrade, please email us at 7+water@project7iii.com for a coupon code.")
                         .font(.caption)
                         .padding(.bottom)
                         .padding(.top, 8)
