@@ -25,6 +25,7 @@ struct StatisticsDetails: View {
     let fastestDistances: [FastestDistanceResult]?
     let jumpCount: Int?
     let highestJump: String?
+    let popUpsTitle: String
     
     @Binding var hasTappedDistance: Bool
     
@@ -45,6 +46,7 @@ struct StatisticsDetails: View {
         fastestDistances: [FastestDistanceResult]?,
         jumpCount: Int? = nil,
         highestJump: String? = nil,
+        popUpsTitle: String = "Pop-Ups",
         hasTappedDistance: Binding<Bool>
     ) {
         self.distance = distance
@@ -63,6 +65,7 @@ struct StatisticsDetails: View {
         self.fastestDistances = fastestDistances
         self.jumpCount = jumpCount
         self.highestJump = highestJump
+        self.popUpsTitle = popUpsTitle
         self._hasTappedDistance = hasTappedDistance
     }
     
@@ -95,7 +98,7 @@ struct StatisticsDetails: View {
             }
             
             HStack {
-                StatisticsInfoViews(header: "Pop-Ups", bodyText: String(popUps))
+                StatisticsInfoViews(header: popUpsTitle, bodyText: String(popUps))
                     .frame(width: width, alignment: .leading)
                 
                 if turns != 0 {

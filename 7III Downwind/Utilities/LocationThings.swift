@@ -413,7 +413,7 @@ func calculateFastestKm(from data: [LocationData]) -> String? {
     var fastestKmStartIndex = 0
     
     for i in 0..<data.count {
-        if let (kmTime, _) = calculateFastestDistance(in: data, fromIndex: i, targetDistance: 1000.0) {
+        if let (kmTime, _) = calculateFastestDistance(in: data, fromIndex: i, targetDistance: 1000.0, maximumPlausibleSegmentSpeed: fastestDistanceMaximumSegmentSpeed(for: nil)) {
             if kmTime < fastestKmSeconds {
                 fastestKmSeconds = kmTime
                 fastestKmStartIndex = i
@@ -435,16 +435,17 @@ func calculateFastestKm(from data: [LocationData]) -> String? {
 }
 
 /// returns array of fastest distances (50m, 100m, 1km) with time and speed strings
-func calculateFastestDistances(from data: [LocationData], system: MeasurementSystem) -> [FastestDistanceResult] {
+func calculateFastestDistances(from data: [LocationData], system: MeasurementSystem, workoutType: WorkoutType? = nil) -> [FastestDistanceResult] {
     var results: [FastestDistanceResult] = []
     let distancesToCheck = [(50.0, "50 m"), (100.0, "100 m"), (1000.0, "1 km")]
+    let maximumPlausibleSegmentSpeed = fastestDistanceMaximumSegmentSpeed(for: workoutType)
     
     for (distanceInMeters, label) in distancesToCheck {
         var fastestSeconds: Double = Double.infinity
         var fastestStartIndex = 0
         
         for i in 0..<data.count {
-            if let (time, _) = calculateFastestDistance(in: data, fromIndex: i, targetDistance: distanceInMeters) {
+            if let (time, _) = calculateFastestDistance(in: data, fromIndex: i, targetDistance: distanceInMeters, maximumPlausibleSegmentSpeed: maximumPlausibleSegmentSpeed) {
                 if time < fastestSeconds {
                     fastestSeconds = time
                     fastestStartIndex = i
@@ -509,7 +510,8 @@ private func calculateSpeed(in data: [LocationData], fromIndex index: Int, durat
 private func calculateFastestDistance(
     in data: [LocationData],
     fromIndex index: Int,
-    targetDistance: Double
+    targetDistance: Double,
+    maximumPlausibleSegmentSpeed: Double
 ) -> (Double, Int)? {
     
     let start = data[index]
@@ -523,6 +525,15 @@ private func calculateFastestDistance(
         let toLocation = CLLocation(latitude: curr.latitude, longitude: curr.longitude)
         
         let segmentDistance = fromLocation.distance(from: toLocation)
+        let segmentTime = curr.timestamp.timeIntervalSince(prev.timestamp)
+
+        guard segmentDistance.isFinite,
+              segmentDistance > 0,
+              segmentTime.isFinite,
+              segmentTime > 0,
+              isPlausibleFastestDistanceSegment(distance: segmentDistance, time: segmentTime, maximumPlausibleSegmentSpeed: maximumPlausibleSegmentSpeed) else {
+            continue
+        }
         
         // Will we cross the target on this segment?
         if accumulatedDistance + segmentDistance >= targetDistance {
@@ -531,7 +542,6 @@ private func calculateFastestDistance(
             let fraction = remainingDistance / segmentDistance
             
             // Interpolate time
-            let segmentTime = curr.timestamp.timeIntervalSince(prev.timestamp)
             let interpolatedTime = prev.timestamp.addingTimeInterval(segmentTime * fraction)
             
             let timeElapsed = interpolatedTime.timeIntervalSince(start.timestamp)
@@ -543,6 +553,27 @@ private func calculateFastestDistance(
     }
     
     return nil
+}
+
+private func isPlausibleFastestDistanceSegment(distance: Double, time: TimeInterval, maximumPlausibleSegmentSpeed: Double) -> Bool {
+    return distance / time <= maximumPlausibleSegmentSpeed
+}
+
+private func fastestDistanceMaximumSegmentSpeed(for workoutType: WorkoutType?) -> Double {
+    let maximumKmh: Double
+
+    switch workoutType {
+    case .pumpFoil, .pumpSkate, .wakeThief, .wakeFoil, .wakeSurf:
+        maximumKmh = 40
+    case .kite, .windsurf:
+        maximumKmh = 110
+    case .downwindSUPFoil, .downwindProneFoil, .dWParawing, .kiteFoil, .wingFoil, .parawing, .windFoil, .foilSurf, .supFoil, .eFoil, .eAssist, .paraUpDown:
+        maximumKmh = 78
+    default:
+        maximumKmh = 110
+    }
+
+    return maximumKmh / 3.6
 }
 
 private func calculateCumulativeDistances(from data: [LocationData]) -> [Double] {

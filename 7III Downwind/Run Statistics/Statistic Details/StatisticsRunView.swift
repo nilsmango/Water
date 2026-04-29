@@ -70,6 +70,7 @@ struct StatisticsRunView: View {
     
     @State private var fastestDistances: [FastestDistanceResult]? = []
     @State private var rounds: [(String, String, String)] = []
+    @State private var flights: [(String, String, String, String)] = []
     @State private var heartRateSpeedData: [SpeedSample] = []
     @State private var detailsSummary = DetailsSummary()
     
@@ -84,7 +85,7 @@ struct StatisticsRunView: View {
         List {
             Section {
                 
-                StatisticsDetails(distance: detailsSummary.distance, time: detailsSummary.time, averageSpeed: detailsSummary.averageSpeed, averagePace: detailsSummary.averagePace, topSpeed: detailsSummary.topSpeed, topsSpeed1s: detailsSummary.topsSpeed1s, topsSpeed10s: detailsSummary.topsSpeed10s, kCal: detailsSummary.kCal, heartRate: detailsSummary.heartRate, popUps: detailsSummary.popUps, percentageOnFoil: detailsSummary.percentageOnFoil, turns: detailsSummary.turns, longestDistanceOnFoil: detailsSummary.longestDistanceOnFoil, fastestDistances: fastestDistances, jumpCount: detailsSummary.jumpCount, highestJump: detailsSummary.highestJump, hasTappedDistance: $hasTappedDistance)
+                StatisticsDetails(distance: detailsSummary.distance, time: detailsSummary.time, averageSpeed: detailsSummary.averageSpeed, averagePace: detailsSummary.averagePace, topSpeed: detailsSummary.topSpeed, topsSpeed1s: detailsSummary.topsSpeed1s, topsSpeed10s: detailsSummary.topsSpeed10s, kCal: detailsSummary.kCal, heartRate: detailsSummary.heartRate, popUps: detailsSummary.popUps, percentageOnFoil: detailsSummary.percentageOnFoil, turns: detailsSummary.turns, longestDistanceOnFoil: detailsSummary.longestDistanceOnFoil, fastestDistances: fastestDistances, jumpCount: detailsSummary.jumpCount, highestJump: detailsSummary.highestJump, popUpsTitle: Self.popUpsTitle(for: statisticsData.workoutType), hasTappedDistance: $hasTappedDistance)
             } header: {
                 VStack(spacing: 0) {
                     StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
@@ -119,8 +120,13 @@ struct StatisticsRunView: View {
 
                 if downwindManager.forcePremiumForScreenshots {
                     if statisticsData.locationData.count > 2 {
-                        rounds = Self.createRounds(from: statisticsData.locationData)
-                        fastestDistances = calculateFastestDistances(from: statisticsData.locationData, system: downwindManager.measurementSystem)
+                        if Self.usesFlightList(for: statisticsData.workoutType) {
+                            let waves = Self.existingOrCalculatedWaves(from: statisticsData)
+                            flights = Self.createFlights(from: waves, measurementSystem: downwindManager.measurementSystem)
+                        } else {
+                            rounds = Self.createRounds(from: statisticsData.locationData)
+                        }
+                        fastestDistances = calculateFastestDistances(from: statisticsData.locationData, system: downwindManager.measurementSystem, workoutType: statisticsData.workoutType)
                     }
                     heartRateSpeedData = Self.createSpeedData(from: statisticsData.locationData)
                     if let importedRun = downwindManager.importedRuns.first(where: { $0.id == statisticsData.id }), !importedRun.heartRates.isEmpty {
@@ -161,7 +167,7 @@ struct StatisticsRunView: View {
             }
             
             if !statisticsData.locationData.isEmpty {
-                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, statisticsData: $statisticsData)
+                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, flights: flights, statisticsData: $statisticsData)
                 
                 if statisticsData.angles?.count ?? 0 > 0 {
                     Section {
@@ -380,9 +386,13 @@ struct StatisticsRunView: View {
         .sheet(isPresented: $showRounds, content: {
             NavigationStack {
                 List {
-                    StatisticsRounds(downwindManager: downwindManager, rounds: rounds)
+                    if Self.usesFlightList(for: statisticsData.workoutType) {
+                        StatisticsFlights(downwindManager: downwindManager, flights: flights)
+                    } else {
+                        StatisticsRounds(downwindManager: downwindManager, rounds: rounds)
+                    }
                 }
-                .navigationTitle("Rounds")
+                .navigationTitle(Self.usesFlightList(for: statisticsData.workoutType) ? "Flights" : "Rounds")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
@@ -594,6 +604,14 @@ struct StatisticsRunView: View {
             calculationProgress = "Analyzing foiling stats..."
         }
         let _ = await calculateFoilStatsAsync()
+
+        if Self.usesFlightList(for: statisticsData.workoutType) {
+            await MainActor.run {
+                calculationProgress = "Calculating flights..."
+            }
+            await calculateFlightsAsync()
+        }
+
         await MainActor.run {
             calculationProgress = "Loading heart rates over time..."
         }
@@ -614,10 +632,12 @@ struct StatisticsRunView: View {
         }
         await calculateFastestDistancesAsync()
         
-        await MainActor.run {
-            calculationProgress = "Calculating rounds..."
+        if !Self.usesFlightList(for: statisticsData.workoutType) {
+            await MainActor.run {
+                calculationProgress = "Calculating rounds..."
+            }
+            await calculateRoundsAsync()
         }
-        await calculateRoundsAsync()
         
         await MainActor.run {
             calculationProgress = "Processing speed data..."
@@ -649,12 +669,13 @@ struct StatisticsRunView: View {
     }
     
     private func calculateFoilStatsAsync() async {
-        guard statisticsData.percentageOnFoil ?? 0 == 0 || statisticsData.longestDistanceOnFoil ?? 0 == 0 else {
-            return
-        }
-        
         guard let workoutType = statisticsData.workoutType,
               workoutType.calculateFoilingStats else { return }
+
+        let needsWaves = workoutType.returnWaves && (statisticsData.waves?.isEmpty ?? true)
+        guard statisticsData.percentageOnFoil ?? 0 == 0 || statisticsData.longestDistanceOnFoil ?? 0 == 0 || needsWaves else {
+            return
+        }
         
         let locationData = statisticsData.locationData
         let threshold = workoutType.thresholdSpeedKmhSlowSpeedWithDefault
@@ -743,9 +764,10 @@ struct StatisticsRunView: View {
 
         let locationData = statisticsData.locationData
         let measurementSystem = downwindManager.measurementSystem
+        let workoutType = statisticsData.workoutType
         
         let distances = await Task.detached(priority: .utility) {
-            calculateFastestDistances(from: locationData, system: measurementSystem)
+            calculateFastestDistances(from: locationData, system: measurementSystem, workoutType: workoutType)
         }.value
         
         await MainActor.run {
@@ -766,6 +788,24 @@ struct StatisticsRunView: View {
         
         await MainActor.run {
             rounds = roundsResult
+        }
+    }
+
+    private func calculateFlightsAsync() async {
+        guard statisticsData.locationData.count > 1,
+              Self.usesFlightList(for: statisticsData.workoutType) else {
+            return
+        }
+
+        let waves = statisticsData.waves ?? []
+        let measurementSystem = downwindManager.measurementSystem
+
+        let flightsResult = await Task.detached(priority: .utility) {
+            Self.createFlights(from: waves, measurementSystem: measurementSystem)
+        }.value
+
+        await MainActor.run {
+            flights = flightsResult
         }
     }
     
@@ -827,6 +867,95 @@ struct StatisticsRunView: View {
         let pace = totalCalculatedTime / (statistic.runDistance / 1000)
         let prettyPace = makePrettyMinutesString(timeInSeconds: pace, paceFormat: true)
         return prettyPace + " /km"
+    }
+
+    private nonisolated static func usesFlightList(for workoutType: WorkoutType?) -> Bool {
+        workoutType?.returnWaves == true
+    }
+
+    private nonisolated static func popUpsTitle(for workoutType: WorkoutType?) -> String {
+        switch workoutType {
+        case .pumpFoil, .wakeThief:
+            return "Flights"
+        default:
+            return "Pop-Ups"
+        }
+    }
+
+    private nonisolated static func existingOrCalculatedWaves(from statistic: RunStatistic) -> [[LocationData]] {
+        if let waves = statistic.waves, !waves.isEmpty {
+            return waves
+        }
+
+        guard let workoutType = statistic.workoutType,
+              workoutType.calculateFoilingStats,
+              workoutType.returnWaves else {
+            return []
+        }
+
+        return calculateFoilingStats(
+            from: statistic.locationData,
+            thresholdSpeedKmh: workoutType.thresholdSpeedKmhSlowSpeedWithDefault,
+            countTurns: workoutType.countTurns,
+            returnWaves: true
+        ).waves
+    }
+
+    private nonisolated static func createFlights(from waves: [[LocationData]], measurementSystem: MeasurementSystem) -> [(String, String, String, String)] {
+        struct FlightMetric {
+            let number: String
+            let time: String
+            let distance: String
+            let distanceInMeters: Double
+            let averageSpeed: Double
+        }
+
+        let metrics = waves.enumerated().compactMap { index, wave -> FlightMetric? in
+            guard wave.count > 1,
+                  let start = wave.first?.timestamp,
+                  let end = wave.last?.timestamp else {
+                return nil
+            }
+
+            let duration = end.timeIntervalSince(start)
+            guard duration > 0 else { return nil }
+
+            var distance = 0.0
+            for locationIndex in 1..<wave.count {
+                distance += calculateDistances(
+                    fromLatitude: wave[locationIndex - 1].latitude,
+                    fromLongitude: wave[locationIndex - 1].longitude,
+                    toLatitude: wave[locationIndex].latitude,
+                    toLongitude: wave[locationIndex].longitude
+                ).directDistance
+            }
+
+            return FlightMetric(
+                number: String(index + 1),
+                time: makePrettyMinutesString(timeInSeconds: duration),
+                distance: makePrettyDistance(meters: distance, system: measurementSystem, statistics: true),
+                distanceInMeters: distance,
+                averageSpeed: (distance / duration) * 3.6
+            )
+        }
+
+        var rows = metrics.map { ($0.number, $0.time, $0.distance, "") }
+
+        let distanceAwards = ["🥇", "🥈", "🥉"]
+        let longestFlights = metrics.indices.sorted {
+            metrics[$0].distanceInMeters > metrics[$1].distanceInMeters
+        }
+
+        for (rank, metricIndex) in longestFlights.prefix(distanceAwards.count).enumerated() {
+            rows[metricIndex].3 += distanceAwards[rank]
+        }
+
+        if let fastestSpeed = metrics.map(\.averageSpeed).max(),
+           let fastestIndex = metrics.firstIndex(where: { $0.averageSpeed == fastestSpeed }) {
+            rows[fastestIndex].3 += "🚀"
+        }
+
+        return rows
     }
     
     private nonisolated static func createRounds(from locations: [LocationData]) -> [(String, String, String)] {

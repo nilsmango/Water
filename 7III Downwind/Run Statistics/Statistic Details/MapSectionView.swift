@@ -15,19 +15,31 @@ struct MapSectionView: View {
     @Binding var showAngleMap: Bool
     
     let rounds: [(String, String, String)]
+    let flights: [(String, String, String, String)]
     @Binding var statisticsData: RunStatistic
     
     var body: some View {
-        if statisticsData.runDistance > 1999 {
+        let showsFlights = statisticsData.workoutType?.returnWaves == true
+        let showsSegmentSection = showsFlights ? !flights.isEmpty : statisticsData.runDistance > 1999
+
+        if showsSegmentSection {
             Section {
-                StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        showRounds = true
-                    }
+                if showsFlights {
+                    StatisticsFlights(downwindManager: downwindManager, flights: flights, overViewLayout: true)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showRounds = true
+                        }
+                } else {
+                    StatisticsRounds(downwindManager: downwindManager, rounds: rounds, overViewLayout: true)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showRounds = true
+                        }
+                }
             } header: {
                 HStack {
-                    Text("Rounds")
+                    Text(showsFlights ? "Flights" : "Rounds")
                         .textCase(nil)
                         .font(.title3)
                         .fontWeight(.bold)
@@ -43,7 +55,7 @@ struct MapSectionView: View {
                 }
                 .padding(.bottom, 9)
             }
-            .id("rounds")
+            .id(showsFlights ? "flights" : "rounds")
         }
         
         
@@ -104,6 +116,6 @@ struct MapSectionView: View {
 
 #Preview {
     List {
-        MapSectionView(downwindManager: DownwindManager(), showRounds: .constant(false), showMapSheet: .constant(false), showAngleMap: .constant(false), rounds: [], statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
+        MapSectionView(downwindManager: DownwindManager(), showRounds: .constant(false), showMapSheet: .constant(false), showAngleMap: .constant(false), rounds: [], flights: [], statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
     }
 }
