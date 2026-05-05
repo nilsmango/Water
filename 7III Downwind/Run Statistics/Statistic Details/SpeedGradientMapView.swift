@@ -28,6 +28,7 @@ struct SpeedGradientMapView: UIViewRepresentable {
 
         context.coordinator.mapViewRef = mapView
         context.coordinator.fullLocationData = locations
+        context.coordinator.polylineData.removeAll()
 
         mapView.removeOverlays(mapView.overlays)
         mapView.removeAnnotations(mapView.annotations)
@@ -46,6 +47,10 @@ struct SpeedGradientMapView: UIViewRepresentable {
         let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)
 
         let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+        context.coordinator.polylineData[polyline] = SpeedGradientMapView.Coordinator.PolylineInfo(
+            gradientLocations: downsampledForGradient,
+            maxSpeed: maxSpeed(in: locations)
+        )
 
         debugMap("Polyline pointCount: \(polyline.pointCount)")
         debugMap("Polyline boundingRect: \(polyline.boundingMapRect)")

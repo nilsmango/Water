@@ -42,6 +42,7 @@ struct SpeedGradientStatisticsMap: UIViewRepresentable {
         context.coordinator.currentNonWaveOpacity = nonWaveOpacity
         context.coordinator.currentMaxPolylinePoints = maxPolylinePoints
         context.coordinator.currentMaxGradientStops = maxGradientStops
+        context.coordinator.currentMaxSpeed = maxSpeed(in: statisticsData.locationData)
 
         context.coordinator.fullLocationData = statisticsData.locationData
         context.coordinator.fullWaves = statisticsData.waves ?? []
@@ -53,6 +54,7 @@ struct SpeedGradientStatisticsMap: UIViewRepresentable {
 
         mapView.removeOverlays(mapView.overlays)
         mapView.removeAnnotations(mapView.annotations)
+        context.coordinator.polylineData.removeAll()
 
         guard statisticsData.locationData.count > 1 else {
             return
@@ -107,6 +109,7 @@ extension SpeedGradientStatisticsMap {
         var currentNonWaveOpacity: CGFloat = 0.3
         var currentMaxPolylinePoints: Int = MAX_POLYLINE_POINTS
         var currentMaxGradientStops: Int = MAX_GRADIENT_STOPS
+        var currentMaxSpeed: Double = 0
         var debounceTimer: Timer?
         var mapViewRef: MKMapView?
 
@@ -114,6 +117,7 @@ extension SpeedGradientStatisticsMap {
             let gradientLocations: [LocationData]
             let lineWidth: CGFloat
             let opacity: CGFloat
+            let maxSpeed: Double
         }
 
         deinit {
@@ -144,7 +148,12 @@ extension SpeedGradientStatisticsMap {
         }
 
         func addPolyline(to mapView: MKMapView, polyline: MKPolyline, gradientLocations: [LocationData], lineWidth: CGFloat, opacity: CGFloat) {
-            let info = PolylineInfo(gradientLocations: gradientLocations, lineWidth: lineWidth, opacity: opacity)
+            let info = PolylineInfo(
+                gradientLocations: gradientLocations,
+                lineWidth: lineWidth,
+                opacity: opacity,
+                maxSpeed: currentMaxSpeed
+            )
             polylineData[polyline] = info
             mapView.addOverlay(polyline)
         }
@@ -171,7 +180,7 @@ extension SpeedGradientStatisticsMap {
             renderer.lineCap = .round
 
             if let gradientLocations = info?.gradientLocations, !gradientLocations.isEmpty {
-                let (colors, stops) = makeGradientStops(from: gradientLocations)
+                let (colors, stops) = makeGradientStops(from: gradientLocations, maxSpeed: info?.maxSpeed)
                 renderer.setColors(colors, locations: stops)
             }
 
@@ -199,37 +208,33 @@ extension SpeedGradientStatisticsMap {
                 height: visibleRect.height * 1.6
             )
 
-            let visibleLocations = filterVisibleLocations(fullLocationData, in: paddedRect)
+            let visibleSegments = visibleLocationSegments(from: fullLocationData, in: paddedRect)
 
-            guard visibleLocations.count > 1 else { return }
-
-            let downsampledForPolyline = downsamplePolylineCoordinates(visibleLocations, targetCount: currentMaxPolylinePoints)
-            let downsampledForGradient = downsampleLocations(visibleLocations, targetCount: currentMaxGradientStops)
+            guard !visibleSegments.isEmpty else { return }
 
             mapView.removeOverlays(mapView.overlays)
+            polylineData.removeAll()
 
             if !fullWaves.isEmpty {
-                let visibleWaves = fullWaves.compactMap { wave -> [LocationData]? in
-                    let visibleWave = filterVisibleLocations(wave, in: paddedRect)
-                    return visibleWave.count > 1 ? visibleWave : nil
+                let visibleWaves = fullWaves.flatMap { wave -> [[LocationData]] in
+                    visibleLocationSegments(from: wave, in: paddedRect)
                 }
-                let visibleNonWaves = fullNonWaves.compactMap { nonWave -> [LocationData]? in
-                    let visibleNonWave = filterVisibleLocations(nonWave, in: paddedRect)
-                    return visibleNonWave.count > 1 ? visibleNonWave : nil
+
+                let visibleNonWaves = fullNonWaves.flatMap { nonWave -> [[LocationData]] in
+                    visibleLocationSegments(from: nonWave, in: paddedRect)
                 }
+
                 addWavePolylines(to: mapView, waves: visibleWaves, lineWidth: currentLineWidth, opacity: currentWaveOpacity, maxPolylinePoints: currentMaxPolylinePoints, maxGradientStops: currentMaxGradientStops)
                 addNonWavePolylines(to: mapView, nonWaves: visibleNonWaves, lineWidth: currentLineWidth, opacity: currentNonWaveOpacity, maxPolylinePoints: currentMaxPolylinePoints, maxGradientStops: currentMaxGradientStops)
             } else {
-                let coordinates = makeCoordinates(from: downsampledForPolyline)
-                let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
-                addPolyline(to: mapView, polyline: polyline, gradientLocations: downsampledForGradient, lineWidth: currentLineWidth, opacity: currentWaveOpacity)
-            }
-        }
-
-        func filterVisibleLocations(_ locations: [LocationData], in rect: MKMapRect) -> [LocationData] {
-            return locations.filter { location in
-                let point = MKMapPoint(CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude))
-                return rect.contains(point)
+                for segment in visibleSegments {
+                    guard segment.count > 1 else { continue }
+                    let downsampledForPolyline = downsamplePolylineCoordinates(segment, targetCount: currentMaxPolylinePoints)
+                    let downsampledForGradient = downsampleLocations(segment, targetCount: currentMaxGradientStops)
+                    let coordinates = makeCoordinates(from: downsampledForPolyline)
+                    let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+                    addPolyline(to: mapView, polyline: polyline, gradientLocations: downsampledForGradient, lineWidth: currentLineWidth, opacity: currentWaveOpacity)
+                }
             }
         }
 

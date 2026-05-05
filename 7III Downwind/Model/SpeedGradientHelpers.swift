@@ -15,6 +15,7 @@ struct DownsamplingCacheKey: Hashable {
 
 struct GradientCacheKey: Hashable {
     let locationHash: Int
+    let maxSpeed: Double?
 }
 
 var downsamplingCache: [DownsamplingCacheKey: [LocationData]] = [:]
@@ -124,11 +125,12 @@ func downsamplePolylineCoordinates(
 }
 
 func makeGradientStops(
-    from data: [LocationData]
+    from data: [LocationData],
+    maxSpeed overrideMaxSpeed: Double? = nil
 ) -> ([UIColor], [CGFloat]) {
 
     let locationHash = data.hashValue
-    let cacheKey = GradientCacheKey(locationHash: locationHash)
+    let cacheKey = GradientCacheKey(locationHash: locationHash, maxSpeed: overrideMaxSpeed)
 
     if let cached = gradientStopsCache[cacheKey] {
         debugMap("Cache hit for gradient stops")
@@ -164,8 +166,7 @@ func makeGradientStops(
         debugMap("⚠️ Total distance is zero")
     }
 
-    let speeds = data.compactMap { $0.speed }
-    let maxSpeed = speeds.max() ?? 0
+    let maxSpeed = overrideMaxSpeed ?? maxSpeed(in: data)
     debugMap("Max speed: \(maxSpeed)m/s")
 
     var colors: [UIColor] = []
@@ -187,6 +188,43 @@ func makeGradientStops(
     gradientStopsCache[cacheKey] = result
 
     return result
+}
+
+func maxSpeed(in locations: [LocationData]) -> Double {
+    locations.compactMap(\.speed).max() ?? 0
+}
+
+func visibleLocationSegments(
+    from locations: [LocationData],
+    in rect: MKMapRect
+) -> [[LocationData]] {
+    var segments: [[LocationData]] = []
+    var currentSegment: [LocationData] = []
+
+    for index in locations.indices {
+        let location = locations[index]
+        let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+        let point = MKMapPoint(coordinate)
+
+        if rect.contains(point) {
+            if currentSegment.isEmpty, index > locations.startIndex {
+                currentSegment.append(locations[locations.index(before: index)])
+            }
+            currentSegment.append(location)
+        } else if !currentSegment.isEmpty {
+            currentSegment.append(location)
+            if currentSegment.count > 1 {
+                segments.append(currentSegment)
+            }
+            currentSegment.removeAll(keepingCapacity: true)
+        }
+    }
+
+    if currentSegment.count > 1 {
+        segments.append(currentSegment)
+    }
+
+    return segments
 }
 
 func colorForSpeed(_ t: Double) -> UIColor {

@@ -132,9 +132,15 @@ extension SpeedGradientMapView {
 
         var locations: [LocationData] = []
         var fullLocationData: [LocationData] = []
+        var polylineData: [MKPolyline: PolylineInfo] = [:]
         var lineWidth: CGFloat = 9.0
         var debounceTimer: Timer?
         var mapViewRef: MKMapView?
+
+        struct PolylineInfo {
+            let gradientLocations: [LocationData]
+            let maxSpeed: Double
+        }
 
         deinit {
             debounceTimer?.invalidate()
@@ -150,7 +156,8 @@ extension SpeedGradientMapView {
 
             guard
                 let polyline = overlay as? MKPolyline,
-                locations.count > 1
+                let info = polylineData[polyline],
+                info.gradientLocations.count > 1
             else {
                 debugMap("Overlay is not MKPolyline or locations missing")
                 return MKOverlayRenderer(overlay: overlay)
@@ -160,7 +167,7 @@ extension SpeedGradientMapView {
             renderer.lineWidth = lineWidth
             renderer.lineCap = .round
 
-            let (colors, stops) = makeGradientStops(from: locations)
+            let (colors, stops) = makeGradientStops(from: info.gradientLocations, maxSpeed: info.maxSpeed)
 
             debugMap("Gradient stops count: \(stops.count)")
             debugMap("First stop: \(stops.first ?? -1), last stop: \(stops.last ?? -1)")
@@ -218,28 +225,29 @@ extension SpeedGradientMapView {
                 height: visibleRect.height * 1.6
             )
 
-            let visibleLocations = filterVisibleLocations(fullLocationData, in: paddedRect)
+            let visibleSegments = visibleLocationSegments(from: fullLocationData, in: paddedRect)
 
-            guard visibleLocations.count > 1 else { return }
-
-            let targetCount = min(MAX_POLYLINE_POINTS, visibleLocations.count)
-            let downsampledForPolyline = downsamplePolylineCoordinates(visibleLocations, targetCount: targetCount)
-            let downsampledForGradient = downsampleLocations(visibleLocations, targetCount: MAX_GRADIENT_STOPS)
-            self.locations = downsampledForGradient
-
-            let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)
-            guard coordinates.count > 1 else { return }
-
-            let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+            guard !visibleSegments.isEmpty else { return }
 
             mapView.removeOverlays(mapView.overlays)
-            mapView.addOverlay(polyline)
-        }
+            polylineData.removeAll()
 
-        func filterVisibleLocations(_ locations: [LocationData], in rect: MKMapRect) -> [LocationData] {
-            return locations.filter { location in
-                let point = MKMapPoint(CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude))
-                return rect.contains(point)
+            let fullRouteMaxSpeed = maxSpeed(in: fullLocationData)
+
+            for segment in visibleSegments {
+                let targetCount = min(MAX_POLYLINE_POINTS, segment.count)
+                let downsampledForPolyline = downsamplePolylineCoordinates(segment, targetCount: targetCount)
+                let downsampledForGradient = downsampleLocations(segment, targetCount: MAX_GRADIENT_STOPS)
+
+                let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)
+                guard coordinates.count > 1 else { continue }
+
+                let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+                polylineData[polyline] = PolylineInfo(
+                    gradientLocations: downsampledForGradient,
+                    maxSpeed: fullRouteMaxSpeed
+                )
+                mapView.addOverlay(polyline)
             }
         }
     }
