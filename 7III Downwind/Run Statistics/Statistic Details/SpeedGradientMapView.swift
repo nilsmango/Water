@@ -49,7 +49,7 @@ struct SpeedGradientMapView: UIViewRepresentable {
         let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
         context.coordinator.polylineData[polyline] = SpeedGradientMapView.Coordinator.PolylineInfo(
             gradientLocations: downsampledForGradient,
-            maxSpeed: maxSpeed(in: locations)
+            maxSpeed: maxSpeed(in: downsampledForGradient)
         )
 
         debugMap("Polyline pointCount: \(polyline.pointCount)")

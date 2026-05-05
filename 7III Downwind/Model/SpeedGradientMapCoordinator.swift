@@ -232,7 +232,9 @@ extension SpeedGradientMapView {
             mapView.removeOverlays(mapView.overlays)
             polylineData.removeAll()
 
-            let fullRouteMaxSpeed = maxSpeed(in: fullLocationData)
+            let fullRouteMaxSpeed = maxSpeed(
+                in: downsampleLocations(fullLocationData, targetCount: MAX_GRADIENT_STOPS)
+            )
 
             for segment in visibleSegments {
                 let targetCount = min(MAX_POLYLINE_POINTS, segment.count)

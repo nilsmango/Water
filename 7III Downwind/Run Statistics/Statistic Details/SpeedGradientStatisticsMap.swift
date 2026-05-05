@@ -42,7 +42,9 @@ struct SpeedGradientStatisticsMap: UIViewRepresentable {
         context.coordinator.currentNonWaveOpacity = nonWaveOpacity
         context.coordinator.currentMaxPolylinePoints = maxPolylinePoints
         context.coordinator.currentMaxGradientStops = maxGradientStops
-        context.coordinator.currentMaxSpeed = maxSpeed(in: statisticsData.locationData)
+        context.coordinator.currentMaxSpeed = maxSpeed(
+            in: downsampleLocations(statisticsData.locationData, targetCount: maxGradientStops)
+        )
 
         context.coordinator.fullLocationData = statisticsData.locationData
         context.coordinator.fullWaves = statisticsData.waves ?? []
