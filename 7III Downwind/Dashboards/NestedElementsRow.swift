@@ -17,6 +17,7 @@ struct NestedElementsRow: View {
     let dashboardIndex: Int?
     let manager: TrackedElementsManager
     var animateDirectionArrow: Bool = true
+    var showsNoDataForErrors: Bool = false
     var onExpand: () -> Void
     var onEdit: () -> Void
     var onDuplicate: () -> Void
@@ -41,14 +42,19 @@ struct NestedElementsRow: View {
             Spacer(minLength: 0.0)
             
             if !rowText.isEmpty {
-                if error != nil {
+                if error != nil, showsNoDataForErrors {
+                    Text("- No Data Found -")
+                        .lineLimit(1)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else if error != nil {
 //                    HStack {
 //                        Image(systemName: "exclamationmark.triangle")
                         
-                        Text(error!)                        
+                    Text(error!)
 //                    }
                     .lineLimit(1)
-                        .foregroundColor(.orange)
+                    .foregroundColor(.orange)
                 } else {
                     HStack {
                         ForEach(Array(rowText.enumerated()), id: \.0) { index, text in

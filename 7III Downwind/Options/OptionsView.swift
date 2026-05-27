@@ -119,6 +119,10 @@ struct OptionsView: View {
                     Text("Foiling Threshold Speeds")
                 }
                 
+                NavigationLink(destination: StatisticsMapStyleSettings()) {
+                    Text("Map Styles")
+                }
+                
             } header: {
                 Text("Tracker Options")
             }
@@ -313,4 +317,39 @@ struct ShareSheet: UIViewControllerRepresentable {
 
 #Preview {
     OptionsView(downwindManager: DownwindManager(), dashboards: TrackedElementsManager())
+}
+
+struct StatisticsMapStyleSettings: View {
+    @State private var mapStyleOverrides: [WorkoutType: StatisticsMapStyle] = [:]
+    
+    var body: some View {
+        Form {
+            Section {
+                ForEach(WorkoutType.allCases, id: \.self) { type in
+                    Picker(type.prettyString, selection: binding(for: type)) {
+                        ForEach(StatisticsMapStyle.allCases) { style in
+                            Text(style.title).tag(style)
+                        }
+                    }
+                }
+            }
+        }
+        .onAppear {
+            for type in WorkoutType.allCases {
+                mapStyleOverrides[type] = type.statisticsMapStyle
+            }
+        }
+        .navigationTitle("Map Styles")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private func binding(for type: WorkoutType) -> Binding<StatisticsMapStyle> {
+        Binding(
+            get: { mapStyleOverrides[type] ?? type.defaultStatisticsMapStyle },
+            set: {
+                mapStyleOverrides[type] = $0
+                WorkoutType.setStatisticsMapStyle($0, for: type)
+            }
+        )
+    }
 }

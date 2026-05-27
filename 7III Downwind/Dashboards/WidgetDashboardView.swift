@@ -51,7 +51,7 @@ struct WidgetDashboardView: View {
                                 
                                     let row = manager.makeNestedElementsRow(elements: elements)
                                     let element: TrackedElement? = elements.count == 1 ? elements[0] : nil
-                                        NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: nil, manager: manager, animateDirectionArrow: animateDirectionArrows, onExpand: {}, onEdit: {}, onDuplicate: {})
+                                        NestedElementsRow(label: row.label, url: row.url, error: row.error, rowText: row.rowText, directionDegrees: row.directionDegrees, element: element, dashboardIndex: nil, manager: manager, animateDirectionArrow: animateDirectionArrows, showsNoDataForErrors: true, onExpand: {}, onEdit: {}, onDuplicate: {})
                                         .padding(.horizontal)
                                         .padding(.top, elements == nestedElements.first ? 0 : widgetPadding/2)
                                                                     

@@ -17,6 +17,7 @@ struct MapSectionView: View {
     let rounds: [(String, String, String)]
     let flights: [(String, String, String, String)]
     let flightSummary: FlightSummary?
+    let mapStyle: StatisticsMapStyle
     @Binding var statisticsData: RunStatistic
     
     var body: some View {
@@ -64,17 +65,10 @@ struct MapSectionView: View {
             Button {
                 showMapSheet = true
             } label: {
-                if let dW = statisticsData.workoutType?.isDWSport, dW == true {
-                    StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
-                        .frame(height: 300)
-                        .cornerRadius(8.0)
-                        .disabled(true)
-                } else {
-                    SpeedGradientStatisticsMap(statisticsData: $statisticsData, lineWidth: 1.5)
-                        .frame(height: 300)
-                        .cornerRadius(8.0)
-                        .disabled(true)
-                }
+                StatisticsRouteMapView(downwindManager: downwindManager, statisticsData: $statisticsData, mapStyle: mapStyle, lineWidth: thumbnailLineWidth)
+                    .frame(height: 300)
+                    .cornerRadius(8.0)
+                    .disabled(true)
             }
             .id("map")
             
@@ -113,10 +107,43 @@ struct MapSectionView: View {
             }
         }
     }
+    
+    private var thumbnailLineWidth: Double? {
+        mapStyle == .gradient ? 1.5 : nil
+    }
+}
+
+struct StatisticsRouteMapView: View {
+    @ObservedObject var downwindManager: DownwindManager
+    @Binding var statisticsData: RunStatistic
+    
+    let mapStyle: StatisticsMapStyle
+    var lineWidth: Double?
+    
+    var body: some View {
+        switch mapStyle {
+        case .neonYellow:
+            StatisticsMap(
+                downwindManager: downwindManager,
+                statisticsData: $statisticsData,
+                mapStyle: .neonYellow,
+                lineWidthOverride: lineWidth ?? 2.0
+            )
+        case .gradient:
+            SpeedGradientStatisticsMap(statisticsData: $statisticsData, lineWidth: lineWidth ?? 2.0)
+        case .downwindGradient:
+            StatisticsMap(
+                downwindManager: downwindManager,
+                statisticsData: $statisticsData,
+                mapStyle: .downwindGradient,
+                lineWidthOverride: lineWidth
+            )
+        }
+    }
 }
 
 #Preview {
     List {
-        MapSectionView(downwindManager: DownwindManager(), showRounds: .constant(false), showMapSheet: .constant(false), showAngleMap: .constant(false), rounds: [], flights: [], flightSummary: nil, statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
+        MapSectionView(downwindManager: DownwindManager(), showRounds: .constant(false), showMapSheet: .constant(false), showAngleMap: .constant(false), rounds: [], flights: [], flightSummary: nil, mapStyle: .gradient, statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
     }
 }

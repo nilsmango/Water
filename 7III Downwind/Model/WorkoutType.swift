@@ -185,10 +185,35 @@ enum WorkoutType: String, Codable, CaseIterable {
     }
 }
 
+enum StatisticsMapStyle: String, Codable, CaseIterable, Identifiable {
+    case neonYellow
+    case gradient
+    case downwindGradient
+    
+    var id: String {
+        rawValue
+    }
+    
+    var title: String {
+        switch self {
+        case .neonYellow:
+            return "Neon Yellow"
+        case .gradient:
+            return "Gradient"
+        case .downwindGradient:
+            return "Downwind Gradient"
+        }
+    }
+}
+
 
 extension WorkoutType {
     var appStorageKey: String {
         "thresholdSpeedKmhSlowSpeed_\(self.rawValue)"
+    }
+    
+    var statisticsMapStyleStorageKey: String {
+        "statisticsMapStyle_\(self.rawValue)"
     }
 
     var thresholdSpeedKmhSlowSpeed: Double {
@@ -213,7 +238,28 @@ extension WorkoutType {
         return value > 0 ? value : defaultThresholdSpeed
     }
     
+    var defaultStatisticsMapStyle: StatisticsMapStyle {
+        isDWSport ? .downwindGradient : .gradient
+    }
+    
+    var statisticsMapStyle: StatisticsMapStyle {
+        get {
+            guard let rawValue = UserDefaults.standard.string(forKey: statisticsMapStyleStorageKey) else {
+                return defaultStatisticsMapStyle
+            }
+            
+            return StatisticsMapStyle(rawValue: rawValue) ?? defaultStatisticsMapStyle
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: statisticsMapStyleStorageKey)
+        }
+    }
+    
     static func setThreshold(_ value: Double, for type: WorkoutType) {
         UserDefaults.standard.set(value, forKey: type.appStorageKey)
+    }
+    
+    static func setStatisticsMapStyle(_ style: StatisticsMapStyle, for type: WorkoutType) {
+        UserDefaults.standard.set(style.rawValue, forKey: type.statisticsMapStyleStorageKey)
     }
 }

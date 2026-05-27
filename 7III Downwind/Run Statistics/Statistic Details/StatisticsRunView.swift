@@ -63,6 +63,7 @@ struct StatisticsRunView: View {
     
     @State private var zoom: CGFloat = 1.0
     @State private var showAngleMap = false
+    @State private var selectedMapStyle: StatisticsMapStyle = .gradient
 
     @State private var isCalculating = false
     @State private var calculationProgress = ""
@@ -118,6 +119,7 @@ struct StatisticsRunView: View {
                 }
                 locationName = statisticsData.locationString ?? ""
                 editLocationName = locationName
+                selectedMapStyle = statisticsData.workoutType?.statisticsMapStyle ?? WorkoutType.surf.defaultStatisticsMapStyle
                 detailsSummary = Self.makeDetailsSummary(from: statisticsData, measurementSystem: downwindManager.measurementSystem)
 
                 if downwindManager.forcePremiumForScreenshots {
@@ -171,7 +173,7 @@ struct StatisticsRunView: View {
             }
             
             if !statisticsData.locationData.isEmpty {
-                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, flights: flights, flightSummary: flightSummary, statisticsData: $statisticsData)
+                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, flights: flights, flightSummary: flightSummary, mapStyle: selectedMapStyle, statisticsData: $statisticsData)
                 
                 if statisticsData.angles?.count ?? 0 > 0 {
                     Section {
@@ -411,15 +413,7 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showMapSheet, content: {
             NavigationStack {
-                Group {
-                    if let dW = statisticsData.workoutType?.isDWSport, dW == true {
-                        StatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
-                    } else {
-                        //                        WindSportStatisticsMap(downwindManager: downwindManager, statisticsData: $statisticsData)
-                        SpeedGradientStatisticsMap(statisticsData: $statisticsData)
-                            .ignoresSafeArea()
-                    }
-                }
+                StatisticsFullMapView(downwindManager: downwindManager, statisticsData: $statisticsData, mapStyle: $selectedMapStyle)
                 .navigationTitle(statisticsData.locationString ?? locationName)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -501,6 +495,7 @@ struct StatisticsRunView: View {
                             locationName = editLocationName
                             statisticsData.locationString = editLocationName
                             downwindManager.saveStatisticWithNewTags(tags: tags, type: editType, saveType: true, statisticsData: statisticsData, locationName: editLocationName)
+                            selectedMapStyle = editType.statisticsMapStyle
                             showEditData = false
                             downwindManager.editCounter += 1
                         }, label: {
@@ -1089,6 +1084,71 @@ struct StatisticsRunView: View {
             )
         }
         .sorted { $0.date < $1.date }
+    }
+}
+
+private struct StatisticsFullMapView: View {
+    @ObservedObject var downwindManager: DownwindManager
+    @Binding var statisticsData: RunStatistic
+    @Binding var mapStyle: StatisticsMapStyle
+    
+    var body: some View {
+        ZStack(alignment: .bottomTrailing) {
+            StatisticsRouteMapView(downwindManager: downwindManager, statisticsData: $statisticsData, mapStyle: mapStyle)
+                .ignoresSafeArea()
+            
+            if #available(iOS 26.0, *) {
+                Menu {
+                    ForEach(StatisticsMapStyle.allCases) { style in
+                        Button {
+                            select(style)
+                        } label: {
+                            Label(style.title, systemImage: style == mapStyle ? "checkmark" : "circle")
+                        }
+                    }
+                } label: {
+                    MapStyleLabel()
+                }
+                .buttonStyle(.glass)
+                .padding(.trailing, 16)
+            } else {
+                Menu {
+                    ForEach(StatisticsMapStyle.allCases) { style in
+                        Button {
+                            select(style)
+                        } label: {
+                            Label(style.title, systemImage: style == mapStyle ? "checkmark" : "circle")
+                        }
+                    }
+                } label: {
+                    MapStyleLabel()
+                }
+                .padding(.trailing, 16)
+            }
+//            .padding(.bottom, 16)
+        }
+    }
+    
+    private func select(_ style: StatisticsMapStyle) {
+        mapStyle = style
+        
+        if let type = statisticsData.workoutType {
+            WorkoutType.setStatisticsMapStyle(style, for: type)
+        }
+    }
+}
+
+private struct MapStyleLabel: View {
+    var body: some View {
+        if #available(iOS 26, *) {
+            Label("Map Style", systemImage: "map")
+                .labelStyle(.iconOnly)
+        } else {
+            Label("Map Style", systemImage: "map.circle.fill")
+                .labelStyle(.iconOnly)
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.black, .gray)
+        }
     }
 }
 

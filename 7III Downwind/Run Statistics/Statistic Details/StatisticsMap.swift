@@ -27,6 +27,9 @@ struct StatisticsMap: View {
     @State private var isFetching: Bool = false
     @State private var hasEdits = false
     
+    var mapStyle: StatisticsMapStyle = .downwindGradient
+    var lineWidthOverride: Double?
+    
     var maxPointsToShow: Int {
         if let workoutType = statisticsData.workoutType {
             if workoutType.isDWSport {
@@ -61,6 +64,10 @@ struct StatisticsMap: View {
     }
     
     var lineWidth: Double {
+        if let lineWidthOverride {
+            return lineWidthOverride
+        }
+        
         if editMode {
             return 13.0
         } else {
@@ -126,7 +133,7 @@ struct StatisticsMap: View {
                         }
                     } else {
                         MapPolyline(coordinates: polyline.coordinates)
-                            .stroke(polyline.strokeColor.opacity(0.5), style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                            .stroke(polylineStrokeColor(for: polyline), style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
                     }
                 }
                 
@@ -248,6 +255,15 @@ struct StatisticsMap: View {
                 // coordinates pairs lines
                 polylineData = await downwindManager.createPolylineData(locationData: statisticsData.locationData, numberOfElementsToKeep: statePolyLineNumber, coordinatesCount: statisticsData.locationData.count)
             }
+        }
+    }
+    
+    private func polylineStrokeColor(for polyline: PolylineData) -> Color {
+        switch mapStyle {
+        case .neonYellow:
+            return .neonYellow
+        case .gradient, .downwindGradient:
+            return polyline.strokeColor.opacity(0.5)
         }
     }
 }
