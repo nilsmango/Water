@@ -56,6 +56,8 @@ struct StatisticsRounds: View {
                     Text(round.second)
                     Spacer()
                     Text(round.third)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
                 }
                 .monospacedDigit()
             }
@@ -97,6 +99,8 @@ struct StatisticsFlights: View {
                         .frame(width: distanceWidth, alignment: .leading)
                     Spacer()
                     Text(flight.award)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
                 }
                 .monospacedDigit()
             }
