@@ -20,6 +20,16 @@ struct FlightData: Hashable {
     let award: String
 }
 
+struct FlightSummary: Hashable, Sendable {
+    let time: String
+    let distance: String
+    let flightCount: Int
+    
+    var flightCountText: String {
+        "(\(flightCount))"
+    }
+}
+
 struct StatisticsRounds: View {
     @ObservedObject var downwindManager: DownwindManager
 
@@ -57,6 +67,7 @@ struct StatisticsFlights: View {
     @ObservedObject var downwindManager: DownwindManager
 
     let flights: [(String, String, String, String)]
+    let summary: FlightSummary?
     var overViewLayout = false
 
     private let numberWidth = UIScreen.main.bounds.width / 6
@@ -90,13 +101,28 @@ struct StatisticsFlights: View {
                 .monospacedDigit()
             }
         }
+        
+        if let summary {
+            HStack {
+                Text("Total")
+                    .bold()
+                    .frame(width: numberWidth, alignment: .leading)
+                Text(summary.time)
+                    .frame(width: timeWidth, alignment: .leading)
+                Text(summary.distance)
+                    .frame(width: distanceWidth, alignment: .leading)
+                Spacer()
+                Text(summary.flightCountText)
+            }
+            .monospacedDigit()
+        }
     }
 }
 
 #Preview {
     List {
         StatisticsRounds(downwindManager: DownwindManager(), rounds: [("1", "6:06", "🐌"), ("2", "4:15", ""), ("3", "2:47", ""), ("4", "2:50", ""), ("5", "2:37", "🚀"), ("6", "2:40", ""), ("7", "2:43", ""), ("8", "2:42", ""), ("9", "2:38", ""), ("10", "3:44", ""), ("11", "3:35", ""), ("12", "2:55", ""), ("13", "2:47", ""), ("14", "2:44", ""), ("15", "2:41", ""), ("16", "2:49", ""), ("17", "2:41", ""), ("18", "3:55", ""), ("19", "3:30", ""), ("20", "2:41", ""), ("21", "2:47", ""), ("22", "2:48", ""), ("22.9", "3:10", "")])
-        StatisticsFlights(downwindManager: DownwindManager(), flights: [("1", "0:42", "144 m", "🥇"), ("2", "0:27", "128 m", "🥈🚀")])
+        StatisticsFlights(downwindManager: DownwindManager(), flights: [("1", "0:42", "144 m", "🥇"), ("2", "0:27", "128 m", "🥈🚀")], summary: FlightSummary(time: "1:09", distance: "272 m", flightCount: 2))
     }
     
 }

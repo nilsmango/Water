@@ -71,6 +71,7 @@ struct StatisticsRunView: View {
     @State private var fastestDistances: [FastestDistanceResult]? = []
     @State private var rounds: [(String, String, String)] = []
     @State private var flights: [(String, String, String, String)] = []
+    @State private var flightSummary: FlightSummary?
     @State private var heartRateSpeedData: [SpeedSample] = []
     @State private var detailsSummary = DetailsSummary()
     
@@ -81,11 +82,12 @@ struct StatisticsRunView: View {
     var body: some View {
         
         let cutDate = runDates.components(separatedBy: " ")
+        let detailsPopUps = Self.usesFlightList(for: statisticsData.workoutType) ? flightSummary?.flightCount ?? flights.count : detailsSummary.popUps
         
         List {
             Section {
                 
-                StatisticsDetails(distance: detailsSummary.distance, time: detailsSummary.time, averageSpeed: detailsSummary.averageSpeed, averagePace: detailsSummary.averagePace, topSpeed: detailsSummary.topSpeed, topsSpeed1s: detailsSummary.topsSpeed1s, topsSpeed10s: detailsSummary.topsSpeed10s, kCal: detailsSummary.kCal, heartRate: detailsSummary.heartRate, popUps: detailsSummary.popUps, percentageOnFoil: detailsSummary.percentageOnFoil, turns: detailsSummary.turns, longestDistanceOnFoil: detailsSummary.longestDistanceOnFoil, fastestDistances: fastestDistances, jumpCount: detailsSummary.jumpCount, highestJump: detailsSummary.highestJump, popUpsTitle: Self.popUpsTitle(for: statisticsData.workoutType), hasTappedDistance: $hasTappedDistance)
+                StatisticsDetails(distance: detailsSummary.distance, time: detailsSummary.time, averageSpeed: detailsSummary.averageSpeed, averagePace: detailsSummary.averagePace, topSpeed: detailsSummary.topSpeed, topsSpeed1s: detailsSummary.topsSpeed1s, topsSpeed10s: detailsSummary.topsSpeed10s, kCal: detailsSummary.kCal, heartRate: detailsSummary.heartRate, popUps: detailsPopUps, percentageOnFoil: detailsSummary.percentageOnFoil, turns: detailsSummary.turns, longestDistanceOnFoil: detailsSummary.longestDistanceOnFoil, fastestDistances: fastestDistances, jumpCount: detailsSummary.jumpCount, highestJump: detailsSummary.highestJump, popUpsTitle: Self.popUpsTitle(for: statisticsData.workoutType), hasTappedDistance: $hasTappedDistance)
             } header: {
                 VStack(spacing: 0) {
                     StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
@@ -122,7 +124,9 @@ struct StatisticsRunView: View {
                     if statisticsData.locationData.count > 2 {
                         if Self.usesFlightList(for: statisticsData.workoutType) {
                             let waves = Self.existingOrCalculatedWaves(from: statisticsData)
-                            flights = Self.createFlights(from: waves, measurementSystem: downwindManager.measurementSystem)
+                            let flightData = Self.createFlights(from: waves, measurementSystem: downwindManager.measurementSystem)
+                            flights = flightData.rows
+                            flightSummary = flightData.summary
                         } else {
                             rounds = Self.createRounds(from: statisticsData.locationData)
                         }
@@ -167,7 +171,7 @@ struct StatisticsRunView: View {
             }
             
             if !statisticsData.locationData.isEmpty {
-                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, flights: flights, statisticsData: $statisticsData)
+                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, flights: flights, flightSummary: flightSummary, statisticsData: $statisticsData)
                 
                 if statisticsData.angles?.count ?? 0 > 0 {
                     Section {
@@ -387,7 +391,7 @@ struct StatisticsRunView: View {
             NavigationStack {
                 List {
                     if Self.usesFlightList(for: statisticsData.workoutType) {
-                        StatisticsFlights(downwindManager: downwindManager, flights: flights)
+                        StatisticsFlights(downwindManager: downwindManager, flights: flights, summary: flightSummary)
                     } else {
                         StatisticsRounds(downwindManager: downwindManager, rounds: rounds)
                     }
@@ -805,7 +809,8 @@ struct StatisticsRunView: View {
         }.value
 
         await MainActor.run {
-            flights = flightsResult
+            flights = flightsResult.rows
+            flightSummary = flightsResult.summary
         }
     }
     
@@ -901,10 +906,11 @@ struct StatisticsRunView: View {
         ).waves
     }
 
-    private nonisolated static func createFlights(from waves: [[LocationData]], measurementSystem: MeasurementSystem) -> [(String, String, String, String)] {
+    private nonisolated static func createFlights(from waves: [[LocationData]], measurementSystem: MeasurementSystem) -> (rows: [(String, String, String, String)], summary: FlightSummary?) {
         struct FlightMetric {
             let number: String
             let time: String
+            let duration: Double
             let distance: String
             let distanceInMeters: Double
             let averageSpeed: Double
@@ -933,6 +939,7 @@ struct StatisticsRunView: View {
             return FlightMetric(
                 number: String(index + 1),
                 time: makePrettyMinutesString(timeInSeconds: duration),
+                duration: duration,
                 distance: makePrettyDistance(meters: distance, system: measurementSystem, statistics: true),
                 distanceInMeters: distance,
                 averageSpeed: (distance / duration) * 3.6
@@ -955,7 +962,15 @@ struct StatisticsRunView: View {
             rows[fastestIndex].3 += "🚀"
         }
 
-        return rows
+        let totalDuration = metrics.reduce(0.0) { $0 + $1.duration }
+        let totalDistance = metrics.reduce(0.0) { $0 + $1.distanceInMeters }
+        let summary = metrics.isEmpty ? nil : FlightSummary(
+            time: makePrettyMinutesString(timeInSeconds: totalDuration),
+            distance: makePrettyDistance(meters: totalDistance, system: measurementSystem, statistics: true),
+            flightCount: metrics.count
+        )
+
+        return (rows, summary)
     }
     
     private nonisolated static func createRounds(from locations: [LocationData]) -> [(String, String, String)] {

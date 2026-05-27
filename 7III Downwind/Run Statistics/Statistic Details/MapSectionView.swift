@@ -16,6 +16,7 @@ struct MapSectionView: View {
     
     let rounds: [(String, String, String)]
     let flights: [(String, String, String, String)]
+    let flightSummary: FlightSummary?
     @Binding var statisticsData: RunStatistic
     
     var body: some View {
@@ -25,7 +26,7 @@ struct MapSectionView: View {
         if showsSegmentSection {
             Section {
                 if showsFlights {
-                    StatisticsFlights(downwindManager: downwindManager, flights: flights, overViewLayout: true)
+                    StatisticsFlights(downwindManager: downwindManager, flights: flights, summary: flightSummary, overViewLayout: true)
                         .contentShape(Rectangle())
                         .onTapGesture {
                             showRounds = true
@@ -116,6 +117,6 @@ struct MapSectionView: View {
 
 #Preview {
     List {
-        MapSectionView(downwindManager: DownwindManager(), showRounds: .constant(false), showMapSheet: .constant(false), showAngleMap: .constant(false), rounds: [], flights: [], statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
+        MapSectionView(downwindManager: DownwindManager(), showRounds: .constant(false), showMapSheet: .constant(false), showAngleMap: .constant(false), rounds: [], flights: [], flightSummary: nil, statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 81.1, runDistance: 2000, topSpeed: 26, locationData: decodeLocationSampleData() ?? Constants.locationSampleData, tags: [])))
     }
 }
