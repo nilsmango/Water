@@ -1,0 +1,2 @@
+FOILDATA_API_KEY =
+#include? "Secrets.xcconfig"

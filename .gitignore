@@ -7,3 +7,10 @@
 build/
 DerivedData/
 .DS_Store
+
+# Local secrets
+Config/Secrets.xcconfig
+Secrets.xcconfig
+*.api-key
+.api-key
+**/.api-key
