@@ -43,10 +43,9 @@ struct NestedElementsRow: View {
             
             if !rowText.isEmpty {
                 if error != nil, showsNoDataForErrors {
-                    Text("- No Data Found -")
+                    Text("No data found")
                         .lineLimit(1)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 } else if error != nil {
 //                    HStack {
 //                        Image(systemName: "exclamationmark.triangle")
