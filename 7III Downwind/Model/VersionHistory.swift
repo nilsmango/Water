@@ -16,10 +16,12 @@ let versionHistory: [Version] = [
             "Fixed dashboard bug",
             "Fixed broken email addresses",
             "Fixed 50 m and 100 m fastest segments",
-            "Changed rounds to flights for pump foiling, wake thieving, and wave sports"
+            "Changed rounds to flights for pump foiling, wake thieving, and wave sports",
+            "Made gradient map better",
+            "Added map style switcher"
         ],
 
-        releaseDate: "May 2026"
+        releaseDate: "June 2026"
 
     ),
     Version(versionNumber: "1.4",

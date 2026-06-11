@@ -796,8 +796,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		780000012F94000000C0DEX1 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Base.xcconfig; sourceTree = "<group>"; };
-		780000022F94000000C0DEX1 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Secrets.example.xcconfig; sourceTree = "<group>"; };
+		780000012F94000000C0DEX1 /* Config/Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Base.xcconfig; sourceTree = "<group>"; };
+		780000022F94000000C0DEX1 /* Config/Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Secrets.example.xcconfig; sourceTree = "<group>"; };
 		78056D092F1E4568000D9591 /* SpeedGradientMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientMapView.swift; sourceTree = "<group>"; };
 		78056D0B2F1E4582000D9591 /* SpeedGradientMapCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientMapCoordinator.swift; sourceTree = "<group>"; };
 		78056D0D2F1E4596000D9591 /* SpeedGradientHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedGradientHelpers.swift; sourceTree = "<group>"; };
@@ -1239,8 +1239,8 @@
 		785C4A8C2B358F7B00EB07F8 = {
 			isa = PBXGroup;
 			children = (
-				780000012F94000000C0DEX1 /* Base.xcconfig */,
-				780000022F94000000C0DEX1 /* Secrets.example.xcconfig */,
+				780000012F94000000C0DEX1 /* Config/Base.xcconfig */,
+				780000022F94000000C0DEX1 /* Config/Secrets.example.xcconfig */,
 				782D8E2F2EC3CE7800E2AE43 /* 7III Water.icon */,
 				785C4A972B358F7B00EB07F8 /* 7III Downwind */,
 				78844E282C2E9D6900B703F5 /* Tracker Watch Watch App */,
@@ -2700,7 +2700,7 @@
 /* Begin XCBuildConfiguration section */
 		785C4AA22B358F7D00EB07F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 780000012F94000000C0DEX1 /* Base.xcconfig */;
+			baseConfigurationReference = 780000012F94000000C0DEX1 /* Config/Base.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -2765,7 +2765,7 @@
 		};
 		785C4AA32B358F7D00EB07F8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 780000012F94000000C0DEX1 /* Base.xcconfig */;
+			baseConfigurationReference = 780000012F94000000C0DEX1 /* Config/Base.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -2828,7 +2828,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
@@ -2878,7 +2878,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
@@ -2934,7 +2934,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2971,7 +2971,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3006,7 +3006,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
@@ -3026,7 +3026,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
