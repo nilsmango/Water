@@ -15,8 +15,17 @@ struct SessionPagingView: View {
     var body: some View {
         TabView(selection: $selection) {
             ControlsView(workoutManager: workoutManager, selection: $selection).tag(Tab.controls)
-            MetricsView(workoutManager: workoutManager, selection: $selection).tag(Tab.metrics)
-            PlayingView(selection: $selection).tag(Tab.nowPlaying)
+            MetricsView(
+                workoutManager: workoutManager,
+                selection: $selection,
+                isActive: selection == .metrics && workoutManager.running
+            )
+            .tag(Tab.metrics)
+            PlayingView(
+                selection: $selection,
+                isActive: selection == .nowPlaying && workoutManager.running
+            )
+            .tag(Tab.nowPlaying)
         }
         .navigationTitle(workoutManager.workoutType.prettyString)
         .navigationBarBackButtonHidden(true)

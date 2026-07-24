@@ -9,9 +9,12 @@ import SwiftUI
 
 struct MetricsView: View {
     @ObservedObject var workoutManager: WorkoutManager
+    @Environment(\.scenePhase) private var scenePhase
     @Binding var selection: Tab
+    var isActive: Bool
     @State private var crownValue = 0.0
-    
+    @FocusState private var hasCrownFocus: Bool
+
     var body: some View {
         TimelineView(
             MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date(), isPaused: workoutManager.session?.state == .paused)) { context in
@@ -24,7 +27,7 @@ struct MetricsView: View {
                 .foregroundColor(.yellow)
                 .fontWeight(.semibold)
                 .padding(.top, 4)
-                
+
                 if workoutManager.withGPS {
                     Text(
                         Measurement(
@@ -48,7 +51,7 @@ struct MetricsView: View {
                         .fontWeight(.semibold)
                         .fontDesign(.rounded)
                     }
-                    
+
 //                    Text(
 //                        Measurement(
 //                            value: workoutManager.averageSpeed,
@@ -62,7 +65,7 @@ struct MetricsView: View {
 //                        )
 //                    )
                 }
-                
+
                 HStack {
                     Text(
                         workoutManager.heartRate.formatted(
@@ -73,7 +76,7 @@ struct MetricsView: View {
                         .font(.title2)
                         .foregroundColor(.red)
                 }
-                
+
                 if !workoutManager.withGPS {
                     HStack {
                         Text(
@@ -84,7 +87,7 @@ struct MetricsView: View {
                         AverageHeartView()
                     }
                 }
-                
+
                 Text(
                     Measurement(
                         value: workoutManager.activeEnergy,
@@ -108,22 +111,58 @@ struct MetricsView: View {
             .padding(.top)
             .padding(.bottom, 4)
         }
-            .focusable()
-            .digitalCrownRotation($crownValue, from: 0, through: 2, by: 1, sensitivity: .medium, isContinuous: false)
+            .focusable(isActive)
+            .focused($hasCrownFocus)
+            .digitalCrownRotation(
+                $crownValue,
+                from: -10_000,
+                through: 10_000,
+                by: 1,
+                sensitivity: .medium,
+                isContinuous: false
+            )
             .onChange(of: crownValue) {
+                guard isActive else { return }
                 selection = .controls
-                crownValue = 0
             }
+            .onAppear {
+                requestCrownFocus()
+            }
+            .onChange(of: isActive) { _, newValue in
+                if newValue {
+                    requestCrownFocus()
+                } else {
+                    hasCrownFocus = false
+                }
+            }
+            .onChange(of: scenePhase) { _, newValue in
+                if newValue == .active {
+                    requestCrownFocus()
+                }
+            }
+    }
+
+    private func requestCrownFocus() {
+        guard isActive else { return }
+
+        DispatchQueue.main.async {
+            guard isActive else { return }
+            hasCrownFocus = true
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        MetricsView(workoutManager: WorkoutManager(), selection: .constant(.metrics))
+        MetricsView(
+            workoutManager: WorkoutManager(),
+            selection: .constant(.metrics),
+            isActive: true
+        )
             .navigationTitle("SUP DW Foil")
             .navigationBarTitleDisplayMode(.inline)
     }
-    
+
 }
 
 private struct MetricsTimelineSchedule: TimelineSchedule {
@@ -139,7 +178,7 @@ private struct MetricsTimelineSchedule: TimelineSchedule {
         var baseSchedule = PeriodicTimelineSchedule(from: self.startDate,
                                                     by: (mode == .lowFrequency ? 1.0 : 1.0 / 30.0))
             .entries(from: startDate, mode: mode)
-        
+
         return AnyIterator<Date> {
             guard !isPaused else { return nil }
             return baseSchedule.next()

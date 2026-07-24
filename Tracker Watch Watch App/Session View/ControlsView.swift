@@ -15,7 +15,12 @@ struct ControlsView: View {
     var body: some View {
         VStack {
             if crownMode {
-                CrownButton(workoutManager: workoutManager, start: false, selection: $selection)
+                CrownButton(
+                    workoutManager: workoutManager,
+                    start: false,
+                    isActive: selection == .controls && workoutManager.running,
+                    selection: $selection
+                )
             } else {
                 Button {
                     workoutManager.endWorkout()
