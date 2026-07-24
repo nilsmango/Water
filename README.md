@@ -6,8 +6,8 @@
 
 Water gets better when the people who use it help shape it.
 
-- [Request a feature or report a bug](https://github.com/nilsmango/7III-DW-App/issues/new/choose)
-- [Browse open issues](https://github.com/nilsmango/7III-DW-App/issues)
+- [Request a feature or report a bug](https://github.com/nilsmango/7III_Location_App/issues/new/choose)
+- [Browse open issues](https://github.com/nilsmango/7III_Location_App/issues)
 - Fork the project and open a pull request
 - Point your AI coding assistant at this repository and ask it to help—but please review and test everything you submit
 

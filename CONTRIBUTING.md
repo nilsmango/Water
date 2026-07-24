@@ -4,7 +4,7 @@ Thank you for helping make Water better. Contributions from riders, designers, t
 
 ## Start with an issue
 
-Before starting a substantial change, [open an issue](https://github.com/nilsmango/7III-DW-App/issues/new/choose) describing:
+Before starting a substantial change, [open an issue](https://github.com/nilsmango/7III_Location_App/issues/new/choose) describing:
 
 - the problem or opportunity;
 - the water sport and workflow it affects;

@@ -61,17 +61,17 @@ struct AboutView: View {
                 Text("Want a feature?")
                     .font(.headline)
 
-                Text("7III Water is open source—and it gets better with your help. [Request a feature or report a bug](https://github.com/nilsmango/7III-DW-App/issues/new/choose), browse the source, or point your AI coding assistant at the project and open a pull request. Contributions from riders, designers, translators, testers, and developers are very welcome.")
+                Text("7III Water is open source—and it gets better with your help. [Request a feature or report a bug](https://github.com/nilsmango/7III_Location_App/issues/new/choose), browse the source, or point your AI coding assistant at the project and open a pull request. Contributions from riders, designers, translators, testers, and developers are very welcome.")
                     .font(.body)
 
-                Text("[View the source code](https://github.com/nilsmango/7III-DW-App)  •  [Contribute](https://github.com/nilsmango/7III-DW-App/blob/main/CONTRIBUTING.md)")
+                Text("[View the source code](https://github.com/nilsmango/7III_Location_App)  •  [Contribute](https://github.com/nilsmango/7III_Location_App/blob/main/CONTRIBUTING.md)")
                     .font(.body)
                     .padding(.bottom)
                 
                 Text("Licenses")
                     .font(.headline)
 
-                Text("7III Water is free and open-source software licensed under the [Mozilla Public License 2.0](https://github.com/nilsmango/7III-DW-App/blob/main/LICENSE). You may use, study, modify, and share it. MPL-covered source files and modifications must remain available under the same open license. The software is provided without warranty.")
+                Text("7III Water is free and open-source software licensed under the [Mozilla Public License 2.0](https://github.com/nilsmango/7III_Location_App/blob/main/LICENSE). You may use, study, modify, and share it. MPL-covered source files and modifications must remain available under the same open license. The software is provided without warranty.")
                     .font(.body)
                     .padding(.bottom)
 
