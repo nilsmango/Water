@@ -36,7 +36,20 @@ struct HelpView: View {
             } footer: {
                 Text("Use **Contact us** to report bugs, or send suggestions.\n\nApp Version: \(downwindManager.currentAppVersion) \(downwindManager.currentAppBuild)")
             }
-            
+
+            Section {
+                Link("Request a Feature or Report a Bug", destination: URL(string: "https://github.com/nilsmango/7III_Location_App/issues/new/choose")!)
+
+                Link("View the Source Code", destination: URL(string: "https://github.com/nilsmango/7III_Location_App")!)
+
+                Link("How to Contribute", destination: URL(string: "https://github.com/nilsmango/7III_Location_App/blob/main/CONTRIBUTING.md")!)
+
+                Link("Open Source on the Water Website", destination: URL(string: "https://project7iii.com/water/#open-source-built-with-you")!)
+            } header: {
+                Text("Open Source")
+            } footer: {
+                Text("Want a feature? Point your AI coding assistant at Water, review and test its work, then open a pull request. Rider feedback, testing, translations, design, and code are all welcome.")
+            }
             
             PremiumSection(downwindManager: downwindManager, showUpgradeView: $showUpgradeView, showManage: $showManage)
 
