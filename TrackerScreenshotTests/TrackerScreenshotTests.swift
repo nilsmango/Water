@@ -12,7 +12,9 @@ import Testing
 
 @Test @MainActor
 func exportScreenshots() throws {
-    let output = URL(fileURLWithPath: "/Users/simxn/Documents/Geschäft/project7III/Apps/7III Water/Water App Store Metadata/Screenshots")
+    let output = ProcessInfo.processInfo.environment["WATER_SCREENSHOT_OUTPUT"]
+        .map(URL.init(fileURLWithPath:))
+        ?? FileManager.default.temporaryDirectory.appendingPathComponent("7III-Water-Screenshots")
     let exporter = AppScreenshotExporter(option: .file(outputURL: output))
 //    try exporter.export(Phone09AngleTool.self, captureDelay: 6)
 //    try exporter.export(Phone12Dashboards.self)

@@ -1,0 +1,49 @@
+name: Bug report
+description: Report something that is not working correctly
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Please describe the problem and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open…
+        2. Tap…
+        3. See…
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Water version
+      placeholder: 1.4.1
+    validations:
+      required: true
+  - type: input
+    id: devices
+    attributes:
+      label: Device and OS version
+      placeholder: iPhone 17, iOS 26.0 / Apple Watch Ultra, watchOS 26.0
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add screenshots or a screen recording if useful. Remove personal health and location data first.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed personal health and precise location data from attachments
+          required: true

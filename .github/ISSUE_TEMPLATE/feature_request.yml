@@ -1,0 +1,42 @@
+name: Feature request
+description: Suggest a way to make 7III Water better
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping shape Water. Concrete examples from real sessions are especially useful.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem should this solve?
+      description: Tell us what you are trying to do and where the current experience falls short.
+      placeholder: During a downwind session, I want to…
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like Water to do?
+      description: Describe your preferred result. Mockups and examples are welcome.
+    validations:
+      required: true
+  - type: input
+    id: sport
+    attributes:
+      label: Water sport or discipline
+      placeholder: Downwind foil, wing foil, pump foil…
+  - type: input
+    id: devices
+    attributes:
+      label: Devices
+      placeholder: iPhone model, Apple Watch model, Garmin…
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Would you like to help build it?
+      options:
+        - label: I can test this feature
+        - label: I would like to work on a pull request

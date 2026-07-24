@@ -57,9 +57,23 @@ struct AboutView: View {
                 Text("project7III makes useful things.\nFind us: [project7iii.com](https://project7iii.com)\nSend us suggestions and bugs: 7+water@project7iii.com")
                     .font(.body)
                     .padding(.bottom)
+
+                Text("Want a feature?")
+                    .font(.headline)
+
+                Text("7III Water is open source—and it gets better with your help. [Request a feature or report a bug](https://github.com/nilsmango/7III-DW-App/issues/new/choose), browse the source, or point your AI coding assistant at the project and open a pull request. Contributions from riders, designers, translators, testers, and developers are very welcome.")
+                    .font(.body)
+
+                Text("[View the source code](https://github.com/nilsmango/7III-DW-App)  •  [Contribute](https://github.com/nilsmango/7III-DW-App/blob/main/CONTRIBUTING.md)")
+                    .font(.body)
+                    .padding(.bottom)
                 
                 Text("Licenses")
                     .font(.headline)
+
+                Text("7III Water is free and open-source software licensed under the [Mozilla Public License 2.0](https://github.com/nilsmango/7III-DW-App/blob/main/LICENSE). You may use, study, modify, and share it. MPL-covered source files and modifications must remain available under the same open license. The software is provided without warranty.")
+                    .font(.body)
+                    .padding(.bottom)
 
                 Text("This app uses [Keychain Swift](https://github.com/evgenyneu/keychain-swift):\nCopyright (c) 2015 - 2024 Evgenii Neumerzhitckii\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS ORIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THEAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHERLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.")
                     .font(.body)

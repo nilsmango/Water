@@ -1,5 +1,5 @@
 {
-  "originHash" : "c2982453a25d04a8b119a83abcce3b5da343242bfe75b2510a753a36b1f218e1",
+  "originHash" : "06ef986c9ce4e8d10a8df4ad169a6a34abdb1835460e5bd47725296c2e2b3ed7",
   "pins" : [
     {
       "identity" : "kanna",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "d108a1fa6189e661f91560548ef48651ed8d93b9",
         "version" : "20.0.0"
+      }
+    },
+    {
+      "identity" : "project7iii-screenshots",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nilsmango/project7III-Screenshots.git",
+      "state" : {
+        "branch" : "cc3f336",
+        "revision" : "cc3f33669d6f18bb757bdc71e5da6762baa38f68"
       }
     },
     {

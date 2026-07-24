@@ -945,7 +945,6 @@
 		78844E502C2EC00D00B703F5 /* Tracker-Watch-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Tracker-Watch-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		78844E512C303C0E00B703F5 /* TagsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsSheetView.swift; sourceTree = "<group>"; };
 		7885356A2DD33F0A00E223C1 /* FoilingThresholds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoilingThresholds.swift; sourceTree = "<group>"; };
-		788B3E4E2F8BA54C00E34392 /* Project7IIIScreenshots */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Project7IIIScreenshots; path = "../../Geschäft/project7III/Packages/project7III-Screenshots"; sourceTree = "<group>"; };
 		788B938D2B63F2CB00BA6B28 /* StartOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOptionsMenu.swift; sourceTree = "<group>"; };
 		788B938F2B63F49D00BA6B28 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		789476582E47D0DB005D8C58 /* WidgetDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDashboardView.swift; sourceTree = "<group>"; };
@@ -1559,7 +1558,6 @@
 		78E5A85B2C32DA4100456ABC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				788B3E4E2F8BA54C00E34392 /* Project7IIIScreenshots */,
 				78A283712C3E8DA00052AA52 /* StoreKit.framework */,
 				78A2836F2C3E8D6C0052AA52 /* StoreKit.framework */,
 			);
@@ -1840,7 +1838,7 @@
 				78320BBE2BB1C28400D6A772 /* XCRemoteSwiftPackageReference "Surge" */,
 				78F047C62D9DA655003E11FA /* XCRemoteSwiftPackageReference "XMLCoder" */,
 				78DB913A2E45F1D700B222C2 /* XCRemoteSwiftPackageReference "Kanna" */,
-				788B3E4F2F8BA5D700E34392 /* XCLocalSwiftPackageReference "../../Geschäft/project7III/Packages/project7III-Screenshots" */,
+				788B3E4F2F8BA5D700E34392 /* XCRemoteSwiftPackageReference "project7III-Screenshots" */,
 			);
 			productRefGroup = 785C4A962B358F7B00EB07F8 /* Products */;
 			projectDirPath = "";
@@ -3416,14 +3414,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		788B3E4F2F8BA5D700E34392 /* XCLocalSwiftPackageReference "../../Geschäft/project7III/Packages/project7III-Screenshots" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../Geschäft/project7III/Packages/project7III-Screenshots";
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
+		788B3E4F2F8BA5D700E34392 /* XCRemoteSwiftPackageReference "project7III-Screenshots" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nilsmango/project7III-Screenshots.git";
+			requirement = {
+				kind = revision;
+				revision = cc3f336;
+			};
+		};
 		78320BBE2BB1C28400D6A772 /* XCRemoteSwiftPackageReference "Surge" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Jounce/Surge";
@@ -3471,12 +3470,12 @@
 		};
 		788B3E542F8BA5F800E34392 /* Project7IIIScreenshots */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 788B3E4F2F8BA5D700E34392 /* XCLocalSwiftPackageReference "../../Geschäft/project7III/Packages/project7III-Screenshots" */;
+			package = 788B3E4F2F8BA5D700E34392 /* XCRemoteSwiftPackageReference "project7III-Screenshots" */;
 			productName = Project7IIIScreenshots;
 		};
 		788B3E582F8BA6CA00E34392 /* Project7IIIScreenshotTestTools */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 788B3E4F2F8BA5D700E34392 /* XCLocalSwiftPackageReference "../../Geschäft/project7III/Packages/project7III-Screenshots" */;
+			package = 788B3E4F2F8BA5D700E34392 /* XCRemoteSwiftPackageReference "project7III-Screenshots" */;
 			productName = Project7IIIScreenshotTestTools;
 		};
 		78DB913B2E45F1D700B222C2 /* Kanna */ = {
