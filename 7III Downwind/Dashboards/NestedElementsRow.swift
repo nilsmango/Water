@@ -105,8 +105,10 @@ struct NestedElementsRow: View {
         .listRowSeparator(.hidden)
         .ifLet(dashboardIndex) { view, dashboardIndex in
             view.contextMenu {
-                if let url = url {
-                    Link(destination: URL(string: url)!) {
+                if let url, let destination = URL(string: url),
+                   let scheme = destination.scheme?.lowercased(),
+                   scheme == "http" || scheme == "https" {
+                    Link(destination: destination) {
                         Label("Go to Source", systemImage: "globe")
                     }
                 }

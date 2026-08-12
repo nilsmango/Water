@@ -118,7 +118,7 @@ struct WidgetDashboardView: View {
         Group {
             if let status = manager.widgetRefreshmentStatus {
                 Text(status)
-            } else if let updated = dashboard.elements.first?.lastUpdated {
+            } else if let updated = dashboard.elements.compactMap(\.lastUpdated).max() {
                 if manager.showWidgetTap {
                     Text("Tap list to refresh. Last updated: \(Text(updated, style: .relative)) ago.")
                 } else {

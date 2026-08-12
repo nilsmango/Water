@@ -167,7 +167,7 @@ struct Dashboards: View {
                         if url.startAccessingSecurityScopedResource() {
                             defer { url.stopAccessingSecurityScopedResource() }
                             
-                            if let jsonString = try? String(contentsOf: url) {
+                            if let jsonString = try? String(contentsOf: url, encoding: .utf8) {
                                 let itWorked = manager.importDashboardJSON(jsonString)
                                 print("Imported \(url.lastPathComponent): \(itWorked)")
                             } else {
@@ -232,5 +232,4 @@ struct Dashboards: View {
 #Preview {
     Dashboards(manager: TrackedElementsManager(), downwindManager: DownwindManager(), navPath: .constant(NavigationPath()))
 }
-
 

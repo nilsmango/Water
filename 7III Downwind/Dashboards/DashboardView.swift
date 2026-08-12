@@ -65,7 +65,7 @@ struct DashboardView: View {
                                     
                                 }, onDuplicate: {
                                     if let element = element {
-                                        newElement = TrackedElement(url: element.url, xpath: element.xpath, userLabel: element.userLabel, lastValue: "", lastUpdated: nil, lastError: nil, trimStart: element.trimStart, trimEnd: element.trimEnd, trimToOne: element.trimToOne, trimmingSelection: element.trimmingSelection, keepNumberNumber: element.keepNumberNumber, appendStart: element.appendStart, appendEnd: element.appendEnd)
+                                        newElement = TrackedElement(url: element.url, xpath: element.xpath, userLabel: element.userLabel, lastValue: nil, lastUpdated: nil, lastError: nil, trimStart: element.trimStart, trimEnd: element.trimEnd, trimToOne: element.trimToOne, trimmingSelection: element.trimmingSelection, keepNumberNumber: element.keepNumberNumber, appendStart: element.appendStart, appendEnd: element.appendEnd, unitType: element.unitType)
                                         showingAddSheet = true
                                     }
                                 })
@@ -93,7 +93,7 @@ struct DashboardView: View {
                                         editingElement = true
                                         showingAddSheet = true
                                     }, onDuplicate: {
-                                        newElement = TrackedElement(url: element.url, xpath: element.xpath, userLabel: element.userLabel, lastValue: "", lastUpdated: nil, lastError: nil, trimStart: element.trimStart, trimEnd: element.trimEnd, trimToOne: element.trimToOne, trimmingSelection: element.trimmingSelection, keepNumberNumber: element.keepNumberNumber, appendStart: element.appendStart, appendEnd: element.appendEnd)
+                                        newElement = TrackedElement(url: element.url, xpath: element.xpath, userLabel: element.userLabel, lastValue: nil, lastUpdated: nil, lastError: nil, trimStart: element.trimStart, trimEnd: element.trimEnd, trimToOne: element.trimToOne, trimmingSelection: element.trimmingSelection, keepNumberNumber: element.keepNumberNumber, appendStart: element.appendStart, appendEnd: element.appendEnd, unitType: element.unitType)
                                         showingAddSheet = true
                                     })
                                 }
@@ -115,7 +115,7 @@ struct DashboardView: View {
                         Text(status)
                             .monospacedDigit()
                     } else {
-                        if let updated = manager.dashboards[dashboardIndex].elements.first?.lastUpdated {
+                        if let updated = manager.dashboards[dashboardIndex].elements.compactMap(\.lastUpdated).max() {
                             Text("Last updated: \(Text(updated, style: .relative)) ago")
                                 .monospacedDigit()
                         }

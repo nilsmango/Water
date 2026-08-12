@@ -42,9 +42,7 @@ class TrackedElementsManager: ObservableObject {
     }
     
     func moveDashboards(from source: IndexSet, to destination: Int) {
-        for index in source {
-            dashboards.move(fromOffsets: [index], toOffset: destination)
-        }
+        dashboards.move(fromOffsets: source, toOffset: destination)
         saveDashboards()
     }
     
@@ -93,11 +91,17 @@ class TrackedElementsManager: ObservableObject {
     }
     
     func moveElements(from source: IndexSet, to destination: Int, elements: [TrackedElement], dashboardIndex: Int) {
-        for index in source {
-            let indexDifferential = destination - index
-            if let globalIndex = dashboards[dashboardIndex].elements.firstIndex(where: { $0.id == elements[index].id }) {
-                dashboards[dashboardIndex].elements.move(fromOffsets: [globalIndex], toOffset: globalIndex + indexDifferential)
-            }
+        guard dashboards.indices.contains(dashboardIndex) else { return }
+        var reorderedElements = elements
+        reorderedElements.move(fromOffsets: source, toOffset: destination)
+        let groupIDs = Set(elements.map(\.id))
+        var replacementIndex = 0
+
+        for globalIndex in dashboards[dashboardIndex].elements.indices
+        where groupIDs.contains(dashboards[dashboardIndex].elements[globalIndex].id) {
+            guard reorderedElements.indices.contains(replacementIndex) else { break }
+            dashboards[dashboardIndex].elements[globalIndex] = reorderedElements[replacementIndex]
+            replacementIndex += 1
         }
         saveDashboards()
     }
@@ -294,12 +298,11 @@ class TrackedElementsManager: ObservableObject {
             widgetRefreshmentStatus = "Refreshing \(dashboardToUpdate.name) | 0/\(total)"
         }
         
-        let groupedByURL = Dictionary(grouping: elements) { $0.url }
+        let groupedByURL = Dictionary(grouping: elements) {
+            WebScrapingService.normalizedPageURLString($0.url) ?? $0.url
+        }
         let urlGroups = Array(groupedByURL)
-        let maxConcurrency = 10
-        
-        // Create a shared actor to coordinate delays per URL base
-        let delayCoordinator = URLBaseDelayCoordinator()
+        let maxConcurrency = 6
         
         // Process in batches to limit concurrent WebViews
         for i in stride(from: 0, to: urlGroups.count, by: maxConcurrency) {
@@ -311,9 +314,6 @@ class TrackedElementsManager: ObservableObject {
             await withTaskGroup(of: (String, [TrackedElement]).self) { group in
                 for (url, elementsForURL) in batch {
                     group.addTask {
-                        // Coordinate delay based on URL base
-                        await delayCoordinator.coordinatedDelay(for: url)
-                        
                         let webService = WebScrapingService()
                         let updatedGroup = await webService.processElementsForURL(
                             url: url,
@@ -357,68 +357,6 @@ class TrackedElementsManager: ObservableObject {
             widgetRefreshmentStatus = nil
         }
     }
-
-    // Helper actor to coordinate delays between requests to the same URL base
-    actor URLBaseDelayCoordinator {
-        private var lastRequestTimes: [String: Date] = [:]
-        private let minimumDelay: TimeInterval = 0.6 // 400ms minimum
-        private let maximumDelay: TimeInterval = 2.0 // 2000ms maximum
-        
-        func coordinatedDelay(for url: String) async {
-            let urlBase = extractURLBase(from: url)
-            let now = Date()
-            
-            if let lastRequestTime = lastRequestTimes[urlBase] {
-                let timeSinceLastRequest = now.timeIntervalSince(lastRequestTime)
-                let randomDelay = Double.random(in: minimumDelay...maximumDelay)
-                
-                if timeSinceLastRequest < randomDelay {
-                    let sleepTime = randomDelay - timeSinceLastRequest
-                    try? await Task.sleep(nanoseconds: UInt64(sleepTime * 1_000_000_000))
-                }
-            }
-            
-            lastRequestTimes[urlBase] = Date()
-        }
-        
-        private func extractURLBase(from urlString: String) -> String {
-            guard let url = URL(string: urlString),
-                  let host = url.host else {
-                return urlString // Fallback to full URL if parsing fails
-            }
-            
-            // Extract the main domain (e.g., "meteobase.ch" from "vingelz.meteobase.ch")
-            let mainDomain = extractMainDomain(from: host)
-            let scheme = url.scheme ?? "https"
-            return "\(scheme)://\(mainDomain)"
-        }
-        
-        private func extractMainDomain(from host: String) -> String {
-            let components = host.split(separator: ".")
-            
-            // Handle cases like "example.com", "example.co.uk", etc.
-            if components.count >= 2 {
-                // For most cases, take the last two components (domain + TLD)
-                let lastTwo = components.suffix(2).joined(separator: ".")
-                
-                // Handle special cases like .co.uk, .com.au, etc.
-                if components.count >= 3 {
-                    let lastThree = components.suffix(3).joined(separator: ".")
-                    let knownTwoPartTLDs = ["co.uk", "com.au", "co.jp", "com.br", "co.za", "com.mx"]
-                    
-                    for tld in knownTwoPartTLDs {
-                        if lastThree.hasSuffix(tld) {
-                            return lastThree
-                        }
-                    }
-                }
-                
-                return lastTwo
-            }
-            
-            return host // Fallback for edge cases
-        }
-    }
     
     // MARK: - Export/Import
     
@@ -436,7 +374,13 @@ class TrackedElementsManager: ObservableObject {
               let importedDashboard = try? JSONDecoder().decode(Dashboard.self, from: jsonData)
         else { return false }
 
-        dashboards.append(importedDashboard)
+        // Imported files may be added more than once. Give each import a fresh ID
+        // so SwiftUI navigation and ForEach never see duplicate dashboard IDs.
+        dashboards.append(Dashboard(
+            name: importedDashboard.name,
+            elements: importedDashboard.elements,
+            info: importedDashboard.info
+        ))
         saveDashboards()
         
         return true

@@ -41,8 +41,12 @@ struct TrackedElementRow: View {
             }
         }        
         .contextMenu {
-            Link(destination: URL(string: element.url)!) {
-                Label("Go to Source", systemImage: "globe")
+            if let destination = URL(string: element.url),
+               let scheme = destination.scheme?.lowercased(),
+               scheme == "http" || scheme == "https" {
+                Link(destination: destination) {
+                    Label("Go to Source", systemImage: "globe")
+                }
             }
             Button {
                 onEdit()
