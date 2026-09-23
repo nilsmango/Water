@@ -327,7 +327,7 @@ struct StatisticsMapStyleSettings: View {
             Section {
                 ForEach(WorkoutType.allCases, id: \.self) { type in
                     Picker(type.prettyString, selection: binding(for: type)) {
-                        ForEach(StatisticsMapStyle.allCases) { style in
+                        ForEach(StatisticsMapStyle.availableStyles(for: type)) { style in
                             Text(style.title).tag(style)
                         }
                     }

@@ -189,6 +189,7 @@ enum StatisticsMapStyle: String, Codable, CaseIterable, Identifiable {
     case neonYellow
     case gradient
     case downwindGradient
+    case windDirections
     
     var id: String {
         rawValue
@@ -202,7 +203,16 @@ enum StatisticsMapStyle: String, Codable, CaseIterable, Identifiable {
             return "Gradient"
         case .downwindGradient:
             return "Downwind Gradient"
+        case .windDirections:
+            return "Wind Directions"
         }
+    }
+
+    static func availableStyles(for workoutType: WorkoutType?) -> [StatisticsMapStyle] {
+        guard workoutType?.angleSport == true else {
+            return allCases.filter { $0 != .windDirections }
+        }
+        return allCases
     }
 }
 
@@ -239,7 +249,10 @@ extension WorkoutType {
     }
     
     var defaultStatisticsMapStyle: StatisticsMapStyle {
-        isDWSport ? .downwindGradient : .gradient
+        if isUpDownwindSport {
+            return .windDirections
+        }
+        return isDWSport ? .downwindGradient : .gradient
     }
     
     var statisticsMapStyle: StatisticsMapStyle {
@@ -247,8 +260,12 @@ extension WorkoutType {
             guard let rawValue = UserDefaults.standard.string(forKey: statisticsMapStyleStorageKey) else {
                 return defaultStatisticsMapStyle
             }
-            
-            return StatisticsMapStyle(rawValue: rawValue) ?? defaultStatisticsMapStyle
+
+            let storedStyle = StatisticsMapStyle(rawValue: rawValue) ?? defaultStatisticsMapStyle
+            if storedStyle == .windDirections, !angleSport {
+                return defaultStatisticsMapStyle
+            }
+            return storedStyle
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: statisticsMapStyleStorageKey)

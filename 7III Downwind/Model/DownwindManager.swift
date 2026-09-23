@@ -1048,12 +1048,16 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                                 self.runStatistics[runIndex].percentageOnFoil = runEdit?.percentageOnFoil
                                 self.runStatistics[runIndex].turnsCount = runEdit?.turnsCount
                                 self.runStatistics[runIndex].angles = runEdit?.angles ?? []
+                                self.runStatistics[runIndex].windDirectionsReversed = runEdit?.windDirectionsReversed ?? self.runStatistics[runIndex].windDirectionsReversed
+                                self.runStatistics[runIndex].windFromBearing = runEdit?.windFromBearing
                             }
                         } else {
                             var statistic = RunStatistic(id: workout.uuid, runName: "", crewStatistics: [], runTime: runEdit?.newTotalTime ?? workout.duration / 60, runDistance: runEdit?.newTotalDistance ?? metaData.totalDistance, topSpeed: runEdit?.newTopSpeed ?? metaData.topSpeed, averageSpeed: runEdit?.newAverageSpeed ?? metaData.averageSpeed, kCalories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0, locationData: [], tags: runEdit?.newTags ?? metaData.tags, workoutType: runEdit?.newWorkoutType ?? metaData.workoutType, startDate: runEdit?.startLocation?.timestamp ?? workout.startDate, endDate: runEdit?.finishLocation?.timestamp ?? workout.endDate, topSpeed1s: runEdit?.topSpeed1s ?? 0, topSpeed10s: runEdit?.topSpeed10s ?? 0, popUps: runEdit?.popUps ?? 0, percentageOnFoil: runEdit?.percentageOnFoil ?? 0, turnsCount: runEdit?.turnsCount ?? 0)
                             statistic.startLocation = metaData.startLocation
                             statistic.locationString = runEdit?.locationString
                             statistic.angles = runEdit?.angles ?? []
+                            statistic.windDirectionsReversed = runEdit?.windDirectionsReversed
+                            statistic.windFromBearing = runEdit?.windFromBearing
                             
                             DispatchQueue.main.async {
                                 self.runStatistics.append(statistic)
@@ -1082,6 +1086,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         newStatistic.startLocation = run.startLocation
                         newStatistic.locationString = runEdit?.locationString ?? run.locationString
                         newStatistic.angles = runEdit?.angles ?? []
+                        newStatistic.windDirectionsReversed = runEdit?.windDirectionsReversed
+                        newStatistic.windFromBearing = runEdit?.windFromBearing
                         
                         DispatchQueue.main.async {
                             self.runStatistics.append(newStatistic)
@@ -1834,6 +1840,26 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         updateGroupedRunArray()
     }
+
+    func saveStatisticWindDirections(statisticsData: RunStatistic) {
+        let reversed = statisticsData.windDirectionsReversed ?? false
+        if let editIndex = runEdits.firstIndex(where: { $0.id == statisticsData.id }) {
+            runEdits[editIndex].windDirectionsReversed = reversed
+            runEdits[editIndex].windFromBearing = statisticsData.windFromBearing
+        } else {
+            runEdits.append(RunEdit(
+                id: statisticsData.id,
+                windDirectionsReversed: reversed,
+                windFromBearing: statisticsData.windFromBearing
+            ))
+        }
+        saveRunEdits()
+
+        if let index = runStatistics.firstIndex(where: { $0.id == statisticsData.id }) {
+            runStatistics[index].windDirectionsReversed = reversed
+            runStatistics[index].windFromBearing = statisticsData.windFromBearing
+        }
+    }
     
     func createLocationNames(statisticsData: RunStatistic, completion: @escaping (String) -> Void) {
         var locationName = "Unknown Location"
@@ -1901,6 +1927,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             // find what changed in the route
             var newRunEdit = RunEdit(id: newStatistic.id)
+            newRunEdit.windDirectionsReversed = newStatistic.windDirectionsReversed
+            newRunEdit.windFromBearing = newStatistic.windFromBearing
             
             // don't forget the tags! And somehow we also need to save the activity otherwise we will lose it
             newRunEdit.newTags = newStatistic.tags

@@ -10,6 +10,18 @@ import Foundation
 let versionHistory: [Version] = [
     // MARK: Newest on Top + Keep the introduction short to not get truncated text.
     Version(
+        versionNumber: "1.4.3",
+        introduction: "More insights for wind sports!",
+        changes: [
+            "Automatically detects upwind and downwind legs in UDW Parawing sessions, including routes where a tack overlaps the downwind heading.",
+            "Added a wind direction map showing upwind, downwind, and idle sections.",
+            "Wind directions can be reversed or set from a known wind bearing for an individual session.",
+            "Automatically measures upwind turn angles for wind sports, including winging and parawing.",
+            "Improved dashboard data refresh."
+        ],
+        releaseDate: "September 2026"
+    ),
+    Version(
         versionNumber: "1.4.2",
         introduction: "Water is now open source!",
         changes: [

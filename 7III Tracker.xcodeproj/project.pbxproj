@@ -125,6 +125,17 @@
 		785D3AEA2F915FA5006A54BC /* Phone11SpotsMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */; };
 		785D3AEC2F9164E2006A54BC /* spots.json in Resources */ = {isa = PBXBuildFile; fileRef = 785D3AEB2F9164E2006A54BC /* spots.json */; };
 		785D3AED2F9164E2006A54BC /* spots.json in Resources */ = {isa = PBXBuildFile; fileRef = 785D3AEB2F9164E2006A54BC /* spots.json */; };
+		79C0A0012026092300000003 /* Phone13WindAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000001 /* Phone13WindAnalysis.swift */; };
+		79C0A0012026092300000004 /* Phone13WindAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000001 /* Phone13WindAnalysis.swift */; };
+		79C0A0012026092300000022 /* TestWindAnalysisMaps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000021 /* TestWindAnalysisMaps.swift */; };
+		79C0A0012026092300000023 /* TestWindAnalysisMaps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000021 /* TestWindAnalysisMaps.swift */; };
+		79C0A0012026092300000006 /* carqueiranne-wind-route.csv in Resources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000002 /* carqueiranne-wind-route.csv */; };
+		79C0A0012026092300000008 /* carqueiranne-2026-09-18.csv in Resources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000007 /* carqueiranne-2026-09-18.csv */; };
+		79C0A0012026092300000012 /* carqueiranne-2026-09-16.csv in Resources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000011 /* carqueiranne-2026-09-16.csv */; };
+		79C0A0012026092300000014 /* carqueiranne-2026-09-17.csv in Resources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000013 /* carqueiranne-2026-09-17.csv */; };
+		79C0A0012026092300000016 /* biel-2026-08-18.csv in Resources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000015 /* biel-2026-08-18.csv */; };
+		79C0A0012026092300000018 /* ipsach-2026-06-06.csv in Resources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000017 /* ipsach-2026-06-06.csv */; };
+		79C0A0012026092300000020 /* yverdon-2026-07-09.csv in Resources */ = {isa = PBXBuildFile; fileRef = 79C0A0012026092300000019 /* yverdon-2026-07-09.csv */; };
 		78682D1F2F46132C0032D0B1 /* MapsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */; };
 		7876FB462F9265C8009575DA /* WebsiteScreenshot01Overview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876FB442F9265C8009575DA /* WebsiteScreenshot01Overview.swift */; };
 		7876FB472F9265C8009575DA /* WebsiteScreenshot02Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7876FB452F9265C8009575DA /* WebsiteScreenshot02Detail.swift */; };
@@ -909,6 +920,15 @@
 		785D39D22F90DE84006A54BC /* FakeMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeMenu.swift; sourceTree = "<group>"; };
 		785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone11SpotsMap.swift; sourceTree = "<group>"; };
 		785D3AEB2F9164E2006A54BC /* spots.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = spots.json; sourceTree = "<group>"; };
+		79C0A0012026092300000001 /* Phone13WindAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phone13WindAnalysis.swift; sourceTree = "<group>"; };
+		79C0A0012026092300000021 /* TestWindAnalysisMaps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWindAnalysisMaps.swift; sourceTree = "<group>"; };
+		79C0A0012026092300000002 /* carqueiranne-wind-route.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "carqueiranne-wind-route.csv"; sourceTree = "<group>"; };
+		79C0A0012026092300000007 /* carqueiranne-2026-09-18.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TrackerScreenshotTests/WindRouteFixtures/carqueiranne-2026-09-18.csv"; sourceTree = SOURCE_ROOT; };
+		79C0A0012026092300000011 /* carqueiranne-2026-09-16.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TrackerScreenshotTests/WindRouteFixtures/carqueiranne-2026-09-16.csv"; sourceTree = SOURCE_ROOT; };
+		79C0A0012026092300000013 /* carqueiranne-2026-09-17.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TrackerScreenshotTests/WindRouteFixtures/carqueiranne-2026-09-17.csv"; sourceTree = SOURCE_ROOT; };
+		79C0A0012026092300000015 /* biel-2026-08-18.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TrackerScreenshotTests/WindRouteFixtures/biel-2026-08-18.csv"; sourceTree = SOURCE_ROOT; };
+		79C0A0012026092300000017 /* ipsach-2026-06-06.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TrackerScreenshotTests/WindRouteFixtures/ipsach-2026-06-06.csv"; sourceTree = SOURCE_ROOT; };
+		79C0A0012026092300000019 /* yverdon-2026-07-09.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TrackerScreenshotTests/WindRouteFixtures/yverdon-2026-07-09.csv"; sourceTree = SOURCE_ROOT; };
 		78682D1E2F46132C0032D0B1 /* MapsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsMenuView.swift; sourceTree = "<group>"; };
 		7876FB442F9265C8009575DA /* WebsiteScreenshot01Overview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteScreenshot01Overview.swift; sourceTree = "<group>"; };
 		7876FB452F9265C8009575DA /* WebsiteScreenshot02Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteScreenshot02Detail.swift; sourceTree = "<group>"; };
@@ -1576,6 +1596,13 @@
 			isa = PBXGroup;
 			children = (
 				785D3AEB2F9164E2006A54BC /* spots.json */,
+				79C0A0012026092300000002 /* carqueiranne-wind-route.csv */,
+				79C0A0012026092300000007 /* carqueiranne-2026-09-18.csv */,
+				79C0A0012026092300000011 /* carqueiranne-2026-09-16.csv */,
+				79C0A0012026092300000013 /* carqueiranne-2026-09-17.csv */,
+				79C0A0012026092300000015 /* biel-2026-08-18.csv */,
+				79C0A0012026092300000017 /* ipsach-2026-06-06.csv */,
+				79C0A0012026092300000019 /* yverdon-2026-07-09.csv */,
 				79A100092F8500020041C173 /* ScreenshotSupport.swift */,
 				785D39D22F90DE84006A54BC /* FakeMenu.swift */,
 				79A100162F8500030041C173 /* Phone01WatchSupport.swift */,
@@ -1587,6 +1614,8 @@
 				79A1000D2F8500020041C173 /* Phone08Places.swift */,
 				79A1000A2F8500020041C173 /* Phone09AngleTool.swift */,
 				785D3AE82F915FA5006A54BC /* Phone11SpotsMap.swift */,
+				79C0A0012026092300000001 /* Phone13WindAnalysis.swift */,
+				79C0A0012026092300000021 /* TestWindAnalysisMaps.swift */,
 				79A1000B2F8500020041C173 /* Phone12Dashboards.swift */,
 				79A100192F8500030041C173 /* ExtraPhone10RouteEdits.swift */,
 				79A1000E2F8500020041C173 /* ExtraPhone05Tags.swift */,
@@ -1934,6 +1963,13 @@
 				78F9DFE12F87CE5D008FDBCF /* Preview Assets.xcassets in Resources */,
 				78F9DFE22F87CE5D008FDBCF /* 7III Water.icon in Resources */,
 				785D3AED2F9164E2006A54BC /* spots.json in Resources */,
+				79C0A0012026092300000006 /* carqueiranne-wind-route.csv in Resources */,
+				79C0A0012026092300000008 /* carqueiranne-2026-09-18.csv in Resources */,
+				79C0A0012026092300000012 /* carqueiranne-2026-09-16.csv in Resources */,
+				79C0A0012026092300000014 /* carqueiranne-2026-09-17.csv in Resources */,
+				79C0A0012026092300000016 /* biel-2026-08-18.csv in Resources */,
+				79C0A0012026092300000018 /* ipsach-2026-06-06.csv in Resources */,
+				79C0A0012026092300000020 /* yverdon-2026-07-09.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2314,6 +2350,8 @@
 				78F9E0632F87CE5D008FDBCF /* ShareOverlayDivider.swift in Sources */,
 				78F9E0642F87CE5D008FDBCF /* SharePreviewWrapper.swift in Sources */,
 				785D3AE92F915FA5006A54BC /* Phone11SpotsMap.swift in Sources */,
+				79C0A0012026092300000003 /* Phone13WindAnalysis.swift in Sources */,
+				79C0A0012026092300000022 /* TestWindAnalysisMaps.swift in Sources */,
 				78F9E0652F87CE5D008FDBCF /* VideoOverlayView.swift in Sources */,
 				78F9E0662F87CE5D008FDBCF /* VideoPicker.swift in Sources */,
 				78F9E0672F87CE5D008FDBCF /* OverlayAlertView.swift in Sources */,
@@ -2525,6 +2563,8 @@
 				78FD8FE02F850DDF0041C173 /* WorkoutType.swift in Sources */,
 				78FD8FE12F850DDF0041C173 /* VersionHistory.swift in Sources */,
 				785D3AEA2F915FA5006A54BC /* Phone11SpotsMap.swift in Sources */,
+				79C0A0012026092300000004 /* Phone13WindAnalysis.swift in Sources */,
+				79C0A0012026092300000023 /* TestWindAnalysisMaps.swift in Sources */,
 				78FD8FE22F850DDF0041C173 /* FoilStallDetector.swift in Sources */,
 				78FD8FE32F850DDF0041C173 /* GeocodingManager.swift in Sources */,
 				78FD8FE42F850DDF0041C173 /* CoordinateSmoothingHelpers.swift in Sources */,
@@ -2826,7 +2866,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 51;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
@@ -2856,7 +2896,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -2876,7 +2916,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "7III Downwind/_III_Downwind.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 51;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"7III Downwind/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
@@ -2912,7 +2952,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -2932,7 +2972,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2949,7 +2989,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -2969,7 +3009,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Tracker Watch Watch App/Tracker Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_ASSET_PATHS = "\"Tracker Watch Watch App/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2986,7 +3026,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.project7III.tracker.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -3004,12 +3044,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 51;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.tracker.-III-Water-Stickers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3024,12 +3064,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 50;
+				CURRENT_PROJECT_VERSION = 51;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "7III Water Stickers/Info.plist";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project7III.tracker.-III-Water-Stickers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3198,7 +3238,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Tracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Water Screenshots.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Water Screenshots";
 				TEST_TARGET_NAME = "7III Water Screenshots";
 			};
 			name = Debug;
@@ -3223,7 +3263,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Tracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Tracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/7III Water Screenshots.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/7III Water Screenshots";
 				TEST_TARGET_NAME = "7III Water Screenshots";
 			};
 			name = Release;

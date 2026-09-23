@@ -264,6 +264,8 @@ struct StatisticsMap: View {
             return .neonYellow
         case .gradient, .downwindGradient:
             return polyline.strokeColor.opacity(0.5)
+        case .windDirections:
+            return .neonYellow
         }
     }
 }

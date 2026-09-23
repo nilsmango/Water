@@ -47,6 +47,10 @@ struct RunStatistic: Identifiable, Codable {
     var locationString: String?
     
     var angles: [MapAngle]?
+    /// User correction when the GPS-only wind axis has the opposite polarity.
+    var windDirectionsReversed: Bool?
+    /// Direction the wind came from, in compass degrees, when known for this run.
+    var windFromBearing: Double?
     
     
     // Parameterless initializer for empty()

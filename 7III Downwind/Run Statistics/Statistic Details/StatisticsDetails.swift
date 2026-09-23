@@ -26,6 +26,10 @@ struct StatisticsDetails: View {
     let jumpCount: Int?
     let highestJump: String?
     let popUpsTitle: String
+    let windRouteAnalysis: WindRouteAnalysis?
+    let showsWindDirections: Bool
+    let showsAutomaticAngles: Bool
+    let measurementSystem: MeasurementSystem
     
     @Binding var hasTappedDistance: Bool
     
@@ -47,6 +51,10 @@ struct StatisticsDetails: View {
         jumpCount: Int? = nil,
         highestJump: String? = nil,
         popUpsTitle: String = "Pop-Ups",
+        windRouteAnalysis: WindRouteAnalysis? = nil,
+        showsWindDirections: Bool = false,
+        showsAutomaticAngles: Bool = false,
+        measurementSystem: MeasurementSystem = .metric,
         hasTappedDistance: Binding<Bool>
     ) {
         self.distance = distance
@@ -66,6 +74,10 @@ struct StatisticsDetails: View {
         self.jumpCount = jumpCount
         self.highestJump = highestJump
         self.popUpsTitle = popUpsTitle
+        self.windRouteAnalysis = windRouteAnalysis
+        self.showsWindDirections = showsWindDirections
+        self.showsAutomaticAngles = showsAutomaticAngles
+        self.measurementSystem = measurementSystem
         self._hasTappedDistance = hasTappedDistance
     }
     
@@ -79,7 +91,7 @@ struct StatisticsDetails: View {
                 StatisticsInfoViews(header: "Total Distance", bodyText: distance)
             }
         }
-        
+
         if averagePace != " /km" && averagePace != "0'00\" /km" {
             HStack {
                 StatisticsInfoViews(header: "∅-Pace", bodyText: averagePace)
@@ -176,6 +188,67 @@ struct StatisticsDetails: View {
                     StatisticsInfoViews(header: "Activity Calories", bodyText: kCal)
                         .frame(width: width, alignment: .leading)
                 }
+            }
+        }
+
+        if let windRouteAnalysis, showsWindDirections {
+            HStack {
+                StatisticsInfoViews(
+                    header: "Upwind Distance",
+                    bodyText: makePrettyDistance(meters: windRouteAnalysis.upwindDistance, system: measurementSystem, statistics: true)
+                )
+                .frame(width: width, alignment: .leading)
+
+                StatisticsInfoViews(
+                    header: "Downwind Distance",
+                    bodyText: makePrettyDistance(meters: windRouteAnalysis.downwindDistance, system: measurementSystem, statistics: true)
+                )
+            }
+
+            HStack {
+                StatisticsInfoViews(
+                    header: "Upwind Time",
+                    bodyText: makePrettyTime(timeInMinutes: windRouteAnalysis.upwindDuration / 60)
+                )
+                .frame(width: width, alignment: .leading)
+
+                StatisticsInfoViews(
+                    header: "Downwind Time",
+                    bodyText: makePrettyTime(timeInMinutes: windRouteAnalysis.downwindDuration / 60)
+                )
+            }
+
+            HStack {
+                StatisticsInfoViews(
+                    header: "Idle Time",
+                    bodyText: makePrettyTime(timeInMinutes: windRouteAnalysis.idleDuration / 60)
+                )
+                .frame(width: width, alignment: .leading)
+
+                if let percentage = windRouteAnalysis.downwindToUpwindTimePercentage {
+                    StatisticsInfoViews(
+                        header: "Down / Up Time",
+                        bodyText: String(format: "%.0f %%", percentage)
+                    )
+                }
+            }
+        }
+
+        if let windRouteAnalysis,
+           showsAutomaticAngles,
+           let averageAngle = windRouteAnalysis.averageTurnAngle,
+           let bestAngle = windRouteAnalysis.bestTurnAngle {
+            HStack {
+                StatisticsInfoViews(
+                    header: "∅ Upwind Angle",
+                    bodyText: String(format: "%.1f°", averageAngle)
+                )
+                .frame(width: width, alignment: .leading)
+
+                StatisticsInfoViews(
+                    header: "Best Upwind Angle",
+                    bodyText: String(format: "%.1f°", bestAngle)
+                )
             }
         }
     }

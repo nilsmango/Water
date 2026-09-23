@@ -75,6 +75,7 @@ struct StatisticsRunView: View {
     @State private var flightSummary: FlightSummary?
     @State private var heartRateSpeedData: [SpeedSample] = []
     @State private var detailsSummary = DetailsSummary()
+    @State private var windRouteAnalysis: WindRouteAnalysis?
     
     @AppStorage("hasTappedFastestDistance") var hasTappedDistance = false
     
@@ -88,7 +89,7 @@ struct StatisticsRunView: View {
         List {
             Section {
                 
-                StatisticsDetails(distance: detailsSummary.distance, time: detailsSummary.time, averageSpeed: detailsSummary.averageSpeed, averagePace: detailsSummary.averagePace, topSpeed: detailsSummary.topSpeed, topsSpeed1s: detailsSummary.topsSpeed1s, topsSpeed10s: detailsSummary.topsSpeed10s, kCal: detailsSummary.kCal, heartRate: detailsSummary.heartRate, popUps: detailsPopUps, percentageOnFoil: detailsSummary.percentageOnFoil, turns: detailsSummary.turns, longestDistanceOnFoil: detailsSummary.longestDistanceOnFoil, fastestDistances: fastestDistances, jumpCount: detailsSummary.jumpCount, highestJump: detailsSummary.highestJump, popUpsTitle: Self.popUpsTitle(for: statisticsData.workoutType), hasTappedDistance: $hasTappedDistance)
+                StatisticsDetails(distance: detailsSummary.distance, time: detailsSummary.time, averageSpeed: detailsSummary.averageSpeed, averagePace: detailsSummary.averagePace, topSpeed: detailsSummary.topSpeed, topsSpeed1s: detailsSummary.topsSpeed1s, topsSpeed10s: detailsSummary.topsSpeed10s, kCal: detailsSummary.kCal, heartRate: detailsSummary.heartRate, popUps: detailsPopUps, percentageOnFoil: detailsSummary.percentageOnFoil, turns: detailsSummary.turns, longestDistanceOnFoil: detailsSummary.longestDistanceOnFoil, fastestDistances: fastestDistances, jumpCount: detailsSummary.jumpCount, highestJump: detailsSummary.highestJump, popUpsTitle: Self.popUpsTitle(for: statisticsData.workoutType), windRouteAnalysis: windRouteAnalysis, showsWindDirections: statisticsData.workoutType?.isUpDownwindSport == true, showsAutomaticAngles: statisticsData.workoutType?.angleSport == true, measurementSystem: downwindManager.measurementSystem, hasTappedDistance: $hasTappedDistance)
             } header: {
                 VStack(spacing: 0) {
                     StatisticsMainHeader(cutDate: cutDate, locationName: statisticsData.locationString ?? locationName, activity: statisticsData.workoutType?.prettyString ?? "Surfing")
@@ -133,6 +134,13 @@ struct StatisticsRunView: View {
                             rounds = Self.createRounds(from: statisticsData.locationData)
                         }
                         fastestDistances = calculateFastestDistances(from: statisticsData.locationData, system: downwindManager.measurementSystem, workoutType: statisticsData.workoutType)
+                        if statisticsData.workoutType?.angleSport == true {
+                            windRouteAnalysis = analyzeWindRoute(
+                                from: statisticsData.locationData,
+                                reverseDirections: statisticsData.windDirectionsReversed ?? false,
+                                windFromBearing: statisticsData.windFromBearing
+                            )
+                        }
                     }
                     heartRateSpeedData = Self.createSpeedData(from: statisticsData.locationData)
                     if let importedRun = downwindManager.importedRuns.first(where: { $0.id == statisticsData.id }), !importedRun.heartRates.isEmpty {
@@ -173,7 +181,7 @@ struct StatisticsRunView: View {
             }
             
             if !statisticsData.locationData.isEmpty {
-                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, flights: flights, flightSummary: flightSummary, mapStyle: selectedMapStyle, statisticsData: $statisticsData)
+                MapSectionView(downwindManager: downwindManager, showRounds: $showRounds, showMapSheet: $showMapSheet, showAngleMap: $showAngleMap, rounds: rounds, flights: flights, flightSummary: flightSummary, mapStyle: selectedMapStyle, windRouteAnalysis: windRouteAnalysis, statisticsData: $statisticsData, onReverseWindDirections: reverseWindDirections, onSetWindBearing: setWindFromBearing)
                 
                 if statisticsData.angles?.count ?? 0 > 0 {
                     Section {
@@ -413,7 +421,7 @@ struct StatisticsRunView: View {
         })
         .sheet(isPresented: $showMapSheet, content: {
             NavigationStack {
-                StatisticsFullMapView(downwindManager: downwindManager, statisticsData: $statisticsData, mapStyle: $selectedMapStyle)
+                StatisticsFullMapView(downwindManager: downwindManager, statisticsData: $statisticsData, mapStyle: $selectedMapStyle, windRouteAnalysis: windRouteAnalysis)
                 .navigationTitle(statisticsData.locationString ?? locationName)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -603,6 +611,15 @@ struct StatisticsRunView: View {
             calculationProgress = "Analyzing foiling stats..."
         }
         let _ = await calculateFoilStatsAsync()
+
+        if statisticsData.workoutType?.angleSport == true {
+            await MainActor.run {
+                calculationProgress = statisticsData.workoutType?.isUpDownwindSport == true
+                    ? "Analyzing upwind and downwind..."
+                    : "Analyzing tack and jibe angles..."
+            }
+            await calculateWindRouteAnalysisAsync()
+        }
 
         if Self.usesFlightList(for: statisticsData.workoutType) {
             await MainActor.run {
@@ -823,6 +840,47 @@ struct StatisticsRunView: View {
         await MainActor.run {
             heartRateSpeedData = speedDataResult
         }
+    }
+
+    private func calculateWindRouteAnalysisAsync() async {
+        guard statisticsData.locationData.count >= 20,
+              statisticsData.workoutType?.angleSport == true else {
+            await MainActor.run {
+                windRouteAnalysis = nil
+            }
+            return
+        }
+
+        let locationData = statisticsData.locationData
+        let reverseDirections = statisticsData.windDirectionsReversed ?? false
+        let windFromBearing = statisticsData.windFromBearing
+        let analysis = await Task.detached(priority: .utility) {
+            analyzeWindRoute(
+                from: locationData,
+                reverseDirections: reverseDirections,
+                windFromBearing: windFromBearing
+            )
+        }.value
+
+        await MainActor.run {
+            if (statisticsData.windDirectionsReversed ?? false) == reverseDirections,
+               statisticsData.windFromBearing == windFromBearing {
+                windRouteAnalysis = analysis
+            }
+        }
+    }
+
+    private func reverseWindDirections() {
+        statisticsData.windDirectionsReversed = !(statisticsData.windDirectionsReversed ?? false)
+        downwindManager.saveStatisticWindDirections(statisticsData: statisticsData)
+        Task { await calculateWindRouteAnalysisAsync() }
+    }
+
+    private func setWindFromBearing(_ bearing: Double?) {
+        statisticsData.windFromBearing = bearing
+        statisticsData.windDirectionsReversed = false
+        downwindManager.saveStatisticWindDirections(statisticsData: statisticsData)
+        Task { await calculateWindRouteAnalysisAsync() }
     }
     
     private func refreshDetailsSummaryAsync() async {
@@ -1087,46 +1145,53 @@ struct StatisticsRunView: View {
     }
 }
 
-private struct StatisticsFullMapView: View {
+struct StatisticsFullMapView: View {
     @ObservedObject var downwindManager: DownwindManager
     @Binding var statisticsData: RunStatistic
     @Binding var mapStyle: StatisticsMapStyle
+    let windRouteAnalysis: WindRouteAnalysis?
     
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            StatisticsRouteMapView(downwindManager: downwindManager, statisticsData: $statisticsData, mapStyle: mapStyle)
+        ZStack(alignment: .bottom) {
+            StatisticsRouteMapView(
+                downwindManager: downwindManager,
+                statisticsData: $statisticsData,
+                mapStyle: mapStyle,
+                windRouteAnalysis: windRouteAnalysis,
+                showsWindLegend: false
+            )
                 .ignoresSafeArea()
-            
-            if #available(iOS 26.0, *) {
-                Menu {
-                    ForEach(StatisticsMapStyle.allCases) { style in
-                        Button {
-                            select(style)
-                        } label: {
-                            Label(style.title, systemImage: style == mapStyle ? "checkmark" : "circle")
-                        }
+
+            HStack(alignment: .bottom) {
+                if mapStyle == .windDirections {
+                    if windRouteAnalysis != nil {
+                        WindRouteLegend()
+                    } else {
+                        WindRouteUnavailableMessage()
                     }
-                } label: {
-                    MapStyleLabel()
                 }
-                .buttonStyle(.glass)
-                .padding(.trailing, 16)
-            } else {
-                Menu {
-                    ForEach(StatisticsMapStyle.allCases) { style in
-                        Button {
-                            select(style)
-                        } label: {
-                            Label(style.title, systemImage: style == mapStyle ? "checkmark" : "circle")
-                        }
-                    }
-                } label: {
-                    MapStyleLabel()
-                }
-                .padding(.trailing, 16)
+
+                Spacer(minLength: 8)
+                mapStyleMenu
             }
-//            .padding(.bottom, 16)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 16)
         }
+    }
+
+    private var mapStyleMenu: some View {
+        Menu {
+            ForEach(StatisticsMapStyle.availableStyles(for: statisticsData.workoutType)) { style in
+                Button {
+                    select(style)
+                } label: {
+                    Label(style.title, systemImage: style == mapStyle ? "checkmark" : "circle")
+                }
+            }
+        } label: {
+            MapStyleLabel()
+        }
+        .modifier(MapStyleButtonAppearance())
     }
     
     private func select(_ style: StatisticsMapStyle) {
@@ -1134,6 +1199,17 @@ private struct StatisticsFullMapView: View {
         
         if let type = statisticsData.workoutType {
             WorkoutType.setStatisticsMapStyle(style, for: type)
+        }
+    }
+}
+
+private struct MapStyleButtonAppearance: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.buttonStyle(.glass)
+        } else {
+            content
         }
     }
 }
