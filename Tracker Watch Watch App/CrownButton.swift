@@ -120,8 +120,11 @@ struct CrownButton: View {
                 reverseRotation += -change
                 if reverseRotation >= 6 {
                     reverseRotation = 0
-                    withAnimation {
-                        selection = .metrics
+                    hasCrownFocus = false
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            selection = .metrics
+                        }
                     }
                 }
             }

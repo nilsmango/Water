@@ -73,7 +73,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "78844E262C2E9D6900B703F5"
             BuildableName = "Tracker Watch Watch App.app"
-            BlueprintName = "Tracker Watch Watch App"
             ReferencedContainer = "container:7III Tracker.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -93,7 +92,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "78844E262C2E9D6900B703F5"
             BuildableName = "Tracker Watch Watch App.app"
-            BlueprintName = "Tracker Watch Watch App"
             ReferencedContainer = "container:7III Tracker.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
