@@ -14,9 +14,15 @@ struct SessionPagingView: View {
         
     var body: some View {
         TabView(selection: $selection) {
-            ControlsView(workoutManager: workoutManager, selection: $selection).tag(Tab.controls)
+            // Vertical paging advances as the crown turns down, so keep the
+            // semantic page order reversed to make crown-up return to earlier pages.
+            PlayingView(
+                selection: $selection,
+                isActive: selection == .nowPlaying
+            )
+            .tag(Tab.nowPlaying)
             MetricsView(workoutManager: workoutManager).tag(Tab.metrics)
-            PlayingView().tag(Tab.nowPlaying)
+            ControlsView(workoutManager: workoutManager, selection: $selection).tag(Tab.controls)
         }
         .navigationTitle(workoutManager.workoutType.prettyString)
         .navigationBarBackButtonHidden(true)

@@ -25,6 +25,7 @@ struct CrownButton: View {
 
     let frameHeight = 52.0
     private let crownLimit = 10_000.0
+    private let pageChangeThreshold = 2.0
 
     private var canHandleCrown: Bool {
         isActive && !workoutManager.showingSummaryView
@@ -114,11 +115,13 @@ struct CrownButton: View {
             reverseRotation = 0
             fillPercentage = min(100, fillPercentage + change)
         } else if change < 0 {
+            let amountToEmpty = min(fillPercentage, -change)
             fillPercentage = max(0, fillPercentage + change)
 
-            if !start {
-                reverseRotation += -change
-                if reverseRotation >= 6 {
+            let rotationPastEmpty = -change - amountToEmpty
+            if !start && rotationPastEmpty > 0 {
+                reverseRotation += rotationPastEmpty
+                if reverseRotation >= pageChangeThreshold {
                     reverseRotation = 0
                     hasCrownFocus = false
                     DispatchQueue.main.async {
