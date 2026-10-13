@@ -10,6 +10,14 @@ import Foundation
 let versionHistory: [Version] = [
     // MARK: Newest on Top + Keep the introduction short to not get truncated text.
     Version(
+        versionNumber: "1.4.4",
+        introduction: "Fixed errors",
+        changes: [
+            "Just a couple of fixes",
+        ],
+        releaseDate: "October 2026"
+    ),
+    Version(
         versionNumber: "1.4.3",
         introduction: "More insights for wind sports!",
         changes: [
