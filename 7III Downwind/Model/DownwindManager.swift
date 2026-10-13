@@ -456,8 +456,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 
                 // only update if we have valid data
                 if var newData = locationData ?? currentStatisticLocationData(refreshTimestamp: true) {
-                    if let pendingRouteSegmentStartTimestamp,
-                       newData.timestamp >= pendingRouteSegmentStartTimestamp {
+                    if let segmentStartTimestamp = pendingRouteSegmentStartTimestamp,
+                       newData.timestamp >= segmentStartTimestamp {
                         newData.isRouteSegmentStart = true
                         pendingRouteSegmentStartTimestamp = nil
                     }
@@ -1103,7 +1103,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let runTime = if let firstLocation, let lastLocation {
                 max(0, lastLocation.timestamp.timeIntervalSince(firstLocation.timestamp) / 60)
             } else {
-                0
+                0.0
             }
             let missingLocations = findMissingLocationData(
                 original: repairedRoute.original,

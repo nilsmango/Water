@@ -60,7 +60,7 @@ struct SpeedGradientMapView: UIViewRepresentable {
                 gradientLocations: downsampledForGradient,
                 maxSpeed: maxSpeed(in: downsampledForGradient)
             )
-            routeBounds = MKMapRectUnion(routeBounds, polyline.boundingMapRect)
+            routeBounds = routeBounds.union(polyline.boundingMapRect)
             firstCoordinate = firstCoordinate ?? coordinates.first
             lastCoordinate = coordinates.last
 
@@ -68,7 +68,7 @@ struct SpeedGradientMapView: UIViewRepresentable {
             debugMap("Polyline boundingRect: \(polyline.boundingMapRect)")
             mapView.addOverlay(polyline)
         }
-        guard let firstCoordinate, let lastCoordinate, !MKMapRectIsNull(routeBounds) else { return }
+        guard let firstCoordinate, let lastCoordinate, !routeBounds.isNull else { return }
         debugMap("Overlay segments added")
 
         let startAnnotation = MKPointAnnotation()

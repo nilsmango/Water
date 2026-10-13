@@ -67,15 +67,20 @@ struct StatisticsRoundsTests {
         let latitude = 43.0
         let longitude = 5.6
         var filter = GPSRouteFilter(workoutType: .downwindSUPFoil)
-        let locations = [
+        var locations: [LocationData] = [
             LocationData(timestamp: start, latitude: latitude, longitude: longitude)
-        ] + (1...6).map { index in
-            LocationData(
+        ]
+        let recoveryLocations: [LocationData] = (1...6).map { index in
+            let recoveryLatitude: Double = index == 1
+                ? 43.02
+                : 43.02 + Double(index - 1) * 0.000001
+            return LocationData(
                 timestamp: start.addingTimeInterval(Double(index)),
-                latitude: index == 1 ? 43.02 : 43.02 + Double(index - 1) * 0.000001,
+                latitude: recoveryLatitude,
                 longitude: longitude
             )
         }
+        locations.append(contentsOf: recoveryLocations)
 
         let filteredLocations = filter.filter(locations)
         let reloadedLocations = cleanGPSRoute(from: filteredLocations, workoutType: .downwindSUPFoil)

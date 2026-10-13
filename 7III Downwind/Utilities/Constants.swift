@@ -22,6 +22,10 @@ enum Constants {
     static let minHorizontalAccuracy = 18.0
     static let poorAccuracyFailOpenTimeInterval = 15.0
     static let minimumJumpHeight = 1.0
+
+    /// Watch route imports ignore large relocations inside a short GPS interval.
+    static let maxObviousGPSJumpTimeInterval: TimeInterval = 10
+    static let maxObviousGPSJumpDistance: Double = 250
     
     /// timer interval for the information toggling in the online locations view (run)
     static let updateTimer: Double = 5.0
