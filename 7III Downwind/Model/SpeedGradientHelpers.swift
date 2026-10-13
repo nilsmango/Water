@@ -203,11 +203,21 @@ func visibleLocationSegments(
 
     for index in locations.indices {
         let location = locations[index]
+
+        if location.isRouteSegmentStart == true, !currentSegment.isEmpty {
+            if currentSegment.count > 1 {
+                segments.append(currentSegment)
+            }
+            currentSegment.removeAll(keepingCapacity: true)
+        }
+
         let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
         let point = MKMapPoint(coordinate)
 
         if rect.contains(point) {
-            if currentSegment.isEmpty, index > locations.startIndex {
+            if currentSegment.isEmpty,
+               index > locations.startIndex,
+               location.isRouteSegmentStart != true {
                 currentSegment.append(locations[locations.index(before: index)])
             }
             currentSegment.append(location)

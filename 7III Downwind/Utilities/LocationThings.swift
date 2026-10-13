@@ -382,17 +382,31 @@ enum LocationError {
 }
 
 /// returns 1 sec and 10 sec top speeds in km/h from an array of LocationData
-func calculateTopSpeeds(from data: [LocationData]) -> (topSpeed1Sec: Double?, topSpeed10Sec: Double?) {
+func calculateTopSpeeds(
+    from rawData: [LocationData],
+    workoutType: WorkoutType? = nil
+) -> (topSpeed1Sec: Double?, topSpeed10Sec: Double?) {
+    let data = cleanGPSRoute(from: rawData, workoutType: workoutType)
     var topSpeed1Sec: Double = 0
     var topSpeed10Sec: Double = 0
     
     for i in 0..<data.count {
         // 1-second window
-        if let oneSecSpeed = calculateSpeed(in: data, fromIndex: i, duration: 1) {
+        if let oneSecSpeed = calculateSpeed(
+            in: data,
+            fromIndex: i,
+            duration: 1,
+            workoutType: workoutType
+        ) {
             topSpeed1Sec = max(topSpeed1Sec, oneSecSpeed)
         }
         // 10-second window
-        if let tenSecSpeed = calculateSpeed(in: data, fromIndex: i, duration: 10) {
+        if let tenSecSpeed = calculateSpeed(
+            in: data,
+            fromIndex: i,
+            duration: 10,
+            workoutType: workoutType
+        ) {
             topSpeed10Sec = max(topSpeed10Sec, tenSecSpeed)
         }
     }
@@ -408,12 +422,13 @@ struct FastestDistanceResult {
 }
 
 /// returns formatted string of fastest km time in minutes:seconds with start position in km, or nil if not found
-func calculateFastestKm(from data: [LocationData]) -> String? {
+func calculateFastestKm(from rawData: [LocationData], workoutType: WorkoutType? = nil) -> String? {
+    let data = cleanGPSRoute(from: rawData, workoutType: workoutType)
     var fastestKmSeconds: Double = Double.infinity
     var fastestKmStartIndex = 0
     
     for i in 0..<data.count {
-        if let (kmTime, _) = calculateFastestDistance(in: data, fromIndex: i, targetDistance: 1000.0, maximumPlausibleSegmentSpeed: fastestDistanceMaximumSegmentSpeed(for: nil)) {
+        if let (kmTime, _) = calculateFastestDistance(in: data, fromIndex: i, targetDistance: 1000.0, maximumPlausibleSegmentSpeed: fastestDistanceMaximumSegmentSpeed(for: workoutType)) {
             if kmTime < fastestKmSeconds {
                 fastestKmSeconds = kmTime
                 fastestKmStartIndex = i
@@ -435,7 +450,8 @@ func calculateFastestKm(from data: [LocationData]) -> String? {
 }
 
 /// returns array of fastest distances (50m, 100m, 1km) with time and speed strings
-func calculateFastestDistances(from data: [LocationData], system: MeasurementSystem, workoutType: WorkoutType? = nil) -> [FastestDistanceResult] {
+func calculateFastestDistances(from rawData: [LocationData], system: MeasurementSystem, workoutType: WorkoutType? = nil) -> [FastestDistanceResult] {
+    let data = cleanGPSRoute(from: rawData, workoutType: workoutType)
     var results: [FastestDistanceResult] = []
     let distancesToCheck = [(50.0, "50 m"), (100.0, "100 m"), (1000.0, "1 km")]
     let maximumPlausibleSegmentSpeed = fastestDistanceMaximumSegmentSpeed(for: workoutType)
@@ -483,7 +499,12 @@ func calculateFastestDistances(from data: [LocationData], system: MeasurementSys
     return results
 }
 
-private func calculateSpeed(in data: [LocationData], fromIndex index: Int, duration: TimeInterval) -> Double? {
+private func calculateSpeed(
+    in data: [LocationData],
+    fromIndex index: Int,
+    duration: TimeInterval,
+    workoutType: WorkoutType?
+) -> Double? {
     let start = data[index]
     let endTime = start.timestamp.addingTimeInterval(duration)
     
@@ -492,12 +513,16 @@ private func calculateSpeed(in data: [LocationData], fromIndex index: Int, durat
     
     for i in index+1..<data.count {
         let point = data[i]
+        if point.isRouteSegmentStart == true { break }
         if point.timestamp > endTime { break }
         
-        let fromLocation = CLLocation(latitude: lastPoint.latitude, longitude: lastPoint.longitude)
-        let toLocation = CLLocation(latitude: point.latitude, longitude: point.longitude)
-        
-        distance += fromLocation.distance(from: toLocation)
+        guard let segment = gpsRouteSegmentMeasurement(
+            from: lastPoint,
+            to: point,
+            workoutType: workoutType
+        ) else { break }
+
+        distance += segment.distance
         lastPoint = point
     }
     
@@ -520,6 +545,7 @@ private func calculateFastestDistance(
     for i in index + 1..<data.count {
         let prev = data[i - 1]
         let curr = data[i]
+        if curr.isRouteSegmentStart == true { return nil }
         
         let fromLocation = CLLocation(latitude: prev.latitude, longitude: prev.longitude)
         let toLocation = CLLocation(latitude: curr.latitude, longitude: curr.longitude)
@@ -559,7 +585,7 @@ private func isPlausibleFastestDistanceSegment(distance: Double, time: TimeInter
     return distance / time <= maximumPlausibleSegmentSpeed
 }
 
-private func fastestDistanceMaximumSegmentSpeed(for workoutType: WorkoutType?) -> Double {
+func fastestDistanceMaximumSegmentSpeed(for workoutType: WorkoutType?) -> Double {
     let maximumKmh: Double
 
     switch workoutType {
@@ -576,12 +602,384 @@ private func fastestDistanceMaximumSegmentSpeed(for workoutType: WorkoutType?) -
     return maximumKmh / 3.6
 }
 
+let maximumContinuousGPSInterval: TimeInterval = 300
+
+/// Stateful filter shared by live GPS collection and saved route cleanup.
+/// A suspicious fix is held aside until the route returns to the last good
+/// location or a stable new GPS position has been observed for several fixes.
+struct GPSRouteFilter {
+    private(set) var lastAcceptedLocation: LocationData?
+    private var pendingLocations = [LocationData]()
+    private var workoutType: WorkoutType?
+    private let recoveryPointCount = 5
+
+    init(workoutType: WorkoutType? = nil) {
+        self.workoutType = workoutType
+    }
+
+    mutating func reset(workoutType: WorkoutType? = nil) {
+        lastAcceptedLocation = nil
+        pendingLocations = []
+        self.workoutType = workoutType
+    }
+
+    /// Returns a normalized point only when it belongs to the accepted route.
+    /// Invalid or implausible speed readings are cleared before they can affect
+    /// maximum-speed statistics.
+    mutating func process(_ rawLocation: LocationData) -> LocationData? {
+        guard isValidGPSLocation(rawLocation) else { return nil }
+
+        var location = rawLocation
+        let maximumSpeed = fastestDistanceMaximumSegmentSpeed(for: workoutType)
+        if let speed = location.speed,
+           (!speed.isFinite || speed < 0 || speed > maximumSpeed) {
+            location.speed = nil
+        }
+
+        if location.isRouteSegmentStart == true {
+            pendingLocations = []
+            lastAcceptedLocation = location
+            return location
+        }
+
+        guard let accepted = lastAcceptedLocation else {
+            lastAcceptedLocation = location
+            return location
+        }
+
+        let interval = location.timestamp.timeIntervalSince(accepted.timestamp)
+        guard interval.isFinite, interval > 0 else { return nil }
+
+        if interval > maximumContinuousGPSInterval, pendingLocations.isEmpty {
+            location.isRouteSegmentStart = true
+            lastAcceptedLocation = location
+            return location
+        }
+
+        let isPlausibleFromAccepted = gpsSegmentIsPlausible(
+            from: accepted,
+            to: location,
+            maximumSpeed: maximumSpeed
+        )
+
+        guard !pendingLocations.isEmpty else {
+            if isPlausibleFromAccepted {
+                lastAcceptedLocation = location
+                return location
+            }
+
+            pendingLocations = [location]
+            return nil
+        }
+
+        let pendingLocation = pendingLocations[pendingLocations.count - 1]
+        let isContinuousFromPending = gpsSegmentIsPlausible(
+            from: pendingLocation,
+            to: location,
+            maximumSpeed: maximumSpeed
+        )
+
+        if isPlausibleFromAccepted {
+            let distanceFromAccepted = gpsDistance(from: accepted, to: location)
+            let distanceFromPending = gpsDistance(from: pendingLocation, to: location)
+            let continuesSuspiciousExcursion = isContinuousFromPending
+                && distanceFromAccepted > distanceFromPending * 1.25 + 50
+
+            if !continuesSuspiciousExcursion {
+                // The route has returned to a plausible position. Discard the
+                // held fixes and resume immediately from this good location.
+                pendingLocations = []
+                lastAcceptedLocation = location
+                return location
+            }
+        }
+
+        if isContinuousFromPending {
+            pendingLocations.append(location)
+        } else {
+            // This is another isolated jump. Start a fresh recovery streak so
+            // unrelated glitches do not make the filter wait indefinitely.
+            pendingLocations = [location]
+        }
+
+        guard pendingLocations.count >= recoveryPointCount else { return nil }
+
+        // GPS has settled at a new location. Re-anchor after a short quarantine
+        // so collection recovers even when it cannot reconnect to the old fix.
+        location.isRouteSegmentStart = true
+        pendingLocations = []
+        lastAcceptedLocation = location
+        return location
+    }
+
+    mutating func filter(_ rawLocations: [LocationData]) -> [LocationData] {
+        rawLocations.enumerated()
+            .filter { _, location in isValidGPSLocation(location) }
+            .sorted { lhs, rhs in
+                if lhs.element.timestamp == rhs.element.timestamp {
+                    return lhs.offset < rhs.offset
+                }
+                return lhs.element.timestamp < rhs.element.timestamp
+            }
+            .compactMap { process($0.element) }
+    }
+}
+
+func cleanGPSRoute(from locations: [LocationData], workoutType: WorkoutType? = nil) -> [LocationData] {
+    var filter = GPSRouteFilter(workoutType: workoutType)
+    return filter.filter(locations)
+}
+
+struct GPSRouteMetrics: Equatable {
+    let totalDistance: Double
+    let topSpeedKmh: Double
+}
+
+func calculateGPSRouteMetrics(
+    from locations: [LocationData],
+    workoutType: WorkoutType? = nil
+) -> GPSRouteMetrics {
+    guard locations.count > 1 else {
+        return GPSRouteMetrics(totalDistance: 0, topSpeedKmh: locations.first?.speed.map { $0 * 3.6 } ?? 0)
+    }
+
+    let maximumSpeed = fastestDistanceMaximumSegmentSpeed(for: workoutType)
+    var totalDistance = 0.0
+    var distanceBeforeCurrentSegment = 0.0
+    var topSpeed = locations.compactMap(\.speed).filter { $0.isFinite && $0 >= 0 && $0 <= maximumSpeed }.max() ?? 0
+
+    for index in 1..<locations.count {
+        let previous = locations[index - 1]
+        let current = locations[index]
+        if current.isRouteSegmentStart == true {
+            distanceBeforeCurrentSegment += totalDistance
+            totalDistance = 0
+            continue
+        }
+        guard let segment = gpsRouteSegmentMeasurement(
+            from: previous,
+            to: current,
+            workoutType: workoutType
+        ), segment.speed <= maximumSpeed else { continue }
+
+        totalDistance += segment.distance
+        topSpeed = max(topSpeed, segment.speed)
+    }
+
+    return GPSRouteMetrics(
+        totalDistance: distanceBeforeCurrentSegment + totalDistance,
+        topSpeedKmh: topSpeed * 3.6
+    )
+}
+
+private func isValidGPSLocation(_ location: LocationData) -> Bool {
+    location.timestamp.timeIntervalSince1970.isFinite
+        && location.latitude.isFinite
+        && (-90...90).contains(location.latitude)
+        && location.longitude.isFinite
+        && (-180...180).contains(location.longitude)
+}
+
+private func gpsSegmentIsPlausible(
+    from start: LocationData,
+    to end: LocationData,
+    maximumSpeed: Double
+) -> Bool {
+    let interval = end.timestamp.timeIntervalSince(start.timestamp)
+    guard interval.isFinite, interval > 0, interval <= maximumContinuousGPSInterval else { return false }
+    let distance = gpsDistance(from: start, to: end)
+    return distance.isFinite && distance / interval <= maximumSpeed
+}
+
+private func gpsDistance(from start: LocationData, to end: LocationData) -> Double {
+    CLLocation(latitude: start.latitude, longitude: start.longitude)
+        .distance(from: CLLocation(latitude: end.latitude, longitude: end.longitude))
+}
+
+private struct GPSRouteSegmentMeasurement {
+    let distance: Double
+    let speed: Double
+}
+
+/// Timestamp precision can collapse two fixes into the same second. When the
+/// duplicate is discarded, the neighboring coordinate delta can then cover
+/// two movements in one recorded second and create a false speed spike. For
+/// short segments, trust consistent device speed readings when they strongly
+/// disagree with the coordinate-derived speed.
+private func gpsRouteSegmentMeasurement(
+    from start: LocationData,
+    to end: LocationData,
+    workoutType: WorkoutType?
+) -> GPSRouteSegmentMeasurement? {
+    let interval = end.timestamp.timeIntervalSince(start.timestamp)
+    guard interval.isFinite, interval > 0, interval <= maximumContinuousGPSInterval else { return nil }
+
+    let maximumSpeed = fastestDistanceMaximumSegmentSpeed(for: workoutType)
+    let geometricDistance = gpsDistance(from: start, to: end)
+    let geometricSpeed = geometricDistance / interval
+    guard geometricDistance.isFinite, geometricSpeed.isFinite else { return nil }
+
+    if interval <= 2,
+       let startSpeed = validReportedGPSSpeed(start.speed, maximumSpeed: maximumSpeed),
+       let endSpeed = validReportedGPSSpeed(end.speed, maximumSpeed: maximumSpeed) {
+        let reportedAverageSpeed = (startSpeed + endSpeed) / 2
+        let maximumReportedSpeed = max(startSpeed, endSpeed)
+        let disagreementTolerance = max(2, maximumReportedSpeed * 0.5)
+
+        if geometricSpeed > maximumReportedSpeed + disagreementTolerance {
+            return GPSRouteSegmentMeasurement(
+                distance: reportedAverageSpeed * interval,
+                speed: reportedAverageSpeed
+            )
+        }
+    }
+
+    guard geometricSpeed <= maximumSpeed else { return nil }
+    return GPSRouteSegmentMeasurement(distance: geometricDistance, speed: geometricSpeed)
+}
+
+private func validReportedGPSSpeed(_ speed: Double?, maximumSpeed: Double) -> Double? {
+    guard let speed, speed.isFinite, speed >= 0, speed <= maximumSpeed else { return nil }
+    return speed
+}
+
+/// Builds kilometer splits from plausible, time-ordered GPS segments.
+///
+/// A single bad GPS fix can move the route several kilometers in one interval.
+/// Rejecting those intervals keeps them out of round distance and pace metrics.
+/// The per-sport speed limit matches fastest-distance analysis.
+func calculateStatisticsRounds(
+    from rawLocations: [LocationData],
+    workoutType: WorkoutType? = nil
+) -> [(String, String, String)] {
+    let locations = cleanGPSRoute(from: rawLocations, workoutType: workoutType)
+
+    guard locations.count > 1 else { return [] }
+
+    let roundLength = 1.0
+    // Don't infer distance or lap pace across a prolonged loss of GPS updates.
+    // Retain plausible progress across short GPS dropouts after bad fixes have
+    // been removed. Implausible high-speed segments are still rejected below.
+    let maximumInterval = maximumContinuousGPSInterval
+    let maximumPlausibleSpeed = fastestDistanceMaximumSegmentSpeed(for: workoutType)
+    var accumulatedDistance = 0.0
+    var distanceBeforeCurrentSegment = 0.0
+    var numberOfKilometers = 0
+    var lastRoundDate = locations[0].timestamp
+    var lastAcceptedDate = locations[0].timestamp
+    var rounds = [(String, String)]()
+    var roundTimes = [Double]()
+
+    for index in 1..<locations.count {
+        let previous = locations[index - 1]
+        let current = locations[index]
+        if current.isRouteSegmentStart == true {
+            distanceBeforeCurrentSegment += accumulatedDistance
+            accumulatedDistance = 0
+            lastRoundDate = current.timestamp
+            lastAcceptedDate = current.timestamp
+            continue
+        }
+        let interval = current.timestamp.timeIntervalSince(previous.timestamp)
+        guard interval.isFinite, interval > 0, interval <= maximumInterval else { continue }
+
+        guard let segment = gpsRouteSegmentMeasurement(
+            from: previous,
+            to: current,
+            workoutType: workoutType
+        ), segment.distance > 0, segment.speed <= maximumPlausibleSpeed else {
+            continue
+        }
+
+        lastAcceptedDate = current.timestamp
+        let segmentDistance = segment.distance
+        var remainingDistance = segmentDistance / 1000
+        var distanceIntoSegment = 0.0
+
+        // A valid interval can contain more than one kilometer (for example,
+        // sparse GPX samples). Interpolate every crossing inside that interval.
+        while accumulatedDistance + remainingDistance >= roundLength {
+            let distanceToCrossing = roundLength - accumulatedDistance
+            distanceIntoSegment += distanceToCrossing
+            let fraction = distanceIntoSegment / (segmentDistance / 1000)
+            let crossingDate = previous.timestamp.addingTimeInterval(interval * fraction)
+            let roundTime = crossingDate.timeIntervalSince(lastRoundDate)
+            guard roundTime.isFinite, roundTime > 0 else { break }
+
+            numberOfKilometers += 1
+            rounds.append((String(numberOfKilometers), makePrettyMinutesString(timeInSeconds: roundTime)))
+            roundTimes.append(roundTime)
+            lastRoundDate = crossingDate
+            accumulatedDistance = 0
+            remainingDistance -= distanceToCrossing
+        }
+
+        accumulatedDistance += remainingDistance
+    }
+
+    let totalDistance = accumulatedDistance + distanceBeforeCurrentSegment + Double(numberOfKilometers)
+    if accumulatedDistance > 0 {
+        let partialTime = lastAcceptedDate.timeIntervalSince(lastRoundDate)
+        if partialTime.isFinite, partialTime >= 0 {
+            let prettyTime = makePrettyMinutesString(timeInSeconds: partialTime)
+            let pace = makePrettyMinutesString(
+                timeInSeconds: partialTime / accumulatedDistance,
+                paceFormat: false
+            )
+            rounds.append((
+                String(format: "%.1f", totalDistance),
+                prettyTime + " (" + pace + " /km)"
+            ))
+            if partialTime > 0 {
+                roundTimes.append(partialTime / accumulatedDistance)
+            }
+        }
+    }
+
+    var result = rounds.map { ($0.0, $0.1, "") }
+    if let slowest = roundTimes.max(),
+       let index = roundTimes.firstIndex(of: slowest),
+       index < result.count {
+        result[index].2 = "🐌"
+        if roundTimes.count > 2 {
+            let original = roundTimes[index]
+            roundTimes[index] = 0
+            if let secondSlowest = roundTimes.max(),
+               let secondIndex = roundTimes.firstIndex(of: secondSlowest),
+               secondIndex < result.count {
+                result[secondIndex].2 = "🐢"
+            }
+            roundTimes[index] = original
+        }
+    }
+
+    if let fastest = roundTimes.min(),
+       let index = roundTimes.firstIndex(of: fastest),
+       index < result.count {
+        result[index].2 = "🚀"
+        if roundTimes.count > 2 {
+            roundTimes[index] = .infinity
+            if let secondFastest = roundTimes.min(),
+               let secondIndex = roundTimes.firstIndex(of: secondFastest),
+               secondIndex < result.count {
+                result[secondIndex].2 = "🐇"
+            }
+        }
+    }
+
+    return result
+}
+
 private func calculateCumulativeDistances(from data: [LocationData]) -> [Double] {
     var cumulativeDistances = [Double](repeating: 0.0, count: data.count)
     
     guard data.count > 0 else { return cumulativeDistances }
     
     for i in 1..<data.count {
+        if data[i].isRouteSegmentStart == true {
+            cumulativeDistances[i] = cumulativeDistances[i - 1]
+            continue
+        }
         let fromLocation = CLLocation(latitude: data[i-1].latitude, longitude: data[i-1].longitude)
         let toLocation = CLLocation(latitude: data[i].latitude, longitude: data[i].longitude)
         let distance = fromLocation.distance(from: toLocation)

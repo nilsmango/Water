@@ -131,7 +131,10 @@ struct StatisticsRunView: View {
                             flights = flightData.rows
                             flightSummary = flightData.summary
                         } else {
-                            rounds = Self.createRounds(from: statisticsData.locationData)
+                            rounds = calculateStatisticsRounds(
+                                from: statisticsData.locationData,
+                                workoutType: statisticsData.workoutType
+                            )
                         }
                         fastestDistances = calculateFastestDistances(from: statisticsData.locationData, system: downwindManager.measurementSystem, workoutType: statisticsData.workoutType)
                         if statisticsData.workoutType?.angleSport == true {
@@ -142,7 +145,10 @@ struct StatisticsRunView: View {
                             )
                         }
                     }
-                    heartRateSpeedData = Self.createSpeedData(from: statisticsData.locationData)
+                    heartRateSpeedData = Self.createSpeedData(
+                        from: statisticsData.locationData,
+                        workoutType: statisticsData.workoutType
+                    )
                     if let importedRun = downwindManager.importedRuns.first(where: { $0.id == statisticsData.id }), !importedRun.heartRates.isEmpty {
                         var heartRateData: [Date: (Double, Double)] = [:]
                         for heartRate in importedRun.heartRates.sorted(by: { $0.date < $1.date }) {
@@ -676,7 +682,10 @@ struct StatisticsRunView: View {
             return
         }
         
-        let topSpeeds = calculateTopSpeeds(from: statisticsData.locationData)
+        let topSpeeds = calculateTopSpeeds(
+            from: statisticsData.locationData,
+            workoutType: statisticsData.workoutType
+        )
         await MainActor.run {
             statisticsData.topSpeed1s = topSpeeds.topSpeed1Sec
             statisticsData.topSpeed10s = topSpeeds.topSpeed10Sec
@@ -797,9 +806,10 @@ struct StatisticsRunView: View {
         }
 
         let locationData = statisticsData.locationData
+        let workoutType = statisticsData.workoutType
         
         let roundsResult = await Task.detached(priority: .utility) {
-            Self.createRounds(from: locationData)
+            calculateStatisticsRounds(from: locationData, workoutType: workoutType)
         }.value
         
         await MainActor.run {
@@ -832,9 +842,10 @@ struct StatisticsRunView: View {
         }
 
         let locationData = statisticsData.locationData
+        let workoutType = statisticsData.workoutType
         
         let speedDataResult = await Task.detached(priority: .utility) {
-            Self.createSpeedData(from: locationData)
+            Self.createSpeedData(from: locationData, workoutType: workoutType)
         }.value
         
         await MainActor.run {
@@ -1026,94 +1037,11 @@ struct StatisticsRunView: View {
         return (rows, summary)
     }
     
-    private nonisolated static func createRounds(from locations: [LocationData]) -> [(String, String, String)] {
-        guard !locations.isEmpty else { return [] }
-
-        var accumulatedDistance = 0.0
-        var numberOfKm = 0
-        var lastKmDate = locations.first?.timestamp ?? Date.now
-        var roundsArray = [(String, String)]()
-        var timesArray = [Double]()
-        let roundLength = 1.0
-
-        for index in 1..<locations.count {
-            let lastLatitude = locations[index - 1].latitude
-            let lastLongitude = locations[index - 1].longitude
-            let presentLatitude = locations[index].latitude
-            let presentLongitude = locations[index].longitude
-            let addedDistance = (calculateDirectDistance(
-                from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude),
-                to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)
-            ) ?? 0.0) / 1000.0
-
-            accumulatedDistance += addedDistance
-
-            if accumulatedDistance >= roundLength {
-                let timeInSeconds = locations[index].timestamp.timeIntervalSince(locations[index - 1].timestamp)
-                let kmPerSecond = addedDistance / timeInSeconds
-
-                let distanceOverRoundLength = accumulatedDistance - roundLength
-                let distanceToRoundLength = addedDistance - distanceOverRoundLength
-                let secondsToRoundLength = distanceToRoundLength / kmPerSecond
-                let kmCrossingDate = locations[index - 1].timestamp.addingTimeInterval(secondsToRoundLength)
-
-                let totalTime = kmCrossingDate.timeIntervalSince(lastKmDate)
-                let prettyTime = makePrettyMinutesString(timeInSeconds: totalTime)
-                timesArray.append(totalTime)
-
-                numberOfKm += Int(roundLength)
-                accumulatedDistance -= roundLength
-                roundsArray.append((String(numberOfKm), prettyTime))
-                lastKmDate = kmCrossingDate
-            }
-        }
-
-        let totalDistance = accumulatedDistance + Double(numberOfKm)
-
-        if accumulatedDistance > 0.0 {
-            let prettyTime = makePrettyMinutesString(timeInSeconds: locations.last!.timestamp.timeIntervalSince(lastKmDate))
-            let timePerKilometer = locations.last!.timestamp.timeIntervalSince(lastKmDate) / accumulatedDistance
-            let paceString = makePrettyMinutesString(timeInSeconds: timePerKilometer, paceFormat: false)
-            let lastRoundTimeString = prettyTime + " (" + paceString + " /km)"
-            roundsArray.append((String(format: "%.1f", totalDistance), lastRoundTimeString))
-
-            timesArray.append((locations.last!.timestamp.timeIntervalSince(lastKmDate)) / accumulatedDistance)
-        }
-
-        var returnArray = roundsArray.map { ($0.0, $0.1, "") }
-
-        if let slowestKM = timesArray.max(),
-           let slowestIndex = timesArray.firstIndex(of: slowestKM) {
-            returnArray[slowestIndex].2 = "🐌"
-
-            if timesArray.count > 2 {
-                let slowestTime = timesArray[slowestIndex]
-                timesArray[slowestIndex] = 0
-                if let secondSlowestKM = timesArray.max(),
-                   let secondSlowestIndex = timesArray.firstIndex(of: secondSlowestKM) {
-                    returnArray[secondSlowestIndex].2 = "🐢"
-                    timesArray[slowestIndex] = slowestTime
-                }
-            }
-        }
-
-        if let fastestKM = timesArray.min(),
-           let fastestIndex = timesArray.firstIndex(of: fastestKM) {
-            returnArray[fastestIndex].2 = "🚀"
-
-            if timesArray.count > 2 {
-                timesArray[fastestIndex] = 1000000
-                if let secondFastestKM = timesArray.min(),
-                   let secondFastestIndex = timesArray.firstIndex(of: secondFastestKM) {
-                    returnArray[secondFastestIndex].2 = "🐇"
-                }
-            }
-        }
-
-        return returnArray
-    }
-    
-    private nonisolated static func createSpeedData(from locationData: [LocationData]) -> [SpeedSample] {
+    private nonisolated static func createSpeedData(
+        from rawLocationData: [LocationData],
+        workoutType: WorkoutType? = nil
+    ) -> [SpeedSample] {
+        let locationData = cleanGPSRoute(from: rawLocationData, workoutType: workoutType)
         guard locationData.count > 1 else { return [] }
 
         let targetSamples = 300

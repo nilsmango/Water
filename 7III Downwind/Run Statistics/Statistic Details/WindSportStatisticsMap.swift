@@ -38,38 +38,43 @@ struct WindSportStatisticsMap: View {
                             let nonWaves = partsBetweenWaves(locationData: statisticsData.locationData, waves: waves)
                             
                             ForEach(nonWaves.indices, id: \.self) { waveIndex in
-                                
-                                MapPolyline(coordinates: makeSmoothedCoordinates(from: nonWaves[waveIndex]))
-                                    .stroke(
-                                        .gray.opacity(0.2),
-                                        style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
-                                
-                                
+                                let segments = makeSmoothedCoordinateSegments(from: nonWaves[waveIndex])
+                                ForEach(segments.indices, id: \.self) { segmentIndex in
+                                    MapPolyline(coordinates: segments[segmentIndex])
+                                        .stroke(
+                                            .gray.opacity(0.2),
+                                            style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                                }
                             }
                         }
                         // Wave lines
                         ForEach(waves.indices, id: \.self) { waveIndex in
-                            let coordinates = makeSmoothedCoordinates(from: waves[waveIndex])
-                            MapPolyline(coordinates: coordinates)
-                                .stroke(
-                                    .neonYellow,
-                                    style: StrokeStyle(
-                                        lineWidth: lineWidth,
-                                        lineCap: .round,
-                                        lineJoin: .round
+                            let segments = makeSmoothedCoordinateSegments(from: waves[waveIndex])
+                            ForEach(segments.indices, id: \.self) { segmentIndex in
+                                MapPolyline(coordinates: segments[segmentIndex])
+                                    .stroke(
+                                        .neonYellow,
+                                        style: StrokeStyle(
+                                            lineWidth: lineWidth,
+                                            lineCap: .round,
+                                            lineJoin: .round
+                                        )
                                     )
-                                )
+                            }
                         }
                         
                         
                     } else {
                         // Line
                         if statisticsData.locationData.count > 0 {
-                            MapPolyline(coordinates: makeSmoothedCoordinates(from: statisticsData.locationData))
-                                .stroke(
-                                    .neonYellow,
-                                    //                                Gradient(colors: downwindManager.createGradientArray(for: statisticsData.locationData, numberOfElementsToKeep: 30)),
-                                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                            let segments = makeSmoothedCoordinateSegments(from: statisticsData.locationData)
+                            ForEach(segments.indices, id: \.self) { segmentIndex in
+                                MapPolyline(coordinates: segments[segmentIndex])
+                                    .stroke(
+                                        .neonYellow,
+                                        //                                Gradient(colors: downwindManager.createGradientArray(for: statisticsData.locationData, numberOfElementsToKeep: 30)),
+                                        style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                            }
                         }
                         
                     }
@@ -310,4 +315,3 @@ struct WindSportStatisticsMap: View {
 #Preview {
     WindSportStatisticsMap(downwindManager: DownwindManager(), statisticsData: .constant(RunStatistic(id: UUID(), runName: "Testrun", crewStatistics: [], runTime: 300, runDistance: 20, topSpeed: 23, locationData: decodeLocationSampleData() ?? Constants.locationSampleData)), angleTool: true)
 }
-

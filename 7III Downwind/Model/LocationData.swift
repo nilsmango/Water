@@ -16,12 +16,15 @@ struct LocationData: Codable, Equatable, Hashable {
     // speed in m/s from CoreLocation
     var speed: Double?
     var verticalAccuracy: Double?
+    /// True when this point begins a new GPS segment after a sustained signal loss.
+    var isRouteSegmentStart: Bool? = nil
     
     static func == (lhs: LocationData, rhs: LocationData) -> Bool {
         lhs.timestamp == rhs.timestamp &&
         lhs.latitude == rhs.latitude &&
         lhs.longitude == rhs.longitude &&
-        lhs.speed == rhs.speed
+        lhs.speed == rhs.speed &&
+        lhs.isRouteSegmentStart == rhs.isRouteSegmentStart
     }
     
     func hash(into hasher: inout Hasher) {
@@ -29,6 +32,7 @@ struct LocationData: Codable, Equatable, Hashable {
         hasher.combine(latitude)
         hasher.combine(longitude)
         hasher.combine(speed)
+        hasher.combine(isRouteSegmentStart)
     }
 }
 
@@ -141,7 +145,9 @@ func analyzeWindRoute(
                 dx: dx,
                 dy: dy,
                 speed: reportedSpeed,
-                isGap: duration > WindRouteConstants.maximumContinuousInterval || derivedSpeed > WindRouteConstants.maximumPlausibleSpeed,
+                isGap: end.isRouteSegmentStart == true
+                    || duration > WindRouteConstants.maximumContinuousInterval
+                    || derivedSpeed > WindRouteConstants.maximumPlausibleSpeed,
                 courseDX: dx,
                 courseDY: dy
             )

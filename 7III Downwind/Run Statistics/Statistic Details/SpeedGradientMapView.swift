@@ -40,36 +40,49 @@ struct SpeedGradientMapView: UIViewRepresentable {
 
         context.coordinator.lineWidth = lineWidth
 
-        let downsampledForPolyline = downsamplePolylineCoordinates(locations, targetCount: MAX_POLYLINE_POINTS)
-        let downsampledForGradient = downsampleLocations(locations, targetCount: MAX_GRADIENT_STOPS)
-        context.coordinator.locations = downsampledForGradient
+        let routeSegments = splitGPSLocationSegments(from: locations)
+        let allGradientLocations = routeSegments.flatMap {
+            downsampleLocations($0, targetCount: MAX_GRADIENT_STOPS)
+        }
+        context.coordinator.locations = allGradientLocations
+        var routeBounds = MKMapRect.null
+        var firstCoordinate: CLLocationCoordinate2D?
+        var lastCoordinate: CLLocationCoordinate2D?
 
-        let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)
+        for routeSegment in routeSegments {
+            let downsampledForPolyline = downsamplePolylineCoordinates(routeSegment, targetCount: MAX_POLYLINE_POINTS)
+            let downsampledForGradient = downsampleLocations(routeSegment, targetCount: MAX_GRADIENT_STOPS)
+            let coordinates = makeSmoothedCoordinates(from: downsampledForPolyline)
+            guard coordinates.count > 1 else { continue }
 
-        let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
-        context.coordinator.polylineData[polyline] = SpeedGradientMapView.Coordinator.PolylineInfo(
-            gradientLocations: downsampledForGradient,
-            maxSpeed: maxSpeed(in: downsampledForGradient)
-        )
+            let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
+            context.coordinator.polylineData[polyline] = SpeedGradientMapView.Coordinator.PolylineInfo(
+                gradientLocations: downsampledForGradient,
+                maxSpeed: maxSpeed(in: downsampledForGradient)
+            )
+            routeBounds = MKMapRectUnion(routeBounds, polyline.boundingMapRect)
+            firstCoordinate = firstCoordinate ?? coordinates.first
+            lastCoordinate = coordinates.last
 
-        debugMap("Polyline pointCount: \(polyline.pointCount)")
-        debugMap("Polyline boundingRect: \(polyline.boundingMapRect)")
-
-        mapView.addOverlay(polyline)
-        debugMap("Overlay added")
+            debugMap("Polyline pointCount: \(polyline.pointCount)")
+            debugMap("Polyline boundingRect: \(polyline.boundingMapRect)")
+            mapView.addOverlay(polyline)
+        }
+        guard let firstCoordinate, let lastCoordinate, !MKMapRectIsNull(routeBounds) else { return }
+        debugMap("Overlay segments added")
 
         let startAnnotation = MKPointAnnotation()
-        startAnnotation.coordinate = coordinates.first!
+        startAnnotation.coordinate = firstCoordinate
         startAnnotation.title = "Start"
         mapView.addAnnotation(startAnnotation)
 
         let finishAnnotation = MKPointAnnotation()
-        finishAnnotation.coordinate = coordinates.last!
+        finishAnnotation.coordinate = lastCoordinate
         finishAnnotation.title = "Finish"
         mapView.addAnnotation(finishAnnotation)
 
         mapView.setVisibleMapRect(
-            polyline.boundingMapRect,
+            routeBounds,
             edgePadding: .init(top: 40, left: 40, bottom: 40, right: 40),
             animated: false
         )

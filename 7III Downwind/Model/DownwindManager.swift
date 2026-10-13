@@ -162,6 +162,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// backup to health
     var backupWorkoutData = [RunStatistic]()
     private var latestStatisticLocationData: LocationData?
+    private var pendingRouteSegmentStartTimestamp: Date?
     
     /// Activates the run statistic tracking (only tracking)
     func startStatistic(tags: [String] = []) {
@@ -192,12 +193,17 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             // make the first data entry if there is a location
-            let currentLocationData = currentStatisticLocationData()
+            gpsRouteFilter.reset(workoutType: workoutType)
+            pendingRouteSegmentStartTimestamp = nil
+            var currentLocationData = currentStatisticLocationData()
+            if let seedLocationData = currentLocationData {
+                currentLocationData = gpsRouteFilter.process(seedLocationData)
+            }
             var newStatistic: RunStatistic
             if let currentLocationData {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: (user.speed ?? 0.0) * 3.6, locationData: [currentLocationData], tags: tags)
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: (currentLocationData.speed ?? 0.0) * 3.6, locationData: [currentLocationData], tags: tags)
             } else {
-                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: (user.speed ?? 0.0) * 3.6, locationData: [], tags: tags)
+                newStatistic = RunStatistic(id: UUID(), runName: activeRun.name, crewStatistics: crewStatistics, runTime: 0.0, runDistance: 0.0, topSpeed: 0, locationData: [], tags: tags)
             }
             
             newStatistic.workoutType = workoutType
@@ -218,14 +224,19 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     routeBuilder = HKWorkoutRouteBuilder(healthStore: healthStore, device: .local())
                 }
             
-        } else {
+            } else {
                 // find current statistic and set runTime and run distance and run speed to now and zero
                 runStatistics[currentRunStatisticIndex].runTime = 0.0
                 runStatistics[currentRunStatisticIndex].runDistance = 0.0
-                runStatistics[currentRunStatisticIndex].topSpeed = (user.speed ?? 0.0) * 3.6
-                if let currentLocationData = currentStatisticLocationData() {
+                gpsRouteFilter.reset(workoutType: workoutType)
+                pendingRouteSegmentStartTimestamp = nil
+                if let rawCurrentLocationData = currentStatisticLocationData(),
+                   let currentLocationData = gpsRouteFilter.process(rawCurrentLocationData) {
+                    runStatistics[currentRunStatisticIndex].topSpeed = (currentLocationData.speed ?? 0.0) * 3.6
                     runStatistics[currentRunStatisticIndex].locationData = [currentLocationData]
                 } else {
+                    runStatistics[currentRunStatisticIndex].topSpeed = 0
+                    pendingRouteSegmentStartTimestamp = nil
                     runStatistics[currentRunStatisticIndex].locationData = []
                 }
                 runStatistics[currentRunStatisticIndex].tags = tags
@@ -444,7 +455,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if locationAccuracy <= Constants.minHorizontalAccuracy {
                 
                 // only update if we have valid data
-                if let newData = locationData ?? currentStatisticLocationData(refreshTimestamp: true) {
+                if var newData = locationData ?? currentStatisticLocationData(refreshTimestamp: true) {
+                    if let pendingRouteSegmentStartTimestamp,
+                       newData.timestamp >= pendingRouteSegmentStartTimestamp {
+                        newData.isRouteSegmentStart = true
+                        pendingRouteSegmentStartTimestamp = nil
+                    }
                     
                     // updating the show vars
                     let currentStatistic = runStatistics[currentRunStatisticIndex]
@@ -457,7 +473,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     
                     // adding up the distance if there is any data
-                    if let lastData = currentStatistic.locationData.last {
+                    if newData.isRouteSegmentStart != true,
+                       let lastData = currentStatistic.locationData.last {
                         
                         // calculate distance from location
                         let lastLatitude = lastData.latitude
@@ -958,8 +975,35 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         do {
             let url = try self.getDocumentsDirectory().appendingPathComponent(self.backupWorkoutDataFileName)
             let data = try Data(contentsOf: url)
-            let decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+            var decodedStatistics = try JSONDecoder().decode([RunStatistic].self, from: data)
+            var repairedBackup = false
+            for index in decodedStatistics.indices {
+                let originalLocations = decodedStatistics[index].locationData
+                let workoutType = decodedStatistics[index].workoutType
+                let cleanedLocations = cleanGPSRoute(from: originalLocations, workoutType: workoutType)
+                guard cleanedLocations != originalLocations else { continue }
+
+                let metrics = calculateGPSRouteMetrics(from: cleanedLocations, workoutType: workoutType)
+                decodedStatistics[index].locationData = cleanedLocations
+                decodedStatistics[index].runDistance = metrics.totalDistance
+                decodedStatistics[index].topSpeed = metrics.topSpeedKmh
+                if let first = cleanedLocations.first, let last = cleanedLocations.last {
+                    decodedStatistics[index].startDate = first.timestamp
+                    decodedStatistics[index].endDate = last.timestamp
+                    decodedStatistics[index].runTime = max(0, last.timestamp.timeIntervalSince(first.timestamp) / 60)
+                    decodedStatistics[index].averageSpeed = decodedStatistics[index].runTime > 0
+                        ? (metrics.totalDistance / 1000) / (decodedStatistics[index].runTime / 60)
+                        : 0
+                }
+                let topSpeeds = calculateTopSpeeds(from: cleanedLocations, workoutType: workoutType)
+                decodedStatistics[index].topSpeed1s = topSpeeds.topSpeed1Sec
+                decodedStatistics[index].topSpeed10s = topSpeeds.topSpeed10Sec
+                repairedBackup = true
+            }
             backupWorkoutData = decodedStatistics
+            if repairedBackup {
+                saveBackupWorkoutDataToDisk()
+            }
         } catch {
             print("Error loading runStatistics: \(error)")
         }
@@ -984,12 +1028,41 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // getting the runStatistics (if no health or for older files)
         var decodedStatistics = getRunStatisticsFromDisk()
+        var repairedRoutes: [(id: UUID, original: [LocationData], cleaned: [LocationData], workoutType: WorkoutType?)] = []
+        var didRepairStoredRoutes = false
         // some cleaning up for old data
-        for (index, statistic) in decodedStatistics.enumerated() {
+        for index in decodedStatistics.indices {
+            let statistic = decodedStatistics[index]
             if statistic.startDate == nil {
                 decodedStatistics[index].startDate = statistic.locationData.first?.timestamp
                 decodedStatistics[index].endDate = statistic.locationData.last?.timestamp
             }
+
+            let cleanedLocations = cleanGPSRoute(
+                from: statistic.locationData,
+                workoutType: statistic.workoutType
+            )
+            guard cleanedLocations != statistic.locationData else { continue }
+
+            didRepairStoredRoutes = true
+            decodedStatistics[index].locationData = cleanedLocations
+            if let firstLocation = cleanedLocations.first,
+               let lastLocation = cleanedLocations.last {
+                let runTime = max(0, lastLocation.timestamp.timeIntervalSince(firstLocation.timestamp) / 60)
+                let metrics = calculateGPSRouteMetrics(from: cleanedLocations, workoutType: statistic.workoutType)
+                decodedStatistics[index].startDate = firstLocation.timestamp
+                decodedStatistics[index].endDate = lastLocation.timestamp
+                decodedStatistics[index].runTime = runTime
+                decodedStatistics[index].runDistance = metrics.totalDistance
+                decodedStatistics[index].topSpeed = metrics.topSpeedKmh
+                decodedStatistics[index].averageSpeed = runTime > 0
+                    ? (metrics.totalDistance / 1000) / (runTime / 60)
+                    : 0
+                repairedRoutes.append((statistic.id, statistic.locationData, cleanedLocations, statistic.workoutType))
+            }
+        }
+        if didRepairStoredRoutes {
+            saveRunStatistics(array: decodedStatistics)
         }
         DispatchQueue.main.async {
             // Update UI on the main thread
@@ -1009,6 +1082,52 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
         } catch {
             logError("Error loading runEdits: \(error)")
+        }
+
+        var repairedRunEdits = false
+        for repairedRoute in repairedRoutes {
+            let editIndex: Int
+            if let existingIndex = runEdits.firstIndex(where: { $0.id == repairedRoute.id }) {
+                editIndex = existingIndex
+            } else {
+                runEdits.append(RunEdit(id: repairedRoute.id))
+                editIndex = runEdits.count - 1
+            }
+
+            let metrics = calculateGPSRouteMetrics(
+                from: repairedRoute.cleaned,
+                workoutType: repairedRoute.workoutType
+            )
+            let firstLocation = repairedRoute.cleaned.first
+            let lastLocation = repairedRoute.cleaned.last
+            let runTime = if let firstLocation, let lastLocation {
+                max(0, lastLocation.timestamp.timeIntervalSince(firstLocation.timestamp) / 60)
+            } else {
+                0
+            }
+            let missingLocations = findMissingLocationData(
+                original: repairedRoute.original,
+                new: repairedRoute.cleaned
+            )
+
+            runEdits[editIndex].deletedLocations = Array(
+                Set((runEdits[editIndex].deletedLocations ?? []) + missingLocations)
+            )
+            runEdits[editIndex].startLocation = firstLocation
+            runEdits[editIndex].finishLocation = lastLocation
+            runEdits[editIndex].newTotalTime = runTime
+            runEdits[editIndex].newTotalDistance = metrics.totalDistance
+            runEdits[editIndex].newTopSpeed = metrics.topSpeedKmh
+            runEdits[editIndex].newAverageSpeed = runTime > 0
+                ? (metrics.totalDistance / 1000) / (runTime / 60)
+                : 0
+            let topSpeeds = calculateTopSpeeds(from: repairedRoute.cleaned, workoutType: repairedRoute.workoutType)
+            runEdits[editIndex].topSpeed1s = topSpeeds.topSpeed1Sec
+            runEdits[editIndex].topSpeed10s = topSpeeds.topSpeed10Sec
+            repairedRunEdits = true
+        }
+        if repairedRunEdits {
+            saveRunEdits()
         }
         
         
@@ -1066,6 +1185,27 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     }
                     
                     self.loadImportedRunsFromDisk()
+
+                    var importedRunsRepaired = false
+                    for runIndex in self.importedRuns.indices {
+                        let originalLocations = self.importedRuns[runIndex].locations
+                        let workoutType = self.importedRuns[runIndex].workoutType
+                        let cleanedLocations = cleanGPSRoute(from: originalLocations, workoutType: workoutType)
+                        guard cleanedLocations != originalLocations else { continue }
+
+                        let metrics = calculateGPSRouteMetrics(from: cleanedLocations, workoutType: workoutType)
+                        self.importedRuns[runIndex].locations = cleanedLocations
+                        self.importedRuns[runIndex].totalDistance = metrics.totalDistance
+                        self.importedRuns[runIndex].topSpeed = metrics.topSpeedKmh
+                        self.importedRuns[runIndex].averageSpeed = self.importedRuns[runIndex].runTime > 0
+                            ? (metrics.totalDistance / 1000) / (self.importedRuns[runIndex].runTime / 60)
+                            : 0
+                        self.importedRuns[runIndex].startLocation = cleanedLocations.first
+                        importedRunsRepaired = true
+                    }
+                    if importedRunsRepaired {
+                        self.saveImportedRunsToDisk()
+                    }
                     
                     for run in self.importedRuns {
                         // overwriting the statistic if we find one at the same time as we are pretty sure we don't want both of them
@@ -1336,7 +1476,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 // load the route and average heart rate
                 self.loadWorkoutRouteHeartFromHealth(id: id, loadHeartRates: withHeartRates) { route, averageHeartRate in
                     if let route = route {
-                        self.locationDataFromWorkoutRoute(route: route) { locationData in
+                        self.locationDataFromWorkoutRoute(route: route, workoutType: statistic.workoutType) { locationData in
                             if let runIndex = self.runStatistics.firstIndex(where: { $0.id == id }) {
                                 var locationData = locationData
                                 // find backup - this is done by comparing start date, but actually would make more sense to use id (?)
@@ -1694,7 +1834,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     
-    private func locationDataFromWorkoutRoute(route: HKWorkoutRoute, completion: @escaping ([LocationData]) -> Void) {
+    private func locationDataFromWorkoutRoute(
+        route: HKWorkoutRoute,
+        workoutType: WorkoutType? = nil,
+        completion: @escaping ([LocationData]) -> Void
+    ) {
         var allLocations = [LocationData]()
         
         let query = HKWorkoutRouteQuery(route: route) { (query, locationsOrNil, done, errorOrNil) in
@@ -1704,12 +1848,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if let error = errorOrNil {
                 // Handle any errors here.
                 self.logError("Error, no locations found: \(error) - in locationDataFromWorkoutRoute")
-                return completion(allLocations)
+                return completion(cleanGPSRoute(from: allLocations, workoutType: workoutType))
             }
             
             guard let locations = locationsOrNil else {
                 self.logError("*** Invalid State: This can only fail if there was an error.  - in locationDataFromWorkoutRoute ***")
-                return completion(allLocations)
+                return completion(cleanGPSRoute(from: allLocations, workoutType: workoutType))
             }
             
             // Do something with this batch of location data.
@@ -1728,7 +1872,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if done {
                 // The query returned all the location data associated with the route.
                 // Do something with the complete data set.
-                completion(allLocations)
+                completion(cleanGPSRoute(from: allLocations, workoutType: workoutType))
             }
             
             // You can stop the query by calling:
@@ -1897,19 +2041,14 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func saveEditedRoute(newStatistic: RunStatistic, updatingExternal: Bool = false) {
+        var newStatistic = newStatistic
+        newStatistic.locationData = cleanGPSRoute(
+            from: newStatistic.locationData,
+            workoutType: newStatistic.workoutType
+        )
         
         if newStatistic.locationData.isEmpty {
             return
-        }
-        
-        // we have to do this because health sometimes had no speed. should be fixed now.
-        if newStatistic.locationData.randomElement()?.speed == -1.0 {
-            var newStatistic = newStatistic
-            newStatistic.locationData = newStatistic.locationData.map { location in
-                var updatedLocation = location
-                updatedLocation.speed = -1.0
-                return updatedLocation
-            }
         }
         
         if let index = runStatistics.firstIndex(where: { $0.id == newStatistic.id }) {
@@ -1935,7 +2074,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             newRunEdit.newWorkoutType = newStatistic.workoutType
             
             // update start if changed
-            if oldRoute.first! != newStatistic.locationData.first! {
+            if oldRoute.first != newStatistic.locationData.first {
                 newRunEdit.startLocation = newStatistic.locationData.first!
                 runStatistics[index].startDate = newRunEdit.startLocation?.timestamp
                 
@@ -1947,7 +2086,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             // update finish if changed
-            if oldRoute.last! != newStatistic.locationData.last! {
+            if oldRoute.last != newStatistic.locationData.last {
                 newRunEdit.finishLocation = newStatistic.locationData.last!
                 runStatistics[index].endDate = newRunEdit.finishLocation?.timestamp
                 
@@ -1962,7 +2101,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             runStatistics[index].runTime = runStatistics[index].endDate!.timeIntervalSince(runStatistics[index].startDate!) / 60
             newRunEdit.newTotalTime = runStatistics[index].runTime
             
-            let newDistanceAndSpeed = calculateTotalDistanceAndTopSpeed(locations: newStatistic.locationData)
+            let newDistanceAndSpeed = calculateTotalDistanceAndTopSpeed(
+                locations: newStatistic.locationData,
+                workoutType: newStatistic.workoutType
+            )
             
             runStatistics[index].runDistance = newDistanceAndSpeed.totalDistance
             newRunEdit.newTotalDistance = newDistanceAndSpeed.totalDistance
@@ -1970,11 +2112,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             runStatistics[index].topSpeed = newDistanceAndSpeed.topSpeed
             newRunEdit.newTopSpeed = newDistanceAndSpeed.topSpeed
             
-            runStatistics[index].averageSpeed = (newDistanceAndSpeed.totalDistance / 1000) / (runStatistics[index].runTime / 60)
+            runStatistics[index].averageSpeed = runStatistics[index].runTime > 0
+                ? (newDistanceAndSpeed.totalDistance / 1000) / (runStatistics[index].runTime / 60)
+                : 0
             newRunEdit.newAverageSpeed = runStatistics[index].averageSpeed
             
             // updating 1 s and 10 s top speed
-            let newTopSpeeds = calculateTopSpeeds(from: newStatistic.locationData)
+            let newTopSpeeds = calculateTopSpeeds(from: newStatistic.locationData, workoutType: newStatistic.workoutType)
             runStatistics[index].topSpeed1s = newTopSpeeds.topSpeed1Sec
             runStatistics[index].topSpeed10s = newTopSpeeds.topSpeed10Sec
             newRunEdit.topSpeed1s = newTopSpeeds.topSpeed1Sec
@@ -2031,7 +2175,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     loadWorkoutRouteFromID(id: newStatistic.id) { route in
                         
                         if let route = route {
-                            self.locationDataFromWorkoutRoute(route: route) { locationData in
+                            self.locationDataFromWorkoutRoute(route: route, workoutType: newStatistic.workoutType) { locationData in
                                 createEdits(locationData: locationData)
                             }
                             // check if we find a backup
@@ -2139,7 +2283,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             // Convert route to location data
-            self.locationDataFromWorkoutRoute(route: route) { locationData in
+            let workoutType = self.runStatistics.first(where: { $0.id == id })?.workoutType
+            self.locationDataFromWorkoutRoute(route: route, workoutType: workoutType) { locationData in
                 var locationData = locationData
                 // find backup
                 if let backupIndex = self.backupWorkoutData.firstIndex(where: { $0.id == id }) {
@@ -2182,7 +2327,13 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// returns missing locations
     private func findMissingLocationData(original: [LocationData], new: [LocationData]) -> [LocationData] {
-        let missingData = original.filter { !new.contains($0) }
+        let missingData = original.filter { originalLocation in
+            !new.contains { newLocation in
+                newLocation.timestamp == originalLocation.timestamp
+                    && newLocation.latitude == originalLocation.latitude
+                    && newLocation.longitude == originalLocation.longitude
+            }
+        }
         return missingData
     }
     
@@ -2272,107 +2423,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     /// create rounds from locationData for Statistics
     func createRounds(for locations: [LocationData]) -> [(String, String, String)] {
-        // safety measure
-        if !locations.isEmpty {
-            var accumulatedDistance = 0.0
-            var numberOfKm = 0
-            var lastKmDate = locations.first?.timestamp ?? Date.now
-            var roundsArray = [(String, String)]()
-            var timesArray = [Double]()
-            let roundLength = 1.0
-            
-            for index in 1..<locations.count {
-                // Update distance
-                let lastLatitude = locations[index-1].latitude
-                let lastLongitude = locations[index-1].longitude
-                let presentLatitude = locations[index].latitude
-                let presentLongitude = locations[index].longitude
-                let addedDistance = (calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)) ?? 0.0) / 1000.0
-                
-                accumulatedDistance += addedDistance
-                
-                // check if we have crossed 1 km (round length)
-                if accumulatedDistance >= roundLength {
-                    
-                    // speed of the last segment
-                    let timeInSeconds = locations[index].timestamp.timeIntervalSince(locations[index-1].timestamp)
-                    let kmPerSecond = addedDistance / timeInSeconds
-                    
-                    // time it took for the distance to 1.0 km
-                    let distanceOverRoundLength = accumulatedDistance - roundLength
-                    let distanceToRoundLength = addedDistance - distanceOverRoundLength
-                    let secondsToRoundLength = distanceToRoundLength / kmPerSecond
-                    
-                    // new crossing date
-                    let kmCrossingDate = locations[index-1].timestamp.addingTimeInterval(secondsToRoundLength)
-                    
-                    // calculate time from last time
-                    let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: kmCrossingDate)
-                    timesArray.append(kmCrossingDate.timeIntervalSince(lastKmDate))
-                    
-                    // updating distances
-                    numberOfKm += Int(roundLength)
-                    accumulatedDistance -= roundLength
-                    
-                    roundsArray.append((String(numberOfKm), prettyTime))
-                    
-                    // updating the last km crossing date
-                    lastKmDate = kmCrossingDate
-                }
-            }
-            
-            // also get the last distance
-            let totalDistance = accumulatedDistance + Double(numberOfKm)
-            
-            if accumulatedDistance > 0.0 {
-                let prettyTime = calculatePrettyTimeString(from: lastKmDate, to: locations.last!.timestamp)
-                let timePerKilometer = locations.last!.timestamp.timeIntervalSince(lastKmDate) / accumulatedDistance
-                let paceString = makePrettyMinutesString(timeInSeconds: timePerKilometer, paceFormat: false)
-                let lastRoundTimeString = prettyTime + " (" + paceString + " /km)"
-                roundsArray.append((String(format: "%.1f", totalDistance), lastRoundTimeString))
-                
-                timesArray.append((locations.last!.timestamp.timeIntervalSince(lastKmDate)) / accumulatedDistance)
-            }
-            
-            var returnArray = roundsArray.map { ($0.0, $0.1, "")}
-            
-            // find the slowest and fastest rounds
-            if let slowestKM = timesArray.max() {
-                if let slowestIndex = timesArray.firstIndex(of: slowestKM) {
-                    returnArray[slowestIndex].2 = "🐌"
-                    
-                    if timesArray.count > 2 {
-                        let slowestTime = timesArray[slowestIndex]
-                        timesArray[slowestIndex] = 0
-                        if let secondSlowestKM = timesArray.max() {
-                            if let secondSlowestIndex = timesArray.firstIndex(of: secondSlowestKM) {
-                                returnArray[secondSlowestIndex].2 = "🐢"
-                                timesArray[slowestIndex] = slowestTime
-                            }
-                        }
-                    }
-                }
-            }
-            
-            if let fastestKM = timesArray.min() {
-                if let fastestIndex = timesArray.firstIndex(of: fastestKM) {
-                    returnArray[fastestIndex].2 = "🚀"
-                    
-                    if timesArray.count > 2 {
-                        timesArray[fastestIndex] = 1000000
-                        if let secondFastestKM = timesArray.min() {
-                            if let secondFastestIndex = timesArray.firstIndex(of: secondFastestKM) {
-                                returnArray[secondFastestIndex].2 = "🐇"
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return returnArray
-        } else {
-            return []
-        }
+        calculateStatisticsRounds(from: locations)
     }
     
     /// calculating average pace
@@ -2558,34 +2609,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     /// calculates a total distance in meter and find the top speed from an array of locations
-    private func calculateTotalDistanceAndTopSpeed(locations: [LocationData]) -> (totalDistance: Double, topSpeed: Double) {
-        var totalDistance = 0.0
-        var topSpeed = locations.first!.speed ?? 0.0
-        
-        for index in 1..<locations.count {
-            // Update top speed
-            if locations[index].speed ?? 0.0 > topSpeed {
-                topSpeed = locations[index].speed!
-            }
-            
-            // Update distance
-            let lastLatitude = locations[index-1].latitude
-            let lastLongitude = locations[index-1].longitude
-            let presentLatitude = locations[index].latitude
-            let presentLongitude = locations[index].longitude
-            let addedDistance = (calculateDirectDistance(from: Member(name: "lastLocation", latitude: lastLatitude, longitude: lastLongitude), to: Member(name: "presentLocation", latitude: presentLatitude, longitude: presentLongitude)) ?? 0.0)
-            
-            totalDistance += addedDistance
-        }
-        
-        if topSpeed == -1.0 {
-            topSpeed = 0.0
-        }
-        
-        // top speed calculation to km/h from m/s
-        topSpeed *= 3.6
-        
-        return (totalDistance, topSpeed)
+    private func calculateTotalDistanceAndTopSpeed(
+        locations: [LocationData],
+        workoutType: WorkoutType? = nil
+    ) -> (totalDistance: Double, topSpeed: Double) {
+        let metrics = calculateGPSRouteMetrics(from: locations, workoutType: workoutType)
+        return (metrics.totalDistance, metrics.topSpeedKmh)
     }
     
     /// reverts all changes of the route
@@ -2599,7 +2628,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if HKHealthStore.isHealthDataAvailable() {
                 loadWorkoutRouteFromID(id: statistic.id) { route in
                     if let route = route {
-                        self.locationDataFromWorkoutRoute(route: route) { locationData in
+                        self.locationDataFromWorkoutRoute(route: route, workoutType: statistic.workoutType) { locationData in
                             var revertedRunStatistic = statistic
                             revertedRunStatistic.locationData = locationData
                             completion(revertedRunStatistic)
@@ -2986,7 +3015,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         ignoreFirstFewLocations = true
         resetKalmanFilter = true
         isUpdatingLocation = false
-        lastAcceptedCollectionLocation = nil
+        gpsRouteFilter.reset()
+        pendingRouteSegmentStartTimestamp = nil
         latestStatisticLocationData = nil
         resetPoorAccuracyFailOpen()
         
@@ -3006,7 +3036,8 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 self.locationManager?.startUpdatingHeading()
                 locationManagerStartTime = Date.now
                 isUpdatingLocation = true
-                lastAcceptedCollectionLocation = nil
+                gpsRouteFilter.reset()
+                pendingRouteSegmentStartTimestamp = nil
                 resetPoorAccuracyFailOpen()
             }
             
@@ -3286,7 +3317,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var ignoreFirstFewLocations = true
     private let secondsWeIgnoreLocations = 5.0
     private var locationManagerStartTime = Date.distantPast
-    private var lastAcceptedCollectionLocation: CLLocation?
+    private var gpsRouteFilter = GPSRouteFilter()
     private var poorAccuracyStreakStartTime: Date?
     private var isFailingOpenForPoorAccuracy = false
     
@@ -3537,34 +3568,36 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         var acceptedLocations = [CLLocation]()
         
         for location in locations {
-            guard !shouldDiscardObviousGPSJump(location) else {
-                continue
+            let rawLocationData = LocationData(
+                timestamp: location.timestamp,
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude,
+                altitude: location.altitude.isFinite ? location.altitude : nil,
+                speed: location.speed,
+                verticalAccuracy: location.verticalAccuracy.isFinite && location.verticalAccuracy >= 0
+                    ? location.verticalAccuracy
+                    : nil
+            )
+
+            guard let filteredLocationData = gpsRouteFilter.process(rawLocationData) else { continue }
+            if filteredLocationData.isRouteSegmentStart == true {
+                pendingRouteSegmentStartTimestamp = filteredLocationData.timestamp
             }
-            
-            acceptedLocations.append(location)
-            lastAcceptedCollectionLocation = location
+
+            acceptedLocations.append(
+                CLLocation(
+                    coordinate: location.coordinate,
+                    altitude: location.altitude,
+                    horizontalAccuracy: location.horizontalAccuracy,
+                    verticalAccuracy: location.verticalAccuracy,
+                    course: location.course,
+                    speed: filteredLocationData.speed ?? -1,
+                    timestamp: location.timestamp
+                )
+            )
         }
         
         return acceptedLocations
-    }
-    
-    private func shouldDiscardObviousGPSJump(_ location: CLLocation) -> Bool {
-        guard let lastAcceptedCollectionLocation else {
-            return false
-        }
-        
-        let timeInterval = location.timestamp.timeIntervalSince(lastAcceptedCollectionLocation.timestamp)
-        if timeInterval > Constants.maxObviousGPSJumpTimeInterval {
-            return false
-        }
-        
-        let distance = location.distance(from: lastAcceptedCollectionLocation)
-        if distance > Constants.maxObviousGPSJumpDistance {
-            logError("Discarding obvious GPS jump of \(Int(distance.rounded()))m")
-            return true
-        }
-        
-        return false
     }
 
     private func shouldFailOpenForPoorAccuracy(_ location: CLLocation) -> Bool {
@@ -4721,7 +4754,12 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             return nil
         }
 
-        let locations = await locationData(from: route)
+        let backup = backupWorkoutData.first(where: { $0.startDate == workout.startDate })
+        let metadata = getWorkoutMetadata(workout: workout, backup: backup)
+        let runEdit = runEdits.first(where: { $0.id == workout.uuid })
+        let workoutType = runEdit?.newWorkoutType ?? metadata.workoutType
+
+        let locations = await locationData(from: route, workoutType: workoutType)
         guard locations.count > 1 else {
             return nil
         }
@@ -4733,20 +4771,11 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             heartRates.map(\.heartRate).reduce(0, +) / Double(heartRates.count)
         }
 
-        let backup = backupWorkoutData.first(where: { $0.startDate == workout.startDate })
-        let metadata = getWorkoutMetadata(workout: workout, backup: backup)
-        let runEdit = runEdits.first(where: { $0.id == workout.uuid })
-
-        let totalDistance = metadata.totalDistance > 0
-            ? metadata.totalDistance
-            : calculatedDistance(from: locations)
+        let routeMetrics = calculateGPSRouteMetrics(from: locations, workoutType: workoutType)
+        let totalDistance = routeMetrics.totalDistance
         let durationMinutes = workout.duration / 60
-        let averageSpeed = metadata.averageSpeed > 0
-            ? metadata.averageSpeed
-            : (durationMinutes > 0 ? (totalDistance / 1000) / (durationMinutes / 60) : 0)
-        let topSpeed = metadata.topSpeed > 0
-            ? metadata.topSpeed
-            : locations.compactMap(\.speed).max().map { $0 * 3.6 } ?? 0
+        let averageSpeed = durationMinutes > 0 ? (totalDistance / 1000) / (durationMinutes / 60) : 0
+        let topSpeed = routeMetrics.topSpeedKmh
 
         return ImportRun(
             id: workout.uuid,
@@ -4754,7 +4783,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             topSpeed: topSpeed,
             averageSpeed: averageSpeed,
             totalDistance: totalDistance,
-            startLocation: metadata.startLocation ?? locations.first,
+            startLocation: runEdit?.startLocation ?? locations.first,
             locations: locations,
             heartRates: heartRates,
             averageHeartRate: averageHeartRate,
@@ -4772,9 +4801,9 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
 
-    private func locationData(from route: HKWorkoutRoute) async -> [LocationData] {
+    private func locationData(from route: HKWorkoutRoute, workoutType: WorkoutType? = nil) async -> [LocationData] {
         await withCheckedContinuation { continuation in
-            locationDataFromWorkoutRoute(route: route) { locations in
+            locationDataFromWorkoutRoute(route: route, workoutType: workoutType) { locations in
                 continuation.resume(returning: locations)
             }
         }
@@ -4825,18 +4854,21 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
 
-    private func calculatedDistance(from locations: [LocationData]) -> Double {
-        guard locations.count > 1 else { return 0 }
-
-        return zip(locations, locations.dropFirst()).reduce(0) { partial, pair in
-            let first = CLLocation(latitude: pair.0.latitude, longitude: pair.0.longitude)
-            let second = CLLocation(latitude: pair.1.latitude, longitude: pair.1.longitude)
-            return partial + first.distance(from: second)
-        }
-    }
-    
     /// imports a run to the imported runs
     func importRun(run: ImportRun) {
+        var run = run
+        run.locations = cleanGPSRoute(from: run.locations, workoutType: run.workoutType)
+        guard !run.locations.isEmpty else { return }
+
+        let routeMetrics = calculateGPSRouteMetrics(from: run.locations, workoutType: run.workoutType)
+        run.totalDistance = routeMetrics.totalDistance
+        run.topSpeed = routeMetrics.topSpeedKmh
+        run.averageSpeed = run.runTime > 0
+            ? (routeMetrics.totalDistance / 1000) / (run.runTime / 60)
+            : 0
+        run.startLocation = run.locations.first
+        let routeTopSpeeds = calculateTopSpeeds(from: run.locations, workoutType: run.workoutType)
+
         importedRuns.append(run)
         saveImportedRunsToDisk()
         
@@ -4848,7 +4880,7 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
                 
-        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: run.runTime, runDistance: run.totalDistance, topSpeed: run.topSpeed, averageSpeed: run.averageSpeed, kCalories: 0, locationData: run.locations, tags: run.tags, workoutType: run.workoutType ?? .surf, startDate: run.locations.first?.timestamp ?? Date(), endDate: run.locations.last?.timestamp ?? Date(), topSpeed1s: 0, topSpeed10s: 0, popUps: 0, percentageOnFoil: 0, turnsCount: 0)
+        var newStatistic = RunStatistic(id: run.id, runName: "", crewStatistics: [], runTime: run.runTime, runDistance: run.totalDistance, topSpeed: run.topSpeed, averageSpeed: run.averageSpeed, kCalories: 0, locationData: run.locations, tags: run.tags, workoutType: run.workoutType ?? .surf, startDate: run.locations.first?.timestamp ?? Date(), endDate: run.locations.last?.timestamp ?? Date(), topSpeed1s: routeTopSpeeds.topSpeed1Sec ?? 0, topSpeed10s: routeTopSpeeds.topSpeed10Sec ?? 0, popUps: 0, percentageOnFoil: 0, turnsCount: 0)
         newStatistic.startLocation = run.startLocation
         newStatistic.locationString = run.locationString
         
@@ -4928,14 +4960,10 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
                 var locations: [LocationData] = []
                 var heartRates: [HeartRate] = []
-                var totalDistance: Double = 0
-                var topSpeed: Double = 0
                 var totalHeartRate: Double = 0
                 var validHeartRateCount: Double = 0
-                var startTime: Date? = nil
-                var endTime: Date? = nil
 
-                for (index, point) in trackSegment.trkpt.enumerated() {
+                for point in trackSegment.trkpt {
                     guard let latitude = Double(point.lat), let longitude = Double(point.lon), let time = point.time else {
                         continue
                     }
@@ -4948,43 +4976,30 @@ class DownwindManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                         totalHeartRate += hrValue
                         validHeartRateCount += 1
                     }
-
-                    if let speed = point.speed, speed > topSpeed {
-                        topSpeed = speed
-                    }
-
-                    if startTime == nil {
-                        startTime = time
-                    }
-                    endTime = time
-
-                    if index > 0 {
-                        let prevPoint = trackSegment.trkpt[index - 1]
-                        totalDistance += calculateDirectDistance(
-                            from: Member(name: "lastLocation", latitude: Double(prevPoint.lat)!, longitude: Double(prevPoint.lon)!),
-                            to: Member(name: "now", latitude: latitude, longitude: longitude)
-                        ) ?? 0
-                    }
                 }
 
-                guard let startTimeUnwrapped = startTime, let endTimeUnwrapped = endTime else {
+                locations = cleanGPSRoute(from: locations)
+                guard let startTimeUnwrapped = locations.first?.timestamp,
+                      let endTimeUnwrapped = locations.last?.timestamp else {
                     DispatchQueue.main.async { completion(nil) }
                     return
                 }
-                
+
+                let routeMetrics = calculateGPSRouteMetrics(from: locations)
                 let timeInterval = endTimeUnwrapped.timeIntervalSince(startTimeUnwrapped)
                 let runTimeMinutes = timeInterval / 60
-                let averageSpeed: Double = runTimeMinutes > 0 ? (totalDistance / (runTimeMinutes / 60)) / 1000 : 0
+                let averageSpeed: Double = runTimeMinutes > 0
+                    ? (routeMetrics.totalDistance / (runTimeMinutes / 60)) / 1000
+                    : 0
                 let averageHeartRate = validHeartRateCount > 0 ? totalHeartRate / validHeartRateCount : 0
-                let topSpeedKmh = topSpeed * 3.6
                 
                 self.createLocationNames(statisticsData: RunStatistic(id: UUID(), locationData: locations, startLocation: locations.first)) { location in
                     let run = ImportRun(
                         id: UUID(),
                         runTime: runTimeMinutes,
-                        topSpeed: topSpeedKmh,
+                        topSpeed: routeMetrics.topSpeedKmh,
                         averageSpeed: averageSpeed,
-                        totalDistance: totalDistance,
+                        totalDistance: routeMetrics.totalDistance,
                         startLocation: locations.first,
                         locations: locations,
                         heartRates: heartRates,

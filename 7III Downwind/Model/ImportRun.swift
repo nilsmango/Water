@@ -12,13 +12,13 @@ struct ImportRun: Identifiable, Codable {
     /// time in minutes
     let runTime: Double
     /// Measured GPS top speed in km/h
-    let topSpeed: Double
+    var topSpeed: Double
     
-    let averageSpeed: Double
-    let totalDistance: Double
+    var averageSpeed: Double
+    var totalDistance: Double
     var startLocation: LocationData?
 
-    let locations: [LocationData]
+    var locations: [LocationData]
     let heartRates: [HeartRate]
     let averageHeartRate: Double
     

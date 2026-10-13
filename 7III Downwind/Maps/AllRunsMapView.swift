@@ -44,12 +44,17 @@ struct AllRunsMapView: View {
             Map(position: $mapPosition) {
                 ForEach(loadedRuns) { run in
                     if !run.locationData.isEmpty {
-                        
-                            MapPolyline(coordinates: makeSmoothedCoordinates(from: run.locationData, removeGpsMistakes: true))
+                        let routeSegments = makeSmoothedCoordinateSegments(
+                            from: run.locationData,
+                            removeGpsMistakes: true
+                        )
+                        ForEach(routeSegments.indices, id: \.self) { segmentIndex in
+                            MapPolyline(coordinates: routeSegments[segmentIndex])
                                 .stroke(
                                     .neonYellow,
                                     style: StrokeStyle(lineWidth: 2.0, lineCap: .round, lineJoin: .round)
                                 )
+                        }
                         
                         
                         if let startData = run.locationData.first {
@@ -171,7 +176,10 @@ struct AllRunsMapView: View {
                         loadedRuns.append(updatedRun)
                         
                         if !updatedRun.locationData.isEmpty {
-                            let coordinates = makeSmoothedCoordinates(from: updatedRun.locationData, removeGpsMistakes: true)
+                            let coordinates = makeSmoothedCoordinateSegments(
+                                from: updatedRun.locationData,
+                                removeGpsMistakes: true
+                            ).flatMap { $0 }
                             if !coordinates.isEmpty {
                                 let minLat = coordinates.map { $0.latitude }.min() ?? 0
                                 let maxLat = coordinates.map { $0.latitude }.max() ?? 0

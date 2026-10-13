@@ -20,9 +20,7 @@ enum Constants {
     
     /// min accuracy to use in statistics
     static let minHorizontalAccuracy = 18.0
-    static let maxObviousGPSJumpDistance = 50.0
-    static let maxObviousGPSJumpTimeInterval = 15.0
-    static let poorAccuracyFailOpenTimeInterval = maxObviousGPSJumpTimeInterval
+    static let poorAccuracyFailOpenTimeInterval = 15.0
     static let minimumJumpHeight = 1.0
     
     /// timer interval for the information toggling in the online locations view (run)
